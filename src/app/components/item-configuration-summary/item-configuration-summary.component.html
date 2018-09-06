@@ -1,0 +1,54 @@
+<div *ngIf="selectedProduct; else loading">
+  <div class="d-flex justify-content-between mb-3">
+    <span class="text-muted">STARTING PRICE</span>
+    <span class="text-muted">{{(selectedProduct | ProductPricePipe | async)?.totalPrice$ | async}}</span>
+  </div>
+  <div *ngFor="let attributeGroup of attributeGroups">
+    <div class="text-muted mb-2">
+      {{attributeGroup}}
+    </div>
+    <ng-container *ngFor="let attribute of attributeList[attributeGroup]">
+      <div *ngIf="productAttributeValue" class="mb-3 d-flex justify-content-between align-items-end">
+          <div>
+            <div>{{attribute._describe.label}}</div>
+            <small>{{productAttributeValue[attribute.Apttus_Config2__Field__c]}}</small>
+          </div>
+          <small class="text-muted">{{(productAttributeValue[attribute.Apttus_Config2__Field__c] | AttributeValuePricePipe:
+            selectedProduct : attribute | async)?.totalPrice$ | async}}</small>
+      </div>
+      </ng-container>
+    <hr/>
+  </div>
+  <div *ngFor="let optionGroup of optionGroups">
+    <span class="text-muted">
+      {{optionGroup}}
+    </span>
+    <div *ngFor="let option of optionList[optionGroup]" class="my-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img class="mr-3" [src]="sanitizer.bypassSecurityTrustUrl(option.Apttus_Config2__OptionId__r.Apttus_Config2__IconId__c | image)"
+            width="50" alt="Generic placeholder image">
+          <div>
+            <div>{{option.Apttus_Config2__OptionId__r.Name}}</div>
+            <div>Quantity: {{option.Apttus_Config2__Quantity__c}} @ {{option.Apttus_Config2__NetUnitPrice__c | localCurrency
+              | async}}</div>
+          </div>
+        </div>
+
+        <span class="text-muted">
+          {{option.Apttus_Config2__NetPrice__c | localCurrency | async}}
+        </span>
+      </div>
+    </div>
+    <hr/>
+  </div>
+  <div class="d-flex justify-content-between">
+    <h5>Total Build</h5>
+    <h5>{{(item | CartItemPricePipe | async)?.totalPrice$ | async}}</h5>
+  </div>
+</div>
+<ng-template #loading>
+  <div class="d-flex justify-content-center py-5">
+    <apt-md-spinner></apt-md-spinner>
+  </div>
+</ng-template>

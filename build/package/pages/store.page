@@ -1,0 +1,39 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false" docType="html-5.0" applyHtmlTag="false" applyBodyTag="false">
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <title>GettingStarted</title>
+
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/x-icon" href="{!URLFOR($Resource.store, '/favicon.ico')}" />
+        <!-- <script>
+    window.sv = JSON.parse("{ \"accessToken\":\"00Df4000004IH5Y!ARAAQFfGb5zi9AfDwsgGexhKz4Lbhl90_J9LYL5DJct8rN7QcbcduWaYmRxmPZa48_x8YprfqoK1kn.yAQYgWrAPVJhAdqse\",\"params\":\"?retURL=%2Fecomm%2Fapex%2FAPTS_eCommerceHome&fromFrontdoor=1&setupid=ChangePassword\",\"user\":\"005f4000002AgY0AAK\",\"resource\":\"/ecomm/resource/1529299982000/GettingStarted\",\"organizationId\":\"00Df4000004IH5YEAW\",\"salesforceEndpoint\":\"apttuscommunities-163960c9372.force.com\",\"baseURL\":\"\"}");
+  </script> -->
+        <link rel="manifest" href="{!URLFOR($Resource.store, '/manifest.json')}" />
+        <meta name="theme-color" content="#1976d2" />
+        <link rel="stylesheet" href="{!URLFOR($Resource.store, '/styles.5bc9942656c8cd8ea8a5.css')}" />
+        <script>
+            window.sv = {
+                accessToken: '{!$Api.Session_ID}',
+                params: window.location.search,
+                user: '{!$User.Id}',
+                resource: '{!URLFOR($Resource.store)}',
+                organizationId: '{!$Organization.Id}',
+                salesforceEndpoint: '{!$Site.Domain}',
+                baseURL: '{!$Site.BaseCustomUrl}'
+            }
+        </script>
+    </head>
+
+    <body>
+        <app-root></app-root>
+        <script type="text/javascript" src="{!URLFOR($Resource.store, 'runtime.003e0114d1627ad4f9a2.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.store, 'polyfills.1f1a0840425f1629cfb5.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.store, 'scripts.2cf2e5da9d895fe09b07.js')}"></script>
+        <script type="text/javascript" src="{!URLFOR($Resource.store, 'main.dc65fc9ad49352a71ff0.js')}"></script>
+    </body>
+
+    </html>
+</apex:page>

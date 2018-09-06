@@ -1,0 +1,21 @@
+{
+  "credentials": {
+    "username": "OMQA@apttus.com.summer18",
+    "password": "Om@Summer2018",
+    "endpoint": "https://test.salesforce.com",
+    "enableCors": true
+  },
+  "domain": "cpqadminqa-apttus-qa.cs61.force.com",
+  "network": {
+    "attributes": {
+      "type": "Network",
+      "url": "/services/data/v42.0/sobjects/Network/0DB4C000000CaYSWA0"
+    },
+    "Id": "0DB4C000000CaYSWA0",
+    "Name": "ECommerce",
+    "UrlPathPrefix": "ecomm"
+  },
+  "initialized": true,
+  "pageName": "store",
+  "resourceName": "store"
+}

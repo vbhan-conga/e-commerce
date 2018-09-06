@@ -1,0 +1,14 @@
+{
+    "/services/Soap/*": {
+        "target": "https://cpqadminqa-apttus-qa.cs61.force.com/ecomm",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/ecomm/*": {
+        "target": "https://cpqadminqa-apttus-qa.cs61.force.com",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    }
+}
