@@ -1,10 +1,9 @@
 # Digital Commerce Core Reference Template
 
-This is the base reference application for the apttus ecommerce product. Follow the below instructions to get started. See https://cmoyle336.github.io/sdk-docs/overview.html for more detailed instructions on interacting with
-the underlying SDK.
+This is the base reference application for the apttus ecommerce product. Follow the below instructions to get started. See the [docs](https://cmoyle336.github.io/sdk-docs/overview.html) for more detailed instructions on interacting with the underlying SDK.
 
-## Deploy the unmanaged package
-Find the zip file named 'unmanaged-package.zip' and deploy it to your org. (Will become a managed package in the near future)
+## Install the managed package in your org
+Login to your org and use the following [link](https://login.salesforce.com/packaging/installPackage.apexp?p0=04to000000047xK) to install the managed package. The managed package requires a password, and you'll need to reach out to an Apttus representative to obtain this.
 
 ## Install the application
 In a terminal window run
@@ -17,8 +16,8 @@ Sentry will be installed and running and, if you run into errors, you may see a 
 
 ```json
 {
-    enableErrorLogging : false
-    enableErrorReporting: false
+    "enableErrorLogging" : false,
+    "enableErrorReporting": false
 }
 ```
 
@@ -26,7 +25,33 @@ Sentry will be installed and running and, if you run into errors, you may see a 
 If you do not have multi-currency enabled in your org, you must turn off multi-currency support in your storefront in the src/app/salesforce.config.ts file.
 ```json
 {
-    enableMultiCurrency : false
+    "enableMultiCurrency" : false
+}
+```
+
+## Debugging
+You can add query and performance metrics in the console output using the following parameters in the src/app/salesforce.config.ts file
+```json
+{
+    "enableQueryLogs" : true,
+    "enablePerformanceLogs" : true
+}
+```
+
+## Response Encryption
+You can disable / enable response encryption (recommended enabled) in the src/app/salesforce.config.ts file
+```json
+{
+    "encryptResponse" : true
+}
+```
+
+## Product identifier
+By default, routing to products in the reference template is dependent on the product code. However, if you wish to use a different field to route to products, you can set the 'productIdentifier' parameter in the config file
+to any product field
+```json
+{
+    "productIdentifier" : "ProductCode"
 }
 ```
 
