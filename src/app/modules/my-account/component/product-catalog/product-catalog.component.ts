@@ -3,6 +3,7 @@ import { ProductService, UserService, Product, PriceListItemService, PriceListIt
 import { Observable } from 'rxjs/Observable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ACondition } from '@apttus/core';
 
 @Component({
   selector: 'app-product-catalog',
@@ -26,7 +27,8 @@ export class ProductCatalogComponent implements OnInit {
               private cartService: CartService) { }
 
   ngOnInit() {
-    this.productList$ = this.userService.me().flatMap(user => this.productService.where(`CreatedById = {0}`, user.Id));
+    // this.productList$ = this.userService.me().flatMap(user => this.productService.where(`CreatedById = {0}`, user.Id));
+    this.productList$ = this.userService.me().flatMap(user => this.productService.where([new ACondition(Product, 'CreatedById', 'Equal', user.Id)]));
   }
 
   newProduct(template: TemplateRef<any>) {
@@ -36,7 +38,7 @@ export class ProductCatalogComponent implements OnInit {
 
   editProduct(product: Product, template: TemplateRef<any>){
     this.product = product;
-    this.priceListItem = product.Apttus_Config2__PriceLists__r.records[0];
+    this.priceListItem = product.PriceLists[0];
     this.modalRef = this.modalService.show(template);
   }
 
@@ -62,9 +64,9 @@ export class ProductCatalogComponent implements OnInit {
 
     this.priceListService.getPriceListId().take(1).flatMap(priceListId =>
         this.productService.create([this.product]).flatMap(productIdList => {
-          this.priceListItem.Apttus_Config2__Active__c = true;
-          this.priceListItem.Apttus_Config2__PriceListId__c = priceListId;
-          this.priceListItem.Apttus_Config2__ProductId__c = productIdList[0];
+          this.priceListItem.Active = true;
+          this.priceListItem.PriceList.Id = priceListId;
+          this.priceListItem.Product = productIdList[0];
           return this.priceListItemService.create([this.priceListItem]);
         })
     )

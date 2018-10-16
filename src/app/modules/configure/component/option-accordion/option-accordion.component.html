@@ -35,7 +35,7 @@
   
       <!-- Optional Options-->
       <div class="pr-5 w-100" style="overflow-x: hidden;">
-        <ngx-slick class="carousel card-deck left-align-slick" [config]="(optionGroup?._metadata?.hasRequired ? slideConfigRequired : slideConfig)">
+        <ngx-slick class="carousel card-deck left-align-slick" [config]="(optionGroup?._metadata?.hasRequired ? slideConfigRequired : slideConfig)" *ngIf="optionGroup.Apttus_Config2__Options__r?.records?.length > 0">
           <ng-container *ngFor="let component of optionGroup.Apttus_Config2__Options__r?.records">
             <div ngxSlickItem *ngIf="!component.Apttus_Config2__Required__c">
               <a class="card" href="javascript:void(0)" (click)="toggleComponent(component)" [class.border-primary]="selected(component)">

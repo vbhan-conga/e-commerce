@@ -23,13 +23,13 @@
          <a href="javascript:void(0)" [routerLink]="['/my-account', 'orders', order.Name]">{{order.Name}}</a></th>
         <td>{{(order | OrderPricePipe | async)?.totalPrice$ | async}}</td>
         <td>{{order.CreatedDate | date : 'short'}}</td>
-        <td>{{order.Apttus_Config2__OrderLineItems__r?.totalSize}}</td>
+        <td>{{order.OrderLineItems?.totalSize}}</td>
         <td>
           <span class="badge w-75" 
-            [class.badge-secondary]="order.Apttus_Config2__Status__c === 'Pending'" 
-            [class.badge-info]="order.Apttus_Config2__Status__c === 'Processing' || order.Apttus_Config2__Status__c === 'Activated' || order.Apttus_Config2__Status__c === 'Fulfilled'"
-            [class.badge-success]="order.Apttus_Config2__Status__c === 'Completed'" 
-            [class.badge-danger]="order.Apttus_Config2__Status__c === 'Cancelled' || order.Apttus_Config2__Status__c === 'Superseded'">{{order.Apttus_Config2__Status__c}}</span>
+            [class.badge-secondary]="order.Status === 'Pending'" 
+            [class.badge-info]="order.Status === 'Processing' || order.Status === 'Activated' || order.Status === 'Fulfilled'"
+            [class.badge-success]="order.Status === 'Completed'" 
+            [class.badge-danger]="order.Status === 'Cancelled' || order.Status === 'Superseded'">{{order.Status}}</span>
         </td>
         <td>
           <div dropdown container="body">
@@ -39,7 +39,7 @@
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
               <li role="menuitem">
-                <a class="dropdown-item" href="#">Reorder</a>
+                <a class="dropdown-item" href="#" [routerLink]="['/my-account', 'orders', order?.Name, 'reorder']">Reorder</a>
               </li>
             </ul>
           </div>

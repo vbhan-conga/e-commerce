@@ -11,9 +11,9 @@
       <div *ngIf="productAttributeValue" class="mb-3 d-flex justify-content-between align-items-end">
           <div>
             <div>{{attribute._describe.label}}</div>
-            <small>{{productAttributeValue[attribute.Apttus_Config2__Field__c]}}</small>
+            <small>{{productAttributeValue[attribute.Field]}}</small>
           </div>
-          <small class="text-muted">{{(productAttributeValue[attribute.Apttus_Config2__Field__c] | AttributeValuePricePipe:
+          <small class="text-muted">{{(productAttributeValue[attribute.Field] | AttributeValuePricePipe:
             selectedProduct : attribute | async)?.totalPrice$ | async}}</small>
       </div>
       </ng-container>
@@ -26,17 +26,17 @@
     <div *ngFor="let option of optionList[optionGroup]" class="my-3">
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-          <img class="mr-3" [src]="sanitizer.bypassSecurityTrustUrl(option.Apttus_Config2__OptionId__r.Apttus_Config2__IconId__c | image)"
+          <img class="mr-3" [src]="sanitizer.bypassSecurityTrustUrl(option.Option.IconId | image)"
             width="50" alt="Generic placeholder image">
           <div>
-            <div>{{option.Apttus_Config2__OptionId__r.Name}}</div>
-            <div>Quantity: {{option.Apttus_Config2__Quantity__c}} @ {{option.Apttus_Config2__NetUnitPrice__c | localCurrency
+            <div>{{option.Option.Name}}</div>
+            <div>Quantity: {{option.Quantity}} @ {{option.NetUnitPrice | localCurrency
               | async}}</div>
           </div>
         </div>
 
         <span class="text-muted">
-          {{option.Apttus_Config2__NetPrice__c | localCurrency | async}}
+          {{option.NetPrice | localCurrency | async}}
         </span>
       </div>
     </div>

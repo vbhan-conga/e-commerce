@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { APageInfo } from '@apttus/core';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +17,7 @@ export class HeaderComponent implements OnInit {
   @ViewChild('searchModal') searchModal: ElementRef;
   @ViewChild('profile') profile: MiniProfileComponent;
   @ViewChild('searchBox') searchBox: ElementRef;
-  
+
   categoryTree$: Observable<Array<Category>>;
   categoryBranch: Array<Category>;
   index: number = 0;
@@ -46,7 +47,7 @@ export class HeaderComponent implements OnInit {
                   observer.next(this.searchQuery);
                 })
                 .filter(query => query.trim().length >= 2)
-                .flatMap(query => this.productService.searchBuilder(query, 10));
+                .flatMap(query => this.productService.search(query, null, 'AND', null, null, new APageInfo(10, 0)));
   }
 
   ngOnInit() {

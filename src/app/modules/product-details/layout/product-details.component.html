@@ -66,12 +66,12 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let matrix of volumeDiscounts; let i = index">
-                    <ng-container *ngIf="matrix.Apttus_Config2__AdjustmentAmount__c > 0">
+                    <ng-container *ngIf="matrix.AdjustmentAmount > 0">
                       <td>
-                        {{matrix.Apttus_Config2__Dimension1Value__c}}+
+                        {{matrix.Dimension1Value}}+
                       </td>
                       <td>
-                        {{matrix.Apttus_Config2__AdjustmentAmount__c}} {{matrix.Apttus_Config2__AdjustmentType__c}}
+                        {{matrix.AdjustmentAmount}} {{matrix.AdjustmentType}}
                       </td>
                     </ng-container>
                   </tr>

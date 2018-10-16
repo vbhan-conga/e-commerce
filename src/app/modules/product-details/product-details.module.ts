@@ -8,7 +8,7 @@ import { ProductImagesComponent } from './component/product-images.component';
 import { NgxGalleryModule } from 'ngx-gallery';
 
 import { CartModule, CatalogModule, PricingModule, StoreModule } from '@apttus/ecommerce';
-import { SalesforceModule } from 'ng-salesforce';
+import { ApttusModule } from '@apttus/core';
 import { BreadcrumbComponent } from './component/breadcrumb.component';
 import { TabFeaturesComponent } from './component/tab-features.component';
 
@@ -25,7 +25,7 @@ import { ProductReplacementsComponent } from './component/product-replacements.c
     CatalogModule,
     PricingModule,
     StoreModule,
-    SalesforceModule,
+    ApttusModule,
     TabsModule.forRoot()
   ],
   providers : [],

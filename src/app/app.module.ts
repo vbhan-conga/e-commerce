@@ -4,9 +4,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 
-import { SalesforceModule } from 'ng-salesforce';
+import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
-import { Configuration } from './salesforce.config';
+import { AppConfig } from './config';
 import { ComponentModule } from './components/component.module';
 import { RouteGuard } from './services/route.guard';
 import { AuthGuard } from './services/auth.guard';
@@ -35,7 +35,7 @@ export function _window(): any {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SalesforceModule.forRoot(Configuration),
+    ApttusModule.forRoot(AppConfig),
     CommerceModule.forRoot('TIER1 Hardware and Software'),
     ComponentModule
   ],

@@ -7,7 +7,7 @@ import { Product, Category } from '@apttus/ecommerce';
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="'/home'" class="text-primary">Home</a></li>
       <li class="breadcrumb-item" *ngFor="let category of categoryList">
-        <a href="javascript:void(0)" [routerLink]="'/product-list/' + category.Name" class="text-primary">{{category.Apttus_Config2__Label__c}}</a>
+        <a href="javascript:void(0)" [routerLink]="'/product-list/' + category.Name" class="text-primary">{{category.Label}}</a>
       </li>
       <li class="breadcrumb-item active">{{product?.Name}}</li>
     </ol>

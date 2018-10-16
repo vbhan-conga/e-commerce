@@ -3,6 +3,7 @@ import { StorefrontService, Storefront, CategoryService, Category, Product, Prod
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
+import { ACondition, APageInfo } from '@apttus/core';
 
 @Component({
   selector: 'app-home',
@@ -22,8 +23,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.storefront$ = this.storefrontService.getStorefront();
-    // this.categoryService.where(`Name = 'Compressors' OR Name = 'Parts & Accessories'`).subscribe(categories => {
-    this.categoryService.queryBuilder(`ID <> NULL`, 2).subscribe(categories => {
+    this.categoryService.where([new ACondition(this.categoryService.type, 'Id', 'NotNull', null)], 'AND', null, null, new APageInfo(2, 0)).subscribe(categories => {
       this.categories = categories;
       if(categories && categories.length === 2){
         this.productListA$ = this.productService.getProductsByCategory(categories[0].Id, 5, 0);

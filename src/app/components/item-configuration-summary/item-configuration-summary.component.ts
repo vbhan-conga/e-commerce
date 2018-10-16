@@ -28,23 +28,21 @@ export class ItemConfigurationSummaryComponent implements OnChanges {
   }
 
 
-  constructor(private productService: ProductService, public sanitizer: DomSanitizer, private cartItemService: CartItemService, private paService: ProductAttributeService) {
-    this.cartItemService.setType(TCartItem);
-  }
+  constructor(private productService: ProductService, public sanitizer: DomSanitizer, private cartItemService: CartItemService, private paService: ProductAttributeService) {}
 
   ngOnChanges() {
     let lineItems = [];
     if (this.parent instanceof Order) {
       this.type = 'Order';
-      lineItems = _.get(this.parent, 'Apttus_Config2__OrderLineItems__r.records', []);
-      this.productService.getProductsByCode([this.item.Apttus_Config2__ProductId__r.ProductCode]).take(1).map(res => res[0]).subscribe(p => {
+      lineItems = _.get(this.parent, 'OrderLineItems', []);
+      this.productService.getProductsByCode([this.item.Product.ProductCode]).take(1).map(res => res[0]).subscribe(p => {
         this.selectedProduct = p;
       });
-      this.productAttributeValue = (<OrderLineItem>this.item).Apttus_Config2__DerivedFromId__r.Apttus_Config2__AttributeValueId__r;
+      this.productAttributeValue = (<OrderLineItem>this.item).DerivedFrom.AttributeValue;
     } else {
       this.type = 'Cart';
-      lineItems = _.get(this.parent, 'Apttus_Config2__LineItems__r.records', []);
-      this.productAttributeValue = (<CartItem> this.item).Apttus_Config2__AttributeValueId__r;
+      lineItems = _.get(this.parent, 'LineItems', []);
+      this.productAttributeValue = (<CartItem> this.item).AttributeValue;
       // Observable.combineLatest(
       //   this.productService.getProductByCode([this.item.Apttus_Config2__ProductId__r.ProductCode]).map(res => res[0]),
       //   this.cartItemService.where('Id = {0}', this.item.Id).map(res => res[0]),
@@ -57,15 +55,15 @@ export class ItemConfigurationSummaryComponent implements OnChanges {
       // });
     }
     
-    const options = lineItems.filter(r => r.Apttus_Config2__LineNumber__c === this.item.Apttus_Config2__PrimaryLineNumber__c && r.Apttus_Config2__LineType__c === 'Option');
-    this.optionList = _.groupBy(options, 'Apttus_Config2__ProductOptionId__r.Apttus_Config2__ProductOptionGroupId__r.Apttus_Config2__OptionGroupId__r.Apttus_Config2__Label__c');
+    const options = lineItems.filter(r => r.LineNumber === this.item.PrimaryLineNumber && r.LineType === 'Option');
+    this.optionList = _.groupBy(options, 'ProductOption.ProductOptionGroup.OptionGroup.Label');
 
-    this.productService.getProductsByCode([this.item.Apttus_Config2__ProductId__r.ProductCode])
+    this.productService.getProductsByCode([this.item.Product.ProductCode])
       .map(res => res[0])
       .subscribe(product => {
         this.selectedProduct = product;
         this.paService.getProductAttributes(product).subscribe(attributes => {
-          this.attributeList = _.groupBy(attributes, 'Apttus_Config2__AttributeGroupId__r.Name');
+          this.attributeList = _.groupBy(attributes, 'AttributeGroup.Name');
         });
       });
   }

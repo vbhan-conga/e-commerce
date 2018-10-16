@@ -4,7 +4,7 @@
   </a>
   <div ngbDropdownMenu>
       <button class="dropdown-item" 
-      *ngFor="let account of (account$ | async).ChildAccounts?.records" 
+      *ngFor="let account of (account$ | async).ChildAccounts" 
       (click)="setAccount(account)">
         {{account?.Name}}
       </button>

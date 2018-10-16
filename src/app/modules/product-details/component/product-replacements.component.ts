@@ -4,9 +4,10 @@ import { Product, ProductService } from '@apttus/ecommerce';
 @Component({
   selector: 'apt-product-replacements',
   template: `
+  
     <ul class="list-group list-group-flush">
       <li class="media list-group-item d-flex" *ngFor="let product of productList">
-        <img class="mr-3" [src]="product.Apttus_Config2__IconId__c | image" alt="Generic placeholder image"  height="60" width="75">
+        <img class="mr-3" [src]="product.IconId | image" alt="Generic placeholder image"  height="60" width="75">
         <div class="media-body">
           <div class="d-flex justify-content-between">
             <h6 class="font-weight-bold mb-0">{{product.Name}}</h6>

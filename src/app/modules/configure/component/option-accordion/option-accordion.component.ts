@@ -20,8 +20,8 @@ export class OptionAccordionComponent{
     if (this.selected(component))
       this.removeComponent(component);
     else{
-      if (component.Apttus_Config2__ProductOptionGroupId__r.Apttus_Config2__MaxOptions__c === 1) {
-        this.productOptionList.filter(option => option.productOptionComponent.Apttus_Config2__ProductOptionGroupId__c === component.Apttus_Config2__ProductOptionGroupId__c).forEach(option => this.removeComponent(option.productOptionComponent));
+      if (component.ProductOptionGroup.MaxOptions === 1) {
+        this.productOptionList.filter(option => option.productOptionComponent.ProductOptionGroup.Id === component.ProductOptionGroup.Id).forEach(option => this.removeComponent(option.productOptionComponent));
         this.productOptionList.push(this.getOptionForm(component));
       }
       else {
@@ -44,7 +44,7 @@ export class OptionAccordionComponent{
 
   getOptionForm(component: ProductOptionComponent): ProductOptionForm{
     const ret = this.productOptionList.filter(option => option.productOptionComponent.Id === component.Id)[0];
-    const quantity = (component.Apttus_Config2__MinQuantity__c) ? component.Apttus_Config2__MinQuantity__c : 1;
+    const quantity = (component.MinQuantity) ? component.MinQuantity : 1;
     return (ret) ? ret : {quantity: quantity, productOptionComponent : component, attributeValues : null};
   }
 

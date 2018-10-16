@@ -23,20 +23,20 @@
     </thead>
     <tbody>
       <tr *ngFor="let cart of cartList; let i = index;" [class.table-success]="cart.Id === myCart?.Id">
-        <th scope="row">{{cart.Name}}</th>
+        <td scope="row">{{cart.Name}}</td>
         <td>{{cart.CreatedDate | date : 'short'}}</td>
-        <td>{{cart.Apttus_Config2__NumberOfItems__c}}</td>
+        <td>{{cart.NumberOfItems}}</td>
         <td>{{(cart | CartPricePipe | async)?.totalPrice$ | async}}</td>
         <td class="text-center">
           
           <span class="oi oi-circle-check" *ngIf="cart.Id === myCart?.Id"></span>
         </td>
         <td>
-          <span class="badge w-75" [class.badge-secondary]="cart.Apttus_Config2__Status__c === 'New'" 
-                      [class.badge-info]="cart.Apttus_Config2__Status__c !== 'New' && cart.Apttus_Config2__Status__c !== 'Finalized' && cart.Apttus_Config2__Status__c !== 'Abandoned' && cart.Apttus_Config2__Status__c !== 'Approval Required'"
-                      [class.badge-success]="cart.Apttus_Config2__Status__c === 'Finalized'" 
-                      [class.badge-warning]="cart.Apttus_Config2__Status__c === 'Approval Required'"
-                      [class.badge-danger]="cart.Apttus_Config2__Status__c === 'Abandoned'">{{cart.Apttus_Config2__Status__c}}</span>
+          <span class="badge w-75" [class.badge-secondary]="cart.Status === 'New'" 
+                      [class.badge-info]="cart.Status !== 'New' && cart.Status !== 'Finalized' && cart.Status !== 'Abandoned' && cart.Status !== 'Approval Required'"
+                      [class.badge-success]="cart.Status === 'Finalized'" 
+                      [class.badge-warning]="cart.Status === 'Approval Required'"
+                      [class.badge-danger]="cart.Status === 'Abandoned'">{{cart.Status}}</span>
         </td>
         <td>
           <div dropdown container="body">
@@ -45,7 +45,7 @@
               <span class="oi oi-ellipses vertical"></span>
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-              <li role="menuitem" *ngIf="cart.Id !== myCart?.Id && (cart.Apttus_Config2__Status__c === 'New' || cart.Apttus_Config2__Status__c === 'Approval Required' || cart.Apttus_Config2__Status__c === 'Ready For Finalization')">
+              <li role="menuitem" *ngIf="cart.Id !== myCart?.Id && (cart.Status === 'New' || cart.Status === 'Approval Required' || cart.Status === 'Ready For Finalization')">
                 <a class="dropdown-item" href="javascript:void(0)" (click)="setCartActive(cart)">Set Active</a>
               </li>
               <li role="menuitem">

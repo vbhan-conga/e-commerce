@@ -3,6 +3,7 @@ import { CartService, Cart, PriceService } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable } from 'rxjs/Observable';
+import { ACondition } from '@apttus/core';
 
 @Component({
   selector: 'app-cart-list',
@@ -26,7 +27,8 @@ export class CartListComponent implements OnInit {
   ngOnInit() {
     this.cartService.getMyCart().subscribe(c =>  this.myCart = c);
     this.loadCarts(this.currentPage);
-    this.cartAggregate$ = this.cartService.aggregate(`ID <> NULL`).map(res => res[0]);
+    // this.cartAggregate$ = this.cartService.aggregate(`ID <> NULL`).map(res => res[0]);
+    this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]).map(res => res[0]);
   }
 
   loadCarts(page) {

@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CategoryService, Category, SearchResults, SearchService, PriceTier, ProductService } from '@apttus/ecommerce';
+import { CategoryService, Category, SearchResults, SearchService, PriceTier, ProductService, PriceListItem } from '@apttus/ecommerce';
 import { PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { DOCUMENT} from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { FieldFilter } from '../component/field-filter.component';
 
 import * as _ from 'lodash';
+import { ACondition } from '@apttus/core';
 
 @Component({
   selector: 'app-product-list',
@@ -45,7 +46,8 @@ export class ProductListComponent implements OnInit {
       this.sortField = null;
 
       if(params['categoryName']){
-        this.categoryService.where(`Name = '` + params['categoryName'] + `'`)
+        // this.categoryService.where(`Name = '` + params['categoryName'] + `'`)
+        this.categoryService.where([new ACondition(Category, 'Name', 'Equal', params['categoryName'])])
           .map(categoryList => categoryList[0])
           .subscribe(category => {
             this.isSearch = false;
@@ -65,10 +67,13 @@ export class ProductListComponent implements OnInit {
   getResults(){
       this.scrollTop();
       if(!this.isSearch){
-        this.searchResults$ = this.searchService.searchProductsByCategory(this.category.Id, this.pageSize, (this.page - 1) * this.pageSize, this.sortField, 'ASC', this.categoryFilter, this.priceTier, this.customFilters.map(f => `Apttus_Config2__ProductId__r.` + f.field + ` = '` + f.value + `'`));
+        this.searchResults$ = this.searchService.searchProductsByCategory(this.category.Id, this.pageSize, (this.page - 1) * this.pageSize, this.sortField, 'ASC', this.categoryFilter, this.priceTier
+          , this.customFilters.map(f => new ACondition(PriceListItem, `Product.${f.field}`, 'Equal', f.value)));
       }else
         this.searchResults$ = this.searchService.getSearchResults(this.query, this.pageSize, (this.page - 1) * this.pageSize, this.sortField, 'ASC',
-          this.categoryFilter, this.priceTier, this.customFilters.map(f => `Apttus_Config2__ProductId__r.` + f.field + ` = '` + f.value + `'`));
+          this.categoryFilter, this.priceTier, this.customFilters.map(f => `Product.` + f.field + ` = '` + f.value + `'`));
+        
+      this.searchResults$.subscribe(res => console.log(res));
   }
 
   scrollTop(){

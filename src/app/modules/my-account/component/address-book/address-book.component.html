@@ -8,13 +8,13 @@
   </div>
 </nav>
 
-<div class="row mt-3" *ngIf="(addressList$ | async); else spinner">
+<div class="row" *ngIf="(addressList$ | async); else spinner">
   <div class="col-12 col-sm-6 col-md-4" *ngFor="let address of addressList$ | async">
-    <div class="card">
+    <div class="card mt-4">
       <div class="card-body">
         <div class="d-flex justify-content-between">
           <strong>
-            <span class="oi oi-check" *ngIf="address.Apttus_Config2__IsDefault__c"></span>
+            <span class="oi oi-check" *ngIf="address.IsDefault"></span>
             {{address.Name}}
           </strong>
           <div class="btn-group info" dropdown>
@@ -36,9 +36,9 @@
           </div>
         </div>
         <address>
-          <br> {{address.Apttus_Config2__Street__c}}
-          <br> {{address.Apttus_Config2__City__c}}, {{address.Apttus_Config2__State__c}} {{address.Apttus_Config2__PostalCode__c}}
-          <br> {{address.Apttus_Config2__Country__c}}
+          <br> {{address.Street}}
+          <br> {{address.City}}, {{address.State}} {{address.PostalCode}}
+          <br> {{address.Country}}
         </address>
         <small class="card-subtitle mt-2 text-muted">{{address.CreatedDate | date : 'short'}}</small>
       </div>

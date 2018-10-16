@@ -7,12 +7,10 @@ import { RouterModule } from '@angular/router';
 import { LaddaModule } from 'angular2-ladda';
 import { FormsModule }   from '@angular/forms';
 import { NavAccountComponent } from './nav-account/nav-account.component';
-import { SalesforceModule } from 'ng-salesforce';
 import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-
+import { ApttusModule } from '@apttus/core';
 import { StoreModule, CartModule, PricingModule } from '@apttus/ecommerce';
-import { OutputFieldComponent } from './output-field/output-field.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ItemConfigurationSummaryComponent } from './item-configuration-summary/item-configuration-summary.component';
@@ -28,7 +26,7 @@ import { ItemConfigurationSummaryComponent } from './item-configuration-summary/
     LaddaModule,
     RouterModule,
     FormsModule,
-    SalesforceModule,
+    ApttusModule,
     StoreModule,
     CartModule,
     PricingModule
@@ -38,14 +36,12 @@ import { ItemConfigurationSummaryComponent } from './item-configuration-summary/
     LazyLoadImageModule,
     LaddaModule,
     FooterComponent,
-    OutputFieldComponent,
     ItemConfigurationSummaryComponent
   ],
   declarations: [
     HeaderComponent,
     NavAccountComponent,
     FooterComponent,
-    OutputFieldComponent,
     ItemConfigurationSummaryComponent
   ]
 })

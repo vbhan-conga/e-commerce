@@ -1,12 +1,12 @@
 import { environment } from '../environments/environment';
-import { SalesforceConfig } from 'ng-salesforce';
+import { Configuration } from '@apttus/core';
 
-export const Configuration: SalesforceConfig = {
-    instanceUrl: 'https://apttuscommunities-1650db92b24.force.com/ecomm',
+export const AppConfig: Configuration = {
+    endpoint: 'https://apttuscommunities-1650db92b24.force.com/ecomm',
     production: environment.production,
     organizationId: '00Df2000000DdlcEAC',
     defaultImageSrc: './',
-    defaultCountry : 'US',
+    defaultCountry: 'US',
     defaultLanguage: 'en-US',
     enableErrorLogging: true,
     enableErrorReporting: true,
@@ -16,8 +16,9 @@ export const Configuration: SalesforceConfig = {
     defaultCurrency: 'USD',
     bufferTime: 200,
     maxBufferSize: 10,
-    disableBuffer: false,
+    disableBuffer: true,
     disableCache: false,
     encryptResponse: false,
-    productIdentifier: 'ProductCode'
+    productIdentifier: 'ProductCode',
+    type: 'Salesforce'
 };

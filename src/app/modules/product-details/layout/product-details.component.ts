@@ -3,6 +3,7 @@ import { ProductService, Product, ConstraintRuleService, ConstraintRule, PriceMa
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
+import { ACondition } from '@apttus/core';
 
 @Component({
   selector: 'app-product-details',
@@ -34,7 +35,7 @@ export class ProductDetailsComponent implements OnInit {
         this.product = null;
         this.rules = null;
         this.replacementRules = null;
-        return this.productService.where(this.productService.config.productIdentifier + ` = {0}`, productCode);
+        return this.productService.where([new ACondition(Product, this.productService.config.productIdentifier, 'Equal', productCode)]);
       })
       .map(res => res[0])
       .filter(product => product != null)
@@ -49,24 +50,24 @@ export class ProductDetailsComponent implements OnInit {
     this.volumeDiscounts = null;
 
     this.product = product;
-    this.relatedProducts$ = this.productService.getProductsByCategory(_.get(product, 'Apttus_Config2__Categories__r.records[0].Apttus_Config2__ClassificationId__r.Apttus_Config2__AncestorId__c'));
-    this.similarProducts$ = this.productService.getProductsByCategory(_.get(product, 'Apttus_Config2__Categories__r.records[0].Apttus_Config2__ClassificationId__r.Apttus_Config2__PrimordialId__c'));
+    this.relatedProducts$ = this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId.AncestorId'));
+    this.similarProducts$ = this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId.PrimordialId'));
 
     this.constraintRuleService.getConstraintRules(product).take(1).subscribe(rules => {
       this.rules = rules;
 
-      this.replacementRules = _.flatten(rules.map(r => r.Apttus_Config2__ConstraintRuleActions__r.records.filter(a => a.Apttus_Config2__ActionType__c === 'Replacement')));
+      this.replacementRules = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionType === 'Replacement')));
       if(this.replacementRules.length > 0)
-        this.replacementProducts$ = this.productService.get(this.replacementRules.map(p => p.Apttus_Config2__ProductId__c));
+        this.replacementProducts$ = this.productService.get(this.replacementRules.map(p => p.ProductId));
     });
-    this.priceMatrixService.getPriceMatrixData([this.product.Apttus_Config2__PriceLists__r.records[0]]).subscribe(r => {
+    this.priceMatrixService.getPriceMatrixData([this.product.PriceLists[0]]).subscribe(r => {
       r.forEach(matrix => {
         let hasQuantityRule = false;
         for(let i = 1; i<= 6; i++){
-          hasQuantityRule = (_.get(matrix, 'Apttus_Config2__Dimension' + i + 'Id__r.Apttus_Config2__Type__c') === 'Quantity') ? true : hasQuantityRule;
+          hasQuantityRule = (_.get(matrix, 'Dimension' + i + '.Type') === 'Quantity') ? true : hasQuantityRule;
         }
         if(hasQuantityRule)
-          this.volumeDiscounts = matrix.Apttus_Config2__MatrixEntries__r.records;
+          this.volumeDiscounts = matrix.MatrixEntries;
       });
     });
     // this.recommendedProducts$ = this.constraintRuleService.getProductsForContstraintRuleCondition(_.get(product, 'Apttus_Config2__ConstraintRuleConditions__r.records'), 'Recommendation');

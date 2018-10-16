@@ -19,7 +19,6 @@ export class AppComponent {
 
   constructor(private cartService: CartService) {
     setTheme('bs4'); // or 'bs4'
-    this.cartService.setType(TCart);
   }
 
 }

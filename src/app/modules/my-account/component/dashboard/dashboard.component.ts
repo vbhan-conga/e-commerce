@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import Chart from 'chart.js';
 import { QuoteService, OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order } from '@apttus/ecommerce';
-import { SObject } from 'ng-salesforce';
+import { AObject, ACondition } from '@apttus/core';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { CustomQuote } from '../quote-list/quote-list.component';
@@ -22,22 +22,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
   spent: Price;
   subscription: any;
 
-  constructor(private quoteService: QuoteService, private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe) {
-    quoteService.setType(CustomQuote);
-  }
+  constructor(private quoteService: QuoteService, private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe) {}
 
   ngOnInit() {
     this.spent = new Price(this.localCurrencyPipe);
     this.subscription = Observable.combineLatest(
         this.quoteService.getMyQuotes(),
         this.orderService.getMyOrders(),
-        this.orderService.aggregate(`CreatedDate = LAST_N_DAYS:7`),
-        this.quoteService.aggregate(`CreatedDate = LAST_N_DAYS:7`))
-    .subscribe(([quotes, orders, ag1, ag2]) => {
+        // this.orderService.aggregate(`CreatedDate = LAST_N_DAYS:7`),
+        // this.quoteService.aggregate(`CreatedDate = LAST_N_DAYS:7`))
+        this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]),
+        this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)])
+    ).subscribe(([quotes, orders, ag1, ag2]) => {
       this.orderList = orders;
       this.quoteList = quotes;
-      this.renderPieWithData(this.quoteChart, quotes, 'Apttus_Proposal__Approval_Stage__c');
-      this.renderPieWithData(this.orderChart, orders, 'Apttus_Config2__Status__c');
+      this.renderPieWithData(this.quoteChart, quotes, 'ApprovalStage');
+      this.renderPieWithData(this.orderChart, orders, 'Status');
 
       this.orderCount = _.get(ag1, '[0].total_records', 0);
       this.quoteCount = _.get(ag2, '[0].total_records', 0);
@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  renderPieWithData(element: ElementRef, records: Array<SObject>, field: string){
+  renderPieWithData(element: ElementRef, records: Array<AObject>, field: string){
     const data = {};
     records.map(r => r[field]).forEach(a => data[a] = (!data[a]) ? 1 : data[a] + 1);
     const myDoughnutChart = new Chart(element.nativeElement, {

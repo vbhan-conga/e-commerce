@@ -16,9 +16,7 @@ export class QuoteDetailComponent implements OnInit {
   selectedLineItem: QuoteLineItem;
   modalRef: BsModalRef;
 
-  constructor(public quoteService: QuoteService, private activatedRoute: ActivatedRoute, private modalService: BsModalService) {
-    quoteService.setType(CustomQuote);
-  }
+  constructor(public quoteService: QuoteService, private activatedRoute: ActivatedRoute, private modalService: BsModalService) {}
 
   ngOnInit() {
     this.quote$ = this.activatedRoute.params.flatMap(r => this.quoteService.getQuoteByName(r.quoteId));

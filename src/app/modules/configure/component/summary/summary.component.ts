@@ -22,7 +22,7 @@ export class SummaryComponent implements OnChanges {
   }
 
   hasOptions(optionGroup: ProductOptionGroup): boolean{
-    return this.productOptions.some(p => p.productOptionComponent.Apttus_Config2__ProductOptionGroupId__c === optionGroup.Id);
+    return this.productOptions.some(p => p.productOptionComponent.ProductOptionGroup.Id === optionGroup.Id);
   }
 
   totalPrice(): Observable<number | Price>{

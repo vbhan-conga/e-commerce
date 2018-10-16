@@ -19,7 +19,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { CartListComponent } from './component/cart-list/cart-list.component';
 import { ProductCatalogComponent } from './component/product-catalog/product-catalog.component';
-import { SalesforceModule } from 'ng-salesforce';
+import { ApttusModule } from '@apttus/core';
 import { OrderDetailComponent } from './component/order-detail/order-detail.component';
 import { QuoteDetailComponent } from './component/quote-detail/quote-detail.component';
 import { ReorderComponent } from './component/reorder/reorder.component';
@@ -27,7 +27,7 @@ import { ReorderComponent } from './component/reorder/reorder.component';
 @NgModule({
   imports: [
     CommonModule,
-    SalesforceModule,
+    ApttusModule,
     MyAccountRoutingModule,
     LazyLoadImageModule,
     StoreModule,

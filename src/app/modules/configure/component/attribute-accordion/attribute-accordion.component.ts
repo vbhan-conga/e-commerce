@@ -17,13 +17,14 @@ export class AttributeAccordionComponent implements OnChanges {
   constructor() { }
 
   ngOnChanges() {
+    console.log(this.productAttributeList);
     this.productAttributeMap = new Array<ProductAttributeMap>();
     if(this.productAttributeList && this.product){
-      this.product.Apttus_Config2__AttributeGroups__r.records.forEach(groupMember => {
+      this.product.AttributeGroups.forEach(groupMember => {
         this.productAttributeMap.push({
           groupMember: groupMember,
-          attributeValue: this.setAttributeDefaults(this.productAttributeList.filter(attr => attr.Apttus_Config2__AttributeGroupId__c === groupMember.Apttus_Config2__AttributeGroupId__c)),
-          productAttributeList: this.productAttributeList,
+          attributeValue: this.setAttributeDefaults(this.productAttributeList.filter(attr => attr.AttributeGroup.Id === groupMember.AttributeGroupId)),
+          productAttributeList: this.productAttributeList.filter(attr => attr.AttributeGroup.Id === groupMember.AttributeGroupId),
           priceMatrices: null
         });
       });

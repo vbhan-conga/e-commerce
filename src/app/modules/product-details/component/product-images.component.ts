@@ -5,7 +5,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { Product, ProductService } from '@apttus/ecommerce';
-import { ImagePipe } from 'ng-salesforce';
+import { ImagePipe } from '@apttus/core';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 
 import * as _ from 'lodash';
@@ -15,7 +15,7 @@ declare var $;
 @Component({
   selector: 'product-images',
   template: `
-    <ngx-gallery [options]="galleryOptions" [images]="galleryImages" *ngIf="!showBlank && galleryImages"></ngx-gallery>
+    <ngx-gallery [options]="galleryOptions" [images]="galleryImages" *ngIf="!showBlank && galleryImages && galleryImages.length > 0"></ngx-gallery>
     <img [lazyLoad]="null | image" *ngIf="showBlank" class="w-100 img-fluid"/>
   `,
   styles: [
@@ -45,7 +45,7 @@ export class ProductImagesComponent implements OnChanges {
           thumbnailsArrows: false,
           imageInfinityMove: true,
           closeIcon: 'fa fa-times-circle-o text-dark',
-          thumbnails: this.thumbnails &&  _.get(this.product, 'Attachments.records.length') > 1,
+          thumbnails: this.thumbnails &&  _.get(this.product, 'Attachments.length') > 1,
           previewCloseOnClick: true,
           previewCloseOnEsc: true,
         },
@@ -55,15 +55,15 @@ export class ProductImagesComponent implements OnChanges {
           preview: false,
           width: '100%',
           imagePercent: 80,
-          thumbnails: this.thumbnails && _.get(this.product, 'Attachments.records.length') > 1,
+          thumbnails: this.thumbnails && _.get(this.product, 'Attachments.length') > 1,
           thumbnailsPercent: 20,
           thumbnailsMargin: 20,
           thumbnailMargin: 20
         }
       ];
       this.galleryImages = [];
-      if (_.get(this.product, 'Attachments.records')) {
-        this.product.Attachments.records.forEach(attachment => {
+      if (_.get(this.product, 'Attachments')) {
+        this.product.Attachments.forEach(attachment => {
           this.galleryImages.push({
             small: new ImagePipe(this.productService.config).transform(attachment.Id),
             medium: new ImagePipe(this.productService.config).transform(attachment.Id),
@@ -74,10 +74,5 @@ export class ProductImagesComponent implements OnChanges {
       if (!this.galleryImages || this.galleryImages.length === 0)
         this.showBlank = true;
     }
-    
-
   }
-
-
-
 }

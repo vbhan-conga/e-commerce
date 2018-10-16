@@ -3,6 +3,7 @@ import { QuoteService, Quote, CartService } from '@apttus/ecommerce';
 import { Observable } from 'rxjs/Observable';
 import { QuoteActions } from './quote-actions.component';
 import { Router } from '@angular/router';
+import { ACondition } from '@apttus/core';
 
 @Component({
   selector: 'app-quote-list',
@@ -18,13 +19,13 @@ export class QuoteListComponent implements OnInit {
   actionConfiguration: object;
 
   constructor(private quoteService: QuoteService, private cartService: CartService, private router: Router) {
-    quoteService.setType(CustomQuote);
     this.actionConfiguration = new QuoteActions(this).actionConfiguration;
   }
 
   ngOnInit() {
     this.loadQuotes(this.currentPage);
-    this.quoteAggregate$ = this.quoteService.aggregate(`ID <> NULL`).map(res => res[0]);
+    // this.quoteAggregate$ = this.quoteService.aggregate(`ID <> NULL`).map(res => res[0]);
+    this.quoteAggregate$ = this.quoteService.aggregate([new ACondition(Quote, 'Id', 'NotNull', null)]).map(res => res[0]);
   }
 
   loadQuotes(page){
@@ -49,7 +50,8 @@ export class QuoteListComponent implements OnInit {
   }
 
   activateCartForQuote(quote: Quote){
-    this.cartService.where(`Apttus_QPConfig__Proposald__c = {0}`, quote.Id)
+    // this.cartService.where(`Apttus_QPConfig__Proposald__c = {0}`, quote.Id)
+    this.cartService.where([new ACondition(this.cartService.type, 'QuoteId', 'Equal', quote.Id)])
       .take(1)
       .map(res => res[0])
       .flatMap(cart => this.cartService.setCartActive(cart))

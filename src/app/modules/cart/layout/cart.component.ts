@@ -61,19 +61,19 @@ export class CartComponent implements OnInit {
       this.primaryContact.OtherCountryCode = this.primaryContact.MailingCountryCode;
       this.primaryContact.OtherCountry = this.primaryContact.MailingCountry;
     }
-    console.log(this.primaryContact);
-    // this.loading = true;
-    // this.orderService.convertCartToOrder(this.order, this.primaryContact).subscribe(
-    //   res => {
-    //     this.loading = false;
-    //     this.orderConfirmation = res;
-    //     this.confirmationModal = this.modalService.show(this.confirmationTemplate);
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.loading = false;
-    //   }
-    // );
+    
+    this.loading = true;
+    this.orderService.convertCartToOrder(this.order, this.primaryContact).subscribe(
+      res => {
+        this.loading = false;
+        this.orderConfirmation = res;
+        this.confirmationModal = this.modalService.show(this.confirmationTemplate);
+      },
+      err => {
+        console.log(err);
+        this.loading = false;
+      }
+    );
   }
 
   public getId(id: string): string {

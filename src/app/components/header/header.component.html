@@ -4,8 +4,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']" *ngIf="(storefront$ | async)?.Logo__c; else text">
-      <img [src]="(storefront$ | async)?.Logo__c | image" [alt]="(storefront$ | async)?.Name"/>
+    <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']" *ngIf="(storefront$ | async)?.Logo; else text">
+      <img [src]="(storefront$ | async)?.Logo | image"/>
     </button>
     <ng-template #text>
       <button class="navbar-brand btn btn-link" [routerLink]="['/']">{{(storefront$ | async)?.Name}}</button>
@@ -68,7 +68,7 @@
 
 <ng-template #typeAheadItem let-model="item" let-index="index" let-last="last">
   <div class="media border-gray p-2" [class.border-bottom]="!last">
-    <img class="mr-3 align-self-center thumbnail" [src]="model.Apttus_Config2__IconId__c | image" [alt]="model.Name">
+    <img class="mr-3 align-self-center thumbnail" [src]="model.IconId | image" [alt]="model.Name">
     <div class="media-body">
       <h6 class="m-0">{{model.Name}}</h6>
       <small class="d-block">{{model.ProductCode}}</small>
@@ -109,8 +109,13 @@
           <div class="media p-2">
             <img [src]="(me$ | async)?.SmallPhotoUrl | image : false" class="img-circle" width="45" height="45"/>
             <div class="media-body ml-3">
-              <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
-              <small class="d-block">Last Login Date {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
+              <ng-container  *ngIf="(me$ | async)?.Alias !== 'guest'; else guest">
+                <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
+                <small class="d-block">Last Login Date {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
+              </ng-container>
+              <ng-template #guest>
+                <h5 class="my-0">Guest User</h5>
+              </ng-template>
             </div>
           </div>
         </div>
