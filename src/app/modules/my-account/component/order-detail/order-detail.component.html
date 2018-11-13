@@ -2,7 +2,6 @@
   <span class="navbar-brand">
     Order {{order?.Name}}
   </span>
-  <button class="btn btn-outline-primary" [routerLink]="['/my-account', 'orders', order?.Name, 'reorder']">Reorder</button>
 </nav>
 
 <div *ngIf="order; else loading">
@@ -11,8 +10,8 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Billing Address</h5>
-          {{order?.Apttus_Config2__PrimaryContactId__r?.FirstName}} {{order?.Apttus_Config2__PrimaryContactId__r?.LastName}}
-          <apt-address [ngModel]="order?.Apttus_Config2__PrimaryContactId__r" name="billingAddress" [readonly]="true"></apt-address>
+          {{order?.PrimaryContact?.FirstName}} {{order?.PrimaryContact?.LastName}}
+          <apt-address [ngModel]="order?.PrimaryContact" name="billingAddress" [readonly]="true"></apt-address>
         </div>
       </div>
     </div>
@@ -20,8 +19,8 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Shipping Address</h5>
-          {{order?.Apttus_Config2__PrimaryContactId__r?.FirstName}} {{order?.Apttus_Config2__PrimaryContactId__r?.LastName}}
-          <apt-address [ngModel]="order?.Apttus_Config2__PrimaryContactId__r" name="shippingAddress" type="shipping" [readonly]="true"></apt-address>
+          {{order?.PrimaryContact?.FirstName}} {{order?.PrimaryContact?.LastName}}
+          <apt-address [ngModel]="order?.PrimaryContact" name="shippingAddress" type="shipping" [readonly]="true"></apt-address>
         </div>
       </div>
     </div>
@@ -36,7 +35,7 @@
             <dd>Purchase Order</dd>
 
             <dt>PO Number:</dt>
-            <dd>{{order?.Apttus_Config2__PONumber__c}}</dd>
+            <dd>{{order?.PONumber}}</dd>
 
             <dt>Total Amount:</dt>
             <dd>{{(order | OrderPricePipe | async)?.totalPrice$ | async}}</dd>
@@ -56,7 +55,7 @@
             <dd>{{order?.CreatedDate | date:'short'}}</dd>
 
             <dt>Order Status:</dt>
-            <dd>{{order?.Apttus_Config2__Status__c}}</dd>
+            <dd>{{order?.Status}}</dd>
           </dl>
         </div>
       </div>
@@ -75,20 +74,20 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let lineItem of order?.Apttus_Config2__OrderLineItems__r?.records">
-              <tr *ngIf="lineItem.Apttus_Config2__LineType__c === 'Product/Service'">
+            <ng-container *ngFor="let lineItem of order?.OrderLineItems">
+              <tr *ngIf="lineItem.LineType === 'Product/Service'">
                 <th scope="row">
                   <div class="media align-items-stretch">
-                    <img class="mr-3" [src]="lineItem.Apttus_Config2__ProductId__r.Apttus_Config2__IconId__c | image" width="75" height="60"
+                    <img class="mr-3" [src]="lineItem.Product.IconId | image" width="75" height="60"
                       alt="Generic placeholder image">
                     <div class="media-body d-flex flex-column justify-content-between">
                       <div>
                         <h6 class="m-0">
-                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Apttus_Config2__ProductId__r[productService.config.productIdentifier]]">{{lineItem.Apttus_Config2__ProductId__r?.Name}}</a>
+                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Product[productService.config.productIdentifier]]">{{lineItem.Product?.Name}}</a>
                         </h6>
                         <small>
-                          <strong>Product Code:</strong>&nbsp;{{lineItem.Apttus_Config2__ProductId__r.ProductCode}}
-                          <a class="d-block mt-1" href="javascript:void(0)" *ngIf="lineItem.Apttus_Config2__HasOptions__c" (click)="openModal(configurationTemplate, lineItem)">
+                          <strong>Product Code:</strong>&nbsp;{{lineItem.Product.ProductCode}}
+                          <a class="d-block mt-1" href="javascript:void(0)" *ngIf="lineItem.HasOptions" (click)="openModal(configurationTemplate, lineItem)">
                             <span class="oi oi-wrench mr-1"></span>Configuration
                           </a>
                         </small>
@@ -98,7 +97,7 @@
                 </th>
                 <td>{{(lineItem | CartItemPricePipe | async)?.totalPrice$ | async}}</td>
                 <td class="text-center">
-                  <span class="badge badge-light p-3 text-muted">{{lineItem.Apttus_Config2__Quantity__c}}</span>
+                  <span class="badge badge-light p-3 text-muted">{{lineItem.Quantity}}</span>
                 </td>
               </tr>
             </ng-container>
@@ -111,7 +110,7 @@
 
 <ng-template #configurationTemplate>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">{{selectedLineItem.Apttus_Config2__ProductId__r.Name}}</h4>
+    <h4 class="modal-title pull-left">{{selectedLineItem.Product.Name}}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>

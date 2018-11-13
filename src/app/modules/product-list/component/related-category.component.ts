@@ -13,7 +13,7 @@ import { Category } from '@apttus/ecommerce';
               [routerLink]="'/product-list/' + category.Name" 
               class="btn btn-link btn-sm py-1"
               [class.disabled]="category.Id === categoryId"
-              [attr.disabled]="category.Id === categoryId">{{category.Apttus_Config2__Label__c}}</a>
+              [attr.disabled]="category.Id === categoryId">{{category.Label}}</a>
           </li>
         </ul>
       </div>

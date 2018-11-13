@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-6 mb-3">
       <label for="cc-name">Name on card</label>
-      <input type="text" class="form-control" id="cc-name" placeholder="" required="">
+      <input type="text" class="form-control" id="cc-name" required [(ngModel)]="card.name" #ccName="ngModel" [ngClass]="{ 'is-invalid': ccName.invalid && (ccName.touched || ccName.dirty || form.submitted) }">
       <small class="text-muted">Full name as displayed on card</small>
       <div class="invalid-feedback">
         Name on card is required
@@ -10,7 +10,7 @@
     </div>
     <div class="col-md-6 mb-3">
       <label for="cc-number">Credit card number</label>
-      <input type="text" class="form-control" id="cc-number" name="cc-number" placeholder="" required="" [(ngModel)]="card.number">
+      <input type="text" pattern="\d*" class="form-control" id="cc-number" name="cc-number" required [(ngModel)]="card.number" #ccNumber="ngModel" [ngClass]="{ 'is-invalid': ccNumber.invalid && (ccNumber.touched || ccNumber.dirty || form.submitted) }">
       <div class="invalid-feedback">
         Credit card number is required
       </div>
@@ -19,21 +19,21 @@
   <div class="row">
     <div class="col-md-3 mb-3">
       <label for="cc-expiration">Expiration Month</label>
-      <input type="text" class="form-control" id="cc-expiration-month" name="cc-expiration-month" placeholder="" required="" [(ngModel)]="card.expirationMonth">
+      <input  type="number" min="0" max="12" pattern="\d*" maxlength="2" class="form-control" id="cc-expiration-month" name="cc-expiration-month" required [(ngModel)]="card.expirationMonth" #ccExprM="ngModel" [ngClass]="{ 'is-invalid': ccExprM.invalid && (ccExprM.touched || ccExprM.dirty || form.submitted) }">
       <div class="invalid-feedback">
         Expiration month required
       </div>
     </div>
     <div class="col-md-3 mb-3">
-      <label for="cc-expiration">Expiration</label>
-      <input type="text" class="form-control" id="cc-expiration-year" name="cc-expiration-year" placeholder="" required="" [(ngModel)]="card.expirationYear">
+      <label for="cc-expiration">Expiration Year</label>
+      <input type="number" min="0" max="99" class="form-control" id="cc-expiration-year" name="cc-expiration-year" required [(ngModel)]="card.expirationYear" #ccExprY="ngModel" [ngClass]="{ 'is-invalid': ccExprY.invalid && (ccExprY.touched || ccExprY.dirty || form.submitted) }">
       <div class="invalid-feedback">
         Expiration year required
       </div>
     </div>
     <div class="col-md-3 mb-3">
       <label for="cc-expiration">CVV</label>
-      <input type="text" class="form-control" id="cc-cvv" placeholder="" name="cc-cvv" required="" [(ngModel)]="card.securityCode">
+      <input type="text" pattern="\d*" class="form-control" id="cc-cvv" placeholder="" name="cc-cvv" required [(ngModel)]="card.securityCode" #cvv="ngModel" [ngClass]="{ 'is-invalid': cvv.invalid && (cvv.touched || cvv.dirty || form.submitted) }">
       <div class="invalid-feedback">
         Security code required
       </div>

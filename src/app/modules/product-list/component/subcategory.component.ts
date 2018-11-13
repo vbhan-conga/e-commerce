@@ -13,7 +13,7 @@ import * as _ from 'lodash';
             <ul class="list-unstyled pl-2">
               <li *ngFor="let category of categoryList" class="custom-control custom-checkbox py-1">
                 <input type="checkbox" class="custom-control-input" [id]="category.Id" [formControlName]="category.Id" (change)="onCheckChange($event)">
-                <label class="custom-control-label" [for]="category.Id">{{category.Apttus_Config2__Label__c}}</label>
+                <label class="custom-control-label" [for]="category.Id">{{category.Label}}</label>
               </li>
             </ul>
           </form>

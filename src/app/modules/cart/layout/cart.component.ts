@@ -61,7 +61,7 @@ export class CartComponent implements OnInit {
       this.primaryContact.OtherCountryCode = this.primaryContact.MailingCountryCode;
       this.primaryContact.OtherCountry = this.primaryContact.MailingCountry;
     }
-    
+
     this.loading = true;
     this.orderService.convertCartToOrder(this.order, this.primaryContact).subscribe(
       res => {

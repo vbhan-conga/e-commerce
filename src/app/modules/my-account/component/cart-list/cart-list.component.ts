@@ -15,7 +15,7 @@ export class CartListComponent implements OnInit {
   cartList: Array<Cart>;
   myCart: Cart;
   cart: Cart = new Cart();
-  cartAggregate$: Observable<any>;
+  cartAggregate$: Observable<Array<any>>;
   modalRef: BsModalRef;
   message: string;
   loading: boolean = false;
@@ -28,12 +28,13 @@ export class CartListComponent implements OnInit {
     this.cartService.getMyCart().subscribe(c =>  this.myCart = c);
     this.loadCarts(this.currentPage);
     // this.cartAggregate$ = this.cartService.aggregate(`ID <> NULL`).map(res => res[0]);
-    this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]).map(res => res[0]);
+    // this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]).map(res => res[0]);
+    this.cartAggregate$ = this.cartService.where([new ACondition(Cart, 'Id', 'NotNull', null)]);
   }
 
   loadCarts(page) {
     this.cartList = null;
-    this.cartService.getMyCarts(this.limit, ((page - 1) * this.limit)).subscribe(c => this.cartList = c);
+    this.cartService.getMyCarts(this.limit, page).subscribe(c => this.ngZone.run(() => this.cartList = c));
   }
 
   newCart(template: TemplateRef<any>){
@@ -69,7 +70,6 @@ export class CartListComponent implements OnInit {
         this.modalRef.hide();
       },
       err => {
-        console.error(err);
         this.loading = false;
         this.message = 'Could not create cart. Please contact your administrator.';
       }

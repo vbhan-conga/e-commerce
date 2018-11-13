@@ -1,11 +1,11 @@
 <ng-container *ngIf="product">
-  <div class="mt-3 options" *ngFor="let optionGroup of product?.Apttus_Config2__OptionGroups__r?.records">
-    <h4>{{optionGroup.Apttus_Config2__OptionGroupId__r.Name}}</h4>
+  <div class="mt-3 options" *ngFor="let optionGroup of product?.OptionGroups">
+    <h4>{{optionGroup.OptionGroup.Name}}</h4>
     <div class="d-flex w-100">
   
       <!-- Required Options -->
-      <ng-container *ngFor="let component of optionGroup.Apttus_Config2__Options__r?.records">
-        <div *ngIf="component.Apttus_Config2__Required__c">
+      <ng-container *ngFor="let component of optionGroup.Options">
+        <div *ngIf="component.Required">
           <div class="card border-primary">
             <div class="d-flex justify-content-between align-items-center p-3">
               <div class="oi oi-check custom-checkbox-lg"></div>
@@ -17,13 +17,13 @@
             </div>
             
             <div class="img-container">
-              <img class="mr-3" [lazyLoad]="component.Apttus_Config2__ComponentProductId__r.Apttus_Config2__IconId__c | image" [defaultImage]="null | image"
-                [alt]="component.Apttus_Config2__ComponentProductId__r.Name" class="card-img-top w-50 m-auto d-flex align-self-center">
+              <img class="mr-3" [lazyLoad]="component.ComponentProduct.IconId | image" [defaultImage]="null | image"
+                [alt]="component.ComponentProduct.Name" class="card-img-top w-50 m-auto d-flex align-self-center">
             </div>
             <div class="card-body text-center">
-              <strong class="card-title d-block">{{component.Apttus_Config2__ComponentProductId__r.Name}}</strong>
+              <strong class="card-title d-block">{{component.ComponentProduct.Name}}</strong>
               <hr/>
-              <apt-input-quantity [min]="component.Apttus_Config2__MinQuantity__c" [max]="component.Apttus_Config2__MaxQuantity__c" [disabled]="!component.Apttus_Config2__Modifiable__c" [(ngModel)]="getOptionForm(component).quantity"></apt-input-quantity>
+              <apt-input-quantity [min]="component.MinQuantity" [max]="component.MaxQuantity" [disabled]="!component.Modifiable" [(ngModel)]="getOptionForm(component).quantity"></apt-input-quantity>
             </div>
           </div>
         </div>
@@ -35,9 +35,9 @@
   
       <!-- Optional Options-->
       <div class="pr-5 w-100" style="overflow-x: hidden;">
-        <ngx-slick class="carousel card-deck left-align-slick" [config]="(optionGroup?._metadata?.hasRequired ? slideConfigRequired : slideConfig)" *ngIf="optionGroup.Apttus_Config2__Options__r?.records?.length > 0">
-          <ng-container *ngFor="let component of optionGroup.Apttus_Config2__Options__r?.records">
-            <div ngxSlickItem *ngIf="!component.Apttus_Config2__Required__c">
+        <ngx-slick class="carousel card-deck left-align-slick" [config]="(optionGroup?._metadata?.hasRequired ? slideConfigRequired : slideConfig)" *ngIf="optionGroup.Options.length > 0">
+          <ng-container *ngFor="let component of optionGroup.Options">
+            <div ngxSlickItem *ngIf="!component.Required">
               <a class="card" href="javascript:void(0)" (click)="toggleComponent(component)" [class.border-primary]="selected(component)">
                 <div class="d-flex justify-content-between align-items-center p-3">
                   <div class="custom-control custom-checkbox custom-checkbox-lg">
@@ -45,17 +45,17 @@
                     <label class="custom-control-label" [for]="component.Id">&nbsp;</label>
                   </div>
                   <div>
-                    &nbsp;<strong *ngIf="(component | OptionPricePipe | async)?.totalPrice > 0" class="text-success">+ {{(component | OptionPricePipe | async)?.totalPrice$ | async}}</strong>
+                    &nbsp;<strong *ngIf="(component | OptionPricePipe | async)?.netPrice > 0" class="text-success">+ <apt-price [record]="component"></apt-price></strong>
                   </div>
                 </div>
                 <div class="img-container">
-                  <img class="mr-3" [src]="component.Apttus_Config2__ComponentProductId__r.Apttus_Config2__IconId__c | image"
-                    [alt]="component.Apttus_Config2__ComponentProductId__r.Name" class="card-img-top w-50 m-auto d-flex align-self-center">
+                  <img class="mr-3" [src]="component.ComponentProduct.IconId | image"
+                    [alt]="component.ComponentProduct.Name" class="card-img-top w-50 m-auto d-flex align-self-center">
                 </div>
                 <div class="card-body text-center">
-                  <strong class="card-title d-block">{{component.Apttus_Config2__ComponentProductId__r.Name}}</strong>
+                  <strong class="card-title d-block">{{component.ComponentProduct.Name}}</strong>
                   <hr/>
-                  <apt-input-quantity [disabled]="!selected(component) || !component.Apttus_Config2__Modifiable__c" [min]="component.Apttus_Config2__MinQuantity__c" [max]="component.Apttus_Config2__MaxQuantity__c" [(ngModel)]="getOptionForm(component).quantity"></apt-input-quantity>
+                  <apt-input-quantity [disabled]="!selected(component) || !component.Modifiable" [min]="component.MinQuantity" [max]="component.MaxQuantity" [(ngModel)]="getOptionForm(component).quantity"></apt-input-quantity>
                 </div>
               </a>
             </div>

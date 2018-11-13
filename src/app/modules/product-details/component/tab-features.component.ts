@@ -13,7 +13,7 @@ import { Product } from '@apttus/ecommerce';
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let feature of product?.ProductFeatureValues?.records; let i = index">
+        <tr *ngFor="let feature of product?.ProductFeatureValues; let i = index">
           <th scope="row">{{i + 1}}</th>
           <td>{{feature.Feature.Name}}</td>
           <td>{{feature.Value}}</td>

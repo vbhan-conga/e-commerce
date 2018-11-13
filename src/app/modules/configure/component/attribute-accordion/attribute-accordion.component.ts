@@ -17,7 +17,6 @@ export class AttributeAccordionComponent implements OnChanges {
   constructor() { }
 
   ngOnChanges() {
-    console.log(this.productAttributeList);
     this.productAttributeMap = new Array<ProductAttributeMap>();
     if(this.productAttributeList && this.product){
       this.product.AttributeGroups.forEach(groupMember => {

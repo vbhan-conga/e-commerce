@@ -1,23 +1,19 @@
-import { QuoteListComponent } from './quote-list.component';
 import * as _ from 'lodash';
 
 export class QuoteActions{
-    constructor(private component: QuoteListComponent){}
+    constructor(){}
     public actionConfiguration = {
         'Draft': {
             color: 'secondary',
             actions: [
                 {
-                    label: 'Download PDF',
-                    action: _.bind(this.component.downloadPdf, this.component)
+                    label: 'Download PDF'
                 },
                 {
-                    label: 'Checkout',
-                    action: _.bind(this.component.activateCartForQuote, this.component)
+                    label: 'Checkout'
                 },
                 {
-                    label: 'Send',
-                    action: this.component.send
+                    label: 'Send'
                 }
             ],
             allowDelete : true
@@ -26,16 +22,13 @@ export class QuoteActions{
             color: 'warning',
             actions: [
                 {
-                    label: 'Download PDF',
-                    action: _.bind(this.component.downloadPdf, this.component)
+                    label: 'Download PDF'
                 },
                 {
-                    label: 'Send',
-                    action: this.component.send
+                    label: 'Send'
                 },
                 {
-                    label: 'Submit for Approval',
-                    action: this.component.submitForApproval
+                    label: 'Submit for Approval'
                 }
             ],
             allowDelete: true
@@ -44,12 +37,10 @@ export class QuoteActions{
             color: 'warning',
             actions: [
                 {
-                    label: 'Download PDF',
-                    action: _.bind(this.component.downloadPdf, this.component)
+                    label: 'Download PDF'
                 },
                 {
-                    label: 'Send',
-                    action: this.component.send
+                    label: 'Send'
                 }
             ],
             allowDelete: false
@@ -58,16 +49,13 @@ export class QuoteActions{
             color: 'success',
             actions: [
                 {
-                    label: 'Download PDF',
-                    action: _.bind(this.component.downloadPdf, this.component)
+                    label: 'Download PDF'
                 },
                 {
-                    label: 'Send',
-                    action: this.component.send
+                    label: 'Send'
                 },
                 {
-                    label: 'Send for eSignature',
-                    action: this.component.send
+                    label: 'Send for eSignature'
                 }
             ],
             allowDelete: true
@@ -76,16 +64,13 @@ export class QuoteActions{
             color: 'success',
             actions: [
                 {
-                    label: 'Download PDF',
-                    action: _.bind(this.component.downloadPdf, this.component)
+                    label: 'Download PDF'
                 },
                 {
-                    label: 'Create Order',
-                    action: this.component.createOrder
+                    label: 'Create Order'
                 },
                 {
-                    label: 'Send',
-                    action: this.component.send
+                    label: 'Send'
                 }
             ],
             allowDelete: true
@@ -94,16 +79,13 @@ export class QuoteActions{
             color : 'success',
             actions : [
                 {
-                    label: 'Download PDF',
-                    action: this.component.downloadPdf
+                    label: 'Download PDF'
                 },
                 {
-                    label: 'Create Order',
-                    action: this.component.createOrder
+                    label: 'Create Order'
                 },
                 {
-                    label: 'Send',
-                    action: this.component.send
+                    label: 'Send'
                 }
             ],
             allowDelete: true

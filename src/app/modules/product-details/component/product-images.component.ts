@@ -7,7 +7,7 @@ import {
 import { Product, ProductService } from '@apttus/ecommerce';
 import { ImagePipe } from '@apttus/core';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
-
+import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 
 declare var $;
@@ -18,9 +18,7 @@ declare var $;
     <ngx-gallery [options]="galleryOptions" [images]="galleryImages" *ngIf="!showBlank && galleryImages && galleryImages.length > 0"></ngx-gallery>
     <img [lazyLoad]="null | image" *ngIf="showBlank" class="w-100 img-fluid"/>
   `,
-  styles: [
-
-  ]
+  styles: []
 })
 export class ProductImagesComponent implements OnChanges {
   @Input() product: Product;
@@ -29,7 +27,7 @@ export class ProductImagesComponent implements OnChanges {
   galleryImages: NgxGalleryImage[];
   showBlank = false;
 
-  constructor(private ngZone: NgZone, private productService: ProductService) { }
+  constructor(private ngZone: NgZone, private productService: ProductService, private dss: DomSanitizer) { }
 
 
   ngOnChanges() {
@@ -65,9 +63,9 @@ export class ProductImagesComponent implements OnChanges {
       if (_.get(this.product, 'Attachments')) {
         this.product.Attachments.forEach(attachment => {
           this.galleryImages.push({
-            small: new ImagePipe(this.productService.config).transform(attachment.Id),
-            medium: new ImagePipe(this.productService.config).transform(attachment.Id),
-            big: new ImagePipe(this.productService.config).transform(attachment.Id)
+            small: new ImagePipe(this.productService.config, this.dss).transform(attachment.Id, true, false),
+            medium: new ImagePipe(this.productService.config, this.dss).transform(attachment.Id, true, false),
+            big: new ImagePipe(this.productService.config, this.dss).transform(attachment.Id, true, false)
           });
         });
       }

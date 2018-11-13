@@ -1,11 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CategoryService, Category, SearchResults, SearchService, PriceTier, ProductService, PriceListItem } from '@apttus/ecommerce';
+import { CategoryService, Category, SearchResults, SearchService, PriceTier, PriceListItem } from '@apttus/ecommerce';
 import { PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
 import { DOCUMENT} from '@angular/common';
 import { Observable } from 'rxjs/Observable';
-import { FieldFilter } from '../component/field-filter.component';
-
 import * as _ from 'lodash';
 import { ACondition } from '@apttus/core';
 
@@ -25,7 +23,7 @@ export class ProductListComponent implements OnInit {
   view='grid';
   priceTier: PriceTier = null;
   categoryFilter: Array<Category> = [];
-  customFilters: Array<FieldFilter> = null;
+  customFilters: Array<ACondition> = null;
   sortField: string = null;
   isSearch: boolean = false;
   query: string;
@@ -34,9 +32,7 @@ export class ProductListComponent implements OnInit {
               private searchService: SearchService,
               private categoryService: CategoryService,
               private pageScrollService: PageScrollService,
-              @Inject(DOCUMENT) private document: any) {
-    // this.productService.setType(IRProduct);
-  }
+              @Inject(DOCUMENT) private document: any) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
@@ -65,15 +61,14 @@ export class ProductListComponent implements OnInit {
   }
 
   getResults(){
+      if(this.sortField == 'Relevance') this.sortField = null;
       this.scrollTop();
       if(!this.isSearch){
-        this.searchResults$ = this.searchService.searchProductsByCategory(this.category.Id, this.pageSize, (this.page - 1) * this.pageSize, this.sortField, 'ASC', this.categoryFilter, this.priceTier
+        this.searchResults$ = this.searchService.searchProductsByCategory(this.category.Id, this.pageSize, this.page, this.sortField, 'ASC', this.categoryFilter, this.priceTier
           , this.customFilters.map(f => new ACondition(PriceListItem, `Product.${f.field}`, 'Equal', f.value)));
       }else
-        this.searchResults$ = this.searchService.getSearchResults(this.query, this.pageSize, (this.page - 1) * this.pageSize, this.sortField, 'ASC',
-          this.categoryFilter, this.priceTier, this.customFilters.map(f => `Product.` + f.field + ` = '` + f.value + `'`));
-        
-      this.searchResults$.subscribe(res => console.log(res));
+        this.searchResults$ = this.searchService.getSearchResults(this.query, this.pageSize, this.page, this.sortField, 'ASC',
+          this.categoryFilter, this.priceTier, this.customFilters);
   }
 
   scrollTop(){
@@ -100,7 +95,7 @@ export class ProductListComponent implements OnInit {
     this.getResults();
   }
 
-  onFieldFilter(evt: FieldFilter){
+  onFieldFilter(evt: ACondition){
     const index = _.findIndex(this.customFilters, { field: evt.field });
 
     if(evt.value === 'null' || evt.value === null)
@@ -117,6 +112,11 @@ export class ProductListComponent implements OnInit {
   onSortChange(evt){
     this.page = 1;
     this.sortField = evt;
+    this.getResults();
+  }
+
+  onPageSizeChange(event){
+    this.pageSize = event;
     this.getResults();
   }
 }

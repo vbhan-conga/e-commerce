@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
     Quotes
-    <span *ngIf="quoteList?.length > 0">({{(quoteAggregate$ | async)?.total_records}})</span>
+    <span *ngIf="quoteList?.length > 0">({{(quoteAggregate$ | async)?.length}})</span>
   </span>
 </nav>
 
@@ -14,7 +14,7 @@
         <th scope="col">Created Date</th>
         <th scope="col">Expected Started Date</th>
         <th scope="col">Approval Stage</th>
-        <th scope="col">&nbsp;</th>
+        <!-- <th scope="col">&nbsp;</th> -->
       </tr>
     </thead>
     <tbody>
@@ -26,29 +26,32 @@
         </th>
         <td>{{quote.Discounted_Price__c | localCurrency | async}}</td>
         <td>{{quote.CreatedDate | date : 'short'}}</td>
-        <td>{{quote.Apttus_Proposal__ExpectedStartDate__c | date : 'short'}}</td>
+        <td>{{quote.ExpectedStartDate | date : 'short'}}</td>
         <td>
-          <span [class]="'badge w-75 badge-' + actionConfiguration[quote.Apttus_Proposal__Approval_Stage__c]?.color">{{quote.Apttus_Proposal__Approval_Stage__c}}</span>
+          <span [class]="'badge w-75 badge-' + actionConfiguration[quote.Approval_Stage]?.color">{{quote.Approval_Stage}}</span>
         </td>
-        <td dropdown container="body">
+        <!-- 
+          Commented as these actions are not yet implemented
+        -->
+        <!-- <td dropdown container="body">
           <button class="btn btn-link p-0 dropdown-toggle" dropdownToggle data-spinner-color="black" data-style="zoom-in">
             <span class="oi oi-ellipses vertical"></span>
           </button>
           <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-            <li role="menuitem" *ngFor="let action of actionConfiguration[quote.Apttus_Proposal__Approval_Stage__c]?.actions">
+            <li role="menuitem" *ngFor="let action of actionConfiguration[quote.Approval_Stage]?.actions">
               <a class="dropdown-item" href="javascript:void(0)" (click)="action.action(quote)">{{action.label}}</a>
             </li><li class="divider dropdown-divider"></li>
-            <li role="menuitem" *ngIf="actionConfiguration[quote.Apttus_Proposal__Approval_Stage__c].allowDelete">
+            <li role="menuitem" *ngIf="actionConfiguration[quote.Approval_Stage].allowDelete">
               <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="delete(quote)">Delete</a>
             </li>
           </ul>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>
 </div>
 <div class="d-flex justify-content-center mt-3" *ngIf="(quoteAggregate$ | async)">
-  <pagination [totalItems]="(quoteAggregate$ | async)?.total_records" [(ngModel)]="currentPage" (pageChanged)="loadQuotes($event.page)"></pagination>
+  <pagination [totalItems]="(quoteAggregate$ | async)?.length" [(ngModel)]="currentPage" (pageChanged)="loadQuotes($event.page)"></pagination>
 </div>
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">

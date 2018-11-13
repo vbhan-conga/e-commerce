@@ -1,0 +1,17 @@
+dt, dd{
+    display: block;
+    width: 100%;
+}
+table{
+    min-width: 800px;
+    tr:first-child td{
+        border-top: none;
+    }
+}
+
+.cart-total {
+    width: 100px; 
+    overflow: hidden; 
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

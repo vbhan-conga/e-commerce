@@ -22,7 +22,7 @@
       </a>
       <ul *dropdownMenu class="dropdown-menu">
         <li *ngFor="let currency of (currencyTypes$ | async)">
-          <a class="dropdown-item" href="javascript:void()" (click)="setCurrency(currency)">{{currency._currency?.currency}}</a>
+          <a class="dropdown-item" href="javascript:void(0)" (click)="setCurrency(currency)">{{currency._currency?.currency}}</a>
         </li>
       </ul>
     </div>

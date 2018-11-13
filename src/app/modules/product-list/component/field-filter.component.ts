@@ -1,5 +1,6 @@
 import { Component, OnChanges, Output, EventEmitter, Input } from '@angular/core';
-import { ProductService } from '@apttus/ecommerce';
+import { ProductService, Product } from '@apttus/ecommerce';
+import { ACondition } from '@apttus/core';
 
 @Component({
   selector: 'pl-field-filter',
@@ -20,28 +21,23 @@ import { ProductService } from '@apttus/ecommerce';
 export class FieldFilterComponent implements OnChanges {
   @Input() fieldName: string;
   @Input() title: string;
-  @Output() fieldValueChange: EventEmitter<FieldFilter> = new EventEmitter<FieldFilter>();
+  @Output() fieldValueChange: EventEmitter<ACondition> = new EventEmitter<ACondition>();
 
   field: any;
   data: any;
   constructor(private productService: ProductService) { }
 
   ngOnChanges() {
-    this.productService.describe().subscribe(
-      res => this.field = res.fields.filter(f => f.name === this.fieldName)[0],
+    this.productService.describe(Product,this.fieldName,null,true).subscribe(
+      res => this.field = res,
       err => console.log(err)
     );
   }
 
   handleChange(evt){
-    this.fieldValueChange.emit({
-      field : this.field.name,
-      value : this.data
-    });
+    if(this.field.type === 'boolean'){
+      this.data = this.data.toLowerCase() == 'true' ?true: false;
+    }
+    this.fieldValueChange.emit(new ACondition(Product, this.fieldName, 'Equal', this.data));
   }
-}
-
-export interface FieldFilter{
-  field: string;
-  value: any;
 }

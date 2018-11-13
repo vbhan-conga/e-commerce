@@ -2,7 +2,10 @@
   <span class="navbar-brand">
     Quote {{(quote$ | async)?.Name}}
   </span>
-  <button class="btn btn-outline-primary">Download Draft</button>
+  <!--
+    Commented as the functionality is not yet implemented
+  -->
+  <!-- <button class="btn btn-outline-primary">Download Draft</button> -->
 </nav>
 
 <div *ngIf="(quote$ | async); else loading">
@@ -13,13 +16,13 @@
           <h5 class="card-title">Summary</h5>
           <dl>
             <dt>Name</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__Account__r?.Name}}</dd>
+            <dd>{{(quote$ | async)?.Account?.Name}}</dd>
             <dt>Primary Contact</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__Primary_Contact__r.FirstName}} {{(quote$ | async)?.Apttus_Proposal__Primary_Contact__r.LastName}}</dd>
+            <dd>{{(quote$ | async)?.Primary_Contact.FirstName}} {{(quote$ | async)?.Primary_Contact.LastName}}</dd>
             <dt>Amount:</dt>
-            <dd>{{(quote$ | async)?.Discounted_Price__c | localCurrency | async}}</dd>
+            <dd>{{(quote$ | async)?.Discounted_Price | localCurrency | async}}</dd>
             <dt>Payment Term:</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__Payment_Term__c}}</dd>
+            <dd>{{(quote$ | async)?.Payment_Term}}</dd>
           </dl>
         </div>
       </div>
@@ -30,16 +33,16 @@
           <h5 class="card-title">Status</h5>
           <dl>
             <dt>Approval Stage</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__Approval_Stage__c}}</dd>
+            <dd>{{(quote$ | async)?.Approval_Stage}}</dd>
             
             <dt>Presented Date:</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__Presented_Date__c | date:'short'}}</dd>
+            <dd>{{(quote$ | async)?.Presented_Date | date:'short'}}</dd>
             
             <dt>Start Date:</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__ExpectedStartDate__c | date:'short'}}</dd>
+            <dd>{{(quote$ | async)?.ExpectedStartDate | date:'short'}}</dd>
             
             <dt>End Date:</dt>
-            <dd>{{(quote$ | async)?.Apttus_Proposal__ExpectedEndDate__c | date:'short'}}</dd>
+            <dd>{{(quote$ | async)?.ExpectedEndDate | date:'short'}}</dd>
             
           </dl>
         </div>
@@ -59,20 +62,19 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let lineItem of (quote$ | async)?.Apttus_Proposal__R00N70000001yUfBEAU__r?.records">
-              <tr *ngIf="lineItem.Apttus_QPConfig__LineType__c === 'Product/Service'">
+            <ng-container *ngFor="let lineItem of (quote$ | async)?.QuoteLineItems">
+              <tr *ngIf="lineItem.LineType === 'Product/Service'">
                 <th scope="row">
                   <div class="media align-items-stretch">
-                    <img class="mr-3" [src]="lineItem.Apttus_Proposal__Product__r.Apttus_Config2__IconId__c | image" width="75" height="60"
-                      alt="Generic placeholder image">
+                    <img class="mr-3" [src]="lineItem.Product?.IconId | image" width="75" height="60" alt="Generic placeholder image">
                     <div class="media-body d-flex flex-column justify-content-between">
                       <div>
                         <h6 class="m-0">
-                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Apttus_Proposal__Product__r[quoteService.config.productIdentifier]]">{{lineItem.Apttus_Proposal__Product__r?.Name}}</a>
+                           <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Product[quoteService.config.productIdentifier]]">{{lineItem.Product?.Name}}</a>
                         </h6>
                         <small>
-                          <strong>Product Code:</strong>&nbsp;{{lineItem.Apttus_Proposal__Product__r.ProductCode}}
-                          <a class="d-block mt-1" href="javascript:void(0)" *ngIf="lineItem.Apttus_QPConfig__HasOptions__c" (click)="openModal(configurationTemplate, lineItem)">
+                          <strong>Product Code:</strong>&nbsp;{{lineItem.Product.ProductCode}}
+                          <a class="d-block mt-1" href="javascript:void(0)" *ngIf="lineItem.HasOptions" (click)="openModal(configurationTemplate, lineItem)">
                             <span class="oi oi-wrench mr-1"></span>Configuration
                           </a>
                         </small>
@@ -80,9 +82,9 @@
                     </div>
                   </div>
                 </th>
-                <td>{{lineItem.Apttus_QPConfig__AdjustedPrice__c | localCurrency | async}}</td>
+                <td>{{lineItem.AdjustedPrice | localCurrency | async}}</td>
                 <td class="text-center">
-                  <span class="badge badge-light p-3 text-muted">{{lineItem.Apttus_QPConfig__Quantity2__c}}</span>
+                  <span class="badge badge-light p-3 text-muted">{{lineItem.Quantity2}}</span>
                 </td>
               </tr>
             </ng-container>
@@ -95,7 +97,7 @@
 
 <ng-template #configurationTemplate>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">{{selectedLineItem.Apttus_Config2__ProductId__r.Name}}</h4>
+    <h4 class="modal-title pull-left">{{selectedLineItem.Product.Name}}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>

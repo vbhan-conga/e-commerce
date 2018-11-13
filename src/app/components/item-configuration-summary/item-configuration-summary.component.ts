@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges } from '@a
 import { CartItem, OrderLineItem, Product, ProductService, Cart, Order, CartItemService, ProductAttributeService, ProductAttributeValue } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { DomSanitizer } from '@angular/platform-browser';
-import { TCartItem } from '../../models/tier-one.model';
 
 @Component({
   selector: 'apt-item-configuration-summary',
@@ -54,7 +53,7 @@ export class ItemConfigurationSummaryComponent implements OnChanges {
       //   console.log(cartItem);
       // });
     }
-    
+
     const options = lineItems.filter(r => r.LineNumber === this.item.PrimaryLineNumber && r.LineType === 'Option');
     this.optionList = _.groupBy(options, 'ProductOption.ProductOptionGroup.OptionGroup.Label');
 

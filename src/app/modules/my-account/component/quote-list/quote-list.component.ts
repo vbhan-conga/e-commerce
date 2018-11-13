@@ -19,18 +19,19 @@ export class QuoteListComponent implements OnInit {
   actionConfiguration: object;
 
   constructor(private quoteService: QuoteService, private cartService: CartService, private router: Router) {
-    this.actionConfiguration = new QuoteActions(this).actionConfiguration;
+    this.actionConfiguration = new QuoteActions().actionConfiguration;
   }
 
   ngOnInit() {
     this.loadQuotes(this.currentPage);
-    // this.quoteAggregate$ = this.quoteService.aggregate(`ID <> NULL`).map(res => res[0]);
-    this.quoteAggregate$ = this.quoteService.aggregate([new ACondition(Quote, 'Id', 'NotNull', null)]).map(res => res[0]);
+   // this.quoteAggregate$ = this.quoteService.aggregate([new ACondition(Quote, 'Id', 'NotNull', null)]).map(res => res[0]);
+    this.quoteAggregate$ = this.quoteService.where([new ACondition(Quote, 'Id', 'NotNull', null)]);
   }
 
   loadQuotes(page){
     this.quoteList = null;
-    this.quoteService.getMyQuotes(null, this.limit, ((page - 1) * this.limit)).subscribe((res: Array<CustomQuote>) => this.quoteList = res);
+    this.quoteService.getMyQuotes(null, this.limit, page).subscribe((res: Array<CustomQuote>) => this.quoteList = res);
+
   }
 
   downloadPdf(){

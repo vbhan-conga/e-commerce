@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 @Component({
   selector: 'pl-price-tier',
   template: `
-    <div class="card">
+    <div class="card" *ngIf='tierList?.length > 0'>
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <h5 class="card-title">{{title}}</h5>
@@ -58,10 +58,10 @@ export class PriceTierComponent implements OnChanges {
   ngOnChanges() {
 
     this.tierList = null;
-    if(_.get(this.data, 'min_Apttus_Config2__ListPrice__c') != null && _.get(this.data, 'max_Apttus_Config2__ListPrice__c') != null && this.data.min_Apttus_Config2__ListPrice__c < this.data.max_Apttus_Config2__ListPrice__c){
+    if (_.get(this.data, 'min_ListPrice') != null && _.get(this.data, 'max_ListPrice') != null && this.data.min_ListPrice < this.data.max_ListPrice){
       this.tierList = new Array<PriceTier>();
-      let min = this.data.min_Apttus_Config2__ListPrice__c;
-      let max = this.data.max_Apttus_Config2__ListPrice__c;
+      let min = this.data.min_ListPrice;
+      let max = this.data.max_ListPrice;
 
       let step = ((max - min) / this.tierCount);
       let tier = 1;

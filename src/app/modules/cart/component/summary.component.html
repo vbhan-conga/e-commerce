@@ -16,7 +16,7 @@
                 </small>
             </div>
             <div class="text-right">
-                <small class="text-muted strike-text d-block" *ngIf="(item | CartItemPricePipe | async)?.discountPrice > 0">{{(item | CartItemPricePipe | async)?.basePrice$ | async}}</small>
+                <small class="text-muted strike-text d-block" *ngIf="(item | CartItemPricePipe | async)?.discountPrice > 0"><apt-price [record]="item" type="list"></apt-price></small>
                 <span class="text-muted d-block">{{(item.NetPrice > 0) ? (item.NetPrice | localCurrency | async) : '-'}}</span>
             </div>
         </li>
@@ -47,7 +47,7 @@
     </div>
 </form>
 
-<h4 class=" mb-3 mt-5">
+<!-- <h4 class=" mb-3 mt-5">
     <span class="text-muted">Configuration Summary</span>
 </h4>
 <div class="card">
@@ -60,9 +60,9 @@
         <button class="btn btn-block btn-outline-primary" (click)="generatePdf()" [ladda]="state.downloadLoading" data-style="zoom-in" data-spinner-color="black">Download</button>
         <button class="btn btn-block btn-outline-primary">Send as Email</button>
     </div>
-</div>
+</div> -->
 
-<h4 class=" mb-3 mt-5">
+<!-- <h4 class=" mb-3 mt-5">
     <span class="text-muted">Request a Quote</span>
 </h4>
 <div class="card">
@@ -72,7 +72,7 @@
         </small>
         <button class="btn btn-block btn-outline-primary" [ladda]="state.requestQuoteLoading" data-style="zoom-in" (click)="createQuote()" data-spinner-color="black">Request a Quote</button>
     </div>
-</div>
+</div> -->
 
 <ng-template #productDetails>
     <div class="modal-header">

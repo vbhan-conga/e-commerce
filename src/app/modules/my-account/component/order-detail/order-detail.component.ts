@@ -1,9 +1,10 @@
-import { Component, OnInit, TemplateRef  } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Order, OrderLineItem, OrderService, ProductService, Product } from '@apttus/ecommerce';
 import * as _ from 'lodash';
+
 
 @Component({
   selector: 'app-order-detail',

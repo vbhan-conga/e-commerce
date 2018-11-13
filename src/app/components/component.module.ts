@@ -7,9 +7,10 @@ import { RouterModule } from '@angular/router';
 import { LaddaModule } from 'angular2-ladda';
 import { FormsModule }   from '@angular/forms';
 import { NavAccountComponent } from './nav-account/nav-account.component';
+import { ApttusModule } from '@apttus/core';
 import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ApttusModule } from '@apttus/core';
+
 import { StoreModule, CartModule, PricingModule } from '@apttus/ecommerce';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';

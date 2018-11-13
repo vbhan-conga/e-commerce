@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Product, ProductOptionForm, ProductOptionComponent, ProductCarouselComponent } from '@apttus/ecommerce';
 
 @Component({

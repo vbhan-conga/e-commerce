@@ -1,0 +1,16 @@
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12 col-md-9 mb-4">
+            <app-cart-table [cart]="(cart$ | async)"></app-cart-table>
+        </div>
+        <div class="col-12 col-md-3">
+            <app-cart-summary [cart]="(cart$ | async)"></app-cart-summary>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="productList$ | async">
+        <div class="col-12">
+            <h4 class="mb-3 text-muted">You may also like...</h4>
+            <apt-product-carousel [productList]="productList$ | async"></apt-product-carousel>
+        </div>
+    </div>
+</div>

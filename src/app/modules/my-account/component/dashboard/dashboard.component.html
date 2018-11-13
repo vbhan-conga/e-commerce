@@ -39,7 +39,7 @@
                     </h6>
                 </div>
                 <div class="p-3">
-                    <h2 class="m-0">{{spent?.totalPrice$ | async}}</h2>
+                    <h2 class="m-0">{{spent?.netPrice$ | async}}</h2>
                     <small>Total Spent</small>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                                 <th scope="row" class="pl-3">
                                     <a href="javascript:void(0)" [routerLink]="['/my-account/orders/', order.Name]">{{order.Name}}</a>
                                 </th>
-                                <td>{{(order | OrderPricePipe | async)?.totalPrice$ | async}}</td>
+                                <td>{{(order | OrderPricePipe | async)?.netPrice$ | async}}</td>
                                 <td class="pr-3">{{order.CreatedDate | date:'shortDate'}}</td>
                             </ng-container>
                         </tr>

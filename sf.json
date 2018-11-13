@@ -1,7 +1,7 @@
 {
   "credentials": {
-    "username": "OMQA@apttus.com.summer18",
-    "password": "Om@Summer2018",
+    "username": "omqa@apttus.com.winter18",
+    "password": "tier123$v4CX98hBAnhDRYrUX3QaECjZc",
     "endpoint": "https://test.salesforce.com",
     "enableCors": true
   },
@@ -17,5 +17,6 @@
   },
   "initialized": true,
   "pageName": "store",
-  "resourceName": "store"
+  "resourceName": "store",
+  "pageEnableCheck": true
 }

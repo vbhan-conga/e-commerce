@@ -19,7 +19,6 @@ import { registerLocaleData } from '@angular/common';
 
 // Service Worker
 // import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
 
 registerLocaleData(localeMx, 'es-MX', localeMxExtra);
 export function _window(): any {
@@ -36,7 +35,7 @@ export function _window(): any {
     BrowserModule,
     AppRoutingModule,
     ApttusModule.forRoot(AppConfig),
-    CommerceModule.forRoot('TIER1 Hardware and Software'),
+    CommerceModule.forRoot('D-Commerce'),
     ComponentModule
   ],
   providers: [RouteGuard, AuthGuard, ConfigureGuard],

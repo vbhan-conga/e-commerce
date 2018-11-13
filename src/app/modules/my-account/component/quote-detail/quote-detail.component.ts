@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { QuoteService, Quote, QuoteLineItem } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ImagePipe } from '@apttus/core'
 
 @Component({
   selector: 'app-quote-detail',
@@ -27,6 +28,7 @@ export class QuoteDetailComponent implements OnInit {
     this.selectedLineItem = lineItem;
     this.modalRef = this.modalService.show(template);
   }
+
 }
 
 export class CustomQuote extends Quote {

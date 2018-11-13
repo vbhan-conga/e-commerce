@@ -19,7 +19,7 @@ import * as _ from 'lodash';
           <div class="input-group-prepend">
             <label class="input-group-text" for="sort">Show</label>
           </div>
-          <select class="custom-select custom-select-sm" id="size" [(ngModel)]="limit" name="limit">
+          <select class="custom-select custom-select-sm" id="size" [(ngModel)]="limit" name="limit" (change)="onPageSizeChange.emit($event.target.value)">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -73,6 +73,7 @@ export class ResultsComponent implements OnChanges{
 
   @Output() onViewChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() onSortChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() onPageSizeChange: EventEmitter<string> = new EventEmitter<string>();
 
   constructor() {}
 

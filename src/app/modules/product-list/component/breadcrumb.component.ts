@@ -11,8 +11,8 @@ import { Category } from '@apttus/ecommerce';
         </li>
 
         <li class="breadcrumb-item" *ngFor="let crumb of breadcrumbs; let l = last" [class.active]="l">
-          <a href="javascript:void(0)" [routerLink]="['/product-list', crumb.Name]" *ngIf="!l">{{crumb.Apttus_Config2__Label__c}}</a>
-          <span *ngIf="l">{{crumb.Apttus_Config2__Label__c}}</span>
+          <a href="javascript:void(0)" [routerLink]="['/product-list', crumb.Name]" *ngIf="!l">{{crumb.Label}}</a>
+          <span *ngIf="l">{{crumb.Label}}</span>
         </li>
       </ol>
     </nav>

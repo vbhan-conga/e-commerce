@@ -1,12 +1,12 @@
 {
     "/services/Soap/*": {
-        "target": "https://apttuscommunities-1650db92b24.force.com/ecomm",
+        "target": "https://sum17patch-qawinter18.cs8.force.com/dc",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
     },
     "/ecomm/*": {
-        "target": "https://apttuscommunities-1650db92b24.force.com",
+        "target": "https://sum17patch-qawinter18.cs8.force.com",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true

@@ -21,7 +21,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of cart?.LineItems?.records">
+  <!--         <tr *ngFor="let item of cart?.LineItems?.records"> -->
+          <tr *ngFor="let item of cart?.LineItems">
             <th scope="row">{{item.Product.Name}}</th>
             <td><apt-price [record]="item" [type]="'unit'" [quantity]="item.Quantity"></apt-price></td>
             <td><apt-price [record]="item" [type]="'base'" [quantity]="item.Quantity"></apt-price></td>
