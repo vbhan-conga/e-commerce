@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 
 import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
-import { AppConfig } from './config';
 import { ComponentModule } from './components/component.module';
 import { RouteGuard } from './services/route.guard';
 import { AuthGuard } from './services/auth.guard';
@@ -31,8 +30,6 @@ export function _window(): any {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ApttusModule.forRoot(AppConfig),
-    CommerceModule.forRoot('D-Commerce'),
     ComponentModule
   ],
   providers: [RouteGuard, AuthGuard, ConfigureGuard],
