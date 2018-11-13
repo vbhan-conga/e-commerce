@@ -17,9 +17,6 @@ import localeMx from '@angular/common/locales/es-MX';
 import localeMxExtra from '@angular/common/locales/extra/es-MX';
 import { registerLocaleData } from '@angular/common';
 
-// Service Worker
-// import { ServiceWorkerModule } from '@angular/service-worker';
-
 registerLocaleData(localeMx, 'es-MX', localeMxExtra);
 export function _window(): any {
   // return the global native browser window object
