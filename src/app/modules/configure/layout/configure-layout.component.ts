@@ -103,9 +103,9 @@ export class ConfigureLayoutComponent implements OnInit {
           };
         });
       }
-      if (attributes) {
+      if (attributes)
         this.productAttributeList = attributes;
-      }
+
       this.product = product;
       if(rules){
         this.constraintRules = rules;

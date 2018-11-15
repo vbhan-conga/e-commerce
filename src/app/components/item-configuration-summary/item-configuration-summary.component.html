@@ -1,7 +1,7 @@
 <div *ngIf="selectedProduct; else loading">
   <div class="d-flex justify-content-between mb-3">
     <span class="text-muted">STARTING PRICE</span>
-    <span class="text-muted">{{(selectedProduct | ProductPricePipe | async)?.totalPrice$ | async}}</span>
+    <span class="text-muted">{{(selectedProduct | ProductPricePipe | async)?.netPrice$ | async}}</span>
   </div>
   <div *ngFor="let attributeGroup of attributeGroups">
     <div class="text-muted mb-2">
@@ -14,7 +14,7 @@
             <small>{{productAttributeValue[attribute.Field]}}</small>
           </div>
           <small class="text-muted">{{(productAttributeValue[attribute.Field] | AttributeValuePricePipe:
-            selectedProduct : attribute | async)?.totalPrice$ | async}}</small>
+            selectedProduct : attribute | async)?.netPrice$ | async}}</small>
       </div>
       </ng-container>
     <hr/>
@@ -44,7 +44,7 @@
   </div>
   <div class="d-flex justify-content-between">
     <h5>Total Build</h5>
-    <h5>{{(item | CartItemPricePipe | async)?.totalPrice$ | async}}</h5>
+    <h5>{{(item | CartItemPricePipe | async)?.netPrice$ | async}}</h5>
   </div>
 </div>
 <ng-template #loading>

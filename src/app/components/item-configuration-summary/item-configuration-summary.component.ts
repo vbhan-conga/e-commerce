@@ -42,16 +42,6 @@ export class ItemConfigurationSummaryComponent implements OnChanges {
       this.type = 'Cart';
       lineItems = _.get(this.parent, 'LineItems', []);
       this.productAttributeValue = (<CartItem> this.item).AttributeValue;
-      // Observable.combineLatest(
-      //   this.productService.getProductByCode([this.item.Apttus_Config2__ProductId__r.ProductCode]).map(res => res[0]),
-      //   this.cartItemService.where('Id = {0}', this.item.Id).map(res => res[0]),
-      //   this.paService.getProductAttributes()
-      // ).take(1)
-      // .subscribe(([product, cartItem]) => {
-      //   this.selectedProduct = product;
-      //   console.log(product);
-      //   console.log(cartItem);
-      // });
     }
 
     const options = lineItems.filter(r => r.LineNumber === this.item.PrimaryLineNumber && r.LineType === 'Option');

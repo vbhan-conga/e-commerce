@@ -1,12 +1,12 @@
 {
     "/services/Soap/*": {
-        "target": "https://sum17patch-qawinter18.cs8.force.com/dc",
+        "target": "",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
     },
     "/ecomm/*": {
-        "target": "https://sum17patch-qawinter18.cs8.force.com",
+        "target": "",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true

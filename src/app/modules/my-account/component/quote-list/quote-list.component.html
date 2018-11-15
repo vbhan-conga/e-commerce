@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
     Quotes
-    <span *ngIf="quoteList?.length > 0">({{(quoteAggregate$ | async)?.length}})</span>
+    <span *ngIf="quoteList?.length > 0">({{(quoteAggregate$ | async)?.total_records}})</span>
   </span>
 </nav>
 
@@ -51,7 +51,7 @@
   </table>
 </div>
 <div class="d-flex justify-content-center mt-3" *ngIf="(quoteAggregate$ | async)">
-  <pagination [totalItems]="(quoteAggregate$ | async)?.length" [(ngModel)]="currentPage" (pageChanged)="loadQuotes($event.page)"></pagination>
+  <pagination [totalItems]="(quoteAggregate$ | async)?.total_records" [(ngModel)]="currentPage" (pageChanged)="loadQuotes($event.page)"></pagination>
 </div>
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">

@@ -24,8 +24,7 @@ export class QuoteListComponent implements OnInit {
 
   ngOnInit() {
     this.loadQuotes(this.currentPage);
-   // this.quoteAggregate$ = this.quoteService.aggregate([new ACondition(Quote, 'Id', 'NotNull', null)]).map(res => res[0]);
-    this.quoteAggregate$ = this.quoteService.where([new ACondition(Quote, 'Id', 'NotNull', null)]);
+   this.quoteAggregate$ = this.quoteService.aggregate([new ACondition(Quote, 'Id', 'NotNull', null)]).map(res => res[0]);
   }
 
   loadQuotes(page){

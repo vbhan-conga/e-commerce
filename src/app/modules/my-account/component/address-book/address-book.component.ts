@@ -50,14 +50,14 @@ export class AddressBookComponent implements OnInit {
 
   setAsDefault(location: AccountLocation){
     this.accountLocationService.setLocationAsDefault(location).subscribe(
-      r => console.log(r),
+      r => {},
       e => console.error(e)
     );
   }
 
   deleteAddress(location: AccountLocation){
     this.accountLocationService.delete([location]).subscribe(
-      r => console.log(r),
+      r => {},
       e => console.error(e)
     );
   }

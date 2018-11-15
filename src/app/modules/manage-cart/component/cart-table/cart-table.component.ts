@@ -12,13 +12,6 @@ export class CartTableComponent implements OnInit {
   @Input() cart: Cart;
 
   /**
-   * Debounce time in milliseconds for change item quantity calculation.
-   *
-   * @ignore
-   */
-  private QUANTITY_CHANGE_DEBOUNCE_TIME = 2000;
-
-  /**
    * Current timeout id for the change item quantity timer.
    *
    * @ignore
@@ -56,10 +49,7 @@ export class CartTableComponent implements OnInit {
    * @fires CartService.updateQuantity()
    */
   changeItemQuantity(cartItem: CartItem) {
-    if (this.timeoutId) clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.cartService.updateQuantity([cartItem]).take(1).subscribe();
-    }, this.QUANTITY_CHANGE_DEBOUNCE_TIME);
+    this.cartService.updateQuantity([cartItem]).take(1).subscribe();
   }
 
   openModal(lineItem: CartItem, template: TemplateRef<any>) {

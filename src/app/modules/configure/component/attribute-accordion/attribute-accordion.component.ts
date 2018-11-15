@@ -33,9 +33,9 @@ export class AttributeAccordionComponent implements OnChanges {
 
   setAttributeDefaults(productAttributeList: Array<ProductAttribute>): ProductAttributeValue {
     const attributeValue: ProductAttributeValue = new ProductAttributeValue();
-    productAttributeList.forEach(attr => {
-      attributeValue[attr['_describe'].name] = InputFieldComponent.getDefaultValue(attr['_describe']);
-    });
+    productAttributeList.forEach(attr =>
+      attributeValue[attr['_describe'].name] = InputFieldComponent.getDefaultValue(attr['_describe'])
+    );
     return attributeValue;
   }
 

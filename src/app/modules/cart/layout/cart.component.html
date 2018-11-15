@@ -84,7 +84,7 @@
               name="poNumber">
           </div>
         </div>
-        <button class="btn btn-primary btn-lg btn-block mt-3" type="submit" [ladda]="loading" data-style="zoom-in">Submit Order</button>
+        <button class="btn btn-primary btn-lg btn-block mt-3" type="submit" [ladda]="loading" data-style="zoom-in" [disabled]="!form.valid || !(cart$ | async)?.LineItems || (cart$ | async)?.LineItems.length === 0">Submit Order</button>
       </form>
     </div>
   </div>

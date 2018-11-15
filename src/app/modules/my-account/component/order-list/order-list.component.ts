@@ -21,7 +21,7 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit() {
     this.loadOrders(this.currentPage);
-    this.orderAggregate$ =  this.orderService.where([new ACondition(Order, 'Id', 'NotNull', null)]);
+    this.orderAggregate$ =  this.orderService.aggregate([new ACondition(Order, 'Id', 'NotNull', null)]).map(res => res[0]);
   }
 
   loadOrders(page){

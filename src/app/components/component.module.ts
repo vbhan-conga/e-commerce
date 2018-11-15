@@ -16,6 +16,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ItemConfigurationSummaryComponent } from './item-configuration-summary/item-configuration-summary.component';
 
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -30,14 +32,16 @@ import { ItemConfigurationSummaryComponent } from './item-configuration-summary/
     ApttusModule,
     StoreModule,
     CartModule,
-    PricingModule
+    PricingModule,
+    ToastrModule.forRoot({ onActivateTick: true })
   ],
   exports : [
     HeaderComponent,
     LazyLoadImageModule,
     LaddaModule,
     FooterComponent,
-    ItemConfigurationSummaryComponent
+    ItemConfigurationSummaryComponent,
+    ToastrModule
   ],
   declarations: [
     HeaderComponent,

@@ -11,8 +11,6 @@
 
         <pl-price-tier [data]="(searchResults$ | async)?.totals" [tier]="priceTier" class="d-block mb-2" (onPriceChange)="onPriceTierChange($event)"></pl-price-tier>
         <pl-field-filter [fieldName]="'Family'" (fieldValueChange)="onFieldFilter($event)" class="d-block mb-2"></pl-field-filter>
-        <pl-field-filter [fieldName]="'ConfigurationType'" (fieldValueChange)="onFieldFilter($event)" class="d-block mb-2"></pl-field-filter>
-        <pl-field-filter [fieldName]="'IsActive'" (fieldValueChange)="onFieldFilter($event)" class="d-block"></pl-field-filter>
       </div>
     </div>
     <div class="col-12 col-lg-9">

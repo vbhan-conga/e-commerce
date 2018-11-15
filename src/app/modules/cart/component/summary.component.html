@@ -16,7 +16,7 @@
                 </small>
             </div>
             <div class="text-right">
-                <small class="text-muted strike-text d-block" *ngIf="(item | CartItemPricePipe | async)?.discountPrice > 0"><apt-price [record]="item" type="list"></apt-price></small>
+                <small class="text-muted strike-text d-block" *ngIf="(item | CartItemPricePipe | async)?.discountPrice > 0"><apt-price [record]="item" type="listExtended"></apt-price></small>
                 <span class="text-muted d-block">{{(item.NetPrice > 0) ? (item.NetPrice | localCurrency | async) : '-'}}</span>
             </div>
         </li>

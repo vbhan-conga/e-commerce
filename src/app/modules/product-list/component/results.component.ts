@@ -34,7 +34,6 @@ import * as _ from 'lodash';
           <select class="custom-select custom-select-sm" id="sort" (change)="onSortChange.emit($event.target.value)">
             <option>Relevance</option>
             <option [value]="'Name'">Name</option>
-            <option [value]="'Rating_Score__c'">Rating</option>
           </select>
         </div>
         <a href="javascript:void(0)"

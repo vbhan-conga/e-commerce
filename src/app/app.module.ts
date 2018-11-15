@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 
 import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
+// import { AppConfiguration } from './config.ts';
+
 import { ComponentModule } from './components/component.module';
 import { RouteGuard } from './services/route.guard';
 import { AuthGuard } from './services/auth.guard';
@@ -15,12 +17,7 @@ import { ConfigureGuard } from './services/configure.guard';
 import localeMx from '@angular/common/locales/es-MX';
 import localeMxExtra from '@angular/common/locales/extra/es-MX';
 import { registerLocaleData } from '@angular/common';
-
 registerLocaleData(localeMx, 'es-MX', localeMxExtra);
-export function _window(): any {
-  // return the global native browser window object
-  return window;
-}
 
 
 @NgModule({
@@ -30,7 +27,9 @@ export function _window(): any {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ComponentModule
+    ComponentModule,
+    // ApttusModule.forRoot(AppConfiguration),
+    // CommerceModule.forRoot('Storefront Name')
   ],
   providers: [RouteGuard, AuthGuard, ConfigureGuard],
   bootstrap: [AppComponent]

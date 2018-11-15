@@ -27,9 +27,7 @@ export class CartListComponent implements OnInit {
   ngOnInit() {
     this.cartService.getMyCart().subscribe(c =>  this.myCart = c);
     this.loadCarts(this.currentPage);
-    // this.cartAggregate$ = this.cartService.aggregate(`ID <> NULL`).map(res => res[0]);
-    // this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]).map(res => res[0]);
-    this.cartAggregate$ = this.cartService.where([new ACondition(Cart, 'Id', 'NotNull', null)]);
+    this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]).map(res => res[0]);
   }
 
   loadCarts(page) {

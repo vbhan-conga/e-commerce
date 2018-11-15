@@ -30,20 +30,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.subscription = Observable.combineLatest(
         this.quoteService.getMyQuotes(),
         this.orderService.getMyOrders(),
-        // this.orderService.aggregate(`CreatedDate = LAST_N_DAYS:7`),
-        // this.quoteService.aggregate(`CreatedDate = LAST_N_DAYS:7`))
-        this.orderService.where([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]),
-        this.quoteService.where([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)])
+        this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0]),
+        this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0])
     ).subscribe(([quotes, orders, ag1, ag2]) => {
       this.orderList = orders;
       this.quoteList = quotes;
       this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
       this.renderPieWithData(this.orderChart, orders, 'Status');
 
-/*       this.orderCount = _.get(ag1, '[0].total_records', 0);
-      this.quoteCount = _.get(ag2, '[0].total_records', 0); */
-      this.orderCount = ag1.length;
-      this.quoteCount = ag2.length;
+      this.orderCount = _.get(ag1, '[0].total_records', 0);
+      this.quoteCount = _.get(ag2, '[0].total_records', 0);
 
       const orderPriceList$ = [];
       orders.forEach(order => orderPriceList$.push(this.priceService.getOrderPrice(order)));

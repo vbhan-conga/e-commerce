@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { setTheme } from 'ngx-bootstrap/utils';
-import { CartService, CartItemService } from '@apttus/ecommerce';
+import { CartService } from '@apttus/ecommerce';
 import { Title } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs';
+import { ExceptionService } from './services/exception.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
   title = 'app';
   showHeader: boolean = true;
 
-  constructor(private cartService: CartService, private cartItemService: CartItemService, private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService) {
     setTheme('bs4'); // or 'bs4'
   }
 

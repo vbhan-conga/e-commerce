@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
     Orders
-    <span *ngIf="orderList?.length > 0">({{(orderAggregate$ | async)?.length}})</span>
+    <span *ngIf="orderList?.length > 0">({{(orderAggregate$ | async)?.total_records}})</span>
   </span>
 </nav>
 
@@ -20,7 +20,7 @@
       <tr *ngFor="let order of (orderList)">
         <th scope="row">
          <a href="javascript:void(0)" [routerLink]="['/my-account', 'orders', order.Name]">{{order.Name}}</a></th>
-        <td>{{(order | OrderPricePipe | async)?.totalPrice$ | async}}</td>
+        <td>{{(order | OrderPricePipe | async).netPrice$ | async}}</td>
         <td>{{order.CreatedDate | date : 'short'}}</td>
         <td>{{order.OrderLineItems?.length}}</td>
         <td>
@@ -35,7 +35,7 @@
   </table>
 </div>
 <div class="d-flex justify-content-center mt-3" *ngIf="(orderAggregate$ | async)">
-  <pagination [totalItems]="(orderAggregate$ | async)?.length" [(ngModel)]="currentPage" (pageChanged)="loadOrders($event.page)"></pagination>
+  <pagination [totalItems]="(orderAggregate$ | async)?.total_records" [(ngModel)]="currentPage" (pageChanged)="loadOrders($event.page)"></pagination>
 </div>
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">

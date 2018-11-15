@@ -68,36 +68,13 @@
 
 <ng-template #typeAheadItem let-model="item" let-index="index" let-last="last">
   <div class="media border-gray p-2" [class.border-bottom]="!last">
-    <img class="mr-3 align-self-center thumbnail" [src]="model.IconId | image" [alt]="model.Name">
+    <img class="mr-3 align-self-center thumbnail" [src]="model.IconId | image" [alt]="model.IconId">
     <div class="media-body">
       <h6 class="m-0">{{model.Name}}</h6>
       <small class="d-block">{{model.ProductCode}}</small>
     </div>
   </div>
 </ng-template>
-
-<!-- <ng-template #storeModal>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Storefronts</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body p-0" *ngIf="(contact$ | async)?.Contact_Storefronts__r?.records?.length > 0; else noStores">
-    <div class="row store-list">
-      <div class="col-12 col-md-4 d-flex justify-content-center align-items-center p-4" *ngFor="let cs of (contact$ | async)?.Contact_Storefronts__r?.records">
-        <a href="javascript:void(0)" (click)="setStorefront(cs.Storefront__r)">
-          <img class="img-thumbnail" width="100" height="100" [src]="cs.Storefront__r.Logo__c | image"/>
-        </a>
-      </div>
-    </div>
-  </div>
-  <ng-template #noStores>
-    <div class="modal-body">
-      <h2 class="text-center">You do not have any available storefronts</h2>
-    </div>
-  </ng-template>
-</ng-template> -->
 
 <apt-mini-profile #profile></apt-mini-profile>
 

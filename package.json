@@ -22,7 +22,7 @@
     "@angular/platform-browser": "^7.0.3",
     "@angular/platform-browser-dynamic": "^7.0.3",
     "@angular/router": "^7.0.3",
-    "@apttus/ecommerce": "^2.0.0-beta.13",
+    "@apttus/ecommerce": "^2.0.0",
     "chart.js": "^2.7.2",
     "core-js": "^2.5.4",
     "open-iconic": "^1.1.1",
