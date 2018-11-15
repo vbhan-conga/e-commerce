@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, HostListener  } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, HostListener, NgZone  } from '@angular/core';
 import {
   ProductService, Product, ProductOptionService, ProductOptionComponent, ProductAttributeService,
   ProductAttribute, ProductOptionForm, ProductAttributeMap, ConstraintRuleService, CartService,
@@ -50,7 +50,8 @@ export class ConfigureLayoutComponent implements OnInit {
                   private productAttributeService: ProductAttributeService,
                   private constraintRuleService: ConstraintRuleService,
                   private modalService: BsModalService,
-                  private cartService: CartService) {
+                  private cartService: CartService,
+                  public ngZone: NgZone) {
   }
 
   ngOnInit() {
@@ -103,14 +104,16 @@ export class ConfigureLayoutComponent implements OnInit {
           };
         });
       }
-      if (attributes)
-        this.productAttributeList = attributes;
-
-      this.product = product;
-      if(rules){
-        this.constraintRules = rules;
-        this.hasReplacements = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionType === 'Replacement'))).length > 0;
-      }
+        if (attributes)
+          this.productAttributeList = attributes;
+          
+        this.ngZone.run(() => {
+          this.product = product;
+          if(rules){
+            this.constraintRules = rules;
+            this.hasReplacements = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionType === 'Replacement'))).length > 0;
+          }
+        });
     });
   }
 

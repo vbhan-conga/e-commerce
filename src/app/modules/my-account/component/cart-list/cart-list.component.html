@@ -26,7 +26,7 @@
         <td scope="row">{{cart.Name}}</td>
         <td>{{cart.CreatedDate | date : 'short'}}</td>
         <td>{{cart.NumberOfItems}}</td>
-        <td>{{(cart | CartPricePipe | async)?.totalPrice$ | async}}</td>
+        <td>{{(cart | CartPricePipe | async)?.netPrice$ | async}}</td>
         <td class="text-center">
           
           <span class="oi oi-circle-check" *ngIf="cart.Id === myCart?.Id"></span>

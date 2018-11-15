@@ -78,6 +78,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
+    this.searchQuery ="";
     this.modalRef = this.modalService.show(template);
   }
 
@@ -116,7 +117,7 @@ export class HeaderComponent implements OnInit {
 
   doSearch(){
     this.modalRef.hide();
-    this.router.navigate(['/search', this.searchQuery]);
+    if(this.searchQuery) this.router.navigate(['/search', this.searchQuery]);
   }
 
   doLogout(){
