@@ -6,7 +6,9 @@ import { AppComponent } from './app.component';
 
 import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
-// import { AppConfiguration } from './config.ts';
+
+// Uncomment this line to import the configuration file
+// import { AppConfig } from './config';
 
 import { ComponentModule } from './components/component.module';
 import { RouteGuard } from './services/route.guard';
@@ -28,7 +30,9 @@ registerLocaleData(localeMx, 'es-MX', localeMxExtra);
     BrowserModule,
     AppRoutingModule,
     ComponentModule,
-    // ApttusModule.forRoot(AppConfiguration),
+
+    // Uncomment these lines to import the apttus core and ecommerce modules
+    // ApttusModule.forRoot(AppConfig),
     // CommerceModule.forRoot('Storefront Name')
   ],
   providers: [RouteGuard, AuthGuard, ConfigureGuard],
