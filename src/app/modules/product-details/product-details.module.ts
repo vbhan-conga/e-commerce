@@ -11,9 +11,12 @@ import { CartModule, CatalogModule, PricingModule, StoreModule } from '@apttus/e
 import { ApttusModule } from '@apttus/core';
 import { BreadcrumbComponent } from './component/breadcrumb.component';
 import { TabFeaturesComponent } from './component/tab-features.component';
+import { TabAttachmentsComponent } from './component/tab-attachments.component';
 
 import { TabsModule } from 'ngx-bootstrap';
 import { ProductReplacementsComponent } from './component/product-replacements.component';
+
+import { ConstraintRulesModule } from '@apttus/constraint-rules';
 
 @NgModule({
   imports: [
@@ -26,6 +29,7 @@ import { ProductReplacementsComponent } from './component/product-replacements.c
     PricingModule,
     StoreModule,
     ApttusModule,
+    ConstraintRulesModule,
     TabsModule.forRoot()
   ],
   providers : [],
@@ -33,6 +37,7 @@ import { ProductReplacementsComponent } from './component/product-replacements.c
                 ProductImagesComponent,
                 BreadcrumbComponent,
                 TabFeaturesComponent,
-                ProductReplacementsComponent]
+                ProductReplacementsComponent,
+                TabAttachmentsComponent]
 })
 export class ProductDetailsModule { }

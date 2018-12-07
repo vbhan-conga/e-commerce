@@ -21,12 +21,13 @@
 }
 .actions>*{
     border-radius: 0px;
-    border-right: 1px solid black;
+    height: 24px;
+    & + *:not([hidden]){
+        border-left: 1px solid black;
+    }
     margin: 0;
     padding: 0 1rem;
-    &:last-child{
-        border-right: none;
-    }
+    
 }
 .navbar-brand>img{
     transition: .45s;

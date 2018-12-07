@@ -1,4 +1,4 @@
-<div class="card" *ngIf="cart">
+<div class="card animated fadeIn" *ngIf="cart">
   <div class="card-header">
     Cart Summary
   </div>
@@ -8,7 +8,7 @@
       <apt-price [record]="cart"></apt-price>
     </h3>
     <hr/>
-    <button class="btn btn-primary btn-block" [routerLink]="['/cart']" [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0">
+    <button class="btn btn-primary btn-block" [routerLink]="['/cart']" [ladda]="cart?._state === 'pending'" data-style="zoom-in" [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
       <span class="oi oi-cart mr-2"></span>
       Checkout
     </button>

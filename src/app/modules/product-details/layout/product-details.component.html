@@ -26,7 +26,7 @@
             <h3 class="d-flex justify-content-start align-items-center">
               <apt-price [record]="product"></apt-price>
             </h3>
-            <apt-add-to-cart [product]="product" class="w-50" rollbackOnFail="false" [disabled]="replacementRules?.length !== 0"></apt-add-to-cart>
+            <apt-cr-add-to-cart [product]="product" rollbackOnFail="false" [disabled]="replacementRules?.length !== 0"></apt-cr-add-to-cart>
           </div>
         </div>
       </div>
@@ -46,6 +46,11 @@
             <tab heading="Features">
               <div class="py-3">
                 <pdp-tab-features [product]="product"></pdp-tab-features>
+              </div>
+            </tab>
+            <tab *ngIf="product?.ProductInformation.length>0" heading="Attachments">
+              <div class="py-3">
+                <pdp-tab-attachments [product]="product"></pdp-tab-attachments>
               </div>
             </tab>
             <!-- <tab heading="Product Reviews">
@@ -98,6 +103,11 @@
   <div *ngIf="product && (similarProducts$ | async)?.length > 0" class="mt-4">
     <h4 class="mt-5">Related Products</h4>
     <apt-product-carousel [productList]="(similarProducts$ | async)" slides="5"></apt-product-carousel>
+  </div>
+
+  <div *ngIf="product && (recommendedProducts$ | async)?.length > 0" class="mt-4">
+      <h4 class="mt-5 text-muted">You may also like...</h4>
+      <apt-product-carousel [productList]="(recommendedProducts$ | async)" slides="5"></apt-product-carousel>
   </div>
 
 </div>

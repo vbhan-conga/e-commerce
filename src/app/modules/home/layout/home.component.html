@@ -7,7 +7,7 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
                     rhoncus. Nullam tempor, libero vel auctor efficitur, nibh lacus luctus orci, vitae fringilla lorem magna
                     at metus.</p>
-                <apt-product-carousel [productList]="productListA$ | async" slides="4"></apt-product-carousel>
+                <apt-cr-product-carousel [productList]="productListA$ | async" slides="4"></apt-cr-product-carousel>
             </div>
 
             <div *ngIf="productListB$ | async" class="animated fadeIn">
@@ -15,7 +15,7 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
                     rhoncus. Nullam tempor, libero vel auctor efficitur, nibh lacus luctus orci, vitae fringilla lorem magna
                     at metus.</p>
-                <apt-product-carousel [productList]="productListB$ | async" slides="4"></apt-product-carousel>
+                <apt-cr-product-carousel [productList]="productListB$ | async" slides="4"></apt-cr-product-carousel>
             </div>
         </div>
     </div>

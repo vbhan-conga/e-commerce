@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ConfigureRoutingModule } from './configure-routing.module';
 import { ConfigureLayoutComponent } from './layout/configure-layout.component';
-import { CartModule, CatalogModule, PricingModule, StoreModule, CommerceModule } from '@apttus/ecommerce';
+import { CartModule, CatalogModule, PricingModule, StoreModule } from '@apttus/ecommerce';
 import { ApttusModule } from '@apttus/core';
 import { OptionAccordionComponent } from './component/option-accordion/option-accordion.component';
 
@@ -26,7 +26,6 @@ import { SlickModule } from 'ngx-slick';
     CartModule,
     StoreModule,
     ApttusModule,
-    CommerceModule,
     ComponentModule,
     SlickModule.forRoot(),
     ModalModule.forRoot()

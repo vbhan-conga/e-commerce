@@ -31,6 +31,7 @@
       <span class="oi oi-magnifying-glass p-0"></span>
     </a>
     <apt-mini-cart></apt-mini-cart>
+    <apt-cr-constraint-icon></apt-cr-constraint-icon>
   </div>
 </div>
 
@@ -57,6 +58,7 @@
           [(ngModel)]="searchQuery" 
           name="searchQuery" 
           #searchBox
+          appAutoFocus
           autocomplete="off"/>
       </div>
       <div class="modal-footer">
@@ -144,3 +146,5 @@
     </div>
   </div>
 </div>
+
+<apt-cr-side-menu></apt-cr-side-menu>

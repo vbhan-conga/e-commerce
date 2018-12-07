@@ -44,18 +44,20 @@
               data-style="zoom-in">
               <span class="oi oi-ellipses vertical"></span>
             </button>
-            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-              <li role="menuitem" *ngIf="cart.Id !== myCart?.Id && (cart.Status === 'New' || cart.Status === 'Approval Required' || cart.Status === 'Ready For Finalization')">
-                <a class="dropdown-item" href="javascript:void(0)" (click)="setCartActive(cart)">Set Active</a>
-              </li>
-              <!-- <li role="menuitem">
-                <a class="dropdown-item" href="#">Clone</a>
-              </li>
-              <li class="divider dropdown-divider"></li> -->
-              <li role="menuitem">
-                <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="deleteCart(cart)">Delete</a>
-              </li>
-            </ul>
+            <ng-container *ngIf="cart.Status !== 'Finalized'">
+              <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+                <li role="menuitem" *ngIf="cart.Id !== myCart?.Id && (cart.Status === 'New' || cart.Status === 'Approval Required' || cart.Status === 'Ready For Finalization')">
+                  <a class="dropdown-item" href="javascript:void(0)" (click)="setCartActive(cart)">Set Active</a>
+                </li>
+                <!-- <li role="menuitem">
+                              <a class="dropdown-item" href="#">Clone</a>
+                            </li>
+                            <li class="divider dropdown-divider"></li> -->
+                <li role="menuitem">
+                  <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="deleteCart(cart)">Delete</a>
+                </li>
+              </ul>
+            </ng-container>
           </div>
         </td>
       </tr>

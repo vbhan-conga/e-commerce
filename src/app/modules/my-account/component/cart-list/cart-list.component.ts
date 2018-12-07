@@ -44,7 +44,9 @@ export class CartListComponent implements OnInit {
   deleteCart(cart: Cart){
     cart._metadata = { state: 'processing' };
     this.cartService.deleteCart(cart).subscribe(
-      res => this.loading = false,
+      res => {
+        this.cartService.refreshCart(cart.Id);
+        this.loading = false},
       err => this.loading = false
     );
   }

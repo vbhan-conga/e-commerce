@@ -22,8 +22,8 @@ export class AttributeAccordionComponent implements OnChanges {
       this.product.AttributeGroups.forEach(groupMember => {
         this.productAttributeMap.push({
           groupMember: groupMember,
-          attributeValue: this.setAttributeDefaults(this.productAttributeList.filter(attr => attr.AttributeGroup.Id === groupMember.AttributeGroupId)),
-          productAttributeList: this.productAttributeList.filter(attr => attr.AttributeGroup.Id === groupMember.AttributeGroupId),
+          attributeValue: this.setAttributeDefaults(this.productAttributeList.filter(attr => attr.AttributeGroup.Id === groupMember.AttributeGroup.Id)),
+          productAttributeList: this.productAttributeList.filter(attr => attr.AttributeGroup.Id === groupMember.AttributeGroup.Id),
           priceMatrices: null
         });
       });

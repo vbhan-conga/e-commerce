@@ -3,6 +3,8 @@ import { Cart } from '@apttus/ecommerce';
 import { QuoteService, Quote } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ConstraintRuleService } from '@apttus/constraint-rules';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-cart-summary',
@@ -16,8 +18,9 @@ export class CartSummaryComponent implements OnInit {
   state: SummaryState;
   generatedQuote: Quote;
   confirmationModal: BsModalRef;
+  hasErrors: boolean = true;
 
-  constructor(private quoteService: QuoteService, private modalService: BsModalService) { 
+  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService) { 
     this.state = {
       configurationMessage: null,
       downloadLoading: false,
@@ -27,6 +30,7 @@ export class CartSummaryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.crService.hasPendingErrors().subscribe(val => this.hasErrors = val);
   }
 
   createQuote() {

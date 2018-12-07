@@ -17,6 +17,8 @@ import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ItemConfigurationSummaryComponent } from './item-configuration-summary/item-configuration-summary.component';
 
 import { ToastrModule } from 'ngx-toastr';
+import { ConstraintRulesModule } from '@apttus/constraint-rules';
+import { DirectivesModule } from '../directives/directive.module';
 
 @NgModule({
   imports: [
@@ -33,6 +35,8 @@ import { ToastrModule } from 'ngx-toastr';
     StoreModule,
     CartModule,
     PricingModule,
+    ConstraintRulesModule,
+    DirectivesModule,
     ToastrModule.forRoot({ onActivateTick: true })
   ],
   exports : [

@@ -38,7 +38,7 @@
             <dd>{{order?.PONumber}}</dd>
 
             <dt>Total Amount:</dt>
-            <dd>{{(order | OrderPricePipe | async)?.totalPrice$ | async}}</dd>
+            <dd>{{(order | OrderPricePipe | async)?.netPrice$ | async}}</dd>
           </dl>
         </div>
       </div>
@@ -95,7 +95,7 @@
                     </div>
                   </div>
                 </th>
-                <td>{{(lineItem | CartItemPricePipe | async)?.totalPrice$ | async}}</td>
+                <td>{{(lineItem | CartItemPricePipe | async)?.netPrice$ | async}}</td>
                 <td class="text-center">
                   <span class="badge badge-light p-3 text-muted">{{lineItem.Quantity}}</span>
                 </td>

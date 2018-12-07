@@ -5,19 +5,19 @@ import { ToastrService } from 'ngx-toastr';
 const ErrorMap = {
     TOO_MANY_ATTEMPTS: 'Oops something went wrong.',
     SERVER_ERROR: 'Oops something went wrong.',
-    PRICE_CHANGE: 'The price of your cart has been updated'
+    PRICE_CHANGE : 'The price of your cart has been updated'
 };
 
 
-@Injectable({ providedIn: 'root' })
-export class ExceptionService {
+@Injectable({providedIn : 'root'})
+export class ExceptionService{
 
-    constructor(private cartService: CartService, private toastr: ToastrService) {
+    constructor(private cartService: CartService, private toastr: ToastrService){
 
         this.cartService.onCartError.subscribe((e: CartError) => {
             if (e === CartError.TOO_MANY_ATTEMPTS)
                 this.toastr.error(ErrorMap.TOO_MANY_ATTEMPTS, 'Cart Error');
-            else if (e === CartError.SERVER_ERROR)
+            else if(e === CartError.SERVER_ERROR)
                 this.toastr.error(ErrorMap.SERVER_ERROR, 'Cart Error');
         });
 

@@ -1,3 +1,4 @@
+<apt-cr-constraint-alert></apt-cr-constraint-alert>
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12 col-md-9 mb-4">
@@ -7,10 +8,10 @@
             <app-cart-summary [cart]="(cart$ | async)"></app-cart-summary>
         </div>
     </div>
-    <div class="row mt-4" *ngIf="productList$ | async">
+    <div class="row mt-4 animated fadeIn" *ngIf="productList$ | async">
         <div class="col-12">
             <h4 class="mb-3 text-muted">You may also like...</h4>
-            <apt-product-carousel [productList]="productList$ | async"></apt-product-carousel>
+            <apt-cr-product-carousel [productList]="productList$ | async"></apt-cr-product-carousel>
         </div>
     </div>
 </div>

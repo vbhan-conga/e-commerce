@@ -17,6 +17,8 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
 
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
+import { ConstraintRulesModule } from '@apttus/constraint-rules';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -28,6 +30,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     PricingModule,
     CatalogModule,
     NgxPageScrollModule,
+    ConstraintRulesModule,
     PaginationModule.forRoot()
   ],
   declarations: [ProductListComponent, SubcategoryComponent, BreadcrumbComponent, PriceTierComponent, RelatedCategoryComponent, FieldFilterComponent, ResultsComponent]

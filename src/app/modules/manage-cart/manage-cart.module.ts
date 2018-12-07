@@ -11,12 +11,17 @@ import { TabsModule } from 'ngx-bootstrap';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CartTableComponent } from './component/cart-table/cart-table.component';
 import { CartSummaryComponent } from './component/cart-summary/cart-summary.component';
+import { DateRangeInputComponent } from './component/date-range-input/date-range-input.component';
+import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ConstraintRulesModule } from '@apttus/constraint-rules';
+import { MomentModule } from 'ngx-moment';
 
 @NgModule({
   imports: [
     ApttusModule,
     CommonModule,
     CatalogModule,
+    ConstraintRulesModule,
     ManageCartRoutingModule,
     cModule,
     StoreModule,
@@ -25,10 +30,11 @@ import { CartSummaryComponent } from './component/cart-summary/cart-summary.comp
     ComponentModule,
     NgxPageScrollModule,
     TabsModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    DatepickerModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    MomentModule
   ],
-  declarations: [ManageCartComponent, CartTableComponent, CartSummaryComponent ]
+  declarations: [ManageCartComponent, CartTableComponent, CartSummaryComponent, DateRangeInputComponent ]
 })
 export class ManageCartModule { }
-
-

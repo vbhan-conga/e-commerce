@@ -3,11 +3,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { ConfigureLayoutComponent } from './layout/configure-layout.component';
 import { ConfigureGuard } from '../../services/configure.guard';
 
-const routes: Routes = [{
-  path : ':productCode',
-  component : ConfigureLayoutComponent,
-  canActivate : []
-}];
+const routes: Routes = [
+  {
+    path : ':productCode',
+    component : ConfigureLayoutComponent,
+    canActivate : []
+  },
+  {
+    path: ':productCode/:cartItemId',
+    component: ConfigureLayoutComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

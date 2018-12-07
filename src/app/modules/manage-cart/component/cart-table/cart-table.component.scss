@@ -1,6 +1,14 @@
+@import "../../../../../variables.scss";
+
 dt, dd{
     display: block;
     width: 100%;
+}
+dl, dd, dt{
+    margin-bottom: 0;
+}
+dt{
+    margin-top: $btn-block-spacing-y;
 }
 table{
     min-width: 800px;
@@ -14,4 +22,7 @@ table{
     overflow: hidden; 
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+.fixed-height{
+    height: 30px;
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { ProductService, ConstraintRuleService, Product } from '@apttus/ecommerce';
+import { ProductService, Product } from '@apttus/ecommerce';
+import { ConstraintRuleService } from '@apttus/constraint-rules';
 import * as _ from 'lodash';
 import { ACondition } from '@apttus/core';
 
@@ -16,7 +17,7 @@ export class ConfigureGuard implements CanActivate {
             .filter(product => product != null)
             .distinctUntilKeyChanged('Id')
             .flatMap(product =>
-                this.constraintRuleService.getConstraintRules(product)
+                this.constraintRuleService.getConstraintRulesForProducts([product])
                     .map(rules => {
                         const activate =
                             ((_.get(product, 'Apttus_Config2__HasAttributes__c') && _.get(product, 'Apttus_Config2__AttributeGroups__r', []).totalSize > 0)

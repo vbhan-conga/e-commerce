@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    this.searchQuery ="";
+    this.searchQuery = '';
     this.modalRef = this.modalService.show(template);
   }
 
@@ -98,6 +98,7 @@ export class HeaderComponent implements OnInit {
 
   typeaheadOnSelect(evt){
     this.modalRef.hide();
+    this.typeaheadLoading = false;
     this.router.navigate(['/product', evt.item[this.productService.config.productIdentifier]]);
   }
 
@@ -117,11 +118,13 @@ export class HeaderComponent implements OnInit {
 
   doSearch(){
     this.modalRef.hide();
+    this.typeaheadLoading = false;
     if(this.searchQuery) this.router.navigate(['/search', this.searchQuery]);
   }
 
   doLogout(){
     this.profile.doLogout();
+    this.router.navigate(['']);
   }
 
   @HostListener('window:scroll', ['$event'])

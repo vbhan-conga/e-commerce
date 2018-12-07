@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { setTheme } from 'ngx-bootstrap/utils';
-import { CartService } from '@apttus/ecommerce';
 import { Title } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { ExceptionService } from './services/exception.service';
+import { ServiceWorkerService } from './services/service-worker';
 
 @Component({
   selector: 'app-root',
   template: `
     <app-header></app-header>
-      <main>
-        <router-outlet></router-outlet>
-      </main>
+    <apt-cr-modal></apt-cr-modal>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
     `,
   styles: []
 })
@@ -21,8 +22,9 @@ export class AppComponent implements OnInit {
   title = 'app';
   showHeader: boolean = true;
 
-  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService) {
+  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService) {
     setTheme('bs4'); // or 'bs4'
+    sr.initialize();
   }
 
   ngOnInit(){

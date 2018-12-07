@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RouteGuard } from './services/route.guard';
 import { AuthGuard } from './services/auth.guard';
+import { ConstraintRuleGuard } from './services/constraint-rule.guard';
 
 const routes: Routes = [
   { path: 'ChangePassword', loadChildren: './modules/change-password/change-password.module#ChangePasswordModule', data: { title: 'Change Password' }},
@@ -10,7 +11,7 @@ const routes: Routes = [
   { path: 'configure', loadChildren: './modules/configure/configure.module#ConfigureModule', canActivate: [RouteGuard], data: { title: 'Configure' } },
   { path: 'product-list', loadChildren: './modules/product-list/product-list.module#ProductListModule', canActivate: [RouteGuard], data: { title: 'Product List' } },
   { path: 'search/:query', loadChildren: './modules/product-list/product-list.module#ProductListModule', canActivate: [RouteGuard], data: { title: 'Search' } },
-  { path: 'cart', loadChildren: './modules/cart/cart.module#CartModule', canActivate: [RouteGuard], data: { title: 'Checkout' } },
+  { path: 'cart', loadChildren: './modules/cart/cart.module#CartModule', canActivate: [RouteGuard, ConstraintRuleGuard], data: { title: 'Checkout' } },
   { path: 'my-account', loadChildren: './modules/my-account/my-account.module#MyAccountModule', canActivate: [RouteGuard, AuthGuard], data: { title: 'My Account' }},
   { path: 'manage-cart', loadChildren: './modules/manage-cart/manage-cart.module#ManageCartModule', canActivate: [RouteGuard], data: { title: 'Cart' }},
   { path: '**', redirectTo: '' }

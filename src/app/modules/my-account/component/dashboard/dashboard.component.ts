@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ).subscribe(([quotes, orders, ag1, ag2]) => {
       this.orderList = orders;
       this.quoteList = quotes;
-      this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
+      //this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
       this.renderPieWithData(this.orderChart, orders, 'Status');
 
       this.orderCount = _.get(ag1, '[0].total_records', 0);
