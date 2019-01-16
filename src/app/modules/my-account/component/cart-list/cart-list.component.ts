@@ -46,7 +46,9 @@ export class CartListComponent implements OnInit {
     this.cartService.deleteCart(cart).subscribe(
       res => {
         this.cartService.refreshCart(cart.Id);
-        this.loading = false},
+        this.loading = false;
+        this.loadCarts(this.currentPage);
+      },
       err => this.loading = false
     );
   }
@@ -54,8 +56,11 @@ export class CartListComponent implements OnInit {
   setCartActive(cart: Cart){
     cart._metadata = {state : 'processing'};
     this.cartService.setCartActive(cart).subscribe(
-      res => {},
+      res => {
+        this.loading = false;
+      },
       err => {
+        this.loading = false;
         console.error(err);
         cart._metadata.state = null;
       }
@@ -68,6 +73,7 @@ export class CartListComponent implements OnInit {
       res => {
         this.loading = false;
         this.modalRef.hide();
+        this.loadCarts(this.currentPage);
       },
       err => {
         this.loading = false;

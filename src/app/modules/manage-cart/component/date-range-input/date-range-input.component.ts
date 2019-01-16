@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnChanges, ChangeDetectionStrategy } from '@angular/core';
-import { Product, CartItem } from '@apttus/ecommerce';
-import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { CartItemService, CartItem } from '@apttus/ecommerce';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -40,21 +40,12 @@ export class DateRangeInputComponent implements OnChanges {
    */
   @Output() onEndDateChange: EventEmitter<any> = new EventEmitter();
 
-  
+
   startDate: Date = new Date();
   endDate: Date = new Date();
   bsConfig: Partial<BsDatepickerConfig>;
 
-  private momentMap = {
-    'Hourly' : 'hours',
-    'Monthly' : 'months',
-    'Daily' : 'days',
-    'Weekly' : 'weeks',
-    'Quarterly' : 'years',
-    'Half Yearly' : 'years',
-    'Yearly' : 'years'
-  };
-  constructor() {
+  constructor(private cartItemService: CartItemService) {
     this.bsConfig = Object.assign({}, {
       showWeekNumbers: false,
       dateInputFormat: 'MM/DD/YYYY'
@@ -64,61 +55,12 @@ export class DateRangeInputComponent implements OnChanges {
   ngOnChanges() {
     this.startDate = moment(_.get(this.cartItem, 'StartDate', new Date().toISOString().split('T')[0]), 'YYYY-MM-DD').toDate();
     this.endDate = moment(_.get(this.cartItem, 'EndDate',
-      this.getEndDate(this.startDate, _.get(this.cartItem, 'PriceListItem.DefaultSellingTerm', 1), this.cartItem.PriceListItem.Frequency).getTime()
+      this.cartItemService.getEndDate(this.startDate, _.get(this.cartItem, 'PriceListItem.DefaultSellingTerm', 1), this.cartItem.PriceListItem.Frequency).getTime()
     )).toDate();
 
     // Assign values to cart
     this.cartItem.StartDate = moment(this.startDate).format('YYYY-MM-DD');
     this.cartItem.EndDate = moment(this.endDate).format('YYYY-MM-DD');
-  }
-
-  private getEndDate(date: Date, term: number, frequency: 'Hourly' | 'Daily' | 'Weekly' | 'Monthly' | 'Quarterly' | 'Half Yearly' | 'Yearly' ): Date{
-    let startDate = new Date(date.getTime());
-    let val = new Date();
-    switch(frequency){
-      case 'Hourly': {
-        val = new Date(startDate.setHours(startDate.getHours() + term));
-        break;
-      }
-      case 'Daily': {
-        val = new Date(startDate.setDate(startDate.getDate() + term));
-        break;
-      }
-      case 'Weekly': {
-        val = new Date(startDate.setDate(startDate.getDate() + term * 7));
-        break;
-      }
-      case 'Monthly': {
-        val = new Date(startDate.setMonth(startDate.getMonth() + term));
-        break;
-      }
-      case 'Quarterly': {
-        val = new Date(startDate.setMonth(startDate.getMonth() + term * 3));
-        break;
-      }
-      case 'Half Yearly': {
-        val = new Date(startDate.setMonth(startDate.getMonth() + term * 6));
-        break;
-      }
-      case 'Yearly': {
-        val = new Date(startDate.setFullYear(startDate.getFullYear() + term));
-        break;
-      }
-      default : {
-        val = startDate;
-      }
-    }
-    return val;
-  }
-
-  private getTerm(startDate: moment.Moment, endDate: moment.Moment, frequency: 'Hourly' | 'Daily' | 'Weekly' | 'Monthly' | 'Quarterly' | 'Half Yearly' | 'Yearly' ){
-    let val = endDate.diff(startDate, this.momentMap[frequency] as moment.unitOfTime.Diff, true);
-    if(frequency === 'Quarterly')
-      val = val * 4;
-    if(frequency === 'Half Yearly')
-      val = val * 2;
-    val = Math.round(val * 1000) / 1000;
-    return val;
   }
 
   /**
@@ -128,7 +70,7 @@ export class DateRangeInputComponent implements OnChanges {
   startDateChange(event: Date) {
       const startDate = moment(event);
       this.cartItem.StartDate = startDate.format('YYYY-MM-DD');
-      this.cartItem.SellingTerm = this.getTerm(moment(this.cartItem.StartDate, 'YYYY-MM-DD'), moment(this.cartItem.EndDate, 'YYYY-MM-DD'), this.cartItem.PriceListItem.Frequency);
+      this.cartItem.SellingTerm = this.cartItemService.getTerm(moment(this.cartItem.StartDate, 'YYYY-MM-DD'), moment(this.cartItem.EndDate, 'YYYY-MM-DD'), this.cartItem.PriceListItem.Frequency);
       this.onStartDateChange.emit();
   }
   /**
@@ -138,7 +80,7 @@ export class DateRangeInputComponent implements OnChanges {
   endDateChange(event: Date) {
     const endDate = moment(event);
     this.cartItem.EndDate = endDate.format('YYYY-MM-DD');
-    this.cartItem.SellingTerm = this.getTerm(moment(this.cartItem.StartDate, 'YYYY-MM-DD'), moment(this.cartItem.EndDate, 'YYYY-MM-DD'), this.cartItem.PriceListItem.Frequency);
+    this.cartItem.SellingTerm = this.cartItemService.getTerm(moment(this.cartItem.StartDate, 'YYYY-MM-DD'), moment(this.cartItem.EndDate, 'YYYY-MM-DD'), this.cartItem.PriceListItem.Frequency);
     this.onEndDateChange.emit();
   }
 }

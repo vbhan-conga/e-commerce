@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, TemplateRef } from '@angular/core';
+import { Component, OnChanges, Input, TemplateRef } from '@angular/core';
 import { Cart, CartItem, CartService, PriceListItemService } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -10,7 +10,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
   styleUrls: ['./cart-table.component.scss']
 })
 
-export class CartTableComponent implements OnInit {
+export class CartTableComponent implements OnChanges {
   @Input() cart: Cart;
 
   /**
@@ -21,17 +21,18 @@ export class CartTableComponent implements OnInit {
   private timeoutId: any;
   modalRef: BsModalRef;
   lineItem: CartItem;
+  identifier: string = 'Id';
   public bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(private cartService: CartService, private modalService: BsModalService, private pliService: PriceListItemService) {
+    this.identifier = cartService.configurationService.get('productIdentifier');
     this.bsConfig = Object.assign({},
       {
         showWeekNumbers: false
       });
    }
 
-  ngOnInit() {
-  }
+  ngOnChanges() {}
 
   /**
    * Removes the provided CartItem from the user's current active cart.

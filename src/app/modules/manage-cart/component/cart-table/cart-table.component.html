@@ -52,7 +52,7 @@
                     <apt-price [record]="item"></apt-price>
                   </h5>
                 </div>
-                <small class="d-block mt-3" *ngIf="item.PriceListItem.PriceType === 'Recurring'">
+                <small class="d-block mt-3" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
                   <apt-date-range-input (onStartDateChange)="handleStartChange(item)" (onEndDateChange)="handleEndDateChange(item)"
                     [cartItem]="item"></apt-date-range-input>
 
@@ -78,7 +78,7 @@
     <div class="modal-header">
       <h4 class="modal-title pull-left">
         {{lineItem?.Product.Name}}
-        <a href="javascript:void(0)" (click)="modalRef.hide()" [routerLink]="['/configure', lineItem?.Product?.ProductCode, lineItem?.Id]" class="ml-2">
+        <a href="javascript:void(0)" (click)="modalRef.hide()" [routerLink]="['/configure', lineItem?.Product[identifier], lineItem?.Id]" class="ml-2">
           <span class="oi oi-pencil oi-sm"></span>
         </a>
       </h4>

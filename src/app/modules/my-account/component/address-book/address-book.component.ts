@@ -23,7 +23,7 @@ export class AddressBookComponent implements OnInit {
   constructor(private accountLocationService: AccountLocationService, private modalService: BsModalService, private ngZone: NgZone) { }
 
   ngOnInit() {
-    this.addressList$ = this.accountLocationService.getAccountLocations();
+    this.loadAddressList();
   }
 
   newAddress(template: TemplateRef<any>) {
@@ -39,6 +39,7 @@ export class AddressBookComponent implements OnInit {
         res => {
           this.loading = false;
           this.modalRef.hide();
+          this.loadAddressList();
         },
         err => {
           console.error(err);
@@ -57,7 +58,7 @@ export class AddressBookComponent implements OnInit {
 
   deleteAddress(location: AccountLocation){
     this.accountLocationService.delete([location]).subscribe(
-      r => {},
+      r => this.loadAddressList(),
       e => console.error(e)
     );
   }
@@ -65,5 +66,10 @@ export class AddressBookComponent implements OnInit {
   edit(location: AccountLocation, template: TemplateRef<any>){
     this.addressEdit = location;
     this.modalRef = this.modalService.show(template);
+  }
+
+  loadAddressList() {
+    this.addressList$ = null;
+    this.addressList$ = this.accountLocationService.getAccountLocations();
   }
 }

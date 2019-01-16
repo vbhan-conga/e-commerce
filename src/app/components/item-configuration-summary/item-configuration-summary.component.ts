@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, NgZone } from '@angular/core';
 import { CartItem, OrderLineItem, Product, ProductService, Cart, Order, CartItemService, ProductAttributeService, ProductAttributeValue } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -27,7 +27,7 @@ export class ItemConfigurationSummaryComponent implements OnChanges {
   }
 
 
-  constructor(private productService: ProductService, public sanitizer: DomSanitizer, private cartItemService: CartItemService, private paService: ProductAttributeService) {}
+  constructor(private productService: ProductService, public sanitizer: DomSanitizer, private cartItemService: CartItemService, private paService: ProductAttributeService, private ngZone: NgZone) {}
 
   ngOnChanges() {
     let lineItems = [];
@@ -49,12 +49,12 @@ export class ItemConfigurationSummaryComponent implements OnChanges {
 
     this.productService.getProductsByCode([this.item.Product.ProductCode])
       .map(res => res[0])
-      .subscribe(product => {
+      .subscribe(product => this.ngZone.run(() => {
         this.selectedProduct = product;
         this.paService.getProductAttributes(product).subscribe(attributes => {
           this.attributeList = _.groupBy(attributes, 'AttributeGroup.Name');
         });
-      });
+      }));
   }
 
 }

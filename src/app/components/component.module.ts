@@ -11,7 +11,7 @@ import { ApttusModule } from '@apttus/core';
 import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
-import { StoreModule, CartModule, PricingModule } from '@apttus/ecommerce';
+import { StoreModule, CartModule, PricingModule, CrmModule } from '@apttus/ecommerce';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ItemConfigurationSummaryComponent } from './item-configuration-summary/item-configuration-summary.component';

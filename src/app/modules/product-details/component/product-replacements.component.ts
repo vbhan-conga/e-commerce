@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Product, ProductService } from '@apttus/ecommerce';
-import { ImagePipe } from '@apttus/core';
+import { Product } from '@apttus/ecommerce';
+import { ConfigurationService } from '@apttus/core';
 
 @Component({
   selector: 'apt-product-replacements',
@@ -32,8 +32,9 @@ import { ImagePipe } from '@apttus/core';
 export class ProductReplacementsComponent implements OnInit {
   @Input() productList: Array<Product>;
   identifier: string = 'Id';
-  constructor(private productService: ProductService) { 
-    this.identifier = productService.config.productIdentifier;
+
+  constructor(private config: ConfigurationService) { 
+    this.identifier = this.config.get('productIdentifier');
   }
 
   ngOnInit() {

@@ -71,7 +71,7 @@
 <ng-template #typeAheadItem let-model="item" let-index="index" let-last="last">
   <div class="media border-gray p-2" [class.border-bottom]="!last">
     <img class="mr-3 align-self-center thumbnail" [src]="model.IconId | image" [alt]="model.IconId">
-    <div class="media-body">
+    <div class="media-body truncate">
       <h6 class="m-0">{{model.Name}}</h6>
       <small class="d-block">{{model.ProductCode}}</small>
     </div>
@@ -86,7 +86,7 @@
       <div class="modal-header d-block p-0">
         <div class="d-flex justify-content-between align-items-start p-2">
           <div class="media p-2">
-            <img [src]="(me$ | async)?.SmallPhotoUrl | image : false" class="img-circle" width="45" height="45"/>
+            <img *ngIf="!isAIC" [src]="(me$ | async)?.SmallPhotoUrl | image : null" class="img-circle" width="45"/>
             <div class="media-body ml-3">
               <ng-container  *ngIf="(me$ | async)?.Alias !== 'guest'; else guest">
                 <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
@@ -105,7 +105,7 @@
           <a href="javascript:void(0)" [routerLink]="['/my-account']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'">
             <span class="oi oi-cog mr-4"></span>My Account
           </a>
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'" (click)="doLogout()">
+          <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'" (click)="doLogout(); menuModal.hide();">
             <span class="oi oi-account-logout mr-4"></span>Log Out
           </a>
           <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias === 'guest'" (click)="profile.openModal('second')">
@@ -118,7 +118,12 @@
           <div class="carousel-inner h-100">
             <div class="carousel-item active">
               <ul class="list-group list-group-flush">
-                <a class="list-group-item list-group-item-action" href="#menuCarousel" (click)="goToCategory(category)" data-slide="next" *ngFor="let category of (categoryTree$ | async)">{{category.Name}}</a>
+                <ng-container *ngFor="let category of (categoryTree$ | async)">
+                  <a class="list-group-item list-group-item-action" href="#menuCarousel" (click)="goToCategory(category)" data-slide="next" *ngIf="category?._children?.length > 0; else direct">{{category.Name}}</a>
+                  <ng-template #direct>
+                    <a class="list-group-item list-group-item-action" (click)="menuModal.hide()" [routerLink]="['/product-list', category.Name]">{{category.Name}}</a>
+                  </ng-template>
+                </ng-container>
               </ul>
             </div>
             <div class="carousel-item" *ngFor="let currentCategory of categoryBranch">

@@ -20,8 +20,8 @@ import * as _ from 'lodash';
             <label class="input-group-text" for="sort">Show</label>
           </div>
           <select class="custom-select custom-select-sm" id="size" [(ngModel)]="limit" name="limit" (change)="onPageSizeChange.emit($event.target.value)">
-            <option value="5">5</option>
-            <option value="10">10</option>
+            <option value="4">4</option>
+            <option value="12">12</option>
             <option value="20">20</option>
             <option value="50">50</option>
           </select>

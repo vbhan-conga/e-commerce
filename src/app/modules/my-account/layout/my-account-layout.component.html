@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-body">
           <div class="media">
-            <img [src]="(me$ | async)?.SmallPhotoUrl | image : false" class="img-circle" width="45" height="45" />
+            <img *ngIf="!isAIC" [src]="(me$ | async)?.SmallPhotoUrl | image : false" class="img-circle" width="45" height="45" />
             <div class="media-body ml-3">
               <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
               <small class="d-block">Last Login Date {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
@@ -16,7 +16,7 @@
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/dashboard']" [routerLinkActive]="'active'">
             <span class="oi oi-dashboard"></span>
-            Dashboard
+            Overview
           </a>
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/orders']" [routerLinkActive]="'active'">
             <span class="oi oi-list"></span>

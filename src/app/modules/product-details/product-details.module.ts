@@ -13,7 +13,7 @@ import { BreadcrumbComponent } from './component/breadcrumb.component';
 import { TabFeaturesComponent } from './component/tab-features.component';
 import { TabAttachmentsComponent } from './component/tab-attachments.component';
 
-import { TabsModule } from 'ngx-bootstrap';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ProductReplacementsComponent } from './component/product-replacements.component';
 
 import { ConstraintRulesModule } from '@apttus/constraint-rules';

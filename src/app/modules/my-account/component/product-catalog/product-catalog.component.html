@@ -22,7 +22,7 @@
     <tbody>
       <tr *ngFor="let product of (productList$ | async)">
         <th scope="row">
-          <a href="javascript:void(0)" [routerLink]="['/product', product[productService.config.productIdentifier]]">{{product.Name}}</a>
+          <a href="javascript:void(0)" [routerLink]="['/product', product[productService.configurationService.get('productIdentifier')]]">{{product.Name}}</a>
         </th>
         <td>{{product.ProductCode}}</td>
         <td>{{product.CreatedDate | date : 'short'}}</td>

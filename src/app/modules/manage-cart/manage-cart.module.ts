@@ -7,7 +7,7 @@ import { ApttusModule } from '@apttus/core';
 import { CartModule as cModule, StoreModule, PricingModule, CatalogModule } from '@apttus/ecommerce';
 import { ComponentModule } from '../../components/component.module';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
-import { TabsModule } from 'ngx-bootstrap';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CartTableComponent } from './component/cart-table/cart-table.component';
 import { CartSummaryComponent } from './component/cart-summary/cart-summary.component';

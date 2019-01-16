@@ -4,7 +4,7 @@ import { ConstraintRule, ConstraintRuleService } from '@apttus/constraint-rules'
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { ACondition } from '@apttus/core';
+import { ACondition, ConfigurationService } from '@apttus/core';
 
 @Component({
   selector: 'app-product-details',
@@ -25,13 +25,14 @@ export class ProductDetailsComponent implements OnInit {
   bannerType: Array<any>;
 
   @Output() validationObj= new EventEmitter<any>();
-  
+
 
   constructor(private route: ActivatedRoute,
               private productService: ProductService,
               private cdr: ChangeDetectorRef,
               private priceMatrixService: PriceMatrixService,
-              private constraintRuleService: ConstraintRuleService) { }
+              private constraintRuleService: ConstraintRuleService,
+              private config: ConfigurationService) { }
 
   ngOnInit() {
     this.route.params
@@ -41,7 +42,7 @@ export class ProductDetailsComponent implements OnInit {
         this.product = null;
         this.rules = null;
         this.replacementRules = null;
-        return this.productService.where([new ACondition(Product, this.productService.config.productIdentifier, 'Equal', productCode)]);
+        return this.productService.where([new ACondition(Product, this.config.get('productIdentifier'), 'Equal', productCode)]);
       })
       .map(res => res[0])
       .filter(product => product != null)
@@ -62,14 +63,13 @@ export class ProductDetailsComponent implements OnInit {
 
     this.constraintRuleService.getConstraintRulesForProducts([product]).take(1).subscribe(rules => {
       this.rules = rules;
-      this.validationObj = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionIntent == 'Show Message')));
+      this.validationObj = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionIntent === 'Show Message')));
       this.replacementRules = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionType === 'Replacement')));
       if(this.replacementRules.length > 0)
         this.replacementProducts$ = this.productService.get(this.replacementRules.map(p => p.ProductId));
     });
 
     this.recommendedProducts$ = this.constraintRuleService.getRecommendationsForProducts([this.product]);
-
     this.priceMatrixService.getPriceMatrixData([this.product.PriceLists[0]]).subscribe(r => {
       r.forEach(matrix => {
         let hasQuantityRule = false;

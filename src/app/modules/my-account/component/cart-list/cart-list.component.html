@@ -25,7 +25,7 @@
       <tr *ngFor="let cart of cartList; let i = index;" [class.table-success]="cart.Id === myCart?.Id">
         <td scope="row">{{cart.Name}}</td>
         <td>{{cart.CreatedDate | date : 'short'}}</td>
-        <td>{{cart.NumberOfItems}}</td>
+        <td>{{cart.NumberOfItems || 0}}</td>
         <td>{{(cart | CartPricePipe | async)?.netPrice$ | async}}</td>
         <td class="text-center">
           

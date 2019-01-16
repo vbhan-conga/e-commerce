@@ -1,7 +1,7 @@
 import { Component, OnChanges, Input, TemplateRef, ViewChild  } from '@angular/core';
 import { Cart, QuoteService, TemplateService, CartItem, Quote } from '@apttus/ecommerce';
 import * as _ from 'lodash';
-import { ForceService } from '@apttus/core';
+import { PlatformService } from '@apttus/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
@@ -40,7 +40,7 @@ export class SummaryComponent implements OnChanges {
     return count;
   }
 
-  constructor(private quoteService: QuoteService, private templateService: TemplateService, private forceService: ForceService, private modalService: BsModalService) {
+  constructor(private quoteService: QuoteService, private templateService: TemplateService, private platformService: PlatformService, private modalService: BsModalService) {
     this.state = {
       configurationMessage: null,
       downloadLoading: false,
@@ -66,43 +66,7 @@ export class SummaryComponent implements OnChanges {
     );
   }
 
-  generatePdf(){
-    this.state.downloadLoading = true;
-    this.state.configurationMessage = 'Generating your PDF. Please be patient, this may take up to a minute...';
-    this.templateService.getActiveTemplates('Proposal').take(1).map(r => r[0]).subscribe(template => {
-
-      const onResponse = (res) => {
-        this.state.downloadLoading = false;
-        this.state.configurationMessage = null;
-        window.open(this.forceService.connection.instanceUrl + '/servlet/servlet.FileDownload?file=' + res.Id, '_blank');
-      };
-
-      const onError = (err, quote) => {
-        this.quoteService.get([quote.Id]).map(res => res[0]).subscribe(r => {
-          this.state.downloadLoading = false;
-          const attachment = _.get(r, 'Attachments[0]', {});
-          if(attachment && attachment.Id){
-            const difference = new Date().getTime() - new Date(attachment.CreatedDate).getTime();
-            if (difference <= 600000) {
-              this.state.configurationMessage = null;
-              window.open(this.forceService.connection.instanceUrl + '/servlet/servlet.FileDownload?file=' + attachment.Id, '_blank');
-            } else
-              this.state.configurationMessage = 'An error occurred generating your document. Please contact an administrator.';
-          }
-        });
-      };
-
-      if(!this.cart.Quote.Id)
-        this.quoteService.convertCartToQuote()
-          .subscribe(quote =>
-            this.quoteService.generateDocument(template, quote, 'PDF', true, 'Read only').subscribe(r => onResponse(r), e => onError(e, quote))
-          );
-      else{
-        this.quoteService.generateDocument(template, this.cart.Quote, 'PDF', true, 'Read only', this.cart.Id)
-          .subscribe(r => onResponse(r), e => onError(e, this.cart.Quote));
-      }
-    });
-  }
+  generatePdf(){}
 
   openModal(lineItem: CartItem, template: TemplateRef<any>) {
     this.lineItem = lineItem;

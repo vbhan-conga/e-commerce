@@ -10,7 +10,7 @@ import { CybersourceComponent } from './component/cybersource/cybersource.compon
 import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
-import { TabsModule } from 'ngx-bootstrap';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({

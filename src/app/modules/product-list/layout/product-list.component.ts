@@ -21,7 +21,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   public searchResults: SearchResults;
   public constraintRules: Array<ConstraintRule> = null;
   page = 1;
-  pageSize = 10;
+  pageSize = 12;
   view = 'grid';
   priceTier: PriceTier = null;
   categoryFilter: Array<Category> = [];
@@ -68,7 +68,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   getResults() {
-    this.searchResults = null;
+    _.set(this.searchResults, 'productList', null);
     if (this.sortField === 'Relevance')
       this.sortField = null;
 
@@ -81,6 +81,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     } else
       obsv = this.searchService.getSearchResults(this.query, this.pageSize, this.page, this.sortField, 'ASC',
         this.categoryFilter, this.priceTier, this.customFilters);
+
+    obsv.take(1).subscribe(r => {
+      this.searchResults = r;
+    });
 
     this.searchSubscription = obsv.flatMap(results => {
       this.searchResults = results;

@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import Chart from 'chart.js';
-import { QuoteService, OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order } from '@apttus/ecommerce';
+import { QuoteService, OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order, UserService, User } from '@apttus/ecommerce';
 import { AObject, ACondition } from '@apttus/core';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
-import { CustomQuote } from '../quote-list/quote-list.component';
 
 
 @Component({
@@ -22,24 +21,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   quoteList: Array<Quote>;
   spent: Price;
   subscription: any;
+  user$: Observable<User>;
 
-  constructor(private quoteService: QuoteService, private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe) {}
+  constructor(private quoteService: QuoteService, private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe, private userService: UserService) {}
 
   ngOnInit() {
+    this.user$ = this.userService.me();
     this.spent = new Price(this.localCurrencyPipe);
     this.subscription = Observable.combineLatest(
-        this.quoteService.getMyQuotes(),
+        // this.quoteService.getMyQuotes(),
         this.orderService.getMyOrders(),
         this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0]),
-        this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0])
-    ).subscribe(([quotes, orders, ag1, ag2]) => {
+        // this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0])
+    ).subscribe(([orders, ag1]) => {
       this.orderList = orders;
-      this.quoteList = quotes;
-      //this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
+      // this.quoteList = quotes;
+      // this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
       this.renderPieWithData(this.orderChart, orders, 'Status');
 
       this.orderCount = _.get(ag1, '[0].total_records', 0);
-      this.quoteCount = _.get(ag2, '[0].total_records', 0);
+      // this.quoteCount = _.get(ag2, '[0].total_records', 0);
 
       const orderPriceList$ = [];
       orders.forEach(order => orderPriceList$.push(this.priceService.getOrderPrice(order)));

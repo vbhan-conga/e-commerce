@@ -1,8 +1,6 @@
-import { Input, Component,ChangeDetectionStrategy, Inject } from '@angular/core';
-import { Product, ProductInformation } from "@apttus/ecommerce";
+import { Input, Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Product, ProductInformation, ProductInformationService } from '@apttus/ecommerce';
 import { Observable } from 'rxjs/Observable';
-import { ProductInformationService } from '../../../services/product-information.service';
-
 @Component({
     selector: 'pdp-tab-attachments',
     template: `
@@ -10,7 +8,6 @@ import { ProductInformationService } from '../../../services/product-information
         <thead>
           <tr>
             <th scope="col" class="border-top-0">File Name</th>
-            <th scope="col" class="border-top-0">Size</th>
             <th scope="col" class="border-top-0">Description</th>
             <th scope="col" class="border-top-0">Created Date</th>
             <th scope="col" class="border-top-0">Information Type</th>
@@ -19,8 +16,7 @@ import { ProductInformationService } from '../../../services/product-information
         <tbody>
           <ng-container *ngFor="let item of (productInformation$ | async)">
             <tr *ngFor="let attachment of item?.Attachments">
-              <td><a href="{{url+attachment.Id}}" target="_blank">{{attachment.Name}}</a></td>
-              <td>{{attachment.BodyLength | fileSize}}</td>
+              <td><a href="{{getAttachmentUrl(attachment.Id, item.ProductId)}}" target="_blank">{{attachment.Name}}</a></td>
               <td>{{attachment.Description}}</td>
               <td>{{attachment.CreatedDate | date : 'short'}}</td>
               <td>{{item.InformationType}}</td>
@@ -36,15 +32,17 @@ import { ProductInformationService } from '../../../services/product-information
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabAttachmentsComponent{
+export class TabAttachmentsComponent implements OnInit{
     @Input() product: Product;
     productInformation$ : Observable<ProductInformation[]>;
-    url: string;
-    constructor(private productInformationService: ProductInformationService){
-      this.url = this.productInformationService.config.endpoint+'/servlet/servlet.FileDownload?file=';
-    }
+
+    constructor(private productInformationService: ProductInformationService){}
 
     ngOnInit(){
       this.productInformation$ = this.productInformationService.getProductInformation(this.product.Id);
+    }
+
+    getAttachmentUrl(attachmentId, productId){
+      return this.productInformationService.getAttachmentUrl(attachmentId,productId);
     }
 }

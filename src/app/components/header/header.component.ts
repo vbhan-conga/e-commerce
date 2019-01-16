@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { APageInfo } from '@apttus/core';
+import { APageInfo, ConfigurationService } from '@apttus/core';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +27,7 @@ export class HeaderComponent implements OnInit {
   searchQuery: string;
   postalCode: number;
   pageTop: boolean = true;
+  isAIC: boolean = false;
   modalRef: BsModalRef;
   me$: Observable<User>;
 
@@ -40,6 +41,7 @@ export class HeaderComponent implements OnInit {
               private conversionService: ConversionService,
               private router: Router,
               private productService: ProductService,
+              private config: ConfigurationService,
               private contactService: ContactService,
               private modalService: BsModalService) {
 
@@ -62,6 +64,7 @@ export class HeaderComponent implements OnInit {
     });
     this.currencyTypes$ = this.conversionService.getConversionRates();
     this.me$ = this.userService.me();
+    this.isAIC = this.config.platform() === 'AIC';
   }
 
   getDepth(obj) {
@@ -99,7 +102,7 @@ export class HeaderComponent implements OnInit {
   typeaheadOnSelect(evt){
     this.modalRef.hide();
     this.typeaheadLoading = false;
-    this.router.navigate(['/product', evt.item[this.productService.config.productIdentifier]]);
+    this.router.navigate(['/product', evt.item[this.config.get('productIdentifier')]]);
   }
 
   goToAddress(){
@@ -124,7 +127,7 @@ export class HeaderComponent implements OnInit {
 
   doLogout(){
     this.profile.doLogout();
-    this.router.navigate(['']);
+    this.router.navigate(['/login']);
   }
 
   @HostListener('window:scroll', ['$event'])

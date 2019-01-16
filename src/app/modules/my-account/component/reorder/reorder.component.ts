@@ -38,7 +38,7 @@ export class ReorderComponent implements OnInit {
         cart.LineItems = new Array<CartItem>();
         productList.forEach(product => {
           const lineItem = _.get(this.order, 'OrderLineItems', []).filter(x => x.ProductId === product.Id)[0];
-          const cartItem = this.cartService.getCartItem(product, (lineItem) ? lineItem.Quantity : 0, cart, false, cart.PriceList.Id);
+          const cartItem = this.cartService.getCartItem(product, (lineItem) ? lineItem.Quantity : 0, cart, false);
           cartItem['Digital_Product_Family_LI__c'] = product['Digital_Product_Family__c'];
           cart.LineItems.push(cartItem);
         });

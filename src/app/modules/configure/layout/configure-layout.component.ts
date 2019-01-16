@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import * as _ from 'lodash';
-import { ACondition } from '@apttus/core';
+import { ACondition, ConfigurationService } from '@apttus/core';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -53,7 +53,8 @@ export class ConfigureLayoutComponent implements OnInit {
     private constraintRuleService: ConstraintRuleService,
     private cartService: CartService,
     private toastr: ToastrService,
-    public ngZone: NgZone) {
+    public ngZone: NgZone,
+    private config: ConfigurationService) {
   }
 
   ngOnInit() {
@@ -63,7 +64,7 @@ export class ConfigureLayoutComponent implements OnInit {
       .map(params => [params['productCode'], params['cartItemId']])
       .flatMap(([productCode, cartItemId]) => {
         this.cartItemId = cartItemId;
-        return this.productService.where([new ACondition(this.productService.type, this.productService.config.productIdentifier, 'Equal', productCode)]);
+        return this.productService.where([new ACondition(this.productService.type, this.config.get('productIdentifier'), 'Equal', productCode)]);
       })
       .map(res => res[0])
       .filter(product => product != null)

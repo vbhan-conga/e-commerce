@@ -4,15 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { ProductService, Product } from '@apttus/ecommerce';
 import { ConstraintRuleService } from '@apttus/constraint-rules';
 import * as _ from 'lodash';
-import { ACondition } from '@apttus/core';
+import { ACondition, ConfigurationService } from '@apttus/core';
 
 @Injectable()
 export class ConfigureGuard implements CanActivate {
 
-    constructor(private router: Router, private productService: ProductService, private constraintRuleService: ConstraintRuleService) { }
+    constructor(private router: Router, private productService: ProductService, private constraintRuleService: ConstraintRuleService, private config: ConfigurationService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        return this.productService.where([new ACondition(Product, this.productService.config.productIdentifier, 'Equal', route.params.productCode)])
+        return this.productService.where([new ACondition(Product, this.config.get('productIdentifier'), 'Equal', route.params.productCode)])
             .map(res => res[0])
             .filter(product => product != null)
             .distinctUntilKeyChanged('Id')
@@ -24,7 +24,7 @@ export class ConfigureGuard implements CanActivate {
                                 || (_.get(product, 'Apttus_Config2__HasOptions__c') && _.get(product, 'Apttus_Config2__OptionGroups__r', []).totalSize > 0))
                             && rules.filter(rule => rule.ConstraintRuleActions.filter(action => action.ActionType === 'Replacement').length > 0).length === 0;
                         if(!activate)
-                            this.router.navigate(['/product', product[this.productService.config.productIdentifier]]);
+                            this.router.navigate(['/product', product[this.config.get('productIdentifier')]]);
                         return activate;
                     })
             );

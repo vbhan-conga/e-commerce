@@ -23,9 +23,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.storefront$ = this.storefrontService.getStorefront();
-    this.categoryService.where([new ACondition(this.categoryService.type, 'Id', 'NotNull', null), new ACondition(this.categoryService.type, 'ProductCount', 'GreaterThan', 4)], 'AND', null, null, new APageInfo(2, 0)).subscribe(categories => {
+    this.categoryService.where([new ACondition(this.categoryService.type, 'Id', 'NotNull', null), new ACondition(this.categoryService.type, 'ProductCount', 'GreaterEqual', 2)], 'AND', null, null, new APageInfo(2, 0)).subscribe(categories => {
       this.categories = categories;
-      if(categories && categories.length === 2){
+      if (categories && categories.length === 2) {
         this.productListA$ = this.productService.getProductsByCategory(categories[0].Id, 5, 0);
         this.productListB$ = this.productService.getProductsByCategory(categories[1].Id, 5, 0);
       }

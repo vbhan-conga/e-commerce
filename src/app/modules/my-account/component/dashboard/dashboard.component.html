@@ -58,6 +58,24 @@
             </div>
         </div>
     </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>Your Information</span>
+                <a href="javascript:void(0)" [routerLink]="['/my-account/settings']">Account Details ></a>
+            </div>
+            <div class="card-body">
+                <dl>
+                    <dt>Name</dt>
+                    <dd>{{(user$ | async)?.FirstName + ' ' + (user$ | async)?.LastName}}</dd>
+                    <dt>Username</dt>
+                    <dd>{{(user$ | async)?.Username}}</dd>
+                    <dt>Email</dt>
+                    <dd>{{(user$ | async)?.Email}}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
     <!--Commented as we are not supporting request for quote in current release. To be added back later-->
     <!-- <div class="col-12 col-md-6">
         <div class="card">
@@ -69,7 +87,9 @@
             </div>
         </div>
     </div> -->
-    <div class="col-12 col-md-6">
+</div>
+<div class="row mt-2">
+    <div class="col-12">
         <div class="card">
             <div class="card-header">
                 Recent Orders

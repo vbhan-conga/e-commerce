@@ -48,7 +48,7 @@
                 <pdp-tab-features [product]="product"></pdp-tab-features>
               </div>
             </tab>
-            <tab *ngIf="product?.ProductInformation.length>0" heading="Attachments">
+            <tab *ngIf="product?.ProductInformation?.length>0" heading="Attachments">
               <div class="py-3">
                 <pdp-tab-attachments [product]="product"></pdp-tab-attachments>
               </div>

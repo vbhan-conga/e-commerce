@@ -20,7 +20,7 @@ export class ManageCartComponent implements OnInit {
       .take(1)
       .flatMap(cart => this.productService.get([_.get(cart.LineItems[Math.floor(Math.random() * cart.LineItems.length)], 'Product.Id', '')])
       .map(productList => productList[0])
-      .flatMap(product => this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId')))
+      .flatMap(product => this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId'), 10))
     );
   }
 

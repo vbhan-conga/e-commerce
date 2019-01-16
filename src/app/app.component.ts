@@ -6,12 +6,13 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs';
 import { ExceptionService } from './services/exception.service';
 import { ServiceWorkerService } from './services/service-worker';
+import { UserService } from '@apttus/ecommerce';
 
 @Component({
   selector: 'app-root',
   template: `
-    <app-header></app-header>
-    <apt-cr-modal></apt-cr-modal>
+    <app-header *ngIf="showHeader"></app-header>
+    <!--<apt-cr-modal></apt-cr-modal>-->
     <main>
       <router-outlet></router-outlet>
     </main>
@@ -22,12 +23,19 @@ export class AppComponent implements OnInit {
   title = 'app';
   showHeader: boolean = true;
 
-  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService) {
+  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService, private userService: UserService) {
     setTheme('bs4'); // or 'bs4'
     sr.initialize();
+
   }
 
-  ngOnInit(){
+  ngOnInit() {
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        this.showHeader = e.url !== '/login';
+      }
+    });
+
     this.router.events
       .filter((event) => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
@@ -38,7 +46,7 @@ export class AppComponent implements OnInit {
       .filter((route) => route.outlet === 'primary')
       .flatMap(r => Observable.combineLatest(r.data, r.params))
       .subscribe(([data, params]) => {
-        if(params && Object.keys(params).length > 0)
+        if (params && Object.keys(params).length > 0)
           this.titleService.setTitle('Apttus: ' + params[Object.keys(params)[0]]);
         else if (_.get(data, 'title'))
           this.titleService.setTitle('Apttus: ' + _.get(data, 'title'));
