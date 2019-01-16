@@ -1,15 +1,49 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+import { Configuration } from '@apttus/core';
 
-export const environment = {
-  production: false
+
+export const environment: Configuration = {
+  production: false,
+  defaultImageSrc: '/assets/images/default.png',
+  defaultCountry: 'US',
+  defaultLanguage: 'en-US',
+  enableErrorLogging: false,
+  enableErrorReporting: false,
+  enableMultiCurrency: false,
+  enableQueryLogs: false,
+  enablePerformanceLogs: false,
+  defaultCurrency: 'USD',
+  bufferTime: 200,
+  maxBufferSize: 10,
+  disableBuffer: false,
+  subqueryLimit: 10,
+  disableCache: false,
+  encryptResponse: false,
+  cartRetryLimit: 20,
+  productIdentifier: 'Id',
+  cartDebounceTime: 2000,
+
+  /**
+   * AIC Environment Example
+   * Uncomment this for AIC environment
+   * NOTE: This configuration uses a proxy hosted at apttus-proxy.herokuapp.com. This proxy is not intended for production use.
+   */
+  // type: 'AIC',
+  // endpoint: 'https://apttus-proxy.herokuapp.com/https://example.apttuscloud.io',
+  // authenticationEndpoint: 'https://apttus-proxy.herokuapp.com/https://login.microsoftonline.com',
+  // tenant: 'example.apttuscloud.io',
+  // tenantId: 111111,
+  // storageAccount: 'exampletenant',
+  // clientId: '000000-000-000-000000',
+  // clientSecret: 'base64encodedclientsecret='
+
+
+
+  /**
+   * SFDC Example File
+   * Uncomment this for SFDC Environment
+   * NOTE: This configuration uses a proxy hosted at apttus-proxy.herokuapp.com. This proxy is not intended for production use.
+   */
+  // type: 'Salesforce',
+  // endpoint: 'https://apttus-proxy.herokuapp.com/https://my-domain.apttuscommunities.com',
+  // organizationId: '00100000ab01'
 };
-
-/*
- * In development mode, to ignore zone related error stack frames such as
- * `zone.run`, `zoneDelegate.invokeTask` for easier debugging, you can
- * import the following file, but please comment it out in production mode
- * because it will have performance impact when throw error
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

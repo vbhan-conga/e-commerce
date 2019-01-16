@@ -13,6 +13,7 @@ import { ComponentModule } from './components/component.module';
 import { RouteGuard } from './services/route.guard';
 import { AuthGuard } from './services/auth.guard';
 import { ConfigureGuard } from './services/configure.guard';
+import { environment } from '../environments/environment';
 import { ConstraintRuleGuard } from './services/constraint-rule.guard';
 
 // Register locale data
@@ -20,6 +21,8 @@ import localeMx from '@angular/common/locales/es-MX';
 import localeMxExtra from '@angular/common/locales/extra/es-MX';
 import { registerLocaleData } from '@angular/common';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 registerLocaleData(localeMx, 'es-MX', localeMxExtra);
 
 
@@ -29,16 +32,18 @@ registerLocaleData(localeMx, 'es-MX', localeMxExtra);
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
-    ComponentModule,
-    ServiceWorkerModule
+    ApttusModule.forRoot(environment),
 
-    // Uncomment these lines to import the apttus core and ecommerce and constraint-rules modules
-    // ApttusModule.forRoot(AppConfig),
-    // CommerceModule.forRoot('Storefront Name'),
-    // ConstraintRulesModule
+    // Set the storefront to use here
+    CommerceModule.forRoot('My Storefront'),
+    ModalModule.forRoot(),
+    ComponentModule,
+    ConstraintRulesModule,
+    ServiceWorkerModule
   ],
-  providers: [RouteGuard, AuthGuard, ConfigureGuard],
+  providers: [RouteGuard, AuthGuard, ConfigureGuard, ConstraintRuleGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
