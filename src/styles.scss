@@ -2,6 +2,9 @@
 
 @import "./variables";
 @import "~bootstrap/scss/bootstrap";
+@import '~ngx-toastr/toastr-bs4-alert';
+@import '~ngx-bootstrap/datepicker/bs-datepicker.css';
+
 .px-6{
     padding-left: 4rem;
     padding-right: 4rem;
@@ -24,6 +27,30 @@ app-header{
         padding: 0;
     }
 }
+
+popover-container.CRPopover {
+    width: 400px;
+    max-width: 400px;
+}
+
+ngx-gallery-image{
+    background-color: $white;
+}
+
+typeahead-container {
+    padding-bottom: 0 !important;
+    .dropdown-item{
+        padding: 0;
+    }
+}
+
+apt-md-spinner.small svg{
+    height: 30px;
+    width: 30px;
+}
+a .oi{
+    top: 0;
+}
 .oi{
     &.vertical{
         transform: rotate(90deg);
@@ -36,6 +63,9 @@ app-header{
     }
     &.oi-xl{
         font-size: 100px;
+    }
+    &.oi-lg{
+        font-size: 24px;
     }
     &.oi-sm{
         font-size: $font-size-sm;
@@ -53,9 +83,7 @@ a:hover, a:focus, a:active, button.btn-link:focus, button.btn-link:active, butto
 button.btn-icon{
     font-size: smaller;
 }
-.oi-lg{
-    font-size: 24px;
-}
+
 main{
     margin-top: $navbar-brand-height;
 }
@@ -68,9 +96,7 @@ main{
     right: 0; 
     left: auto; 
 }
-ngx-gallery-image{
-    background-color: $white;
-}
+
 .left-align-slick > .slick-list > .slick-track {    
     margin-left:0;
     padding-bottom: 10px;
@@ -80,9 +106,6 @@ div.slick-slide:focus{
 }
 .strike-text{
     text-decoration: line-through;
-}
-star-rating{
-    margin-right: 0 !important;
 }
 .slick-prev:before, .slick-next:before, .slick-prev:hover:before, .slick-prev:focus:before, .slick-next:hover:before, .slick-next:focus:before{
     color: $primary !important;
@@ -95,17 +118,7 @@ star-rating{
     max-width: 3rem;
     max-height: 3rem;
 }
-typeahead-container {
-    padding-bottom: 0 !important;
-    .dropdown-item{
-        padding: 0;
-    }
-}
 
-apt-md-spinner.small svg{
-    height: 30px;
-    width: 30px;
-}
 dl{
     dd, dt{
         display: inline-block;
@@ -118,3 +131,15 @@ dl{
         width: 66%;
     }
 }
+
+.bs-datepicker-head {
+    background-color: $primary !important;
+}
+
+.truncate{
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
