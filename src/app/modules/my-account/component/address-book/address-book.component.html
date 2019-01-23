@@ -58,7 +58,7 @@
     <div class="modal-body" *ngIf="addressEdit">
       <div class="mb-3">
         <label for="addressName">Name</label>
-        <input type="text" class="form-control" id="addressName" placeholder="Name" [(ngModel)]="addressEdit.Name" name="addressName">
+        <input type="text" appAutoFocus class="form-control" id="addressName" placeholder="Name" [(ngModel)]="addressEdit.Name" name="addressName">
       </div>
       <apt-address [(ngModel)]="addressEdit" name="addressInput"></apt-address>
       <small class="text-danger animated fadeIn" *ngIf="message">{{message}}</small>

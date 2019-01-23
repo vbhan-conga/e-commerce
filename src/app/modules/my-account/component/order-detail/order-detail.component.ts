@@ -15,10 +15,15 @@ export class OrderDetailComponent implements OnInit {
   modalRef: BsModalRef;
   order: Order;
   selectedLineItem: OrderLineItem;
-  
+  /**
+   * The product identifier set in the configuration file.
+   */
+  identifier: string = 'Id';
+
   constructor(private route: ActivatedRoute, private orderService: OrderService, private modalService: BsModalService, public productService: ProductService) { }
 
   ngOnInit() {
+    this.productService.configurationService.get('productIdentifier');
     this.route.params
       .flatMap(r => this.orderService.getOrderByName(r.orderId))
       .subscribe(order => this.order = order);

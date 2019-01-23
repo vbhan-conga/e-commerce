@@ -16,10 +16,15 @@ export class QuoteDetailComponent implements OnInit {
   quote$: Observable<Quote>;
   selectedLineItem: QuoteLineItem;
   modalRef: BsModalRef;
+  /**
+   * The product identifier set in the configuration file.
+   */
+  identifier: string = 'Id';
 
   constructor(public quoteService: QuoteService, private activatedRoute: ActivatedRoute, private modalService: BsModalService) {}
 
   ngOnInit() {
+    this.quoteService.configurationService.get('productIdentifier');
     this.quote$ = this.activatedRoute.params.flatMap(r => this.quoteService.getQuoteByName(r.quoteId));
     this.quote$.subscribe(r => console.log(r));
   }

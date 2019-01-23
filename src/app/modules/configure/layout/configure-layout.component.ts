@@ -41,6 +41,10 @@ export class ConfigureLayoutComponent implements OnInit {
   cart$: Observable<Cart>;
   cartItemId: string;
   cartItem: CartItem;
+  /**
+   * The product identifier set in the configuration file.
+   */
+  identifier: string = 'Id';
 
   get productAttributeValueList(): Array<ProductAttributeValue> {
     return this.productAttributeMap.map(p => p.attributeValue);
@@ -59,6 +63,7 @@ export class ConfigureLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.cart$ = this.cartService.getMyCart();
+    this.productService.configurationService.get('productIdentifier');
     this.route.params
       .filter(params => params['productCode'] != null)
       .map(params => [params['productCode'], params['cartItemId']])

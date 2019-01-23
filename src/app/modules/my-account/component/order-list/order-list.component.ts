@@ -13,7 +13,6 @@ export class OrderListComponent implements OnInit {
   currentPage: number = 1;
   limit: number = 10;
 
- // orderList: Observable<Array<Order>>;
   orderList: Array<Order>;
   orderAggregate$: Observable<Array<any>>;
 
@@ -21,13 +20,12 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit() {
     this.loadOrders(this.currentPage);
-    this.orderAggregate$ =  this.orderService.aggregate([new ACondition(Order, 'Id', 'NotNull', null)]).map(res => res[0]);
+    this.orderAggregate$ = this.orderService.getAllOrders();
   }
 
   loadOrders(page){
     this.orderList = null;
     this.orderService.getMyOrders(null, null, this.limit, page).subscribe((res: Array<Order>) => this.orderList = res);
-
   }
 
 }

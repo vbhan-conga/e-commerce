@@ -83,7 +83,7 @@
                     <div class="media-body d-flex flex-column justify-content-between">
                       <div>
                         <h6 class="m-0">
-                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Product[productService.configurationService.get('productIdentifier')]]">{{lineItem.Product?.Name}}</a>
+                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Product[identifier]]">{{lineItem.Product?.Name}}</a>
                         </h6>
                         <small>
                           <strong>Product Code:</strong>&nbsp;{{lineItem.Product.ProductCode}}

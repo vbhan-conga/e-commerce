@@ -45,7 +45,8 @@ import { DirectivesModule } from '../directives/directive.module';
     LaddaModule,
     FooterComponent,
     ItemConfigurationSummaryComponent,
-    ToastrModule
+    ToastrModule,
+    DirectivesModule
   ],
   declarations: [
     HeaderComponent,

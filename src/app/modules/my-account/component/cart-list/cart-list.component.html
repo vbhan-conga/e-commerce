@@ -84,7 +84,7 @@
     <div class="modal-body">
       <div class="mb-3">
         <label for="addressName">Name</label>
-        <input type="text" class="form-control" id="addressName" placeholder="Name" [(ngModel)]="cart.Name" name="cartName">
+        <input type="text" appAutoFocus class="form-control" id="addressName" placeholder="Name" [(ngModel)]="cart.Name" name="cartName">
       </div>
       <small class="text-danger animated fadeIn" *ngIf="message">{{message}}</small>
     </div>

@@ -17,6 +17,10 @@ export class ProductCatalogComponent implements OnInit {
   priceListItem: PriceListItem = new PriceListItem();
   message: string;
   loading: boolean = false;
+  /**
+   * The product identifier set in the configuration file.
+   */
+  identifier: string = 'Id';
 
   constructor(public productService: ProductService,
               private userService: UserService,
@@ -27,6 +31,7 @@ export class ProductCatalogComponent implements OnInit {
               private cartService: CartService) { }
 
   ngOnInit() {
+    this.productService.configurationService.get('productIdentifier');
     // this.productList$ = this.userService.me().flatMap(user => this.productService.where(`CreatedById = {0}`, user.Id));
     this.productList$ = this.userService.me().flatMap(user => this.productService.where([new ACondition(Product, 'CreatedById', 'Equal', user.Id)]));
   }

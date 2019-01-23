@@ -1,6 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injector, Injectable } from '@angular/core';
 import * as _ from 'lodash';
+import { ConfigurationService } from '@apttus/core';
 
 export function ngswAppInitializer(injector: Injector, script: string): Function {
     if (!(('serviceWorker' in navigator) && environment.production)) {
@@ -25,9 +26,13 @@ export function ngswAppInitializer(injector: Injector, script: string): Function
     providedIn: 'root'
 })
 export class ServiceWorkerService{
-    constructor(private injector: Injector){}
+    constructor(private injector: Injector, private configService: ConfigurationService){}
 
     initialize(){
-        ngswAppInitializer(this.injector, _.get(window, 'sv.resource', '') + '/apttus-worker.js');
+        if(this.configService.platform() === 'AIC'){
+            ngswAppInitializer(this.injector, '/ngsw-worker.js');
+        }else{
+            ngswAppInitializer(this.injector, _.get(window, 'sv.resource', '') + '/apttus-worker.js');
+        }
     }
 }

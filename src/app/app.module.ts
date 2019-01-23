@@ -37,7 +37,7 @@ registerLocaleData(localeMx, 'es-MX', localeMxExtra);
     ApttusModule.forRoot(environment),
 
     // Set the storefront to use here
-    CommerceModule.forRoot('My Storefront'),
+    CommerceModule.forRoot('D-Commerce'),
     ModalModule.forRoot(),
     ComponentModule,
     ConstraintRulesModule,

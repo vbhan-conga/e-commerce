@@ -22,7 +22,7 @@
     <tbody>
       <tr *ngFor="let product of (productList$ | async)">
         <th scope="row">
-          <a href="javascript:void(0)" [routerLink]="['/product', product[productService.configurationService.get('productIdentifier')]]">{{product.Name}}</a>
+          <a href="javascript:void(0)" [routerLink]="['/product', product[identifier]]">{{product.Name}}</a>
         </th>
         <td>{{product.ProductCode}}</td>
         <td>{{product.CreatedDate | date : 'short'}}</td>
@@ -72,7 +72,7 @@
     <div class="modal-body">
       <div class="mb-3">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" placeholder="Name" [(ngModel)]="product.Name" name="name" />
+        <input type="text" appAutoFocus class="form-control" id="name" placeholder="Name" [(ngModel)]="product.Name" name="name" />
       </div>
       <div class="mb-3">
         <label for="productCode">Product Code</label>

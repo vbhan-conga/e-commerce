@@ -21,7 +21,7 @@ export class CartTableComponent implements OnChanges {
   private timeoutId: any;
   modalRef: BsModalRef;
   lineItem: CartItem;
-  identifier: string = 'Id';
+  identifier: string = this.cartService.configurationService.get('productIdentifier');
   public bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(private cartService: CartService, private modalService: BsModalService, private pliService: PriceListItemService) {
