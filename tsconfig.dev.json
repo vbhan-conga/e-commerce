@@ -1,0 +1,58 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "paths" : {
+      "jsforce": [
+        "./node_modules/jsforce/build/jsforce.min.js"
+      ],
+      "@apttus/core": [
+        "../path/to/ecommerce-core/resources/projects/apttus/core/src/public_api.ts"
+      ],
+      "@apttus/core/*": [
+        "../path/to/ecommerce-core/resources/projects/apttus/core/src/public_api.ts"
+      ],
+      "@apttus/ecommerce": [
+        "../path/to/ecommerce-core/resources/projects/apttus/ecommerce/src/public_api.ts"
+      ],
+      "@apttus/ecommerce/*": [
+        "../path/to/ecommerce-core/resources/projects/apttus/ecommerce/src/public_api.ts"
+      ],
+      "@apttus/constraint-rules": [
+        "../path/to/ecommerce-core/resources/projects/apttus/constraint-rules/src/public_api.ts"
+      ],
+      "@apttus/constraint-rules/*": [
+        "../path/to/ecommerce-core/resources/projects/apttus/constraint-rules/src/public_api.ts"
+      ],
+      "@angular/platform-browser": [
+        "./node_modules/@angular/platform-browser"
+      ],
+      "@angular/core": [
+        "./node_modules/@angular/core"
+      ],
+      "@angular/router": [
+        "./node_modules/@angular/router"
+      ],
+      "@angular/common": [
+        "./node_modules/@angular/common"
+      ],
+      "rxjs-compat": [
+        "./node_modules/rxjs-compat"
+      ]
+    }
+  }
+}
