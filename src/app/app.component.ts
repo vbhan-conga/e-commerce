@@ -8,6 +8,7 @@ import { ExceptionService } from './services/exception.service';
 import { ServiceWorkerService } from './services/service-worker';
 import { UserService } from '@apttus/ecommerce';
 import { PlatformService } from '@apttus/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
   private subs: Array<any> = [];
 
-  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService, private userService: UserService, private platformService: PlatformService) {
+  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService, private userService: UserService, private platformService: PlatformService, private toastr: ToastrService) {
     setTheme('bs4'); // or 'bs4'
     sr.initialize();
   }
@@ -51,9 +52,16 @@ export class AppComponent implements OnInit, OnDestroy {
       this.subs.push(this.platformService.onRefreshHome.subscribe(res => {
         if (res) {
           this.router.navigateByUrl('/');
+          localStorage.setItem('Show Toastr', 'true');
           window.location.reload();
         }
       }));
+      if (localStorage.getItem('Show Toastr')) {
+        if (localStorage.getItem('Show Toastr').valueOf()) {
+          this.toastr.warning('This page has been reloaded.', 'Session Expired');
+          localStorage.removeItem('Show Toastr');
+        }
+      }
   }
 
   ngOnDestroy() {
