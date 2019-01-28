@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { setTheme } from 'ngx-bootstrap/utils';
 import { Title } from '@angular/platform-browser';
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { ExceptionService } from './services/exception.service';
 import { ServiceWorkerService } from './services/service-worker';
 import { UserService } from '@apttus/ecommerce';
+import { PlatformService } from '@apttus/core';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +20,11 @@ import { UserService } from '@apttus/ecommerce';
     `,
   styles: []
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
+  private subs: Array<any> = [];
 
-  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService, private userService: UserService) {
+  constructor(private titleService: Title, private router: Router, private activatedRoute: ActivatedRoute, private exceptionService: ExceptionService, private sr: ServiceWorkerService, private userService: UserService, private platformService: PlatformService) {
     setTheme('bs4'); // or 'bs4'
     sr.initialize();
   }
@@ -45,6 +47,19 @@ export class AppComponent implements OnInit {
         else
           this.titleService.setTitle('Apttus: B2B E-commerce');
       });
+
+      this.subs.push(this.platformService.onRefreshHome.subscribe(res => {
+        if (res) {
+          this.router.navigateByUrl('/');
+          window.location.reload();
+        }
+      }));
+  }
+
+  ngOnDestroy() {
+    if (this.subs.length > 0) {
+      this.subs.forEach(sub => sub.unsubscribe());
+    }
   }
 
 }
