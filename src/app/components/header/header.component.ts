@@ -127,7 +127,7 @@ export class HeaderComponent implements OnInit {
 
   doLogout(){
     this.profile.doLogout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   @HostListener('window:scroll', ['$event'])
