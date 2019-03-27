@@ -11,6 +11,17 @@ import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 
+/**
+ * Product Images Component
+ *
+ * The Product Images component displays the image of the products.
+ *
+ * Example Usage:
+ *
+ * @example
+ * <product-images></product-images>
+ */
+
 @Component({
   selector: 'product-images',
   template: `
@@ -63,17 +74,27 @@ export class ProductImagesComponent implements OnChanges {
             }
           ];
           this.galleryImages = [];
-          result.forEach(productinfo => {
-            if (_.get(productinfo, 'Attachments')) {
-              productinfo.Attachments.forEach(attachment => {
-                this.galleryImages.push({
-                  small: new ImagePipe(this.config, this.dss).transform(attachment.Id, true, false, productinfo.ProductId),
-                  medium: new ImagePipe(this.config, this.dss).transform(attachment.Id, true, false, productinfo.ProductId),
-                  big: new ImagePipe(this.config, this.dss).transform(attachment.Id, true, false, productinfo.ProductId)
+          if(Attachments.length>0){
+            result.forEach(productinfo => {
+              if (_.get(productinfo, 'Attachments')) {
+                productinfo.Attachments.forEach(attachment => {
+                  this.galleryImages.push({
+                    small: new ImagePipe(this.config, this.dss).transform(attachment.Id, true, false, productinfo.ProductId),
+                    medium: new ImagePipe(this.config, this.dss).transform(attachment.Id, true, false, productinfo.ProductId),
+                    big: new ImagePipe(this.config, this.dss).transform(attachment.Id, true, false, productinfo.ProductId)
+                  });
                 });
-              });
-            }
-          });
+              }
+            });
+          }
+          if(_.get(this.product,'IconId')){
+            this.galleryImages.push({
+              small: new ImagePipe(this.config, this.dss).transform(this.product.IconId, true, false, this.product.Id),
+              medium: new ImagePipe(this.config, this.dss).transform(this.product.IconId, true, false, this.product.Id),
+              big: new ImagePipe(this.config, this.dss).transform(this.product.IconId, true, false, this.product.Id)
+            });
+          }
+
           if (!this.galleryImages || this.galleryImages.length === 0)
             this.showBlank = true;
         }

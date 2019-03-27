@@ -11,7 +11,7 @@ import * as _ from 'lodash';
     <div class="border p-2 d-flex align-items-center justify-content-between">
       <div>
         Showing {{recordCount > 0 ? offset + 1 : 0}}-{{lastResult}} of {{totalRecords}} results
-          <span class="d-none d-md-inline" *ngIf="query"> &nbsp;for your search of&nbsp;<strong>{{query}}</strong></span>
+          <span class="d-none d-md-inline" *ngIf="query"> for your search of&nbsp;<strong>{{query}}</strong></span>
       </div>
 
       <div class="d-flex align-items-center">

@@ -1,3 +1,6 @@
+/**
+ * @ignore
+ */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -7,13 +10,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
 import { ConstraintRulesModule } from '@apttus/constraint-rules';
+import { PromotionModule } from '@apttus/promotion';
+import { AboModule } from '@apttus/abo';
 
-// import { AppConfig } from './config';
+import { environment } from '../environments/environment';
 import { ComponentModule } from './components/component.module';
 import { RouteGuard } from './services/route.guard';
 import { AuthGuard } from './services/auth.guard';
 import { ConfigureGuard } from './services/configure.guard';
-import { environment } from '../environments/environment';
 import { ConstraintRuleGuard } from './services/constraint-rule.guard';
 
 // Register locale data
@@ -22,9 +26,20 @@ import localeMxExtra from '@angular/common/locales/extra/es-MX';
 import { registerLocaleData } from '@angular/common';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
+import { ProductDrawerModule, ApttusModalModule, RenewModalComponent, TerminateModalComponent } from '@apttus/elements';
+
+// If using additional locales, register the locale data here
 registerLocaleData(localeMx, 'es-MX', localeMxExtra);
 
+// Translations
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { AboGuard } from './services/aboGuard';
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -35,15 +50,25 @@ registerLocaleData(localeMx, 'es-MX', localeMxExtra);
     BrowserAnimationsModule,
     AppRoutingModule,
     ApttusModule.forRoot(environment),
-
-    // Set the storefront to use here
     CommerceModule.forRoot('D-Commerce'),
+    ProductDrawerModule,
     ModalModule.forRoot(),
+    ApttusModalModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+    HttpClientModule,
     ComponentModule,
     ConstraintRulesModule,
-    ServiceWorkerModule
+    PromotionModule,
+    ServiceWorkerModule,
+    AboModule
   ],
-  providers: [RouteGuard, AuthGuard, ConfigureGuard, ConstraintRuleGuard],
+  providers: [RouteGuard, AuthGuard, AboGuard, ConfigureGuard, ConstraintRuleGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

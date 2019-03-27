@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef,Output, EventEmitter } from '@angular/core';
-import { ProductService, Product, PriceMatrixService, PriceMatrixEntry } from '@apttus/ecommerce';
-import { ConstraintRule, ConstraintRuleService } from '@apttus/constraint-rules';
+import { Component, OnInit, ElementRef, HostListener, ViewChild, Output } from '@angular/core';
+import { ProductService, Product, ProductOptionForm, ProductAttributeForm, CartService, CartItem, PriceListItem, CartItemService } from '@apttus/ecommerce';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { ACondition, ConfigurationService } from '@apttus/core';
+import { BehaviorSubject  } from 'rxjs';
+import { ExceptionService } from '@apttus/elements';
 
 @Component({
   selector: 'app-product-details',
@@ -14,78 +15,201 @@ import { ACondition, ConfigurationService } from '@apttus/core';
 export class ProductDetailsComponent implements OnInit {
 
   product: Product;
-  rules: Array<ConstraintRule>;
+  
   relatedProducts$: Observable<Array<Product>>;
   similarProducts$: Observable<Array<Product>>;
+  isConfigurationChanged: boolean = false;
 
-  replacementProducts$: Observable<Array<Product>>;
-  recommendedProducts$: Observable<Array<Product>>;
-  replacementRules: Array<any>;
-  volumeDiscounts: Array<PriceMatrixEntry>;
-  bannerType: Array<any>;
+  productOptionFormList: Array<ProductOptionForm> = new Array<ProductOptionForm>();
+  productAttributeFormList: Array<ProductAttributeForm> = new Array<ProductAttributeForm>();
 
-  @Output() validationObj= new EventEmitter<any>();
+  populateDefaults: boolean = true;
+  quantity: number = 1;
+  priceListItem: PriceListItem;
+  cartItemId: string;
+  saving: boolean = false;
+  isQuantityUpdated: boolean = false;
+  term: number = 1;
 
+  @Output() onAddToCart: BehaviorSubject <boolean> = new BehaviorSubject<boolean>(false);
+
+  @ViewChild('details') details: ElementRef;
+  @ViewChild('config') config: ElementRef;
+  @ViewChild('attachments') attachments: ElementRef;
+  @ViewChild('specifications') specifications: ElementRef;
+  @ViewChild('recommendations') recommendations: ElementRef;
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event) {
+    if (this.headerClass != null && window.pageYOffset < 85){
+      this.headerClass = 'fixed-top expand';
+      setTimeout(() => this.headerClass = null, 200);
+    }else if(window.pageYOffset >= 85){
+      this.headerClass = 'fixed-top';
+    }else{
+      this.headerClass = null;
+    }
+
+    this.setActiveTab(window.pageYOffset);
+  }
+  headerClass: 'fixed-top' | 'fixed-top expand' = null;
+
+
+  tabList: Array<ProductDetailTab>;
+  private activeTabIndex = 0;
+  private headerHeight = 200;
 
   constructor(private route: ActivatedRoute,
               private productService: ProductService,
-              private cdr: ChangeDetectorRef,
-              private priceMatrixService: PriceMatrixService,
-              private constraintRuleService: ConstraintRuleService,
-              private config: ConfigurationService) { }
+              private configurationService: ConfigurationService,
+              private exceptionService: ExceptionService,
+              private cartItemService: CartItemService,
+              private cartService: CartService) { }
 
   ngOnInit() {
     this.route.params
-      .filter(params => params['productCode'] != null)
-      .map(params => params['productCode'])
-      .flatMap(productCode => {
+      .flatMap(params => {
         this.product = null;
-        this.rules = null;
-        this.replacementRules = null;
-        return this.productService.where([new ACondition(Product, this.config.get('productIdentifier'), 'Equal', productCode)]);
+        this.cartItemId = _.get(params, 'cartItemId');
+        return this.productService.where([new ACondition(Product, this.configurationService.get('productIdentifier'), 'Equal', _.get(params, 'productCode'))]);
       })
       .map(res => res[0])
       .filter(product => product != null)
       .subscribe(product => this.onProductLoad(product));
   }
 
+  scrollTo(tab: ProductDetailTab){
+    if(tab.section)
+      window.scrollTo({ top: tab.section.nativeElement.offsetTop - this.headerHeight, left: 0, behavior: 'smooth'});
+    setTimeout(() => {
+      this.tabList.forEach(t => t.active = false);
+      tab.active = true;
+      this.activeTabIndex = _.findIndex(this.tabList, t => t.label === tab.label);
+    }, 500);
+  }
+
+  setActiveTab(windowPosition){
+    let index = 0;
+    if(this.tabList){
+      this.tabList.forEach((tab, idx) => {
+        if(tab.section != null && windowPosition + (this.headerHeight * 1.5) >= tab.section.nativeElement.offsetTop)
+          index = idx;
+      });
+
+      if(index !== this.activeTabIndex){
+        this.tabList.forEach(t => t.active = false);
+        this.tabList[index].active = true;
+        this.activeTabIndex = index;
+      }
+    }
+  }
+
+  getAttributeValues(){
+    return this.productAttributeFormList.map(p => p.attributeValue);
+  }
 
   onProductLoad(product: Product){
-    this.relatedProducts$ = null;
-    this.replacementProducts$ = null;
-    this.recommendedProducts$ = null;
-    this.replacementRules = null;
-    this.volumeDiscounts = null;
-
     this.product = product;
+    this.priceListItem = ((_.get(this.product,'PriceLists')).length > 1)?this.getPrimaryPriceListItem(this.product):this.product.PriceLists[0];
     this.relatedProducts$ = this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId.AncestorId'));
     this.similarProducts$ = this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId.PrimordialId'));
 
-    this.constraintRuleService.getConstraintRulesForProducts([product]).take(1).subscribe(rules => {
-      this.rules = rules;
-      this.validationObj = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionIntent === 'Show Message')));
-      this.replacementRules = _.flatten(rules.map(r => r.ConstraintRuleActions.filter(a => a.ActionType === 'Replacement')));
-      if(this.replacementRules.length > 0)
-        this.replacementProducts$ = this.productService.get(this.replacementRules.map(p => p.ProductId));
-    });
+    if(this.cartItemId){
+      this.populateDefaults = false;
+      
+      this.cartItemService.get([this.cartItemId])
+        .map(res => res[0])
+        .subscribe(cartItem => {
+          if(cartItem){
+            this.quantity = cartItem.Quantity;
+            this.term = cartItem.SellingTerm;
+            this.priceListItem = _.get(cartItem, 'PriceListItem');
+          }else{
+            delete this.cartItemId;
+          }
+        });
+    }
 
-    this.recommendedProducts$ = this.constraintRuleService.getRecommendationsForProducts([this.product]);
-    this.priceMatrixService.getPriceMatrixData([this.product.PriceLists[0]]).subscribe(r => {
-      r.forEach(matrix => {
-        let hasQuantityRule = false;
-        for(let i = 1; i<= 6; i++){
-          hasQuantityRule = (_.get(matrix, 'Dimension' + i + '.Type') === 'Quantity') ? true : hasQuantityRule;
-        }
-        if(hasQuantityRule)
-          this.volumeDiscounts = matrix.MatrixEntries;
-      });
-    });
-    // this.recommendedProducts$ = this.constraintRuleService.getProductsForContstraintRuleCondition(_.get(product, 'Apttus_Config2__ConstraintRuleConditions__r.records'), 'Recommendation');
-    // this.includedProducts$ = this.constraintRuleService.getProductsForContstraintRuleCondition(_.get(product, 'Apttus_Config2__ConstraintRuleConditions__r.records'), 'Inclusion');
+    setTimeout(() => this.buildTabs(), 100);
   }
 
-  changeTab($evt){
-    this.cdr.detectChanges();
+  onConfigurationChange(){
+    this.isConfigurationChanged = true;
   }
 
+  getPrimaryPriceListItem(product){
+    const res = product.PriceLists.find(pli => pli.Sequence === 1);
+    return (_.isUndefined(res))?product.PriceLists[0]:res;
+  }
+
+  updateConfiguration(){
+    this.saving = true;
+    this.cartService.updateConfigurationsOnCartItem(this.cartItemId, this.productOptionFormList, this.productAttributeFormList, this.quantity)
+    .subscribe(res => 
+      {
+        this.saving = false;
+        this.exceptionService.showSuccess('Your configuration has been updated.');
+        this.isConfigurationChanged = false;
+      },
+      err => {
+        console.log(err);
+        this.saving = false;
+        this.exceptionService.showError(new Error('Could not update your configuration'));
+      }
+    )
+  }
+
+  changeQuantity(){
+    this.isQuantityUpdated = true;
+   }
+
+  handleStartChange(cartItem: CartItem) {
+    this.cartService.updateQuantity([cartItem]);
+  }
+
+  handleEndDateChange(cartItem: CartItem) {
+    this.cartService.updateQuantity([cartItem]);
+  }
+
+  buildTabs(){
+    this.tabList = _.orderBy([
+      {
+        label: 'Configurations',
+        active: false,
+        section: this.config,
+        showLabel: true
+      },
+      {
+        label: 'Details',
+        active: true,
+        section: this.details,
+        showLabel: true
+      },
+      {
+        label: 'Attachments',
+        active: false,
+        section: this.attachments,
+        showLabel: true
+      },
+      {
+        label: 'Specifications',
+        active: false,
+        section: this.specifications,
+        showLabel: true
+      },
+      {
+        label: 'Recommended Products',
+        active: false,
+        section: this.recommendations,
+        showLabel: true
+      }
+    ], 'section.nativeElement.offsetTop');
+  }
+}
+
+export interface ProductDetailTab{
+  label: string;
+  active: boolean;
+  section: ElementRef;
+  showLabel: boolean;
 }

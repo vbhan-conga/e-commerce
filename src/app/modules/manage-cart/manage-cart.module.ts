@@ -1,3 +1,4 @@
+import { AboModule } from '@apttus/abo';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,12 +10,13 @@ import { ComponentModule } from '../../components/component.module';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { CartTableComponent } from './component/cart-table/cart-table.component';
 import { CartSummaryComponent } from './component/cart-summary/cart-summary.component';
-import { DateRangeInputComponent } from './component/date-range-input/date-range-input.component';
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ConstraintRulesModule } from '@apttus/constraint-rules';
-import { MomentModule } from 'ngx-moment';
+import { ProductCarouselModule, ConstraintAlertModule, ProductConfigurationSummaryModule, PriceModule, PromotionAppliedtoLineitemModule, PromotionModule, InputDateModule } from '@apttus/elements';
+
 
 @NgModule({
   imports: [
@@ -22,19 +24,28 @@ import { MomentModule } from 'ngx-moment';
     CommonModule,
     CatalogModule,
     ConstraintRulesModule,
+    PromotionModule,
     ManageCartRoutingModule,
     cModule,
+    ProductCarouselModule,
     StoreModule,
     PricingModule,
     FormsModule,
     ComponentModule,
     NgxPageScrollModule,
+    ConstraintAlertModule,
+    ProductConfigurationSummaryModule,
+    PriceModule,
+    PromotionAppliedtoLineitemModule,
+    PromotionModule,
     TabsModule.forRoot(),
     ModalModule.forRoot(),
     DatepickerModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    MomentModule
+    PopoverModule.forRoot(),
+    AboModule,
+    InputDateModule
   ],
-  declarations: [ManageCartComponent, CartTableComponent, CartSummaryComponent, DateRangeInputComponent ]
+  declarations: [ManageCartComponent, CartTableComponent, CartSummaryComponent ]
 })
 export class ManageCartModule { }

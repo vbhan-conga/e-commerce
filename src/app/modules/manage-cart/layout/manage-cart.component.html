@@ -11,7 +11,7 @@
     <div class="row mt-4 animated fadeIn" *ngIf="productList$ | async">
         <div class="col-12">
             <h4 class="mb-3 text-muted">You may also like...</h4>
-            <apt-cr-product-carousel [productList]="productList$ | async"></apt-cr-product-carousel>
+            <apt-product-carousel [productList]="productList$ | async"></apt-product-carousel>
         </div>
     </div>
 </div>

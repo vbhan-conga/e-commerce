@@ -95,7 +95,7 @@
                     </div>
                   </div>
                 </th>
-                <td>{{(lineItem | CartItemPricePipe | async)?.netPrice$ | async}}</td>
+                <td>{{(lineItem | OrderLineItemPricePipe | async)?.netPrice$ | async}}</td>
                 <td class="text-center">
                   <span class="badge badge-light p-3 text-muted">{{lineItem.Quantity}}</span>
                 </td>
@@ -110,13 +110,13 @@
 
 <ng-template #configurationTemplate>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">{{selectedLineItem.Product.Name}}</h4>
+    <h4 class="modal-title pull-left">Product Configuration</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <apt-item-configuration-summary [item]="selectedLineItem" [parent]="order"></apt-item-configuration-summary>
+    <apt-product-configuration-summary [item]="selectedLineItem"></apt-product-configuration-summary>
   </div>
 </ng-template>
 

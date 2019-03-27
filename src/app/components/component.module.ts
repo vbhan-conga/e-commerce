@@ -1,3 +1,4 @@
+import { AboModule } from '@apttus/abo';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
@@ -11,20 +12,26 @@ import { ApttusModule } from '@apttus/core';
 import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
-import { StoreModule, CartModule, PricingModule, CrmModule } from '@apttus/ecommerce';
+import { StoreModule, CartModule, PricingModule, CatalogModule, CrmModule } from '@apttus/ecommerce';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-import { ItemConfigurationSummaryComponent } from './item-configuration-summary/item-configuration-summary.component';
 
 import { ToastrModule } from 'ngx-toastr';
 import { ConstraintRulesModule } from '@apttus/constraint-rules';
 import { DirectivesModule } from '../directives/directive.module';
+
+import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSideMenuModule, MdSpinnerModule, PriceModule } from '@apttus/elements';
+import { ItemConfigurationSummaryComponent } from './item-configuration-summary/item-configuration-summary.component';
 
 @NgModule({
   imports: [
     CommonModule,
     LazyLoadImageModule,
     SlickModule,
+    MiniProfileModule,
+    MiniCartModule,
+    ConstraintIconModule,
+    ConstraintSideMenuModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     TypeaheadModule.forRoot(),
@@ -37,16 +44,20 @@ import { DirectivesModule } from '../directives/directive.module';
     PricingModule,
     ConstraintRulesModule,
     DirectivesModule,
+    AboModule,
+    MdSpinnerModule,
+    PriceModule,
     ToastrModule.forRoot({ onActivateTick: true })
   ],
   exports : [
     HeaderComponent,
     LazyLoadImageModule,
     LaddaModule,
+    CatalogModule,
     FooterComponent,
-    ItemConfigurationSummaryComponent,
     ToastrModule,
-    DirectivesModule
+    DirectivesModule,
+    ItemConfigurationSummaryComponent
   ],
   declarations: [
     HeaderComponent,

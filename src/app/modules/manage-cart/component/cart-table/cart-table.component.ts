@@ -1,8 +1,10 @@
-import { Component, OnChanges, Input, TemplateRef } from '@angular/core';
-import { Cart, CartItem, CartService, PriceListItemService } from '@apttus/ecommerce';
+import { Component, OnChanges, Input, TemplateRef, OnInit } from '@angular/core';
+import { Cart, CartItem, CartService, PriceListItemService, Storefront, StorefrontService } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cart-table',
@@ -10,7 +12,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
   styleUrls: ['./cart-table.component.scss']
 })
 
-export class CartTableComponent implements OnChanges {
+export class CartTableComponent implements OnChanges, OnInit {
   @Input() cart: Cart;
 
   /**
@@ -23,14 +25,23 @@ export class CartTableComponent implements OnChanges {
   lineItem: CartItem;
   identifier: string = this.cartService.configurationService.get('productIdentifier');
   public bsConfig: Partial<BsDatepickerConfig>;
+  storefront$: Observable<Storefront>;
 
-  constructor(private cartService: CartService, private modalService: BsModalService, private pliService: PriceListItemService) {
+  constructor(private cartService: CartService, private modalService: BsModalService, private pliService: PriceListItemService, private route: Router, private storefrontService: StorefrontService) {
     this.identifier = cartService.configurationService.get('productIdentifier');
     this.bsConfig = Object.assign({},
       {
         showWeekNumbers: false
       });
    }
+
+   ngOnInit(){
+    this.route.events.subscribe((event) => {
+      if(event['url'] && event['url'].indexOf('manage-cart')===-1 && this.modalRef)
+        this.modalRef.hide();
+    });
+    this.storefront$ = this.storefrontService.getStorefront();
+  }
 
   ngOnChanges() {}
 
@@ -59,7 +70,7 @@ export class CartTableComponent implements OnChanges {
 
   openModal(lineItem: CartItem, template: TemplateRef<any>) {
     this.lineItem = lineItem;
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template,{class:'modal-lg'});
   }
 
   changePliDate(cartItem: CartItem){

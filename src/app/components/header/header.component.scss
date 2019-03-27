@@ -1,4 +1,4 @@
-@import "../../../variables";
+@import "variables";
 .navbar-brand img{
     max-height: $navbar-brand-height / 2;
 }
@@ -58,4 +58,7 @@ apt-md-spinner{
     position: absolute;
     right: 1.4rem;
     top: 1.3rem;
+}
+apt-mini-cart{
+    margin-top: 1px !important;
 }

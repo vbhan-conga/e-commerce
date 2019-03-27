@@ -3,16 +3,29 @@
     Cart Summary
   </div>
   <div class="card-body">
-    Total
-    <h3 class="mt-2">
-      <apt-price [record]="cart"></apt-price>
-    </h3>
-    <hr/>
-    <button class="btn btn-primary btn-block" [routerLink]="['/cart']" [ladda]="cart?._state === 'pending'" data-style="zoom-in" [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
+    <div class="d-flex justify-content-between small">
+      <span>Total Price</span>
+      <span class="font-weight-bold"><apt-price [record]="cart"></apt-price></span> 
+    </div>
+    <div *ngIf="(storefront$ | async)?.EnablePromotions && (storefront$ | async) !== null ? true : false" class="d-flex mt-2 justify-content-between small">
+      <span>Promotion(s) Applied</span>
+      <span>{{totalPromotions | localCurrency | async}}</span>
+    </div>
+    <hr class="mt-3 mb-2" />
+    <div class="d-flex justify-content-between small">
+      <span>Sub Total</span>
+      <span class="font-weight-bold"><apt-price [record]="cart"></apt-price></span>
+    </div>
+    <hr class="mt-2 mb-3"/>
+    <button class="btn btn-primary btn-block" [routerLink]="['/cart']" [ladda]="cart?._state === 'pending'" data-style="zoom-in"
+      [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
       <span class="oi oi-cart mr-2"></span>
       Checkout
     </button>
   </div>
+</div>
+<div *ngIf="(storefront$ | async)?.EnablePromotions && (storefront$ | async) !== null ? true : false" class="mt-3">
+  <apt-promotion [appliedpromos]="cart"></apt-promotion>
 </div>
 <!--
   Not part of Nov 15 deliverable

@@ -105,6 +105,12 @@
           <a href="javascript:void(0)" [routerLink]="['/my-account']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'">
             <span class="oi oi-cog mr-4"></span>My Account
           </a>
+          <a href="javascript:void(0)" [routerLink]="['/installed-products']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'">
+            <span class="oi oi-list-rich mr-4"></span>Installed Products
+          </a>
+          <a href="javascript:void(0)" [routerLink]="['/product-list']" (click)="menuModal.hide()" class="list-group-item list-group-item-action">
+            <span class="oi oi-grid-three-up mr-4"></span>Product Catalog
+          </a>
           <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'" (click)="doLogout(); menuModal.hide();">
             <span class="oi oi-account-logout mr-4"></span>Log Out
           </a>

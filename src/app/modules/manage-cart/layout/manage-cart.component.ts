@@ -18,7 +18,7 @@ export class ManageCartComponent implements OnInit {
     this.cart$ = this.cartService.getMyCart();
     this.productList$ = this.cart$
       .take(1)
-      .flatMap(cart => this.productService.get([_.get(cart.LineItems[Math.floor(Math.random() * cart.LineItems.length)], 'Product.Id', '')])
+      .flatMap(cart => this.productService.get([_.get(_.get(cart, 'LineItems')[Math.floor(Math.random() * _.get(cart, 'LineItems.length', 0))], 'Product.Id', '')])
       .map(productList => productList[0])
       .flatMap(product => this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId'), 10))
     );

@@ -1,0 +1,11 @@
+<ng-container *ngIf="products; else spinner">
+  <apt-product-compare
+    [identifiers]="identifiers"
+  ></apt-product-compare>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="d-flex justify-content-center pt-5">
+    <apt-md-spinner></apt-md-spinner>
+  </div>
+</ng-template>

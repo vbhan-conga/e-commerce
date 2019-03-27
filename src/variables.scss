@@ -46,6 +46,7 @@ $green:   #28a745 !default;
 $teal:    #20c997 !default;
 $cyan:    #17a2b8 !default;
 
+
 $colors: () !default;
 $colors: map-merge((
   "blue":       $blue,
@@ -64,9 +65,9 @@ $colors: map-merge((
 ), $colors);
 
 $primary:       #181818 !default;
-$secondary:     $gray-600 !default;
+$secondary:     $gray-500 !default;
 $success:       $green !default;
-$info:          #D42A1E !default;
+$info:          $cyan !default;
 $warning:       $yellow !default;
 $danger:        $red !default;
 $light:         $gray-100 !default;
@@ -208,6 +209,7 @@ $line-height-sm:              1.5 !default;
 
 $border-width:                1px !default;
 $border-color:                $gray-300 !default;
+
 
 $border-radius:               0rem !default;
 $border-radius-lg:            0rem !default;
@@ -905,9 +907,9 @@ $carousel-transition:               transform .6s ease !default; // Define trans
 
 // Close
 
-$close-font-size:                   $font-size-base * 1.5 !default;
-$close-font-weight:                 $font-weight-bold !default;
-$close-color:                       $black !default;
+$close-font-size:                   $font-size-base * 2.2 !default;
+$close-font-weight:                 $font-weight-normal !default;
+$close-color:                       #000 !default;
 $close-text-shadow:                 0 1px 0 $white !default;
 
 // Code
@@ -928,3 +930,7 @@ $pre-scrollable-max-height:         340px !default;
 // Printing
 $print-page-size:                   a3 !default;
 $print-body-min-width:              map-get($grid-breakpoints, "lg") !default;
+
+// Promotion
+
+$promo-input-font-size:             0.75rem;

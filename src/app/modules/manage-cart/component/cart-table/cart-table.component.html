@@ -1,92 +1,104 @@
 <div class="card animated fadeIn" *ngIf="cart">
-    <div class="card-header">
-      Items in your cart
-    </div>
-    <div class="table-responsive card-body py-0">
-      <table class="table h-100">
-        <tbody>
-          <ng-container *ngFor="let item of cart?.LineItems">
-            <tr *ngIf="item.LineType === 'Product/Service' && item.Product">
-              <td width="15%" class="pt-4">
-                <img [src]="item.Product.IconId | image" class="w-100" />
-              </td>
-              <td class="w-50 pt-4">
-                <div class="h-100 d-flex flex-column">
-                  <h5>
-                    <a href="javascript:void(0)" [routerLink]="['/product', item.Product[identifier]]">
-                      {{item.Product.Name}}
-                    </a>
-                  </h5>
-                  <p class="text-muted small">
-                    {{item.Product.ProductCode}} | {{item.Product.Family}} | {{item.PriceListItem.ChargeType}}
-                  </p>
-                  <p class="small">
-                    {{item.Product.Description}}
-                  </p>
-                  <div class="mt-auto">
-                    <span *ngIf="item.Product.HasAttributes || item.Product.HasOptions">
-                      <button class="text-muted btn btn-link btn-sm p-0" (click)="openModal(item, productDetails)">
-                        <span class="oi oi-wrench"></span>
-                        Configuration Details
-                      </button>
-                      <span class="mx-2">|</span>
-                    </span>
-                    <button class="btn btn-link text-muted btn-sm p-0" (click)="removeCartItem(item, $event)" [ladda]="item?._metadata?._deleting"
-                      data-style="zoom-in" data-spinner-color="black">
-                      <span class="oi oi-trash"></span>
-                      Remove Item
+  <div class="card-header">
+    Items in your cart
+  </div>
+  <div class="table-responsive card-body py-0">
+    <table class="table h-100">
+      <tbody>
+        <ng-container *ngFor="let item of cart?.LineItems">
+          <tr *ngIf="item.LineType === 'Product/Service' && item.Product">
+            <td width="15%" class="pt-4">
+              <img [src]="item.Product.IconId | image" class="w-100" />
+            </td>
+            <td class="w-50 pt-4 ">
+              <div class="h-100 d-flex flex-column border-right pr-2">
+                <h5>
+                  <a href="javascript:void(0)" *ngIf="item?.Product && item?.Product[identifier]" [routerLink]="['/product', item.Product[identifier]]">
+                    {{item.Product.Name}}
+                  </a>
+                  <span *ngIf="item.Product.HasAttributes || item.Product.HasOptions">
+                    <button class="text-muted btn btn-link btn-sm p-0" (click)="openModal(item, productDetails)" >
+                      <span class="oi oi-wrench"></span>
                     </button>
+                  </span>
+                </h5>
+                <p class="text-muted small">
+                  {{item.Product?.ProductCode}} | {{item.Product?.Family}} | {{item.PriceListItem?.ChargeType}}
+                </p>
+                <p class="small description">
+                  {{item.Product.Description}}
+                </p>
+                <div class="d-flex flex-row small">
+                  <div class="flex-column justify-content-between mr-2" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
+                    <span class="text-muted">Frequency:</span>
+                    <span class="pl-1">{{item.PriceListItem?.Frequency}}</span>
+                    
                   </div>
-                </div>
-              </td>              
-              <td class="pt-4 w-25">
-                <div class="d-flex align-items-center">
-                  <div class="d-flex flex-column justify-content-center align-items-center small w-25">
-                    <apt-price [record]="item" type="base"></apt-price>
-                    <s class="text-muted" *ngIf="(item | CartItemPricePipe | async)?.discountPrice !== 0">
-                      <apt-price [record]="item" type="list"></apt-price>
-                    </s>
+                  <div class="flex-column justify-content-between mr-2" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
+                    <span class="text-muted">Term:</span>
+                    <span class="pl-1">{{item.SellingTerm | number}}</span>
                   </div>
-                  <input type="number" min="1" [(ngModel)]="item.Quantity" class="mx-3 w-25" (ngModelChange)="changeItemQuantity(item)" />
-                  <h5 class="my-0 cart-total text-right ml-auto">
-                    <apt-price [record]="item"></apt-price>
-                  </h5>
+                  <div class="flex-column justify-content-between mr-2">
+                    <span class="text-muted">Line Status:</span>
+                    <span class="pl-1">{{item?.LineStatus}}</span>
+                  </div>
                 </div>
                 <small class="d-block mt-3" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
-                  <apt-date-range-input (onStartDateChange)="handleStartChange(item)" (onEndDateChange)="handleEndDateChange(item)"
-                    [cartItem]="item"></apt-date-range-input>
-
-                  <div class="d-flex justify-content-end">
-                    <dl>
-                      <dt>Frequency</dt>
-                      <dd>{{item.PriceListItem.Frequency}}</dd>
-                    </dl>
-                    <dl class="ml-4">
-                      <dt>Term</dt>
-                      <dd>{{item.SellingTerm | number}}</dd>
-                    </dl>
-                  </div>
+                  <apt-date-range-input [disableStartDate]="item?.LineStatus?.toLowerCase() !=='new'" (onStartDateChange)="handleStartChange(item)" (onEndDateChange)="handleEndDateChange(item)" [cartItem]="item"></apt-date-range-input>
                 </small>
-              </td>
-            </tr>
-          </ng-container>
-        </tbody>
-      </table>
-    </div>
-  </div>  
-  <ng-template #productDetails>
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">
-        {{lineItem?.Product.Name}}
-        <a href="javascript:void(0)" (click)="modalRef.hide()" [routerLink]="['/configure', lineItem?.Product[identifier], lineItem?.Id]" class="ml-2">
-          <span class="oi oi-pencil oi-sm"></span>
-        </a>
-      </h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <apt-item-configuration-summary [item]="lineItem" [parent]="cart"></apt-item-configuration-summary>
-    </div>
-  </ng-template>
+              </div>
+            </td>
+            <td class="pt-4 w-25">
+              <div>
+                <div class="d-flex justify-content-between small mt-1 text-muted">
+                  <span>Standard Price</span>
+                  <span>
+                    <apt-price [record]="item" type="base"></apt-price>
+                  </span>
+                </div>
+                <div
+                  class="d-flex justify-content-between mt-1 text-muted"
+                  *ngIf="item?.IncentiveAdjustmentAmount && (storefront$ | async)?.EnablePromotions && (storefront$ | async) !== null ? true : false"
+                >
+                  <apt-pr-lineitem [appliedpromos]="cart" [record]="item"></apt-pr-lineitem>
+                  <span class="small mt-1">{{item?.IncentiveAdjustmentAmount | localCurrency | async}}</span>
+                </div>
+                <div class="d-flex justify-content-between small mt-1">
+                  <span>Net Price</span>
+                  <apt-price [record]="item" type="net"></apt-price>
+                </div>
+                <!--  <s class="text-muted" *ngIf="(item | CartItemPricePipe | async)?.discountPrice !== 0">
+                      <apt-price [record]="item" type="list"></apt-price>
+                    </s> -->
+              </div>
+              <div class="d-flex justify-content-end mt-5">
+                <span class="small m-auto">Qty</span>
+                <input type="number" min="1" [(ngModel)]="item.Quantity" class="w-25" [class.mx-3]= "item?.IsPrimaryLine" (ngModelChange)="changeItemQuantity(item)" [disabled]="item?.LineStatus?.toLowerCase() ==='cancelled'" />
+                <button *ngIf="item?.IsPrimaryLine" class="btn btn-primary btn-sm" (click)="removeCartItem(item, $event)" [ladda]="item?._metadata?._deleting" data-style="zoom-in"
+                  data-spinner-color="black">
+                  Remove
+                </button>
+              </div>
+              <!-- <h5 class="my-0 cart-total text-right ml-auto">
+                    <apt-price [record]="item"></apt-price>
+                  </h5> -->
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+<ng-template #productDetails>
+  <div class="modal-header align-items-center p-0 mx-4 mt-3 border-bottom border-secondary">
+    <h6 class="modal-title pull-left font-weight-bold">
+      Product Configuration
+    </h6>
+    <button type="button" class="close" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body px-0 pt-0 mx-4">
+    <apt-product-configuration-summary [item]="lineItem"></apt-product-configuration-summary>
+  </div>
+</ng-template>

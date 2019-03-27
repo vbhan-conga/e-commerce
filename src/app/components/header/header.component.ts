@@ -1,6 +1,9 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { CategoryService, Category, Storefront, ContactService, StorefrontService,
-  UserService, ConversionService, CurrencyType, User, MiniProfileComponent, ProductService, Product, Contact } from '@apttus/ecommerce';
+  UserService, ConversionService, CurrencyType, User, ProductService, Product, Contact } from '@apttus/ecommerce';
+
+import { MiniProfileComponent } from '@apttus/elements';
+
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 

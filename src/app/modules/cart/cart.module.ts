@@ -12,6 +12,7 @@ import { CardFormComponent } from './component/card-form/card-form.component';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { AddressModule, PriceModule, MdSpinnerModule } from '@apttus/elements';
 
 @NgModule({
   imports: [
@@ -23,8 +24,11 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     FormsModule,
     ComponentModule,
     NgxPageScrollModule,
+    PriceModule,
+    MdSpinnerModule,
     TabsModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    AddressModule
   ],
   declarations: [CartComponent, SummaryComponent, CybersourceComponent, CardFormComponent]
 })

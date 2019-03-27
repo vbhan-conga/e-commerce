@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild, TemplateRef, Input } from '@angular/core';
-import { Cart } from '@apttus/ecommerce';
+import { Component, OnInit, ViewChild, TemplateRef, Input, OnChanges } from '@angular/core';
+import { Cart, StorefrontService, Storefront } from '@apttus/ecommerce';
 import { QuoteService, Quote } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { ConstraintRuleService } from '@apttus/constraint-rules';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-cart-summary',
   templateUrl: './cart-summary.component.html',
   styleUrls: ['./cart-summary.component.scss']
 })
-export class CartSummaryComponent implements OnInit {
+export class CartSummaryComponent implements OnInit, OnChanges {
   @Input() cart: Cart;
   @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
 
@@ -19,8 +20,10 @@ export class CartSummaryComponent implements OnInit {
   generatedQuote: Quote;
   confirmationModal: BsModalRef;
   hasErrors: boolean = true;
+  totalPromotions: number = 0;
+  storefront$: Observable<Storefront>;
 
-  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService) { 
+  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService, private storefrontService: StorefrontService) {
     this.state = {
       configurationMessage: null,
       downloadLoading: false,
@@ -31,8 +34,12 @@ export class CartSummaryComponent implements OnInit {
 
   ngOnInit() {
     this.crService.hasPendingErrors().subscribe(val => this.hasErrors = val);
+    this.storefront$ = this.storefrontService.getStorefront();
   }
 
+   ngOnChanges() {
+     if(this.cart) this.totalPromotions = _.sum(this.cart.LineItems.map(res=> res.IncentiveAdjustmentAmount));
+   }
   createQuote() {
     this.state.requestQuoteLoading = true;
     this.quoteService.convertCartToQuote().subscribe(

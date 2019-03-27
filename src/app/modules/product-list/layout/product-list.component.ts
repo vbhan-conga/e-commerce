@@ -1,12 +1,11 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CategoryService, Category, SearchResults, SearchService, PriceTier, PriceListItem, Product } from '@apttus/ecommerce';
-import { PageScrollService, PageScrollInstance } from 'ngx-page-scroll';
-import { DOCUMENT } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CategoryService, Category, SearchResults, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
-import { ACondition } from '@apttus/core';
-import { Subscription } from 'rxjs/Subscription';
+import { ACondition, AJoin } from '@apttus/core';
+import { Subscription } from 'rxjs';
 import { ConstraintRuleService, ConstraintRule } from '@apttus/constraint-rules';
+
 
 @Component({
   selector: 'app-product-list',
@@ -15,90 +14,75 @@ import { ConstraintRuleService, ConstraintRule } from '@apttus/constraint-rules'
 })
 export class ProductListComponent implements OnInit, OnDestroy {
 
-  public category: Category;
-  public subCategories: Array<Category>;
-  public searchSubscription: Subscription;
-  public searchResults: SearchResults;
-  public constraintRules: Array<ConstraintRule> = null;
   page = 1;
   pageSize = 12;
   view = 'grid';
-  priceTier: PriceTier = null;
-  categoryFilter: Array<Category> = [];
-  customFilters: Array<ACondition> = null;
-  sortField: string = null;
-  isSearch: boolean = false;
-  query: string;
+  sortField: string;
+  /**
+   * Value of the product family field filter.
+   */
+  productFamilyFilter: ACondition;
 
-  constructor(private activatedRoute: ActivatedRoute,
-    private searchService: SearchService,
-    private categoryService: CategoryService,
-    private pageScrollService: PageScrollService,
-    private crService: ConstraintRuleService,
-    @Inject(DOCUMENT) private document: any) { }
+  conditions: Array<ACondition> = new Array<ACondition>();
+  joins: Array<AJoin> = new Array<AJoin>();
+  searchString: string = null;
+  searchResults: SearchResults;
+  searchResultsSubscription: Subscription;
+  category: Category;
+  constraintRules: Array<ConstraintRule>;
 
-  ngOnDestroy() {
-    if (this.searchSubscription)
-      this.searchSubscription.unsubscribe();
-  }
+  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private constraintRuleService: ConstraintRuleService, private router: Router, public productService: ProductService) {}
+
+  ngOnDestroy() {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.categoryFilter = [];
-      this.customFilters = new Array();
-      this.priceTier = null;
-      this.sortField = null;
+      this.searchString = _.get(params, 'query');
 
-      if (params['categoryName']) {
-        this.categoryService.where([new ACondition(Category, 'Name', 'Equal', params['categoryName'])])
-          .map(categoryList => categoryList[0])
-          .subscribe(category => {
-            this.isSearch = false;
-            this.category = category;
-            this.getResults();
-            this.categoryService.getSubcategories(this.category.Id)
-              .subscribe(subcategories => this.subCategories = subcategories);
-          });
-      } else if (params['query']) {
-        this.query = params['query'];
-        this.isSearch = true;
-        this.getResults();
-      }
+      this.categoryService.getCategoryByName(_.get(params, 'categoryName')).subscribe(category => {
+        if(category){
+          this.category = category;
+          this.defaultCategory();
+        }else{
+          this.getResults();
+        }
+      });
+    });
+  }
+
+  defaultCategory(){
+    this.categoryService.getCategoryBranchChildren([this.category.Id]).subscribe(categoryList => {
+      this.joins = [new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(c => c.Id))])];
+      this.getResults();
     });
   }
 
   getResults() {
-    _.set(this.searchResults, 'productList', null);
-    if (this.sortField === 'Relevance')
-      this.sortField = null;
-
-    this.scrollTop();
-
-    let obsv = null;
-    if (!this.isSearch) {
-      obsv = this.searchService.searchProductsByCategory(this.category.Id, this.pageSize, this.page, this.sortField, 'ASC', this.categoryFilter, this.priceTier
-        , this.customFilters.map(f => new ACondition(PriceListItem, `Product.${f.field}`, 'Equal', f.value)));
-    } else
-      obsv = this.searchService.getSearchResults(this.query, this.pageSize, this.page, this.sortField, 'ASC',
-        this.categoryFilter, this.priceTier, this.customFilters);
-
-    obsv.take(1).subscribe(r => {
-      this.searchResults = r;
-    });
-
-    this.searchSubscription = obsv.flatMap(results => {
-      this.searchResults = results;
-      return this.crService.getConstraintRulesForProducts(results.productList);
-    }).subscribe(rules => this.constraintRules = rules);
+    this.searchResults = null;
+    if(this.searchResultsSubscription)
+      this.searchResultsSubscription.unsubscribe();
+    this.searchResultsSubscription = this.searchService.searchProducts(this.searchString, this.pageSize, this.page, null, null, this.conditions, this.joins)
+      .subscribe(results =>
+        this.constraintRuleService.getConstraintRulesForProducts(results.productList, true, true).subscribe(constraintRules => {
+          this.constraintRules = constraintRules;
+          this.searchResults = results;
+        })
+      );
   }
 
   scrollTop() {
-    setTimeout(() => {
-      let pageScrollInstance: PageScrollInstance = PageScrollInstance.newInstance({ document: this.document, scrollTarget: '#top', pageScrollDuration: 200 });
-      this.pageScrollService.start(pageScrollInstance);
-    });
+    const c = document.documentElement.scrollTop || document.body.scrollTop;
+    if (c > 0) {
+      window.requestAnimationFrame(this.scrollTop);
+      window.scrollTo(0, c - c / 8);
+    }
   }
 
+  onCategory(categoryList: Array<Category>){
+    const category = _.get(categoryList, '[0]');
+    if(category)
+      this.router.navigate(['/product-list', category.Name]);
+  }
   onPage(evt) {
     this.page = evt.page;
     this.getResults();
@@ -106,26 +90,35 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   onPriceTierChange(evt) {
     this.page = 1;
-    this.priceTier = evt;
     this.getResults();
   }
 
-  onSubcategoryFilter(evt) {
+  onSubcategoryFilter(categoryList: Array<Category>) {
+    _.remove(this.joins, (j) => j.type === ProductCategory);
     this.page = 1;
-    this.categoryFilter = evt;
+
+    if(_.get(categoryList, 'length', 0) > 0){
+      this.joins.push(new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(category => category.Id))]));
+      this.getResults();
+    }else
+      this.defaultCategory();
+  }
+
+  onFilterAdd(condition: ACondition){
+    _.remove(this.conditions, (c) => _.isEqual(c, condition));
+    this.page = 1;
+
+    this.conditions.push(condition);
+    this.getResults();
+  }
+
+  onFilterRemove(condition: ACondition){
+    _.remove(this.conditions, (c) => _.isEqual(c, condition));
+    this.page = 1;
     this.getResults();
   }
 
   onFieldFilter(evt: ACondition) {
-    const index = _.findIndex(this.customFilters, { field: evt.field });
-
-    if (evt.value === 'null' || evt.value === null)
-      this.customFilters = this.customFilters.filter(a => a.field !== evt.field);
-    else if (index >= 0) {
-      this.customFilters[index] = evt;
-    } else
-      this.customFilters.push(evt);
-
     this.page = 1;
     this.getResults();
   }
@@ -140,4 +133,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.pageSize = event;
     this.getResults();
   }
+
+  handlePicklistChange(event: any) {
+    if (this.productFamilyFilter) _.remove(this.conditions, this.productFamilyFilter);
+    if (event.length > 0) {
+      let values = [];
+      event.forEach(item => values.push(item.value));
+      this.productFamilyFilter = new ACondition(this.productService.type, 'Family', 'In', values);
+      this.conditions.push(this.productFamilyFilter);
+    }
+    this.getResults();
+  }
+ 
 }

@@ -7,15 +7,18 @@ import { ComponentModule } from '../../components/component.module';
 import { CatalogModule, StoreModule } from '@apttus/ecommerce';
 
 import { ConstraintRulesModule } from '@apttus/constraint-rules';
+import { ProductCarouselModule, JumbotronModule } from '@apttus/elements';
 
 @NgModule({
   imports: [
     CommonModule,
     HomeRoutingModule,
     ComponentModule,
+    JumbotronModule,
     CatalogModule,
     StoreModule,
-    ConstraintRulesModule
+    ConstraintRulesModule,
+    ProductCarouselModule
   ],
   declarations: [HomeComponent]
 })

@@ -1,54 +1,164 @@
-<div *ngIf="selectedProduct; else loading">
-  <div class="d-flex justify-content-between mb-3">
-    <span class="text-muted">STARTING PRICE</span>
-    <span class="text-muted">{{(selectedProduct | ProductPricePipe | async)?.netPrice$ | async}}</span>
-  </div>
-  <div *ngFor="let attributeGroup of attributeGroups">
-    <div class="text-muted mb-2">
-      {{attributeGroup}}
-    </div>
-    <ng-container *ngFor="let attribute of attributeList[attributeGroup]">
-      <div *ngIf="productAttributeValue" class="mb-3 d-flex justify-content-between align-items-end">
-          <div>
-            <div>{{attribute._describe.label}}</div>
-            <small>{{productAttributeValue[attribute.Field]}}</small>
-          </div>
-          <small class="text-muted">{{(productAttributeValue[attribute.Field] | AttributeValuePricePipe:
-            selectedProduct : attribute | async)?.netPrice$ | async}}</small>
-      </div>
-      </ng-container>
-    <hr/>
-  </div>
-  <div *ngFor="let optionGroup of optionGroups">
-    <span class="text-muted">
-      {{optionGroup}}
-    </span>
-    <div *ngFor="let option of optionList[optionGroup]" class="my-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-          <img class="mr-3" [src]="sanitizer.bypassSecurityTrustUrl(option.Option.IconId | image)"
-            width="50" alt="Generic placeholder image">
-          <div>
-            <div>{{option.Option.Name}}</div>
-            <div>Quantity: {{option.Quantity}} @ {{option.NetUnitPrice | localCurrency
-              | async}}</div>
-          </div>
+<div *ngIf="(optionGroupList?.length>0 || attributeFormList?.length>0) && selectedProduct; else loading">
+    <!-- Product Information -->
+    <div *ngIf="root" class="card card-header border-0 px-2">
+        <div class="d-flex">
+            <div class="flex-grow-1 productDetails">
+                <h5>{{selectedProduct?.Name}}</h5>
+                <span class="text-muted">
+                    Product Code: {{selectedProduct?.ProductCode}}
+                </span>
+            </div>
+            <div>
+                <form class="border-left pl-6 row">
+                    <div class="col">
+                        <label class="text-muted">Net Price</label>
+                        <h6>
+                            <apt-price [record]="selectedProduct" *ngIf="selectedProduct"></apt-price>
+                        </h6>
+                    </div>
+                    <div class="col align-self-center">
+                        <button class="btn btn-outline-primary btn-sm" type="button">
+                            Change Configuration
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <span class="text-muted">
-          {{option.NetPrice | localCurrency | async}}
-        </span>
-      </div>
     </div>
-    <hr/>
-  </div>
-  <div class="d-flex justify-content-between">
-    <h5>Total Build</h5>
-    <h5>{{(item | CartItemPricePipe | async)?.netPrice$ | async}}</h5>
-  </div>
+
+    <div class="mt-3">
+        <!-- Attribute Information -->
+        <ng-container *ngIf="attributeFormList?.length>0">
+            <div *ngFor="let attributeForm of attributeFormList; let x = index">
+                <div [class.card]="root" *ngIf="attributeForm?.productAttributeList?.length>0">
+                    <div [class.card-header]="root" class="px-2" [class.py-1]="root">
+                        <h5 [class.border-bottom]="!root" [class.mb-0]="root">
+                            <button class="btn btn-link" data-toggle="collapse"
+                                [attr.data-target]="'#' + attributeForm.groupMember.Id + selectedProduct.Id"
+                                [attr.aria-expanded]="true">
+                                {{attributeForm.groupMember?.AttributeGroup?.Name}}
+                            </button>
+                        </h5>
+                    </div>
+                    <div [id]="attributeForm.groupMember.Id + selectedProduct.Id" [class.show]="true"
+                        class="collapse mb-3" [class.pl-4]="!root" [attr.data-parent]="'#acc-' + selectedProduct.Id">
+                        <div [class.card-body]="root" class="py-1">
+                            <div class="row no-gutters">
+                                <div class="col-12"
+                                    *ngFor="let attribute of attributeForm.productAttributeList; let l = last">
+                                    <div class="d-flex align-items-center justify-content-between attributeData"
+                                        [class.border-bottom]="!l" [class.py-2]="root">
+                                        <div>{{attribute._describe.label}}</div>
+                                        <div *ngIf="type" class="text-muted">
+                                            <i>{{attributeForm?.attributeValue[attribute._describe.label]}}</i></div>
+                                        <div *ngIf="!type" class="text-muted">
+                                            <i>{{attributeForm?.attributeValue[attribute._describe.name]}}</i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Option Information -->
+        <div [id]="'acc-' + selectedProduct.Id" *ngIf="optionGroupList?.length>0" class="accordion">
+            <div *ngFor="let optionGroup of optionGroupList; let i = index; let l = last">
+                <div [class.card]="root" *ngIf="optionGroup?.showLabel">
+                    <div [class.card-header]="root" class="px-2 py-1">
+                        <div [class.border-bottom]="!root" [class.mb-0]="root">
+                            <button class="btn btn-link" data-toggle="collapse"
+                                [attr.data-target]="'#' + optionGroup.Id + selectedProduct.Id"
+                                [attr.aria-expanded]="true">
+                                {{optionGroup?.Label}}
+                            </button>
+                        </div>
+                    </div>
+                    <div [id]="optionGroup.Id + selectedProduct.Id" class="collapse" [class.pl-4]="!root"
+                        [class.show]="true" [attr.data-parent]="'#acc-' + selectedProduct.Id">
+                        <div [class.card-body]="root" class="py-2">
+                            <!-- Sub groups -->
+                            <div [id]="'sub-accordion-' + optionGroup.Id + selectedProduct.Id"
+                                *ngIf="optionGroup._children?.length > 0" class="accordion">
+                                <ng-container *ngFor="let childOptionGroup of optionGroup?._children; let c = index">
+                                    <div
+                                        *ngIf="childOptionGroup?._metadata?.options?.length > 0 && childOptionGroup?.showLabel">
+                                        <h5 class="border-bottom">
+                                            <button class="btn btn-link" data-toggle="collapse"
+                                                [attr.data-target]="'#' + childOptionGroup?.Id + selectedProduct.Id"
+                                                [attr.aria-expanded]="true" aria-controls="collapseOne">
+                                                {{childOptionGroup?.Label}}
+                                            </button>
+                                        </h5>
+                                        <!-- Options -->
+                                        <div class="collapse pl-4" [id]="childOptionGroup?.Id + selectedProduct.Id"
+                                            [class.show]="true"
+                                            [attr.data-parent]="'#sub-accordion-' + optionGroup.Id + selectedProduct.Id">
+                                            <div *ngFor="let component of childOptionGroup?._metadata?.options; index as i; last as l; first as f"
+                                                class="subOption"
+                                                [class.border-bottom]="!l && !component.ComponentProduct?.HasOptions"
+                                                [class.py-1]="!f && !l" [class.pt-1]="l" [class.pb-1]="f">
+                                                <ng-template [ngTemplateOutlet]="componentTemplate"
+                                                    [ngTemplateOutletContext]="{component: component}">
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <!-- Options -->
+                            <div *ngFor="let component of optionGroup?._metadata?.options; index as i; last as l; first as f"
+                                class="option" [class.border-bottom]="!l && !component.ComponentProduct?.HasOptions"
+                                [class.py-1]="!f && !l" [class.pt-1]="l" [class.pb-1]="f">
+                                <ng-template [ngTemplateOutlet]="componentTemplate"
+                                    [ngTemplateOutletContext]="{component: component}"></ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <ng-template #loading>
-  <div class="d-flex justify-content-center py-5">
-    <apt-md-spinner></apt-md-spinner>
-  </div>
+    <div class="d-flex justify-content-center py-5">
+        <apt-md-spinner></apt-md-spinner>
+    </div>
+</ng-template>
+
+<ng-template #componentTemplate let-component="component">
+    <div *ngIf="optionLineItems.length>0; else productOptions">
+        <div *ngFor="let lineItem of optionLineItems">
+            <div *ngIf="lineItem?.ProductOption?.Id === component?.Id"
+                class="d-flex justify-content-between my-2 optionData" [class.pl-3]="!root">
+                <div class="itemName">{{lineItem.Option.Name}}</div>
+                <div>
+                    <label>Qty:</label>
+                    {{lineItem.Quantity}}
+                </div>
+                <div>{{lineItem.NetPrice | localCurrency | async}}</div>
+            </div>
+        </div>
+        <div *ngIf="component?.ComponentProduct?.HasOptions || component?.ComponentProduct.HasAttributes"
+            class="pl-3 mt-2">
+            <apt-item-configuration-summary [product]="component.ComponentProduct" [parent]="parent" [root]="false"
+                [optionLineItems]="optionLineItems"></apt-item-configuration-summary>
+        </div>
+    </div>
+    <ng-template #productOptions>
+        <div class="d-flex justify-content-between my-2 optionData" [class.pl-3]="!root">
+            <div class="itemName">{{component?.ComponentProduct?.Name}}</div>
+            <div>
+                <label>Qty:</label>
+                {{getOptionQuantity(component?.ComponentProduct)}}
+            </div>
+            <apt-price [record]="component"></apt-price>
+        </div>
+        <div *ngIf="component?.ComponentProduct?.HasOptions || component?.ComponentProduct.HasAttributes"
+            class="pl-3 mt-2">
+            <apt-item-configuration-summary [product]="component.ComponentProduct" [parent]="parent" [item]="item"
+                [root]="false"></apt-item-configuration-summary>
+        </div>
+    </ng-template>
 </ng-template>

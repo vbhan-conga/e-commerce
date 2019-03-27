@@ -1,9 +1,10 @@
 import { Component, OnInit, TemplateRef, NgZone } from '@angular/core';
+import { ACondition } from '@apttus/core'
 import { CartService, Cart, PriceService } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable } from 'rxjs/Observable';
-import { ACondition } from '@apttus/core';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-cart-list',
@@ -27,12 +28,12 @@ export class CartListComponent implements OnInit {
   ngOnInit() {
     this.cartService.getMyCart().subscribe(c =>  this.myCart = c);
     this.loadCarts(this.currentPage);
-    this.cartAggregate$ = this.cartService.getAllCarts();
+    this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]);
   }
 
   loadCarts(page) {
     this.cartList = null;
-    this.cartService.getMyCarts(this.limit, page).subscribe(c => this.ngZone.run(() => this.cartList = c));
+    this.cartService.getMyCarts(this.limit, page).take(1).subscribe(c => this.ngZone.run(() => this.cartList = c));
   }
 
   newCart(template: TemplateRef<any>){
@@ -54,21 +55,20 @@ export class CartListComponent implements OnInit {
   }
 
   setCartActive(cart: Cart){
-    cart._metadata = {state : 'processing'};
+    _.set(cart, '_metadata.state', 'processing');
     this.cartService.setCartActive(cart).subscribe(
       res => {
-        this.loading = false;
+        _.set(cart, '_metadata.state', 'ready');
       },
       err => {
-        this.loading = false;
-        console.error(err);
-        cart._metadata.state = null;
+        _.set(cart, '_metadata.state', 'ready');
       }
     );
   }
 
   createCart(){
-    this.ngZone.run(() => this.loading = true);
+    this.loading = true;
+    this.currentPage = 1;
     this.cartService.createNewCart(this.cart).subscribe(
       res => {
         this.loading = false;

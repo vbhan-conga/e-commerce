@@ -31,7 +31,7 @@ export class OrderDetailComponent implements OnInit {
 
   openModal(template: TemplateRef<any>, lineItem: OrderLineItem) {
     this.selectedLineItem = lineItem;
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template, {class:'modal-lg'});
   }
 
 }

@@ -23,6 +23,7 @@ import { ApttusModule } from '@apttus/core';
 import { OrderDetailComponent } from './component/order-detail/order-detail.component';
 import { QuoteDetailComponent } from './component/quote-detail/quote-detail.component';
 import { ReorderComponent } from './component/reorder/reorder.component';
+import { MdSpinnerModule, AddressModule, PriceModule, InputQuantityModule, ProductConfigurationSummaryModule } from '@apttus/elements';
 
 @NgModule({
   imports: [
@@ -33,7 +34,12 @@ import { ReorderComponent } from './component/reorder/reorder.component';
     StoreModule,
     PricingModule,
     ComponentModule,
+    MdSpinnerModule,
+    AddressModule,
+    PriceModule,
     FormsModule,
+    InputQuantityModule,
+    ProductConfigurationSummaryModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot()

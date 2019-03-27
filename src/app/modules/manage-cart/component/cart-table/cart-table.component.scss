@@ -1,4 +1,4 @@
-@import "../../../../../variables.scss";
+@import "variables.scss";
 
 dt, dd{
     display: block;
@@ -25,4 +25,8 @@ table{
 }
 .fixed-height{
     height: 30px;
+}
+p.description{
+    max-height: 55px;
+    overflow-y: hidden;
 }

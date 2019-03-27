@@ -1,5 +1,5 @@
 <div>
-    <apt-jumbotron [storefront]="storefront$ | async" imagePosition="left" height="32rem;" class="animated fadeIn" class="d-block bg-info" brightness="80"></apt-jumbotron>
+    <apt-jumbotron [storefront]="storefront$ | async" imagePosition="left" height="45vh;" class="animated fadeIn" class="d-block" brightness="50"></apt-jumbotron>
     <div class="container py-5">
         <div *ngIf="categories">
             <div *ngIf="productListA$ | async" class="animated fadeIn">
@@ -7,7 +7,7 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
                     rhoncus. Nullam tempor, libero vel auctor efficitur, nibh lacus luctus orci, vitae fringilla lorem magna
                     at metus.</p>
-                <apt-cr-product-carousel [productList]="productListA$ | async" slides="4"></apt-cr-product-carousel>
+                <apt-product-carousel [productList]="productListA$ | async" slides="4"></apt-product-carousel>
             </div>
 
             <div *ngIf="productListB$ | async" class="animated fadeIn">
@@ -15,7 +15,7 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
                     rhoncus. Nullam tempor, libero vel auctor efficitur, nibh lacus luctus orci, vitae fringilla lorem magna
                     at metus.</p>
-                <apt-cr-product-carousel [productList]="productListB$ | async" slides="4"></apt-cr-product-carousel>
+                <apt-product-carousel [productList]="productListB$ | async" slides="4"></apt-product-carousel>
             </div>
         </div>
     </div>

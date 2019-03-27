@@ -49,10 +49,6 @@
                 <li role="menuitem" *ngIf="cart.Id !== myCart?.Id && (cart.Status === 'New' || cart.Status === 'Approval Required' || cart.Status === 'Ready For Finalization')">
                   <a class="dropdown-item" href="javascript:void(0)" (click)="setCartActive(cart)">Set Active</a>
                 </li>
-                <!-- <li role="menuitem">
-                              <a class="dropdown-item" href="#">Clone</a>
-                            </li>
-                            <li class="divider dropdown-divider"></li> -->
                 <li role="menuitem">
                   <a class="dropdown-item text-danger" href="javascript:void(0)" (click)="deleteCart(cart)">Delete</a>
                 </li>
@@ -65,7 +61,7 @@
   </table>
 </div>
 <div class="d-flex justify-content-center mt-3" *ngIf="(cartAggregate$ | async)">
-  <pagination [totalItems]="(cartAggregate$ | async)?.total_records" [(ngModel)]="currentPage" (pageChanged)="loadCarts($event.page)"></pagination>
+  <pagination [totalItems]="(cartAggregate$ | async)?.total_records" [(ngModel)]="currentPage" [itemsPerPage]="limit" (pageChanged)="loadCarts($event.page)" [maxSize]="5"></pagination>
 </div>
 <ng-template #spinner>
   <div class="d-flex justify-content-center py-5">
