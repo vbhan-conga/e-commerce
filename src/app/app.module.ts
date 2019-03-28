@@ -5,7 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
@@ -47,7 +46,6 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
     ApttusModule.forRoot(environment),
     CommerceModule.forRoot('D-Commerce'),
