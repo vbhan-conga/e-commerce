@@ -2,7 +2,6 @@ import { AboModule } from '@apttus/abo';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SlickModule } from 'ngx-slick';
 import { RouterModule } from '@angular/router';
 import { LaddaModule } from 'angular2-ladda';
@@ -26,7 +25,6 @@ import { ItemConfigurationSummaryComponent } from './item-configuration-summary/
 @NgModule({
   imports: [
     CommonModule,
-    LazyLoadImageModule,
     SlickModule,
     MiniProfileModule,
     MiniCartModule,
@@ -51,7 +49,6 @@ import { ItemConfigurationSummaryComponent } from './item-configuration-summary/
   ],
   exports : [
     HeaderComponent,
-    LazyLoadImageModule,
     LaddaModule,
     CatalogModule,
     FooterComponent,

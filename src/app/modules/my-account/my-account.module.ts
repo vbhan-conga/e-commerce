@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MyAccountRoutingModule } from './my-account-routing.module';
 import { MyAccountLayoutComponent } from './layout/my-account-layout.component';
 
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { OrderListComponent } from './component/order-list/order-list.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { QuoteListComponent } from './component/quote-list/quote-list.component';
@@ -30,7 +29,6 @@ import { MdSpinnerModule, AddressModule, PriceModule, InputQuantityModule, Produ
     CommonModule,
     ApttusModule,
     MyAccountRoutingModule,
-    LazyLoadImageModule,
     StoreModule,
     PricingModule,
     ComponentModule,

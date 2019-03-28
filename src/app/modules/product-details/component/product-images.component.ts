@@ -26,7 +26,7 @@ import { Observable } from 'rxjs/Observable';
   selector: 'product-images',
   template: `
     <ngx-gallery [options]="galleryOptions" [images]="galleryImages" *ngIf="!showBlank && galleryImages && galleryImages.length > 0"></ngx-gallery>
-    <img [lazyLoad]="null | image" *ngIf="showBlank" class="w-100 img-fluid"/>
+    <img [src]="null | image" *ngIf="showBlank" class="w-100 img-fluid"/>
   `,
   styles: []
 })
