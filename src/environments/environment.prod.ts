@@ -1,7 +1,6 @@
 import { Configuration } from '@apttus/core';
 export const environment: Configuration = {
   production: true,
-  organizationId: '00DL00000061f4D',
   defaultImageSrc: './assets/images/default.png',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
@@ -21,6 +20,9 @@ export const environment: Configuration = {
   productIdentifier: 'Id',
   type: 'Salesforce',
   cartDebounceTime: 2000,
-  endpoint: 'https://sum17patch-qawinter18.cs8.force.com/dc',
-  proxy: 'https://apttus-proxy.herokuapp.com'
+  proxy: 'https://apttus-proxy.herokuapp.com',
+
+  // Salesforce environment variables
+  organizationId: '****Salesforce Organization Id****',
+  endpoint: '****Salesforce Community URL****'
 };
