@@ -19,7 +19,7 @@
                   <apt-price [record]="product" *ngIf="product"></apt-price>
                 </h5>
               </div>
-              <div class="form-group col mx-3">
+              <div *ngIf="!product?.HasOptions" class="form-group col mx-3">
                 <label>Net Price</label>
                 <h5 class="pt-1">
                   <apt-price *ngIf="product" [record]="product" [quantity]="quantity" [options]="productOptionFormList" type="net"></apt-price>
@@ -56,12 +56,12 @@
               </div>
               <div class="col d-flex align-items-center">
                 <apt-add-to-cart *ngIf="product && !cartItemId" [configurationEnabled]="false" [quantity]="quantity"
-                  [showQuantityControls]="false" [product]="product" [productAttributes]="getAttributeValues()"
+                  [showQuantityControls]="false" [product]="product" [productAttributes]="[attributeValue]"
                   [btnClass]="'btn-primary px-4'" [productOptions]="productOptionFormList"></apt-add-to-cart>
 
                 <button *ngIf="product && cartItemId" class="btn px-3 btn-outline-primary"
                   (click)="updateConfiguration()" [ladda]="saving" data-style="zoom-in"
-                  data-spinner-color="black">Update Configuration</button>
+                  data-spinner-color="black" [disabled]="setDisabled">Update Configuration</button>
               </div>
             </form>
           </div>
@@ -73,7 +73,7 @@
     <div class="row" #details>
       <h4 class="text-muted col-12">Product Details</h4>
       <div class="col-12 col-md-4">
-        <product-images [product]="product"></product-images>
+        <apt-product-images [product]="product"></apt-product-images>
       </div>
       <div class="col-12 col-md-8">
         <div class="card">
@@ -89,7 +89,7 @@
       <h4 class="text-muted col-12">Configurations</h4>
       <div class="col-12">
         <apt-product-configuration [productId]="product" [(optionFormList)]="productOptionFormList"
-          [(attributeFormList)]="productAttributeFormList" [cartItemId]="cartItemId"
+          [(attributeValue)]="attributeValue" [cartItemId]="cartItemId"
           [populateDefaults]="populateDefaults" (configurationChange)="onConfigurationChange()">
         </apt-product-configuration>
       </div>
@@ -128,14 +128,4 @@
       <apt-md-spinner></apt-md-spinner>
     </div>
   </ng-template>
-
-  <div *ngIf="product && (relatedProducts$ | async)?.length > 0" class="mt-4">
-    <h4 class="mt-5 text-muted">Customers who purchased this also purchased...</h4>
-    <apt-product-carousel [productList]="(relatedProducts$ | async)" slides="5"></apt-product-carousel>
-  </div>
-
-  <div *ngIf="product && (similarProducts$ | async)?.length > 0" class="mt-4">
-    <h4 class="mt-5 text-muted">Related Products</h4>
-    <apt-product-carousel [productList]="(similarProducts$ | async)" slides="5"></apt-product-carousel>
-  </div>
 </div>

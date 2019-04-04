@@ -1,7 +1,4 @@
 import { Component, OnChanges, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Category, SearchResults, PriceTier } from '@apttus/ecommerce';
-
 import * as _ from 'lodash';
 
 @Component({

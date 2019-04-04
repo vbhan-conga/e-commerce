@@ -6,6 +6,7 @@ import { CartComponent } from './layout/cart.component';
 import { SummaryComponent } from './component/summary.component';
 
 import { CartModule as cModule, StoreModule, PricingModule } from '@apttus/ecommerce';
+import { ProductConfigurationSummaryModule } from '@apttus/elements';
 import { CybersourceComponent } from './component/cybersource/cybersource.component';
 import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
@@ -24,6 +25,7 @@ import { AddressModule, PriceModule, MdSpinnerModule } from '@apttus/elements';
     FormsModule,
     ComponentModule,
     NgxPageScrollModule,
+    ProductConfigurationSummaryModule,
     PriceModule,
     MdSpinnerModule,
     TabsModule.forRoot(),

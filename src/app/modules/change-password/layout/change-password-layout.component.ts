@@ -2,6 +2,16 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { UserService } from '@apttus/ecommerce';
 import { Router } from '@angular/router';
 
+/**
+ * Change password component, takes new password and update with old
+ * 
+ * @example
+ * <app-change-password-layout></app-change-password-layout>
+ */
+
+ /**
+  * Prevents compile time type error checking from flagging the call as invalid.
+  */
 const sv = (<any>window).sv;
 
 @Component({
@@ -9,18 +19,30 @@ const sv = (<any>window).sv;
   templateUrl: './change-password-layout.component.html',
   styleUrls: ['./change-password-layout.component.scss']
 })
-export class ChangePasswordLayoutComponent implements OnInit {
+export class ChangePasswordLayoutComponent {
 
+  /**
+   * Different messages depending on the state of component
+   * e.g. PasswordA and PasswordB doesn't match, Reusing old password, some errors/exceptions
+   */
   message: string;
+  /**
+   * Change Password form model consisting PasswordA and PasswordB fields
+   */
   passwordForm: PasswordForm = {} as PasswordForm;
+  /**
+   * Shows/Hides Spinner when LoadingStarts/LoadingEnds
+   */
   loading: boolean = false;
 
   constructor(private userService: UserService, private router: Router, private ngZone: NgZone) { }
 
-  ngOnInit() {
 
-  }
-
+  /**
+   * Takes two password from form inputs, compares them if match is found
+   * calls user service's setPassword(newPassword) and changes password for user.
+   * Shows error if there are any
+   */
   setPassword(){
     if(this.passwordForm.passwordA !== this.passwordForm.passwordB)
       this.message = 'Your passwords do not match';

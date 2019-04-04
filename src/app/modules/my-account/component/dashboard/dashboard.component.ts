@@ -5,7 +5,9 @@ import { AObject, ACondition } from '@apttus/core';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
-
+/**
+ * This component is for Apttus-ecommerce dashboard. This gives you glimpse of orders, quotes and total spending done for logged in user profile.
+ */
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -15,16 +17,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('quoteChart') quoteChart: ElementRef;
   @ViewChild('orderChart') orderChart: ElementRef;
 
+  /**
+   * Number of order count for logged in user.
+   */
   orderCount: number = 0;
+  /**
+   * Number of quote count for logged in user.
+   */
   quoteCount: number = 0;
+  /**
+   * List of order for logged in user. -Array of order.
+   */
   orderList: Array<Order>;
+  /**
+   * List of order for logged in user. -Array of quote.
+   */
   quoteList: Array<Quote>;
+  /**
+   * Total spending done by logged-in user.
+   */
   spent: Price;
+  /**
+   * Any current subscription availed by logged in user.
+   */
   subscription: any;
   user$: Observable<User>;
 
+  /**
+  * @ignore
+  */
   constructor(private quoteService: QuoteService, private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe, private userService: UserService) {}
 
+  /**
+  * @ignore
+  */
   ngOnInit() {
     this.user$ = this.userService.me();
     this.spent = new Price(this.localCurrencyPipe);
@@ -45,18 +71,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const orderPriceList$ = [];
       orders.forEach(order => orderPriceList$.push(this.priceService.getOrderPrice(order)));
       Observable.combineLatest(orderPriceList$).subscribe(prices => {
-        prices.forEach(price => this.spent.addPrice(price as Price));
+        prices.forEach(price => this.spent.addPrice(price));
       });
 
     });
   }
 
+  /**
+  * @ignore
+  */
   ngOnDestroy(){
     if (this.subscription && this.subscription.unsubscribe){
       this.subscription.unsubscribe();
     }
   }
 
+  /**
+   * @ignore
+   */
   renderPieWithData(element: ElementRef, records: Array<AObject>, field: string){
     const data = {};
     records.map(r => r[field]).forEach(a => data[a] = (!data[a]) ? 1 : data[a] + 1);

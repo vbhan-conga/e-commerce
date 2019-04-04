@@ -1,11 +1,12 @@
 import { Component, OnInit, ElementRef, HostListener, ViewChild, Output } from '@angular/core';
-import { ProductService, Product, ProductOptionForm, ProductAttributeForm, CartService, CartItem, PriceListItem, CartItemService } from '@apttus/ecommerce';
+import { ProductService, Product, ProductOptionForm, CartService, CartItem, PriceListItem, CartItemService, ProductAttributeValue } from '@apttus/ecommerce';
+import { ConstraintRuleService } from '@apttus/constraint-rules';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { ACondition, ConfigurationService } from '@apttus/core';
 import { BehaviorSubject  } from 'rxjs';
-import { ExceptionService } from '@apttus/elements';
+import { ExceptionService , ProductConfigurationService} from '@apttus/elements';
 
 @Component({
   selector: 'app-product-details',
@@ -15,13 +16,11 @@ import { ExceptionService } from '@apttus/elements';
 export class ProductDetailsComponent implements OnInit {
 
   product: Product;
-  
-  relatedProducts$: Observable<Array<Product>>;
-  similarProducts$: Observable<Array<Product>>;
   isConfigurationChanged: boolean = false;
 
   productOptionFormList: Array<ProductOptionForm> = new Array<ProductOptionForm>();
-  productAttributeFormList: Array<ProductAttributeForm> = new Array<ProductAttributeForm>();
+  attributeValue: ProductAttributeValue = new ProductAttributeValue();
+  recommendedProducts$: Observable<Array<Product>>;
 
   populateDefaults: boolean = true;
   quantity: number = 1;
@@ -30,6 +29,7 @@ export class ProductDetailsComponent implements OnInit {
   saving: boolean = false;
   isQuantityUpdated: boolean = false;
   term: number = 1;
+  setDisabled: boolean = false;
 
   @Output() onAddToCart: BehaviorSubject <boolean> = new BehaviorSubject<boolean>(false);
 
@@ -64,7 +64,9 @@ export class ProductDetailsComponent implements OnInit {
               private configurationService: ConfigurationService,
               private exceptionService: ExceptionService,
               private cartItemService: CartItemService,
-              private cartService: CartService) { }
+              private constraintRuleService: ConstraintRuleService,
+              private cartService: CartService,
+              private productConfigService: ProductConfigurationService) { }
 
   ngOnInit() {
     this.route.params
@@ -76,6 +78,11 @@ export class ProductDetailsComponent implements OnInit {
       .map(res => res[0])
       .filter(product => product != null)
       .subscribe(product => this.onProductLoad(product));
+
+      this.productConfigService.disableAddToCartBtn.subscribe(disableBtn => {
+        this.setDisabled = disableBtn;
+      });
+    
   }
 
   scrollTo(tab: ProductDetailTab){
@@ -104,16 +111,10 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  getAttributeValues(){
-    return this.productAttributeFormList.map(p => p.attributeValue);
-  }
-
   onProductLoad(product: Product){
     this.product = product;
     this.priceListItem = ((_.get(this.product,'PriceLists')).length > 1)?this.getPrimaryPriceListItem(this.product):this.product.PriceLists[0];
-    this.relatedProducts$ = this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId.AncestorId'));
-    this.similarProducts$ = this.productService.getProductsByCategory(_.get(product, 'Categories[0].ClassificationId.PrimordialId'));
-
+    this.recommendedProducts$ = this.constraintRuleService.getRecommendationsForProducts([product]);
     if(this.cartItemId){
       this.populateDefaults = false;
       
@@ -144,7 +145,7 @@ export class ProductDetailsComponent implements OnInit {
 
   updateConfiguration(){
     this.saving = true;
-    this.cartService.updateConfigurationsOnCartItem(this.cartItemId, this.productOptionFormList, this.productAttributeFormList, this.quantity)
+    this.cartService.updateConfigurationsOnCartItem(this.cartItemId, this.productOptionFormList, this.attributeValue, this.quantity)
     .subscribe(res => 
       {
         this.saving = false;

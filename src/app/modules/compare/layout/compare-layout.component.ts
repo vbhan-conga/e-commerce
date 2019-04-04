@@ -4,26 +4,45 @@ import { ProductService, Product } from '@apttus/ecommerce';
 import { ConfigurationService, ACondition } from '@apttus/core';
 import { ProductDrawerService, ProductSelectionService } from '@apttus/elements';
 
+
+/**
+ * The compare layout component is a wrapper component for the product comparison component.
+ * It is used to pass appropriate information to the product comparison component and will navigate to the home screen when there isn't sufficient data to compare.
+ * @example
+ * <app-compare-layout></app-compare-layout>
+ */
 @Component({
   selector: 'app-compare-layout',
   templateUrl: './compare-layout.component.html',
   styleUrls: ['./compare-layout.component.scss']
 })
 export class CompareLayoutComponent implements OnInit, OnDestroy {
-
+  /**
+   * Array of products to check is theri any product exist.
+   */
   products: Array<Product>;
+  /**
+  * The product identifier set in the configuration file.
+  */
   identifiers: Array<string>;
   /**
-   * The product identifier set in the configuration file.
-   */
+  * Defined default value if one not found in configuration.
+  */
   identifier: string = 'Id';
 
   constructor(private config: ConfigurationService, private activatedRoute: ActivatedRoute, private router: Router, private productService: ProductService, private productSelectionService: ProductSelectionService, private productDrawerService: ProductDrawerService) {
     this.identifier = this.config.get('productIdentifier');
   }
 
+  /**
+    * Current subscriptions in this class.
+    * @ignore
+  */
   private subs: Array<any> = [];
 
+  /**
+   * @ignore
+   */
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
       let newIdentifiers = decodeURIComponent(params.products).split(',');
@@ -48,6 +67,9 @@ export class CompareLayoutComponent implements OnInit, OnDestroy {
     });
   }
 
+ /**
+   * @ignore
+   */
   ngOnDestroy() {
     if (this.subs && this.subs.length > 0) {
       this.subs.forEach(sub => sub.unsubscribe());

@@ -29,12 +29,12 @@
                   {{item.Product.Description}}
                 </p>
                 <div class="d-flex flex-row small">
-                  <div class="flex-column justify-content-between mr-2" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
+                  <div class="flex-column justify-content-between mr-2" *ngIf="item.PriceListItem?.PriceType === 'Recurring' || item.PriceListItem?.PriceType === 'Usage'">
                     <span class="text-muted">Frequency:</span>
                     <span class="pl-1">{{item.PriceListItem?.Frequency}}</span>
                     
                   </div>
-                  <div class="flex-column justify-content-between mr-2" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
+                  <div class="flex-column justify-content-between mr-2" *ngIf="item.PriceListItem?.PriceType === 'Recurring' || item.PriceListItem?.PriceType === 'Usage'">
                     <span class="text-muted">Term:</span>
                     <span class="pl-1">{{item.SellingTerm | number}}</span>
                   </div>
@@ -43,7 +43,7 @@
                     <span class="pl-1">{{item?.LineStatus}}</span>
                   </div>
                 </div>
-                <small class="d-block mt-3" *ngIf="item.PriceListItem?.PriceType === 'Recurring'">
+                <small class="d-block mt-3" *ngIf="item.PriceListItem?.PriceType === 'Recurring' || item.PriceListItem?.PriceType === 'Usage'">
                   <apt-date-range-input [disableStartDate]="item?.LineStatus?.toLowerCase() !=='new'" (onStartDateChange)="handleStartChange(item)" (onEndDateChange)="handleEndDateChange(item)" [cartItem]="item"></apt-date-range-input>
                 </small>
               </div>
@@ -53,7 +53,7 @@
                 <div class="d-flex justify-content-between small mt-1 text-muted">
                   <span>Standard Price</span>
                   <span>
-                    <apt-price [record]="item" type="base"></apt-price>
+                    <apt-price [record]="item" type="list"></apt-price>
                   </span>
                 </div>
                 <div

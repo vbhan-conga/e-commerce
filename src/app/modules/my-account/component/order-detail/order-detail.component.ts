@@ -5,7 +5,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Order, OrderLineItem, OrderService, ProductService, Product } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 
-
+/**
+ * Component to load individual order detail. Takes order name as input parameter and lods that order.
+ */
 @Component({
   selector: 'app-order-detail',
   templateUrl: './order-detail.component.html',
@@ -20,8 +22,14 @@ export class OrderDetailComponent implements OnInit {
    */
   identifier: string = 'Id';
 
+  /**
+   * @ignore
+   */
   constructor(private route: ActivatedRoute, private orderService: OrderService, private modalService: BsModalService, public productService: ProductService) { }
 
+  /**
+   * @ignore
+   */
   ngOnInit() {
     this.productService.configurationService.get('productIdentifier');
     this.route.params
@@ -29,6 +37,9 @@ export class OrderDetailComponent implements OnInit {
       .subscribe(order => this.order = order);
   }
 
+  /**
+   * @ignore
+   */
   openModal(template: TemplateRef<any>, lineItem: OrderLineItem) {
     this.selectedLineItem = lineItem;
     this.modalRef = this.modalService.show(template, {class:'modal-lg'});

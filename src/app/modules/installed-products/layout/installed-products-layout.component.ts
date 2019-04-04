@@ -8,9 +8,13 @@ import { AssetSelectionService } from '@apttus/elements';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
+
 /**
- * Installed products layout component is used to set the structure of the installed products page.
- */
+* Installed Product Layout is used to set the structure of the installed products page.
+*
+* @example
+* <app-installed-products-layout></app-installed-products-layout>
+*/
 @Component({
   selector: 'app-installed-products-layout',
   templateUrl: './installed-products-layout.component.html',
@@ -73,8 +77,10 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * Instance of the current cart.
    */
   cart: Cart;
+  /**
+  * Stores all the details about current storefront object
+  */
   storefront$: Observable<Storefront>;
-
   /**
    * Value of the days to renew filter.
    */
@@ -148,6 +154,9 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     }));
   }
 
+  /**
+   * @ignore
+   */
   ngOnInit() {
     this.storefront$ = this.storefrontService.getStorefront();
     this._selectedProductID = this.route.snapshot.params.productId;
@@ -272,6 +281,9 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     this.getResults();
   }
 
+ /**
+  * @ignore
+ */
   ngOnDestroy() {
     this.assetSelectionService.clearSelection();
     this.subs.forEach(sub => sub.unsubscribe());

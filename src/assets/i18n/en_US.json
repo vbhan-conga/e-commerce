@@ -1,0 +1,21 @@
+{
+    "ERROR" : {
+        "MIN-OPTIONS" : "You must select at least {{value}} options.",
+        "MAX-OPTIONS" : "You can select no more than {{value}} options.",
+        "MIN-TOTAL-QUANTITY" : "You must have a total of {{value}} options.",
+        "MAX-TOTAL-QUANTITY" : "You can select no more than a total of {{value}} options.",
+        "UNABLE_TO_RENEW" : "An error occurred renewing this asset(s)",
+        "CART": {
+            "TOO_MANY_ATTEMPTS": "An item in your cart could not be priced. Please try removing an item / items and try again.",
+            "SERVER_ERROR": "Oops something went wrong.",
+            "PRICE_CHANGE": "The price of your cart has been updated"
+        },
+        "CONSTRAINT_RULE" : {
+            "ASSOCIATE_AND_APPLY" : "An error ocurred getting the constraint rules for your cart."
+        }
+    },
+    "ASSETS" : {
+        "TERMINATE_SUCCESS" : "The asset termination has been added to your cart.",
+        "RENEW_SUCCESS" : "The asset renewal has been added to your cart."
+    }
+}

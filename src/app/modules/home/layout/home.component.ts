@@ -3,17 +3,35 @@ import { StorefrontService, Storefront, CategoryService, Category, Product, Prod
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
-import { ACondition, APageInfo } from '@apttus/core';
 
+/**
+ * Default Home/Landing componenet for Apttus Digital Commerce.
+ * Shows Storefront image(s), products from first two categories of price list and Footer
+ * 
+ * @example
+ * <app-home></app-home>
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  /**
+   * Stores all the details about current storefront object
+   */
   storefront$: Observable<Storefront>;
+  /**
+   * To show products from price list's first category 
+   */
   productListA$: Observable<Array<Product>>;
+  /**
+   * To show products from price list's second category 
+   */
   productListB$: Observable<Array<Product>>;
+  /**
+   * Stores category tree for price list
+   */
   categories: Array<Category>;
 
   constructor(private storefrontService: StorefrontService,

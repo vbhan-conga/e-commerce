@@ -38,8 +38,8 @@ export class CartSummaryComponent implements OnInit, OnChanges {
   }
 
    ngOnChanges() {
-     if(this.cart) this.totalPromotions = _.sum(this.cart.LineItems.map(res=> res.IncentiveAdjustmentAmount));
-   }
+     this.totalPromotions = ((this.cart && _.get(this.cart,'LineItems.length') > 0))?_.sum(this.cart.LineItems.map(res=> res.IncentiveAdjustmentAmount)):0;
+    }
   createQuote() {
     this.state.requestQuoteLoading = true;
     this.quoteService.convertCartToQuote().subscribe(

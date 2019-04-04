@@ -5,7 +5,6 @@ import { ComponentModule } from '../../components/component.module';
 import { ProductDetailsRoutingModule } from './product-details-routing.module';
 import { ProductDetailsComponent } from './layout/product-details.component';
 
-import { ProductImagesComponent } from './component/product-images.component';
 import { NgxGalleryModule } from 'ngx-gallery';
 
 import { CartModule, CatalogModule, PricingModule, StoreModule } from '@apttus/ecommerce';
@@ -19,7 +18,7 @@ import { ProductReplacementsComponent } from './component/product-replacements.c
 
 
 import { ConfigureGuard } from '../../services/configure.guard';
-import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, MdSpinnerModule, InputDateModule } from '@apttus/elements';
+import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, MdSpinnerModule, InputDateModule, ProductImagesModule } from '@apttus/elements';
 
 
 @NgModule({
@@ -30,6 +29,7 @@ import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, Pro
     ProductConfigurationModule,
     MdSpinnerModule,
     ButtonModule,
+    ProductImagesModule,
     PriceModule,
     FormsModule,
     ProductDetailsRoutingModule,
@@ -46,7 +46,6 @@ import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, Pro
   ],
   providers : [ConfigureGuard],
   declarations: [ProductDetailsComponent,
-                ProductImagesComponent,
                 TabFeaturesComponent,
                 ProductReplacementsComponent,
                 TabAttachmentsComponent]

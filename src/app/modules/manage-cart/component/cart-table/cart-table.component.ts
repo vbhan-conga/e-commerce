@@ -53,9 +53,13 @@ export class CartTableComponent implements OnChanges, OnInit {
    * @fires CartService.removeCartItem()
    */
   removeCartItem(item: CartItem, evt) {
-    item._metadata = { _deleting: true };
     evt.stopPropagation();
-    this.cartService.removeCartItem(item);
+    this.cart.LineItems.forEach(lineItem => {
+      if (item.LineNumber === lineItem.LineNumber) {
+        lineItem._metadata = { _deleting: true };
+        this.cartService.removeCartItem(lineItem);
+      }
+    });
   }
   /**
    * Changes the quantity of the cart item passed to this method.

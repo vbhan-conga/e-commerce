@@ -9,6 +9,17 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import * as _ from 'lodash';
 
+/**
+ * Cart component, contains details such as
+ * 
+ * Addresses (Billing/Shipping), 
+ * Payment Method (Card, PO),
+ * Cart Summary (line items in current cart)
+ * 
+ * Example Usage:
+ * @example
+ * <app-cart></app-cart>
+ */
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -20,16 +31,46 @@ export class CartComponent implements OnInit {
   @ViewChild('staticTabs') staticTabs: TabsetComponent;
   @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
 
+  /**
+   * A hot observable containing the single cart instance
+   */
   cart$: Observable<Cart>;
+  /**
+   * An Observable containing the current contact record
+   */
   primaryContact: Contact;
-
+  /**
+   * If shilling and billing addresses are same or not.
+   */
   shippingEqualsBilling: boolean = true;
+  /**
+   * Order Object Model
+   */
   order: Order;
+  /**
+   * Order Response Object Model
+   */
   orderConfirmation: Order;
+  /**
+   * Card Model (name, card number, expiration date, etc)
+   */
   card: Card;
+  /**
+   * Loading flag for spinner
+   */
   loading: boolean = false;
+  /**
+   * Unique Id 
+   */
   uniqueId: string;
+  /**
+   * Payment state such as Card and Invoice
+   * Default is Card
+   */
   paymentState: 'CARD' | 'INVOICE' = 'CARD';
+  /**
+   * Stores confirmation model
+   */
   confirmationModal: BsModalRef;
 
   constructor(private cartService: CartService, private orderService: OrderService, private modalService: BsModalService, public contactService: ContactService) {
@@ -43,6 +84,12 @@ export class CartComponent implements OnInit {
     this.card = {} as Card;
   }
 
+  /**
+   * Allow to switch address tabs if billing and shipping address are diffrent.
+   * 
+   * @param evt Event that identifies if Shipping and billing addresses are same.
+   * 
+   */
   selectTab(evt){
       if (evt)
         this.staticTabs.tabs[0].active = true;
@@ -51,6 +98,9 @@ export class CartComponent implements OnInit {
       }
   }
 
+  /**
+   * Allows user to submit order. Convert a cart to order and submit it.
+   */
   submitOrder(){
     if (this.shippingEqualsBilling){
       this.primaryContact.OtherCity = this.primaryContact.MailingCity;
@@ -76,6 +126,12 @@ export class CartComponent implements OnInit {
     );
   }
 
+  /**
+   * Generates a unique id for different components
+   * 
+   * @param id ids such as 'firstName', 'lastName', 'email', etc
+   * @returns uniqueid
+   */
   public getId(id: string): string {
     return this.uniqueId + '_' + id;
   }
