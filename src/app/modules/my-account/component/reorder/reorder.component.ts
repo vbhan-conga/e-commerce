@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { ACondition } from '@apttus/core';
 
+/** @ignore */
 @Component({
   selector: 'app-reorder',
   templateUrl: './reorder.component.html',

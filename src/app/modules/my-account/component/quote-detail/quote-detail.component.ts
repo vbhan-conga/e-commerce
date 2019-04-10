@@ -5,6 +5,7 @@ import { QuoteService, Quote, QuoteLineItem } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
+/** @ignore */
 /**
  * Component loads individual quote from param quoteID.
  */

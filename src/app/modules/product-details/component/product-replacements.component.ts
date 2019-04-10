@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Product } from '@apttus/ecommerce';
 import { ConfigurationService } from '@apttus/core';
-
+/**
+ * @ignore
+ */
 @Component({
   selector: 'apt-product-replacements',
   template: `
@@ -29,6 +31,10 @@ import { ConfigurationService } from '@apttus/core';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
+/**
+ * @ignore
+ */
 export class ProductReplacementsComponent implements OnInit {
   @Input() productList: Array<Product>;
   identifier: string = 'Id';

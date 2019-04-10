@@ -5,6 +5,7 @@ import { QuoteActions } from './quote-actions.component';
 import { Router } from '@angular/router';
 import { ACondition } from '@apttus/core';
 
+/** @ignore */
 /**
  * Loads list of quotes for logged in user.
  */

@@ -8,8 +8,17 @@ import * as _ from 'lodash';
   templateUrl: './manage-cart.component.html',
   styleUrls: ['./manage-cart.component.scss']
 })
+/**
+ * Manage Cart component is used to show the list of cart line item(s)  and summary of the cart.
+ */
 export class ManageCartComponent implements OnInit {
+  /**
+   * Observable of cart
+   */
   cart$: Observable<Cart>;
+    /**
+   * Observable of Array of Product
+   */
   productList$: Observable<Array<Product>>;
 
   constructor(private cartService: CartService, private productService: ProductService) { }

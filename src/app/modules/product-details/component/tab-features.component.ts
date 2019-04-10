@@ -28,6 +28,9 @@ import { Product } from '@apttus/ecommerce';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+/**
+ * Tab Features Component displays the list of specifications for the product.
+ */
 export class TabFeaturesComponent {
   @Input() product: Product;
 

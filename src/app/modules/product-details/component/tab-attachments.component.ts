@@ -32,8 +32,16 @@ import { Observable } from 'rxjs/Observable';
     `],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
+/**
+ * Tab Attachments Component displays the list of attachment for the product.
+ */
 export class TabAttachmentsComponent implements OnInit{
+
     @Input() product: Product;
+
+    /**
+     * productInformation Observable to get product information.
+     */
     productInformation$ : Observable<ProductInformation[]>;
 
     constructor(private productInformationService: ProductInformationService){}
@@ -41,7 +49,12 @@ export class TabAttachmentsComponent implements OnInit{
     ngOnInit(){
       this.productInformation$ = this.productInformationService.getProductInformation(this.product.Id);
     }
-
+    /**
+     * getAttachmentUrl method fetches the attachment url based on attachment id and product id.
+     * @param attachmentId is a string consisting of attachment id
+     * @param productId is a string consisting of product id.
+     * @returns the attachment url which is type of string
+     */
     getAttachmentUrl(attachmentId, productId){
       return this.productInformationService.getAttachmentUrl(attachmentId,productId);
     }

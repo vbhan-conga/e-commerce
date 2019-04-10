@@ -12,14 +12,25 @@ import * as _ from 'lodash';
   templateUrl: './cart-summary.component.html',
   styleUrls: ['./cart-summary.component.scss']
 })
+
+/**
+ * Cart Summary Component shows the sub total of the cart also allows to apply promotions if promotion is enabled in the storefront.
+ */
+
 export class CartSummaryComponent implements OnInit, OnChanges {
   @Input() cart: Cart;
   @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
 
   state: SummaryState;
+ /**
+  * @ignore
+  */
   generatedQuote: Quote;
   confirmationModal: BsModalRef;
   hasErrors: boolean = true;
+  /**
+   * Gives the total amount of promotion applied to the cart
+   */
   totalPromotions: number = 0;
   storefront$: Observable<Storefront>;
 
@@ -40,6 +51,9 @@ export class CartSummaryComponent implements OnInit, OnChanges {
    ngOnChanges() {
      this.totalPromotions = ((this.cart && _.get(this.cart,'LineItems.length') > 0))?_.sum(this.cart.LineItems.map(res=> res.IncentiveAdjustmentAmount)):0;
     }
+    /**
+     * @ignore
+     */
   createQuote() {
     this.state.requestQuoteLoading = true;
     this.quoteService.convertCartToQuote().subscribe(

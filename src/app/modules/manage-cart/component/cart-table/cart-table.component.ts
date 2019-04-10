@@ -12,6 +12,10 @@ import { Observable } from 'rxjs';
   styleUrls: ['./cart-table.component.scss']
 })
 
+/**
+ * Cart Table Component displays the list of cart line items
+ */
+
 export class CartTableComponent implements OnChanges, OnInit {
   @Input() cart: Cart;
 

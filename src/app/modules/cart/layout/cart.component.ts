@@ -109,9 +109,14 @@ export class CartComponent implements OnInit {
       this.primaryContact.OtherStateCode = this.primaryContact.MailingStateCode;
       this.primaryContact.OtherPostalCode = this.primaryContact.MailingPostalCode;
       this.primaryContact.OtherCountryCode = this.primaryContact.MailingCountryCode;
-      this.primaryContact.OtherCountry = this.primaryContact.MailingCountry;
     }
 
+    //Removing MailingCountry, OtherCountry, OtherState and OtherStateCode from primary contact object
+    delete this.primaryContact.MailingCountry;
+    delete this.primaryContact.OtherCountry;
+    delete this.primaryContact.OtherState;
+    delete this.primaryContact.OtherStateCode;
+    
     this.loading = true;
     this.orderService.convertCartToOrder(this.order, this.primaryContact).subscribe(
       res => {

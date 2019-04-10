@@ -10,11 +10,13 @@ import { Observable } from 'rxjs/Observable';
 export class FooterComponent implements OnInit {
 
   storefront$: Observable<Storefront>;
+  currentYear: string = null;
 
   constructor(private storefrontService: StorefrontService) { }
 
   ngOnInit() {
     this.storefront$ = this.storefrontService.getStorefront();
+    this.currentYear = new Date().getFullYear().toString();
   }
 
 }
