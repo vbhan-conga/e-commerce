@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef } from '@angular/core';
-import { Cart, CartService, Order, OrderService, Contact, ContactService } from '@apttus/ecommerce';
+import { Cart, CartService, Order, OrderService, Contact, ContactService, UserService, AccountService } from '@apttus/ecommerce';
 import { Observable } from 'rxjs/Observable';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Card } from '../component/card-form/card-form.component';
@@ -73,11 +73,19 @@ export class CartComponent implements OnInit {
    */
   confirmationModal: BsModalRef;
 
-  constructor(private cartService: CartService, private orderService: OrderService, private modalService: BsModalService, public contactService: ContactService) {
+  /**
+    * A hot observable containing the logged in information
+  */
+  isLoggedIn$: Observable<boolean>;
+  accountId: string;
+
+  constructor(private cartService: CartService, private orderService: OrderService, private modalService: BsModalService, public contactService: ContactService, private userService: UserService, private accountService: AccountService) {
     this.uniqueId = _.uniqueId();
   }
 
   ngOnInit() {
+    this.isLoggedIn$ = this.userService.isLoggedIn();
+    this.accountService.getCurrentAccount().subscribe(res => this.accountId = res.Id);
     this.cart$ = this.cartService.getMyCart();
     this.contactService.getMyContact().subscribe(c => this.primaryContact = c);
     this.order = new Order();

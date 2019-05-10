@@ -1,9 +1,11 @@
-import { Component, OnChanges, Input, TemplateRef, ViewChild  } from '@angular/core';
+import { Component, OnChanges, Input, TemplateRef, ViewChild, Output, EventEmitter  } from '@angular/core';
 import { Cart, QuoteService, TemplateService, CartItem, Quote } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { PlatformService } from '@apttus/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'cart-summary',
@@ -25,8 +27,13 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 })
 export class SummaryComponent implements OnChanges {
   @Input() cart: Cart;
+  @Input() form: NgForm;
+  @Input() spinner: boolean;
+  @Input() accountId: string;
+  @Input() isLoggedIn: Observable<boolean>;
   @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
-
+  @Output() onSubmitOrder: EventEmitter<string> = new EventEmitter();
+  
   state: SummaryState;
   modalRef: BsModalRef;
   lineItem: CartItem;
@@ -71,6 +78,10 @@ export class SummaryComponent implements OnChanges {
   openModal(lineItem: CartItem, template: TemplateRef<any>) {
     this.lineItem = lineItem;
     this.modalRef = this.modalService.show(template);
+  }
+
+  submitOrder() {
+    this.onSubmitOrder.emit();
   }
 }
 

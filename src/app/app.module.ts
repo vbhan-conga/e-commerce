@@ -48,7 +48,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserModule,
     AppRoutingModule,
     ApttusModule.forRoot(environment),
-    CommerceModule.forRoot('*** Storefront Name ****'),
+    CommerceModule.forRoot('D-Commerce'),
     ProductDrawerModule,
     ModalModule.forRoot(),
     ApttusModalModule,

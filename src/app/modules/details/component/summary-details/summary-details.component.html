@@ -1,0 +1,44 @@
+<div *ngIf="item">
+  <div class="table-responsive mt-2 bg-white">
+    <table class="table table-borderless h-100">
+      <tbody>
+        <tr>
+          <td>
+            <div class="d-flex flex-row small mb-2">
+              <strong>Created On : </strong> &nbsp;
+              {{item?.CreatedDate | date:'shortDate'}}
+            </div>
+            <div class="d-flex flex-row small mb-2">
+              <strong>Created By : </strong> &nbsp;
+              {{item?.CreatedBy?.FirstName}} {{item?.CreatedBy?.LastName}}
+            </div>
+            <div class="d-flex flex-row small mb-2">
+              <strong>Primary Contact : </strong> &nbsp;
+              {{item?.PrimaryContact?.FirstName}} {{item?.PrimaryContact?.LastName}}
+            </div>
+            <div *ngIf="item?.SoldToAccount" class="d-flex flex-row small mb-2">
+              <strong>Account : </strong> &nbsp;
+              {{item?.SoldToAccount?.Name}}
+            </div>
+          </td>
+          <td>
+            <div *ngIf="item?.SoldToAccount" class="d-flex flex-row small mb-3">
+              <strong>Ship To : </strong> &nbsp;
+              {{item?.SoldToAccount?.ShippingStreet}} , {{item?.SoldToAccount?.ShippingCity}} ,
+              <br />
+              {{item?.SoldToAccount?.ShippingState}} , {{item?.SoldToAccount?.ShippingPostalCode}} ,
+              {{item?.SoldToAccount?.ShippingCountry}}
+            </div>
+            <div *ngIf="item?.SoldToAccount" class="d-flex flex-row small mb-3">
+              <strong>Bill To : </strong> &nbsp;
+              {{item?.SoldToAccount?.BillingStreet}} , {{item?.SoldToAccount?.BillingCity}} ,
+              <br />
+              {{item?.SoldToAccount?.BillingState}} , {{item?.SoldToAccount?.BillingPostalCode}} ,
+              {{item?.SoldToAccount?.BillingCountry}}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

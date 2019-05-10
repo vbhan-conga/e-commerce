@@ -38,6 +38,19 @@
     </li>
 </ul>
 
+<div *ngIf="!accountId && !isLoggedIn; else showButton" [tooltip]="'Default account for Guest Orders not available.'">
+    <button class="btn btn-primary btn-block mb-3" [ladda]="spinner" data-style="zoom-in" (click)="submitOrder()"
+        [disabled]="true">
+        Submit Order
+    </button>
+</div>
+<ng-template #showButton>
+    <button class="btn btn-primary btn-block mb-3" [ladda]="spinner" data-style="zoom-in" (click)="submitOrder()"
+        [disabled]="!form.valid || !cart?.LineItems || cart?.LineItems.length === 0">
+        Submit Order
+    </button>
+</ng-template>
+
 <form class="card p-2">
     <div class="input-group">
         <input type="text" class="form-control" placeholder="Promo code">

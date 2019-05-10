@@ -1,10 +1,10 @@
 <div class="container-fluid px-5 py-4" id="checkout-form">
   <div class="row">
-    <cart-summary class="col-md-4 order-md-2 mb-4 animated fadeIn" [cart]="(cart$ | async)"></cart-summary>
+    <cart-summary class="col-md-4 order-md-2 mb-4 animated fadeIn" [form]="form" [spinner]="loading" [accountId]="accountId" [isLoggedIn]="(isLoggedIn$ | async)" [cart]="(cart$ | async)" (onSubmitOrder)="submitOrder()"></cart-summary>
     <div class="col-md-8 order-md-1 animated fadeIn">
       <h4 class="mb-3 text-muted">Address Information</h4>
 
-      <form class="needs-validation" novalidate (ngSubmit)="form.form.valid && submitOrder()" #form="ngForm">
+      <form class="needs-validation" novalidate #form="ngForm">
         <div class="card p-3">
           <tabset #staticTabs *ngIf="primaryContact">
             <tab heading="Billing Address" id="billing">
@@ -27,9 +27,9 @@
               
               <div class="mb-3">
                 <label [for]="getId('email')">Email
-                  <span class="text-muted">(Optional)</span>
+                  <span *ngIf="isLoggedIn$ | async" class="text-muted">(Optional)</span>
                 </label>
-                <input class="form-control" [id]="getId('email')" placeholder="you@example.com" email #email="ngModel" [ngModel]="primaryContact?.Email" name="email" [ngClass]="{ 'is-invalid': email.invalid }">
+                <input class="form-control" [id]="getId('email')" placeholder="you@example.com" [required]="!(isLoggedIn$ | async)" email #email="ngModel" [(ngModel)]="primaryContact.Email" name="email" [ngClass]="{ 'is-invalid': email.invalid && (email.touched || email.dirty || form.submitted)}">
                 <div class="invalid-feedback">
                   Please enter a valid email address for shipping updates.
                 </div>
@@ -52,7 +52,7 @@
               name="shippingEqualsBilling">
             <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
           </div>
-          <div class="custom-control custom-checkbox">
+          <div class="custom-control custom-checkbox" *ngIf="isLoggedIn$ | async">
             <input type="checkbox" class="custom-control-input" id="save-info">
             <label class="custom-control-label" for="save-info">Save this information for next time</label>
           </div>
@@ -69,7 +69,7 @@
               <input name="paymentState" type="radio" id="debit" class="custom-control-input" required="">
               <label class="custom-control-label" for="debit">Debit card</label>
             </div>
-            <div class="custom-control custom-radio">
+            <div class="custom-control custom-radio" *ngIf="isLoggedIn$ | async">
               <input name="paymentState" type="radio" id="invoice" class="custom-control-input" [value]="'INVOICE'" [(ngModel)]="paymentState">
               <label class="custom-control-label" for="invoice">PO Number</label>
             </div>
@@ -84,7 +84,6 @@
               name="poNumber">
           </div>
         </div>
-        <button class="btn btn-primary btn-lg btn-block mt-3" type="submit" [ladda]="loading" data-style="zoom-in" [disabled]="!form.valid || !(cart$ | async)?.LineItems || (cart$ | async)?.LineItems.length === 0">Submit Order</button>
       </form>
     </div>
   </div>
@@ -102,6 +101,7 @@
   </div>
   <div class="modal-footer d-flex justify-content-center flex-wrap flex-md-nowrap">
     <button class="btn btn-secondary d-block w-100 m-2" [routerLink]="['/']" (click)="confirmationModal.hide()">Continue Shopping</button>
-    <button class="btn btn-primary d-block w-100 m-2" [routerLink]="['/my-account', 'orders', orderConfirmation.Name]" (click)="confirmationModal.hide()">Order Details</button>
+    <button *ngIf="isLoggedIn$ | async" class="btn btn-primary d-block w-100 m-2" [routerLink]="['/my-account', 'orders', orderConfirmation.Name]" (click)="confirmationModal.hide()">Order Details</button>
+    <button *ngIf="!(isLoggedIn$ | async)" class="btn btn-primary d-block w-100 m-2" [routerLink]="['/details', orderConfirmation.Name]" (click)="confirmationModal.hide()">Order Details</button>    
   </div>
 </ng-template>

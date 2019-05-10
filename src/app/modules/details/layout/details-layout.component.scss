@@ -8,10 +8,6 @@
   }
 }
 
-apt-add-to-cart{
-    white-space: nowrap;
-}
-
 .navbar{
     transition: all 0.2s ease 0s;
     &.fixed-top{
@@ -23,7 +19,7 @@ apt-add-to-cart{
         animation-duration: 0.2s;
     }
     &.expand{
-        top: calc(#{$navbar-brand-height} + 72px);
+        top: calc(#{$navbar-brand-height}  72px);
     }
     h3{
         max-width: 95%;
@@ -34,7 +30,7 @@ apt-add-to-cart{
 }
 
 .headerContainer{
-    height: 230px;
+    height: 100px;
     .form-group{
         margin-bottom: 0;
         input:not(.form-control-plaintext){

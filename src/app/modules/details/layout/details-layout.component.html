@@ -1,0 +1,51 @@
+<div class="py-4 container-fluid">
+  <apt-breadcrumb [sobject]="(item$ | async)"></apt-breadcrumb>
+  <div class="border-bottom"></div>
+  <div class="headerContainer my-2">
+    <h5 class="my-3">
+      <strong>{{name}}</strong>
+      <span class="pl-4 text-muted">{{(item$ | async)?.Status}}</span>
+    </h5>
+    <nav class="navbar navbar-light bg-light d-block pb-0 pt-3 nav-tabs" [ngClass]="headerClass">
+      <div class="d-flex align-items-end">
+        <ng-container *ngFor="let tab of tabList; let i = index">
+          <a class="nav-link" [class.active]="tab.active" href="javascript:void(0)"
+            *ngIf="tab?.section?.nativeElement" (click)="scrollTo(tab)">
+            {{tab.label}}
+          </a>
+        </ng-container>
+      </div>
+    </nav>
+  </div>
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row my-2 justify-content-between" #summary>
+      <div class="w-75 pr-3">
+        <div *ngIf="item$ | async" class="card animated fadeIn">
+          <div class="card-header">
+            ORDER SUMMARY
+          </div>
+          <div class="card-body py-0">
+            <app-summary-details [item]='(item$ | async)'></app-summary-details>
+          </div>
+        </div>
+      </div>
+      <div class="w-25">
+        <app-price-summary [item] = "item$ | async"></app-price-summary>
+      </div>
+    </div>
+    <div class="d-flex flex-column my-2" #lineItems>
+      <div *ngIf="item$ | async else loading" class="card animated fadeIn">
+        <div class="card-header">
+          LINE ITEMS
+        </div>
+        <app-line-item-details [lineItems]='(item$ | async)?.OrderLineItems'></app-line-item-details>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center flex-fill pt-5">
+    <apt-md-dots></apt-md-dots>
+  </div>
+</ng-template>

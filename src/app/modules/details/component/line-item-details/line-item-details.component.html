@@ -1,0 +1,92 @@
+<div *ngIf="lineItems">
+  <div class="table-responsive card-body py-0 bg-white">
+    <table class="table h-100">
+      <tbody>
+        <div *ngFor="let item of lineItems">
+          <tr *ngIf="item.LineType === 'Product/Service' && item.Product" class="w-100">
+            <td width="15%" class="pt-4">
+              <img [src]="item.Product.IconId | image" class="w-100" />
+            </td>
+            <td class="w-50 pt-4 ">
+              <div class="h-100 d-flex flex-column border-right pr-2">
+                <h5>
+                  <a href="javascript:void(0)" *ngIf="item?.Product && item?.Product[identifier]" [routerLink]="['/product', item.Product[identifier]]">
+                    {{item.Product?.Name}}
+                  </a>
+                  <span *ngIf="item.Product.HasAttributes || item.Product.HasOptions">
+                    <button class="text-muted btn btn-link btn-sm p-0" (click)="openModal(item, configurationTemplate)" >
+                      <span class="oi oi-wrench"></span>
+                    </button>
+                  </span>
+                  <span class="small text-muted ml-4">{{item.Status}}</span>
+                </h5>
+                <p class="text-muted small">
+                  Product ID: {{item.Product?.ProductCode}}
+                </p>
+                <p class="small description">
+                  {{item.Product?.Description}}
+                </p>
+                <div class="d-flex flex-row small">
+                  <div class="d-flex flex-column justify-content-end mr-5">
+                    <span class="text-muted"> Quantity </span>
+                    <span>{{item.Quantity}}</span>
+                  </div>
+                  <div class="d-flex flex-column justify-content-between mr-5" *ngIf="item?.PriceType === 'Recurring' || item?.PriceType === 'Usage'">
+                    <span class="text-muted"> Frequency </span>
+                    <span>{{item?.Frequency}}</span>
+                  </div>
+                  <div class="d-flex flex-column justify-content-between mr-5" *ngIf="item?.PriceType === 'Recurring' || item?.PriceType === 'Usage'">
+                    <span class="text-muted"> Term </span>
+                    <span>{{item?.SellingTerm | number}}</span>
+                  </div>
+                </div>
+                <div class="d-flex flex-row small mt-3" *ngIf="item?.PriceType === 'Recurring' || item?.PriceType === 'Usage'">
+                  <div class="d-flex flex-column justify-content-between mr-4" *ngIf="item?.StartDate">
+                    <span class="text-muted"> Start Date </span>
+                    <span>{{item?.StartDate}}</span>
+                  </div>
+                  <div class="d-flex flex-column justify-content-between ml-2" *ngIf="item?.EndDate">
+                    <span class="text-muted"> End Date </span>
+                    <span>{{item?.EndDate}}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="pt-4 w-25">
+              <div>
+                <div class="d-flex justify-content-between small mt-1 text-muted">
+                  <span> Standard Price </span>
+                  <span>
+                    <apt-price [record]="item" type="list"></apt-price>
+                  </span>
+                </div>
+                <div
+                  class="d-flex justify-content-between mt-1 text-muted"
+                  *ngIf="item?.IncentiveAdjustmentAmount">
+                    <apt-pr-lineitem [record]="item"></apt-pr-lineitem>
+                    <span class="small mt-1">{{item?.IncentiveAdjustmentAmount | localCurrency | async}}</span>
+                </div>
+                <div class="d-flex justify-content-between small mt-1">
+                  <span> Net Price </span>
+                  <apt-price [record]="item" type="net"></apt-price>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </div>
+      </tbody>
+    </table>
+  </div>  
+</div>
+
+<ng-template #configurationTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Product ID: {{ProductCode}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <apt-product-configuration-summary [item]="selectedLineItem"></apt-product-configuration-summary>
+  </div>
+</ng-template>

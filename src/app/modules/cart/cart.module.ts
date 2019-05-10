@@ -12,6 +12,7 @@ import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AddressModule, PriceModule, MdSpinnerModule } from '@apttus/elements';
 
@@ -30,7 +31,8 @@ import { AddressModule, PriceModule, MdSpinnerModule } from '@apttus/elements';
     MdSpinnerModule,
     TabsModule.forRoot(),
     ModalModule.forRoot(),
-    AddressModule
+    AddressModule,
+    TooltipModule.forRoot(),
   ],
   declarations: [CartComponent, SummaryComponent, CybersourceComponent, CardFormComponent]
 })
