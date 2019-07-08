@@ -3,13 +3,14 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" (click)="menuModal.show()">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']" *ngIf="(storefront$ | async)?.Logo; else text">
-      <img [src]="(storefront$ | async)?.Logo | image"/>
-    </button>
-    <ng-template #text>
-      <button class="navbar-brand btn btn-link" [routerLink]="['/']">{{(storefront$ | async)?.Name}}</button>
-    </ng-template>
+    <span *ngIf="(storefront$ | async) as storefront">
+      <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']" *ngIf="storefront?.Logo; else text">
+        <img [src]="storefront?.Logo | image"/>
+      </button>
+      <ng-template #text>
+        <button class="navbar-brand btn btn-link" [routerLink]="['/']">{{storefront?.Name}}</button>
+      </ng-template>
+    </span>
   </div>
 
   <div class="actions d-flex align-items-center">
@@ -81,16 +82,16 @@
 <apt-mini-profile #profile></apt-mini-profile>
 
 <div bsModal #menuModal="bs-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
-  <div class="modal-dialog modal-lg menu">
+  <div class="modal-dialog modal-lg menu" *ngIf="(me$ | async) as me">
     <div class="modal-content py-3">
       <div class="modal-header d-block p-0">
         <div class="d-flex justify-content-between align-items-start p-2">
           <div class="media p-2">
-            <img *ngIf="!isAIC" [src]="(me$ | async)?.SmallPhotoUrl | image : null" class="img-circle" width="45"/>
+            <img *ngIf="!isAIC" [src]="me?.SmallPhotoUrl | image : null" class="img-circle" width="45"/>
             <div class="media-body ml-3">
-              <ng-container  *ngIf="(me$ | async)?.Alias !== 'guest'; else guest">
-                <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
-                <small class="d-block">Last Login Date {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
+              <ng-container  *ngIf="me?.Alias !== 'guest'; else guest">
+                <h5 class="my-0">{{me?.FirstName}} {{me?.LastName}}</h5>
+                <small class="d-block">Last Login Date {{me?.LastLoginDate | date : 'short'}}</small>
               </ng-container>
               <ng-template #guest>
                 <h5 class="my-0">Guest User</h5>
@@ -102,19 +103,19 @@
           <a href="javascript:void(0)" [routerLink]="['/']" (click)="menuModal.hide()" class="list-group-item list-group-item-action">
             <span class="oi oi-home mr-4"></span>Home
           </a>
-          <a href="javascript:void(0)" [routerLink]="['/my-account']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'">
+          <a href="javascript:void(0)" [routerLink]="['/my-account']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="me?.Alias !== 'guest'">
             <span class="oi oi-cog mr-4"></span>My Account
           </a>
-          <a href="javascript:void(0)" [routerLink]="['/installed-products']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'">
+          <a href="javascript:void(0)" [routerLink]="['/installed-products']" (click)="menuModal.hide()" class="list-group-item list-group-item-action" *ngIf="me?.Alias !== 'guest' && (storefront$ | async)?.EnableABO">
             <span class="oi oi-list-rich mr-4"></span>Installed Products
           </a>
           <a href="javascript:void(0)" [routerLink]="['/product-list']" (click)="menuModal.hide()" class="list-group-item list-group-item-action">
             <span class="oi oi-grid-three-up mr-4"></span>Product Catalog
           </a>
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias !== 'guest'" (click)="doLogout(); menuModal.hide();">
+          <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="me?.Alias !== 'guest'" (click)="doLogout(); menuModal.hide();">
             <span class="oi oi-account-logout mr-4"></span>Log Out
           </a>
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="(me$ | async)?.Alias === 'guest'" (click)="profile.openModal('second')">
+          <a href="javascript:void(0)" class="list-group-item list-group-item-action" *ngIf="me?.Alias === 'guest'" (click)="profile.openModal('second')">
             <span class="oi oi-account-login mr-4"></span>Log In
           </a>
         </div>

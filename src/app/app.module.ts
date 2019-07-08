@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ApttusModule } from '@apttus/core';
 import { CommerceModule } from '@apttus/ecommerce';
@@ -36,7 +37,11 @@ registerLocaleData(localeMx, 'es-MX', localeMxExtra);
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AboGuard } from './services/aboGuard';
+
 export function createTranslateLoader(http: HttpClient) {
+  let base = '/';
+  if(window && window['sv'] && window['sv']['resource'])
+    base = window['sv']['resource'] + '/';
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
@@ -46,6 +51,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ApttusModule.forRoot(environment),
     CommerceModule.forRoot('*** Storefront Name ****'),
@@ -67,6 +73,7 @@ export function createTranslateLoader(http: HttpClient) {
     AboModule
   ],
   providers: [RouteGuard, AuthGuard, AboGuard, ConfigureGuard, ConstraintRuleGuard],
+  entryComponents: [RenewModalComponent, TerminateModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
