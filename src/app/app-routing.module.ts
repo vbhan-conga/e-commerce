@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'my-account', loadChildren: './modules/my-account/my-account.module#MyAccountModule', data: { title: 'My Account' }, canActivate: [AuthGuard] },
   { path: 'manage-cart', loadChildren: './modules/manage-cart/manage-cart.module#ManageCartModule', data: { title: 'Cart' } },
   { path: 'login', loadChildren: './modules/login/login.module#LoginModule', data: { title: 'Login'}},
+  { path: 'details/:id', loadChildren: './modules/details/details.module#DetailsModule', data: { title: 'Details'}},
   { path: '**', redirectTo: '' }
 ];
 
