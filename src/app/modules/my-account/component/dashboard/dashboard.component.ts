@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import Chart from 'chart.js';
-import { QuoteService, OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order, UserService, User } from '@apttus/ecommerce';
+import { OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order, UserService, User } from '@apttus/ecommerce';
 import { AObject, ACondition } from '@apttus/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable, combineLatest } from 'rxjs';
 import * as _ from 'lodash';
+import { map } from 'rxjs/operators';
 
 /**
  * This component is for Apttus-ecommerce dashboard. This gives you glimpse of orders, quotes and total spending done for logged in user profile.
@@ -42,11 +43,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
    */
   subscription: any;
   user$: Observable<User>;
+  order: Order = new Order();
 
   /**
   * @ignore
   */
-  constructor(private quoteService: QuoteService, private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe, private userService: UserService) {}
+  constructor(private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe, private userService: UserService) {}
 
   /**
   * @ignore
@@ -54,23 +56,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user$ = this.userService.me();
     this.spent = new Price(this.localCurrencyPipe);
-    this.subscription = Observable.combineLatest(
+    this.subscription = combineLatest(
         // this.quoteService.getMyQuotes(),
         this.orderService.getMyOrders(),
-        this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0]),
+        this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]),
         // this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0])
     ).subscribe(([orders, ag1]) => {
       this.orderList = orders;
       // this.quoteList = quotes;
       // this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
       this.renderPieWithData(this.orderChart, orders, 'Status');
-
-      this.orderCount = _.get(ag1, '[0].total_records', 0);
+      this.orderCount = _.get(ag1, 'total_records', 0);
       // this.quoteCount = _.get(ag2, '[0].total_records', 0);
 
       const orderPriceList$ = [];
       orders.forEach(order => orderPriceList$.push(this.priceService.getOrderPrice(order)));
-      Observable.combineLatest(orderPriceList$).subscribe(prices => {
+      combineLatest(orderPriceList$).subscribe(prices => {
         prices.forEach(price => this.spent.addPrice(price as Price));
       });
 

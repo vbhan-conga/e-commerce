@@ -2,7 +2,7 @@
   <div class="d-flex mb-2">
     <div class="mr-auto">
       <div class="input-group">
-        <input type="search" class="form-control border-0" placeholder="Search Assets" [(ngModel)]="searchQuery"
+        <input type="search" class="form-control" placeholder= "{{'INSTALLED_PRODUCTS.SEARCH_ASSETS' | translate}}" [(ngModel)]="searchQuery"
           (change)="handleSearchChange()" autocomplete="off">
         <div class="input-group-append">
           <button class="btn" type="button">
@@ -14,11 +14,15 @@
     <div>
       <pagination
         (pageChanged)="onPage($event)"
-        [totalItems]="showingFullList ? (searchResults$ | async)?.length : selectedTotalItems.length"
+        [totalItems]="totalItems"
         [(ngModel)]="page"
         [boundaryLinks]="true"
         [itemsPerPage]="pageSize"
         [maxSize]="5"
+        [firstText]="paginationButtonLabels.first"
+        [previousText]="paginationButtonLabels.previous"
+      [nextText]="paginationButtonLabels.next" 
+      [lastText]="paginationButtonLabels.last"
       ></pagination>
     </div>
   </div>
@@ -28,11 +32,10 @@
       <app-price-type-filter class="d-block mb-2" (value)="onPriceTypeChange($event)"></app-price-type-filter>
       <div class="card mb-2">
         <div class="card-body">
-          <h5 class="card-title">Product Family</h5>
+          <h5 class="card-title"> {{'INSTALLED_PRODUCTS.PRODUCT_FAMILY' | translate}} </h5>
           <apt-input-select
-            [fieldName]="'Family'"
-            [override]="'multipicklist'"
-            [serviceReference]="fieldFilterServiceContext"
+            [picklistType]="'multipicklist'"
+            [values]="productFamilies"
             (onChange)="handlePicklistChange($event)"
           ></apt-input-select>
         </div>
@@ -40,9 +43,9 @@
     </div>
     <div class="col-12 col-lg-9">
       <apt-asset-list
-        [assets]="showingFullList ? (searchResults$ | async) : selectedTotalItems"
-        [pageAssets]="showingFullList ? (assets$ | async) : selectedPageItems"
+        [pageAssets]="showingFullList ? groupedPageAssetLineItems : selectedPageItems"
         [operation]="operation"
+        [currentConditions]="conditions"
         (onSelectedAmountClick)="handleSelectedAmountClick($event)"
         (onFullListClick)="handleFullListClick()"
       ></apt-asset-list>

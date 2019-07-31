@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService, AccountService, User, Account } from '@apttus/ecommerce';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 /**
  * Loads user and account specific settings.

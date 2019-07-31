@@ -1,3 +1,5 @@
+
+import {map, take} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { UserService, StorefrontService } from '@apttus/ecommerce';
@@ -9,11 +11,11 @@ export class AboGuard implements CanActivate {
   EnableABO: boolean;
 
   constructor(private router: Router, private userService: UserService, private storefrontService: StorefrontService) {
-      this.storefrontService.getStorefront().take(1).subscribe(storefront => this.EnableABO = storefront.EnableABO);
+      this.storefrontService.getStorefront().pipe(take(1)).subscribe(storefront => this.EnableABO = storefront.EnableABO);
   }
 
   canActivate(): Observable<boolean> {
-    return this.userService.isLoggedIn().map(res => {
+    return this.userService.isLoggedIn().pipe(map(res => {
       if (res) {
         if (this.EnableABO) return true;
         else {
@@ -24,6 +26,6 @@ export class AboGuard implements CanActivate {
         this.router.navigate(['/']);
         return false;
       }
-    });
+    }));
   }
 }

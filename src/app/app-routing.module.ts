@@ -1,5 +1,11 @@
+/**
+ * Apttus Digital Commmerce
+ *
+ * Primary routing module for the application. Provides all the root level routing paths for the application
+ */
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { OrderDetailsGuard } from '@apttus/ecommerce';
 import { RouteGuard } from './services/route.guard';
 import { ConstraintRuleGuard } from './services/constraint-rule.guard';
 import { AuthGuard } from './services/auth.guard';
@@ -17,9 +23,15 @@ const routes: Routes = [
   { path: 'my-account', loadChildren: './modules/my-account/my-account.module#MyAccountModule', data: { title: 'My Account' }, canActivate: [AuthGuard] },
   { path: 'manage-cart', loadChildren: './modules/manage-cart/manage-cart.module#ManageCartModule', data: { title: 'Cart' } },
   { path: 'login', loadChildren: './modules/login/login.module#LoginModule', data: { title: 'Login'}},
+  { path: 'Orders', loadChildren: './modules/order/order.module#OrderModule', data: { title: 'Orders' }, canActivate: [OrderDetailsGuard] },
+  { path: 'Proposals', loadChildren: './modules/quote/quote.module#QuoteModule', data: { title: 'Proposals'}, canActivate: [AuthGuard]},
+  { path: 'payment-message', loadChildren: './modules/payment/payment-message.module#PaymentMessageModule', data: { title: 'PaymentMessage'} },
   { path: '**', redirectTo: '' }
 ];
 
+/**
+ * @internal
+ */
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled' })],
   exports: [RouterModule]

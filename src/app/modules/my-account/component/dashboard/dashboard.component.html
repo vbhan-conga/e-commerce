@@ -3,12 +3,12 @@
         <div class="card">
             <div class="card-body p-0">
                 <div class="d-flex justify-content-between border-bottom py-2 px-3">
-                    <span>Orders</span>
-                    <h6><span class="badge badge-primary">Weekly</span></h6>
+                    <span>{{'COMMON.ORDERS' | translate}}</span>
+                    <h6><span class="badge badge-primary">{{'MY_ACCOUNT.DASHBOARD.WEEKLY' | translate}}</span></h6>
                 </div>
                 <div class="p-3">
                     <h2 class="m-0">{{orderCount}}</h2>
-                    <small>Orders this week</small>
+                    <small>{{'MY_ACCOUNT.DASHBOARD.ORDERS_THIS_WEEK' | translate}}</small>
                 </div>
             </div>
         </div>
@@ -34,14 +34,14 @@
         <div class="card">
             <div class="card-body p-0">
                 <div class="d-flex justify-content-between border-bottom py-2 px-3">
-                    <span>Spent</span>
+                    <span>{{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</span>
                     <h6>
-                        <span class="badge badge-primary">Total</span>
+                        <span class="badge badge-primary">{{'COMMON.TOTAL' | translate}}</span>
                     </h6>
                 </div>
                 <div class="p-3">
-                    <h2 class="m-0">{{spent?.netPrice$ | async}}</h2>
-                    <small>Total Spent</small>
+                    <h2 class="m-0">{{spent?.netPrice | localCurrency | async}}</h2>
+                    <small>{{'COMMON.TOTAL' | translate}} {{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</small>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
     <div class="col-12 col-md-6">
         <div class="card">
             <div class="card-header">
-                Orders by Status
+                {{'MY_ACCOUNT.DASHBOARD.ORDERS_BY_STATUS' | translate}}
             </div>
             <div class="card-body">
                 <canvas #orderChart id="chart"></canvas>
@@ -61,17 +61,14 @@
     <div class="col-12 col-md-6">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <span>Your Information</span>
-                <a href="javascript:void(0)" [routerLink]="['/my-account/settings']">Account Details ></a>
+                <span>{{'MY_ACCOUNT.DASHBOARD.INFORMATION' | translate}}</span>
+                <a href="javascript:void(0)" [routerLink]="['/my-account/settings']">{{'MY_ACCOUNT.DASHBOARD.ACCOUNT_DETAILS' | translate}} ></a>
             </div>
             <div class="card-body">
-                <dl>
-                    <dt>Name</dt>
-                    <dd>{{(user$ | async)?.FirstName + ' ' + (user$ | async)?.LastName}}</dd>
-                    <dt>Username</dt>
-                    <dd>{{(user$ | async)?.Username}}</dd>
-                    <dt>Email</dt>
-                    <dd>{{(user$ | async)?.Email}}</dd>
+                <dl *ngIf="user$ | async as user">
+                    <dd><apt-output-field [record]="user" field="FirstName" [editable]="false" [layout]="'inline'"></apt-output-field></dd>
+                    <dd><apt-output-field [record]="user" field="Username" [editable]="false" [layout]="'inline'"></apt-output-field></dd>
+                    <dd><apt-output-field [record]="user" field="Email" [editable]="false" [layout]="'inline'"></apt-output-field></dd>
                 </dl>
             </div>
         </div>
@@ -92,22 +89,22 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                Recent Orders
+                {{'MY_ACCOUNT.DASHBOARD.RECENT_ORDERS' | translate}}
             </div>
             <div class="card-body p-0">
                 <table class="table table-sm table-striped table-hover">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col" class="pl-3">Order Name</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col" class="pr-3">Date</th>
+                            <th scope="col" class="pl-3"><apt-output-field [record]="order" field="Name" [editable]="false" [labelOnly]="true"></apt-output-field></th>
+                            <th scope="col">{{'COMMON.AMOUNT' | translate}}</th>
+                            <th scope="col" class="pr-3"><apt-output-field [record]="order" field="CreatedDate" [editable]="false" [labelOnly]="true"></apt-output-field></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let order of orderList; let i = index" class="px-2">
                             <ng-container *ngIf="i < 6">
                                 <th scope="row" class="pl-3">
-                                    <a href="javascript:void(0)" [routerLink]="['/my-account/orders/', order.Name]">{{order.Name}}</a>
+                                    <a href="javascript:void(0)" [routerLink]="['/Orders', order.Id]">{{order.Name}}</a>
                                 </th>
                                 <td>{{(order | OrderPricePipe | async)?.netPrice$ | async}}</td>
                                 <td class="pr-3">{{order.CreatedDate | date:'shortDate'}}</td>

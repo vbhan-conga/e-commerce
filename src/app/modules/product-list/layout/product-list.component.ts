@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService, Category, SearchResults, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
-import { Subscription } from 'rxjs';
-import { ConstraintRuleService, ConstraintRule } from '@apttus/constraint-rules';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { map, take, mergeMap, tap } from 'rxjs/operators';
 
 /**
  * Product list component shows all the products in a list for user selection.
@@ -45,63 +46,100 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * Search query to filter products list from grid.
    */
   searchString: string = null;
-  searchResults: SearchResults;
-  searchResultsSubscription: Subscription;
+  searchResults$: BehaviorSubject<SearchResults> = new BehaviorSubject<SearchResults>(null);
+  productFamilies$: Observable<Array<string>> = new Observable<Array<string>>();
   category: Category;
-  constraintRules: Array<ConstraintRule>;
+  subscription: Subscription;
 
-  /** 
+  /**
+   * Control over button's text/label of pagination component for Multi-Language Support
+   */
+  paginationButtonLabels: any = {
+    first: '',
+    previous: '',
+    next: '',
+    last: ''
+  };
+  /**
+   * Array of product families associated with the list of assets.
+   */
+
+  /**
    * @ignore
    */
-  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private constraintRuleService: ConstraintRuleService, private router: Router, public productService: ProductService) {}
+  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService) {}
 
-  /** 
+  /**
    * @ignore
    */
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    if(!_.isNil(this.subscription))
+      this.subscription.unsubscribe();
+  }
 
-  /** 
+  /**
    * @ignore
    */
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      this.searchString = _.get(params, 'query');
+    this.getResults();
 
-      this.categoryService.getCategoryByName(_.get(params, 'categoryName')).subscribe(category => {
-        if(category){
-          this.category = category;
-          this.defaultCategory();
-        }else{
-          this.getResults();
-        }
-      });
+    this.productFamilies$ = this.productService.query({groupBy: ['Family']})
+      .pipe(
+        map(productList => _.compact(_.map(productList, 'Family')))
+      );
+
+    // this.productFamilies$ = this.searchService.searchProducts(undefined, null, null, null, null, [new ACondition(this.productService.type, 'Id', 'NotNull', null)], null).pipe(
+    //   take(1),
+    //   map(searchResults => _.get(searchResults, 'productList')),
+    //   map(products => _.uniqBy(
+    //     products
+    //       .filter(product => _.get(product, 'Family') != null)
+    //       .map(product => _.get(product, 'Family'))
+    //     ,
+    //     val => val
+    //   ))
+    // );
+
+    this.translateService.stream('PAGINATION').subscribe((val: string) => {
+      this.paginationButtonLabels.first = val['FIRST'];
+      this.paginationButtonLabels.previous = val['PREVIOUS'];
+      this.paginationButtonLabels.next = val['NEXT'];
+      this.paginationButtonLabels.last = val['LAST'];
     });
   }
 
-  /** 
-   * @ignore
-   */
-  defaultCategory(){
-    this.categoryService.getCategoryBranchChildren([this.category.Id]).subscribe(categoryList => {
-      this.joins = [new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(c => c.Id))])];
-      this.getResults();
-    });
-  }
-
-  /** 
+  /**
    * @ignore
    */
   getResults() {
-    this.searchResults = null;
-    if(this.searchResultsSubscription)
-      this.searchResultsSubscription.unsubscribe();
-    this.searchResultsSubscription = this.searchService.searchProducts(this.searchString, this.pageSize, this.page, null, null, this.conditions, this.joins)
-      .subscribe(results =>
-        this.constraintRuleService.getConstraintRulesForProducts(results.productList, true, true).subscribe(constraintRules => {
-          this.constraintRules = constraintRules;
-          this.searchResults = results;
-        })
-      );
+    this.ngOnDestroy();
+    this.subscription = this.activatedRoute.params.pipe(
+      tap(() => {
+        if(!_.isNil(this.searchResults$)){
+          const results = this.searchResults$.value;
+          _.set(results, 'productList', null);
+          this.searchResults$.next(results);
+        }
+      }),
+      mergeMap(params => {
+        this.searchString = _.get(params, 'query');
+
+        if (!_.isNil(_.get(params, 'categoryName')))
+          return this.categoryService.getCategoryByName(_.get(params, 'categoryName')).pipe(
+            tap(category => this.category = category),
+            mergeMap(category => this.categoryService.getCategoryBranchChildren([category.Id])),
+            tap(categoryList =>{
+              this.joins = [new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(c => c.Id))])]
+            })
+          );
+        else{
+          return of(null);
+        }
+      }),
+      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins))
+    ).subscribe(r => {
+      this.searchResults$.next(r);
+    });
   }
 
   /**
@@ -130,11 +168,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * @param evt Event object that was fired.
    */
   onPage(evt) {
-    this.page = evt.page;
-    this.getResults();
+    if(_.get(evt, 'page') !== this.page){
+      this.page = evt.page;
+      this.getResults();
+    }
   }
 
-  /** 
+  /**
    * @ignore
    */
   onPriceTierChange(evt) {
@@ -150,11 +190,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     _.remove(this.joins, (j) => j.type === ProductCategory);
     this.page = 1;
 
-    if(_.get(categoryList, 'length', 0) > 0){
+    if(_.get(categoryList, 'length', 0) > 0)
       this.joins.push(new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(category => category.Id))]));
-      this.getResults();
-    }else
-      this.defaultCategory();
+
+    this.getResults();
   }
 
   /**
@@ -179,7 +218,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getResults();
   }
 
-  /** 
+  /**
    * @ignore
    */
   onFieldFilter(evt: ACondition) {
@@ -193,7 +232,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   onSortChange(evt) {
     this.page = 1;
-    this.sortField = evt;
+    this.sortField = evt === 'Name' ? evt : null;
     this.getResults();
   }
 
@@ -214,11 +253,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
     if (this.productFamilyFilter) _.remove(this.conditions, this.productFamilyFilter);
     if (event.length > 0) {
       let values = [];
-      event.forEach(item => values.push(item.value));
+      event.forEach(item => values.push(item));
       this.productFamilyFilter = new ACondition(this.productService.type, 'Family', 'In', values);
       this.conditions.push(this.productFamilyFilter);
     }
     this.getResults();
   }
- 
+
 }

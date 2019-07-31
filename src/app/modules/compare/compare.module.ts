@@ -4,21 +4,18 @@ import { ApttusModule } from '@apttus/core';
 import { ComponentModule } from '../../components/component.module';
 import { CompareRoutingModule } from './compare-routing.module';
 import { CompareLayoutComponent } from './layout/compare-layout.component';
-import { PricingModule, CartModule, StoreModule, CatalogModule } from '@apttus/ecommerce';
-import { ProductCardModule, MdSpinnerModule, ProductCompareModule } from '@apttus/elements';
+import { PricingModule } from '@apttus/ecommerce';
+import { ProductCardModule, IconModule, ProductCompareModule } from '@apttus/elements';
 
 @NgModule({
   imports: [
     CommonModule,
     CompareRoutingModule,
-    CatalogModule,
     PricingModule,
-    CartModule,
-    StoreModule,
     ApttusModule,
     ComponentModule,
     ProductCardModule,
-    MdSpinnerModule,
+    IconModule,
     ProductCompareModule
   ],
   declarations: [

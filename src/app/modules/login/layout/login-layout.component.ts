@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UserService } from '@apttus/ecommerce';
-import { Router } from '@angular/router';
+import { CacheService } from '@apttus/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
+import { TranslateService } from '@ngx-translate/core';
+import * as _ from 'lodash';
 
 /**
- * Login Layout component is used to get the user details and verify it with connected org. 
+ * Login Layout component is used to get the user details and verify it with connected org.
  *
  * @example
  * <app-login-layout></app-login-layout>
@@ -29,7 +31,7 @@ export class LoginLayoutComponent {
    * Flag used to show/hide loader
    */
   loading: boolean = false;
-  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private translateService: TranslateService, private activatedRoute: ActivatedRoute, private cacheService: CacheService) { }
 
   /**
    * This method will check user authenthicity based on given details
@@ -40,11 +42,14 @@ export class LoginLayoutComponent {
     this.userService.login(this.username, this.password).subscribe(
       () => {
         this.loading = false;
-        this.router.navigate(['/']);
+        this.cacheService.refresh(this.userService.type);
+        (_.get(this.activatedRoute.snapshot.params,'orderId')) ? this.router.navigate(['/Orders', _.get(this.activatedRoute.snapshot.params,'orderId')]) : this.router.navigate(['/']);
       },
       (e) => {
         this.loading = false;
-        this.toastr.error('Your username or password is incorrect.', 'Login Fail');
+        this.translateService.stream(['LOGIN.INCORRECT_CREDENTIALS_TOASTR_MESSAGE', 'LOGIN.INCORRECT_CREDENTIALS_TOASTR_TITLE']).subscribe((val: string) => {
+          this.toastr.error(val['LOGIN.INCORRECT_CREDENTIALS_TOASTR_MESSAGE'], val['LOGIN.INCORRECT_CREDENTIALS_TOASTR_TITLE']);
+        });
       }
     );
   }

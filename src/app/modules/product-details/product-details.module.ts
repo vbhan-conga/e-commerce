@@ -7,9 +7,8 @@ import { ProductDetailsComponent } from './layout/product-details.component';
 
 import { NgxGalleryModule } from 'ngx-gallery';
 
-import { CartModule, CatalogModule, PricingModule, StoreModule } from '@apttus/ecommerce';
+import { PricingModule} from '@apttus/ecommerce';
 import { ApttusModule } from '@apttus/core';
-import { ConstraintRulesModule } from '@apttus/constraint-rules';
 
 import { TabFeaturesComponent } from './component/tab-features.component';
 import { TabAttachmentsComponent } from './component/tab-attachments.component';
@@ -18,8 +17,9 @@ import { ProductReplacementsComponent } from './component/product-replacements.c
 
 
 import { ConfigureGuard } from '../../services/configure.guard';
-import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, MdSpinnerModule, InputDateModule, ProductImagesModule } from '@apttus/elements';
-
+import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, IconModule, InputDateModule, ProductImagesModule, ProductConfigurationSummaryModule } from '@apttus/elements';
+import { TranslateModule } from '@ngx-translate/core'; 
+import { DetailsModule } from '../details/details.module';
 
 @NgModule({
   imports: [
@@ -27,7 +27,8 @@ import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, Pro
     BreadcrumbModule,
     ProductCarouselModule,
     ProductConfigurationModule,
-    MdSpinnerModule,
+    ProductConfigurationSummaryModule,
+    IconModule,
     ButtonModule,
     ProductImagesModule,
     PriceModule,
@@ -35,14 +36,12 @@ import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, Pro
     ProductDetailsRoutingModule,
     NgxGalleryModule,
     ComponentModule,
-    CartModule,
-    CatalogModule,
     PricingModule,
-    StoreModule,
     ApttusModule,
-    ConstraintRulesModule,
     TabsModule.forRoot(),
-    InputDateModule
+    InputDateModule,
+    TranslateModule.forChild(),
+    DetailsModule
   ],
   providers : [ConfigureGuard],
   declarations: [ProductDetailsComponent,

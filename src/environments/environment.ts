@@ -19,10 +19,15 @@ export const environment: Configuration = {
   cartRetryLimit: 20,
   productIdentifier: 'Id',
   type: 'Salesforce',
-  cartDebounceTime: 2000,
+  debounceTime: 1000,
   proxy: 'https://apttus-proxy.herokuapp.com',
+  sentryDsn: '***sentry.io url***',
+  useIndexedDB: true,
+ storefront: '*** Storefront Name ****',
+ expandDepth: 8,
 
   // Salesforce environment variables
   organizationId: '****Salesforce Organization Id****',
   endpoint: '****Salesforce Community URL****'
+
 };

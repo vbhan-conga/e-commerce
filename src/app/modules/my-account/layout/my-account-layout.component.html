@@ -1,3 +1,4 @@
+<apt-breadcrumb [label]="'HEADER.MY_ACCOUNT' | translate"></apt-breadcrumb>
 <div class="container-fluid p-4">
   <div class="row">
     <div class="col-12 col-md-3">
@@ -7,7 +8,7 @@
             <img *ngIf="!isAIC" [src]="(me$ | async)?.SmallPhotoUrl | image : false" class="img-circle" width="45" height="45" />
             <div class="media-body ml-3">
               <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
-              <small class="d-block">Last Login Date {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
+              <small class="d-block">{{'MY_ACCOUNT.LAST_LOGIN_DATE' | translate}} {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
             </div>
           </div>
         </div>
@@ -16,24 +17,23 @@
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/dashboard']" [routerLinkActive]="'active'">
             <span class="oi oi-dashboard"></span>
-            Overview
+            {{'MY_ACCOUNT.OVERVIEW' | translate}}
           </a>
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/orders']" [routerLinkActive]="'active'">
             <span class="oi oi-list"></span>
-            Orders
+            {{'COMMON.ORDERS' | translate}}
           </a>
-          <!--Commented as we are not supporting request for quote in current release. To be added back later-->
-          <!-- <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/quotes']" [routerLinkActive]="'active'">
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/quotes']" [routerLinkActive]="'active'">
             <span class="oi oi-pencil"></span>
-            Quotes
-          </a> -->
+            {{'COMMON.QUOTES' | translate}}
+          </a>
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/carts']" [routerLinkActive]="'active'">
             <span class="oi oi-cart"></span>
-            Carts
+            {{'COMMON.CARTS' | translate}}
           </a>
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/addresses']" [routerLinkActive]="'active'">
             <span class="oi oi-grid-two-up"></span>
-            Address Book
+            {{'COMMON.ADDRESS_BOOK' | translate}}
           </a>
           <!-- <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/catalog']" [routerLinkActive]="'active'">
             <span class="oi oi-list-rich"></span>
@@ -41,7 +41,7 @@
           </a> -->
           <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/settings']" [routerLinkActive]="'active'">
             <span class="oi oi-cog"></span>
-            Settings
+            {{'MY_ACCOUNT.SETTINGS' | translate}}
           </a>
         </div>
       </div>

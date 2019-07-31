@@ -1,0 +1,58 @@
+<apt-detail *ngIf="order$ | async as order" [context]="(isLoggedIn$ | async) ? order : null">
+  <div class="detail-header">
+    <div class="d-flex align-items-center mb-2">
+      <h3 class="m-0">{{order?.Name}}</h3>
+      <span class="badge badge-light ml-3 px-3 py-1 border text-uppercase" *ngIf="order?.Status">{{order?.Status}}</span>
+      <div *ngIf="order?.Quote as quote" class="ml-auto">
+        <apt-output-field [record]="quote" field="Name" labelClass="d-none" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
+      </div>
+    </div>
+  </div>
+
+  <apt-detail-section [title]="'DETAILS.ORDER_SUMMARY' | translate">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <h5>
+              {{'DETAILS.ORDER_SUMMARY' | translate}}
+          </h5>
+          <div class="row mt-4">
+            <dl class="col-12 col-md-6">
+              <apt-output-field [record]="order" field="CreatedDate" layout="inline" [editable]="false"></apt-output-field>
+              <apt-output-field [record]="order" field="CreatedBy" layout="inline" [editable]="false"></apt-output-field>
+              <apt-output-field [record]="order" field="PrimaryContactId" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
+              <apt-output-field [record]="order" field="BillToAccountId" label="BillToAccount.Name" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
+            </dl>
+            <dl class="col-12 col-md-6">
+              <apt-output-field [record]="order" field="ShipToAccountId" label="Ship To Account" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
+              <apt-output-field [record]="order" field="ShipToAccount.ShippingAddress" label="Ship To Address" layout="inline" [editable]="false"></apt-output-field>
+              <apt-output-field [record]="order" field="BillToAccountId" label="Bill To Account" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
+              <apt-output-field [record]="order" field="BillToAccount.BillingAddress" label="Bill To Address" layout="inline" [editable]="false"></apt-output-field>
+            </dl>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <apt-price-summary [record]="order" [page]="'order-details'"></apt-price-summary>
+        </div>
+      </div>
+    </apt-detail-section>
+
+    <apt-detail-section [title]="'DETAILS.LINE_ITEMS' | translate" class="mt-4">
+      <h5 class="py-2">
+          {{'DETAILS.LINE_ITEMS' | translate}}
+        </h5>
+        <table class="table table-responsive border-bottom">
+          <tbody>
+            <ng-container *ngFor="let item of order?.OrderLineItems; let i = index">
+              <apt-line-item-table-row *ngIf="item?.IsPrimaryLine"
+              [index]="i"
+              [parent]="item"
+              [children]="getChildItems(order?.OrderLineItems, item)"
+              [editableFields]="false"
+              >
+              </apt-line-item-table-row>
+            </ng-container>
+          </tbody>
+        </table>
+      </apt-detail-section>
+
+</apt-detail>

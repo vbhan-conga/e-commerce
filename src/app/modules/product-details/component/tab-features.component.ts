@@ -8,8 +8,8 @@ import { Product } from '@apttus/ecommerce';
       <thead>
         <tr>
           <th scope="col" class="border-top-0">#</th>
-          <th scope="col" class="border-top-0">Feature</th>
-          <th scope="col" class="border-top-0">Value</th>
+          <th scope="col" class="border-top-0">{{'PRODUCT_DETAILS.FEATURE' | translate}}</th>
+          <th scope="col" class="border-top-0">{{'PRODUCT_DETAILS.VALUE' | translate}}</th>
         </tr>
       </thead>
       <tbody>

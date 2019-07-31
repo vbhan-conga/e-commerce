@@ -2,18 +2,18 @@
   <div class="row w-100 no-gutters">
     <div class="col-md-6 col-12 offset-md-3">
       <form class="form-signin" _lpchecked="1" (ngSubmit)="login()">
-        <h1 class="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">Username</label>
+        <h1 class="h3 mb-3 font-weight-normal text-center"> {{'LOGIN.PLS_SIGNIN' | translate}}</h1>
+        <label for="inputEmail" class="sr-only">{{'LOGIN.PLS_SIGNIN' | translate}}</label>
         <input type="email" id="inputEmail" class="form-control" [(ngModel)]="username" name="username" placeholder="Username" required="" autofocus=""
           autocomplete="off">
-        <label for="inputPassword" class="sr-only">Password</label>
+        <label for="inputPassword" class="sr-only">{{'LOGIN.PLS_SIGNIN' | translate}}</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" [(ngModel)]="password" name="password" required="" autocomplete="off">
         <div class="checkbox mb-3 mt-2">
           <label>
-            <input type="checkbox" value="remember-me"> Remember me
+            <input type="checkbox" value="remember-me">{{'LOGIN.REMEMBER_ME' | translate}}
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" [ladda]="loading">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" [ladda]="loading">{{'LOGIN.SIGN_IN' | translate}}</button>
       </form>
     </div>
   </div>

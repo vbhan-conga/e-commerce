@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService, Account } from '@apttus/ecommerce';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line:component-selector
