@@ -1,8 +1,10 @@
 import { Component, OnInit, TemplateRef, NgZone } from '@angular/core';
 import { AccountLocationService, AccountLocation } from '@apttus/ecommerce';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { TranslateService } from '@ngx-translate/core';
+import * as _ from 'lodash';
 /**
  * Address book component for managing list of addresses. Can  Add, Edit, Delete and Set any address as default.
  */
@@ -12,6 +14,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
   styles: [`
     .info{
       margin: -10px -10px 0 0;
+    }
+    .set-dropdown-for-address{
+      left: auto !important;
+      right: 0px !important;
     }
   `]
 })
@@ -26,15 +32,15 @@ export class AddressBookComponent implements OnInit {
   message: string = null;
 
   /**
-   * @ignore 
+   * @ignore
   */
-  constructor(private accountLocationService: AccountLocationService, private modalService: BsModalService, private ngZone: NgZone) { }
+  constructor(private accountLocationService: AccountLocationService, private modalService: BsModalService, private ngZone: NgZone, private translateService: TranslateService) { }
 
   /**
-   * @ignore 
+   * @ignore
   */
   ngOnInit() {
-    this.loadAddressList();
+    this.addressList$ = this.accountLocationService.getAccountLocations();
   }
 
   /**
@@ -44,11 +50,11 @@ export class AddressBookComponent implements OnInit {
   newAddress(template: TemplateRef<any>) {
     this.addressEdit = new AccountLocation();
     this.message = null;
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template, { class : 'modal-lg'});
   }
 
   /**
-   * @ignore 
+   * @ignore
   */
   saveAddress(){
     this.ngZone.run(() => this.loading = true);
@@ -57,11 +63,12 @@ export class AddressBookComponent implements OnInit {
         res => {
           this.loading = false;
           this.modalRef.hide();
-          this.loadAddressList();
         },
         err => {
           console.error(err);
-          this.message = 'Failed to save address. Please contact your administrator.';
+          this.translateService.stream('MY_ACCOUNT.ADDRESS_BOOK.SAVE_FAILED').subscribe((val: string) => {
+            this.message = val;
+          });
           this.loading = false;
         }
       );
@@ -72,6 +79,7 @@ export class AddressBookComponent implements OnInit {
    * @param location Account lcoation to set it as default for logged in user.
    */
   setAsDefault(location: AccountLocation){
+    _.set(location, '_metadata.loading', true);
     this.accountLocationService.setLocationAsDefault(location).subscribe(
       r => {},
       e => console.error(e)
@@ -83,8 +91,9 @@ export class AddressBookComponent implements OnInit {
    * @param location Account location to be deleted for logged in user.
    */
   deleteAddress(location: AccountLocation){
+    _.set(location, '_metadata.loading', true);
     this.accountLocationService.delete([location]).subscribe(
-      r => this.loadAddressList(),
+      r => {},
       e => console.error(e)
     );
   }
@@ -97,13 +106,5 @@ export class AddressBookComponent implements OnInit {
   edit(location: AccountLocation, template: TemplateRef<any>){
     this.addressEdit = location;
     this.modalRef = this.modalService.show(template);
-  }
-
-  /**
-   * @ignore 
-  */
-  loadAddressList() {
-    this.addressList$ = null;
-    this.addressList$ = this.accountLocationService.getAccountLocations();
   }
 }

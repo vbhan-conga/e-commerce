@@ -1,8 +1,6 @@
-import { AboModule } from '@apttus/abo';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SlickModule } from 'ngx-slick';
 import { RouterModule } from '@angular/router';
 import { LaddaModule } from 'angular2-ladda';
@@ -11,21 +9,21 @@ import { NavAccountComponent } from './nav-account/nav-account.component';
 import { ApttusModule } from '@apttus/core';
 import { FooterComponent } from './footer/footer.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-
-import { StoreModule, CartModule, PricingModule, CatalogModule, CrmModule } from '@apttus/ecommerce';
+import { AttachmentComponent } from './attachment/attachment.component';
+import { PricingModule } from '@apttus/ecommerce';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-
 import { ToastrModule } from 'ngx-toastr';
-import { ConstraintRulesModule } from '@apttus/constraint-rules';
-import { DirectivesModule } from '../directives/directive.module';
 
-import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSideMenuModule, MdSpinnerModule, PriceModule } from '@apttus/elements';
+import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSideMenuModule, IconModule, PriceModule } from '@apttus/elements';
+
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AutoFocusDirective } from '../directives/auto-focus.directive';
 
 @NgModule({
   imports: [
     CommonModule,
-    LazyLoadImageModule,
     SlickModule,
     MiniProfileModule,
     MiniCartModule,
@@ -38,29 +36,26 @@ import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSide
     RouterModule,
     FormsModule,
     ApttusModule,
-    StoreModule,
-    CartModule,
     PricingModule,
-    ConstraintRulesModule,
-    DirectivesModule,
-    AboModule,
-    MdSpinnerModule,
+    IconModule,
     PriceModule,
+    NgScrollbarModule,
+    TooltipModule.forRoot(),
     ToastrModule.forRoot({ onActivateTick: true })
   ],
   exports : [
     HeaderComponent,
-    LazyLoadImageModule,
     LaddaModule,
-    CatalogModule,
     FooterComponent,
     ToastrModule,
-    DirectivesModule
+    AutoFocusDirective
   ],
   declarations: [
     HeaderComponent,
     NavAccountComponent,
-    FooterComponent
+    FooterComponent,
+    AttachmentComponent,
+    AutoFocusDirective
   ]
 })
 export class ComponentModule { }

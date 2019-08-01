@@ -1,23 +1,23 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
-    Select Items
+      {{'MY_ACCOUNT.REORDER.SELECT_ITEMS' | translate}}
   </span>
-  <button class="btn btn-primary" [ladda]="cartLoading" data-style="zoom-in">Add to Cart</button>
+  <button class="btn btn-primary" [ladda]="cartLoading" data-style="zoom-in">{{'COMMON.ADD_TO_CART' | translate}}</button>
 </nav>
 
 <ng-container *ngIf="cart; else loading">
   <div class="card mt-4">
     <div class="card-body">
-      <h4 class="card-title">Reorder</h4>
-      <small class="font-weight-bold">Your previously purchased products have been pre-selected</small>
+      <h4 class="card-title">{{'COMMON.REORDER' | translate}}</h4>
+      <small class="font-weight-bold">{{'MY_ACCOUNT.REORDER.PRE_SELECTION_OF_PRODUCTS' | translate}}</small>
       <table class="table mt-3">
         <thead>
           <tr>
-            <th scope="col">Product</th>
-            <th scope="col">Unit</th>
-            <th scope="col">Base</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Total Price</th>
+            <th scope="col">{{'COMMON.PRODUCT' | translate}}</th>
+            <th scope="col">{{'MY_ACCOUNT.REORDER.UNIT' | translate}}</th>
+            <th scope="col">{{'MY_ACCOUNT.REORDER.BASE' | translate}}</th>
+            <th scope="col">{{'COMMON.QUANTITY' | translate}}</th>
+            <th scope="col">{{'MY_ACCOUNT.REORDER.TOTAL_PRICE' | translate}}</th>
           </tr>
         </thead>
         <tbody>

@@ -21,9 +21,12 @@
 }
 .actions>*{
     border-radius: 0px;
-    height: 24px;
+    .oi{
+        font-size: 17px;
+    }
     & + *:not([hidden]){
         border-left: 1px solid black;
+        height: 20px;
     }
     margin: 0;
     padding: 0 1rem;
@@ -58,7 +61,4 @@ apt-md-spinner{
     position: absolute;
     right: 1.4rem;
     top: 1.3rem;
-}
-apt-mini-cart{
-    margin-top: 1px !important;
 }

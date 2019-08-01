@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AssetService, AssetLineItem } from '@apttus/abo';
-import { ACondition, APageInfo, ASort } from '@apttus/core';
-import { CartService, Cart, Storefront, StorefrontService, ProductService } from '@apttus/ecommerce';
+import { ACondition, APageInfo, ASort, ConfigurationService } from '@apttus/core';
+import { CartService, Cart, Storefront, StorefrontService, ProductService, AssetService, AssetLineItemExtended} from '@apttus/ecommerce';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { AssetSelectionService } from '@apttus/elements';
+import { AssetSelectionService, AccordionRows } from '@apttus/elements';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
 * Installed Product Layout is used to set the structure of the installed products page.
@@ -30,30 +31,21 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * Number of records per page used by the pagination component.
    */
   pageSize = 12;
-  /**
-   * Max number of asset line item records to fetch.
-   */
-  maxRecords = 100;
+
+  totalItems = 0;
+
   /**
    * Current value of the search input to be used for finding records.
    */
   searchQuery: string;
   /**
-   * Observable instance of the current page of assets.
+   * Array of conditions to be used for populating search results. Initialized to filter out assets that are bundle options.
    */
-  assets$: Observable<Array<AssetLineItem>>;
-  /**
-   * Observable instance of all assets after filtered criteria.
-   */
-  searchResults$: Observable<Array<AssetLineItem>>;
-  /**
-   * Array of conditions to be used for populating search results.
-   */
-  conditions: Array<ACondition> = [];
+  conditions: Array<ACondition> = [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option')];
   /**
    * Observable array of all assets that have been selected from the asset list.
    */
-  selectedAssets$: Observable<Array<AssetLineItem>>;
+  selectedAssets$: Observable<Array<AssetLineItemExtended>>;
   /**
    * Product Id from the route params.
    */
@@ -96,16 +88,39 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
   /**
    * Total number of selected items to pass to pagination component when showing only selected assets.
    */
-  selectedTotalItems: Array<AssetLineItem>;
+  selectedTotalItems: Array<AccordionRows>;
   /**
    * Selected assets to show for the current page.
    */
-  selectedPageItems: Array<AssetLineItem>;
+  selectedPageItems: Array<AccordionRows>;
+  /**
+   * Array of asset line items grouped by parent / child relationship based on the filter criteria.
+   */
+  groupedAssetLineItems: Array<AccordionRows> = [];
+  /**
+   * Array of asset line items grouped by parent / child relationship for the current page.
+   */
+  groupedPageAssetLineItems: Array<AccordionRows> = [];
+  /**
+   * The product identifier set in the configuration file.
+   */
+  identifier: string = 'Id';
   /**
    * Current subscriptions in this class.
    * @ignore
    */
   protected subs: Array<any> = [];
+  /** @ignore */
+  paginationButtonLabels: any = {
+    first: '',
+    previous: '',
+    next: '',
+    last: ''
+  };
+  /**
+   * Array of product families associated with the list of assets.
+   */
+  productFamilies: Array<string> = [];
   /**
    * Object used for managing filters that are set on the asset list.
    */
@@ -129,6 +144,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
       _.remove(this.conditions, this.priceTypeFilters['One Time']);
       _.remove(this.conditions, this.priceTypeFilters.Recurring);
       _.remove(this.conditions, this.priceTypeFilters.Usage);
+      this.conditions = this.conditions.slice();
     },
     /**
      * Adds a new filter to the list of the given type in this object.
@@ -137,6 +153,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     addFilter: key => {
       this.priceTypeFilters.removeFilters();
       this.conditions.push(this.priceTypeFilters[key]);
+      this.conditions = this.conditions.slice();
     }
   };
 
@@ -147,56 +164,100 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     protected cartService: CartService,
     protected toastr: ToastrService,
     private storefrontService: StorefrontService,
-    public fieldFilterServiceContext: ProductService
+    public fieldFilterServiceContext: ProductService,
+    private translateService: TranslateService,
+    private config: ConfigurationService
   ) {
     this.subs.push(this.cartService.getMyCart().subscribe(cartRes => {
       this.cart = cartRes;
     }));
+    this.identifier = this.config.get('productIdentifier');
   }
 
   /**
    * @ignore
    */
   ngOnInit() {
+    this.assetService.getAssetLineItemForAccount(null, this.conditions)
+    .pipe(
+      take(1)
+    )
+    .subscribe(assets => {
+      this.productFamilies = _.uniqBy(
+        assets
+        .filter(asset => asset.IsPrimaryLine && asset.Product.Family != null)
+        .map(asset => asset.Product.Family)
+        ,
+        val => val
+      );
+    });
     this.storefront$ = this.storefrontService.getStorefront();
     this._selectedProductID = this.route.snapshot.params.productId;
     this.operation = this.route.snapshot.params.operation;
-    this._isABOOperation = (this._selectedProductID != null && this._selectedProductID !== undefined && (this.operation === 'Renew' || this.operation === 'Terminate'));
+    this._isABOOperation = (this._selectedProductID != null && this._selectedProductID !== undefined && (this.operation === 'Renew' || this.operation === 'Terminate' || this.operation === 'Buy More' || this.operation === 'Change Configuration'));
     if (this._isABOOperation) {
       this.newIdentifiers = decodeURIComponent(this._selectedProductID).split(',');
       this.conditions.push(new ACondition(this.assetService.type, 'ProductId', 'In', this.newIdentifiers));
+      this.assetService.getAssetLineItemForAccount(null, this.conditions, [new ASort(this.assetService.type, 'Product.Name')]).pipe(take(1)).subscribe(assets => {
+        this.newIdentifiers.forEach(identifier => {
+          this.assetSelectionService.addAssetToSelection(assets.filter(asset => asset.Product[this.identifier] === identifier)[0]);
+        });
+      });
     }
     this.selectedAssets$ = this.assetSelectionService.getSelectedAssets();
     this.getResults();
-    this.assetService.getAssetLineItemForAccount().take(1).subscribe(assets => {
+    this.assetService.getAssetLineItemForAccount().pipe(take(1)).subscribe(assets => {
       let families = [];
-      assets.forEach(asset => {
-        if (!_.includes(families, asset.Product.Family)) {
-          if (asset.Product.Family != null) families.push(asset.Product.Family);
-        }
-      });
+      if(_.get(assets, 'length', 0) > 0){
+        assets.forEach(asset => {
+          if (!_.includes(families, asset.Product.Family)) {
+            if (asset.Product.Family != null) families.push(asset.Product.Family);
+          }
+        });
+      }
+    });
+    this.translateService.stream('PAGINATION').subscribe((val: string) => {
+      this.paginationButtonLabels.first = val['FIRST'];
+      this.paginationButtonLabels.previous = val['PREVIOUS'];
+      this.paginationButtonLabels.next = val['NEXT'];
+      this.paginationButtonLabels.last = val['LAST'];
     });
   }
   /**
    * Gets the search results based on the current applied filters.
    */
   getResults() {
-    let results: Array<AssetLineItem>;
+    this.groupedAssetLineItems = [];
+    this.groupedPageAssetLineItems = [];
     if (this.searchQuery) {
-      this.searchResults$ = this.assetService.search(this.searchQuery, this.conditions, 'AND', null, null, new APageInfo(this.maxRecords, 1));
-      this.assets$ = this.assetService.search(this.searchQuery, this.conditions, 'AND', null, null, new APageInfo(this.pageSize, this.page));
+      this.assetService.search(this.searchQuery, this.conditions, 'AND', null, null, new APageInfo(999, 1))
+      .pipe(take(1)).subscribe(assets => {
+        assets.filter(asset => asset.IsPrimaryLine)
+        .forEach(primaryLine => {
+          this.groupedAssetLineItems.push({
+            parent: primaryLine,
+            children: assets.filter(asset => {
+              return (!asset.IsPrimaryLine && asset.BundleAssetId === primaryLine.Id);
+            })
+          });
+        });
+        this.groupedPageAssetLineItems = this.groupedAssetLineItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
+        this.totalItems = this.groupedAssetLineItems.length;
+      });
     }
     else {
-      this.searchResults$ = this.assetService.getAssetLineItemForAccount(null, this.conditions, [new ASort(this.assetService.type, 'Product.Name')], new APageInfo(this.maxRecords, 1));
-      this.assets$ = this.assetService.getAssetLineItemForAccount(null, this.conditions, [new ASort(this.assetService.type, 'Product.Name')], new APageInfo(this.pageSize, this.page));
-    }
-    if (this._isABOOperation) {
-      this.searchResults$.take(1).subscribe(assetsData => {
-        if (assetsData != null) {
-          this.newIdentifiers.forEach(productId => {
-            this.assetSelectionService.addAssetToSelection(assetsData.filter(data => data.ProductId === productId)[0]);
+      this.assetService.getAssetLineItemForAccount(null, this.conditions, [new ASort(this.assetService.type, 'Product.Name')]).pipe(take(1)).subscribe(assets => {
+        assets.filter(asset => asset.IsPrimaryLine)
+        .forEach(primaryLine => {
+          this.groupedAssetLineItems.push({
+            parent: primaryLine,
+            children: assets.filter(asset => {
+              return (!asset.IsPrimaryLine && asset.BundleAssetId === primaryLine.Id);
+            })
           });
-        }
+        });
+        this.groupedPageAssetLineItems = this.groupedAssetLineItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
+        this.totalItems = this.groupedAssetLineItems.length;
       });
     }
   }
@@ -247,17 +308,27 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * @returns Selected assets for the current page.
    * @ignore
    */
-  private getPageForSelectedList(): Array<AssetLineItem> {
+  private getPageForSelectedList(): Array<AccordionRows> {
     return this.selectedTotalItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
   }
   /**
    * Event handler for showing only the selected assets in the asset list.
    * @param event Array of asset line items that was fired on this event.
    */
-  handleSelectedAmountClick(event: Array<AssetLineItem>) {
-    this.selectedTotalItems = event;
-    this.selectedPageItems = this.getPageForSelectedList();
-    this.showingFullList = false;
+  handleSelectedAmountClick(event: Array<AssetLineItemExtended>) {
+    this.selectedTotalItems = [];
+    this.assetService.getAssetLineItemForAccount(null, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option')]).pipe(take(1)).subscribe(assets => {
+      event.forEach(asset => {
+        this.selectedTotalItems.push({
+          parent: asset,
+          children: assets.filter(lineItem => {
+            return (!lineItem.IsPrimaryLine && lineItem.BundleAssetId === asset.Id);
+          })
+        });
+      });
+      this.selectedPageItems = this.getPageForSelectedList();
+      this.showingFullList = false;
+    });
   }
   /**
    * Event handler for showing the full list of assets both selected and not selected.
@@ -274,7 +345,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     if (this.productFamilyFilter) _.remove(this.conditions, this.productFamilyFilter);
     if (event.length > 0) {
       let values = [];
-      event.forEach(item => values.push(item.value));
+      event.forEach(item => values.push(item));
       this.productFamilyFilter = new ACondition(this.fieldFilterServiceContext.type, 'Product.Family', 'In', values);
       this.conditions.push(this.productFamilyFilter);
     }

@@ -4,6 +4,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Order, OrderLineItem, OrderService, ProductService, Product } from '@apttus/ecommerce';
 import * as _ from 'lodash';
+import { flatMap } from 'rxjs/operators';
 
 /**
  * Component to load individual order detail. Takes order name as input parameter and lods that order.
@@ -33,7 +34,9 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit() {
     this.productService.configurationService.get('productIdentifier');
     this.route.params
-      .flatMap(r => this.orderService.getOrderByName(r.orderId))
+      .pipe(
+        flatMap(r => this.orderService.getOrderByName(r.orderId))
+      )
       .subscribe(order => this.order = order);
   }
 

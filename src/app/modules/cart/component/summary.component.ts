@@ -1,9 +1,11 @@
 import { Component, OnChanges, Input, TemplateRef, ViewChild  } from '@angular/core';
-import { Cart, QuoteService, TemplateService, CartItem, Quote } from '@apttus/ecommerce';
+import { Cart, QuoteService, TemplateService, CartItem, Quote, ItemGroup, CartItemService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { PlatformService } from '@apttus/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { TranslateService } from '@ngx-translate/core';
+import {ProductConfigurationSummaryComponent} from "@apttus/elements";
 
 @Component({
   selector: 'cart-summary',
@@ -12,7 +14,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
     .small{
       font-size: smaller;
     }
-    li.list-group-item .details small:not(:last-child){
+    li.group-item .details small:not(:last-child){
       border-right: 1px solid gray;
       padding-right: 6px;
       margin-right: 6px;
@@ -26,12 +28,18 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 export class SummaryComponent implements OnChanges {
   @Input() cart: Cart;
   @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
+  @ViewChild(ProductConfigurationSummaryComponent)
+  public configSummaryModal: ProductConfigurationSummaryComponent;
 
   state: SummaryState;
   modalRef: BsModalRef;
   lineItem: CartItem;
   confirmationModal: BsModalRef;
   generatedQuote: Quote;
+  /** @ignore */
+  generatedQuoteName: string;
+
+  lineItems: Array<CartItem>;
 
   get itemCount(): number{
     let count = 0;
@@ -40,7 +48,7 @@ export class SummaryComponent implements OnChanges {
     return count;
   }
 
-  constructor(private quoteService: QuoteService, private templateService: TemplateService, private platformService: PlatformService, private modalService: BsModalService) {
+  constructor(private quoteService: QuoteService, private cartItemService: CartItemService, private modalService: BsModalService, private translate: TranslateService) {
     this.state = {
       configurationMessage: null,
       downloadLoading: false,
@@ -49,13 +57,19 @@ export class SummaryComponent implements OnChanges {
     };
   }
 
-  ngOnChanges() {}
+  ngOnChanges() {
+    this.lineItems = _.map(this.cartItemService.groupItems(_.get(this, 'cart.LineItems')), i => _.get(i, 'MainLine'));
+  }
 
   createQuote() {
     this.state.requestQuoteLoading = true;
     this.quoteService.convertCartToQuote().subscribe(
       res => {
         this.generatedQuote = res;
+        this.translate.stream('CART.CART_SUMMARY.QUOTE_GENERATED', {value: this.generatedQuote.Name}).subscribe((
+          quoteMessage:string) => {
+            this.generatedQuoteName = quoteMessage;
+        });
         this.state.requestQuoteLoading = false;
         this.confirmationModal = this.modalService.show(this.confirmationTemplate);
       },
@@ -68,9 +82,10 @@ export class SummaryComponent implements OnChanges {
 
   generatePdf(){}
 
-  openModal(lineItem: CartItem, template: TemplateRef<any>) {
+  openModal(lineItem: CartItem) {
     this.lineItem = lineItem;
-    this.modalRef = this.modalService.show(template);
+    setTimeout(() => this.configSummaryModal.show());
+    // this.modalRef = this.modalService.show(template);
   }
 }
 

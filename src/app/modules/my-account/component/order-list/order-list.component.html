@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
-    Orders
-    <span *ngIf="orderList?.length > 0">({{(orderAggregate$ | async)?.total_records}})</span>
+    {{'COMMON.ORDERS' | translate}}
+    <span *ngIf="orderList?.length > 0">({{orderAggregate?.total_records}})</span>
   </span>
 </nav>
 
@@ -9,22 +9,22 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Order #</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Date</th>
-        <th scope="col"># of Items</th>
-        <th scope="col">Status</th>
+        <th scope="col"><apt-output-field [record]="order" field="Name" [editable]="false" [labelOnly]="true"></apt-output-field></th>
+        <th scope="col">{{'COMMON.AMOUNT' | translate}}</th>
+        <th scope="col"><apt-output-field [record]="order" field="CreatedDate" [editable]="false" [labelOnly]="true"></apt-output-field></th>
+        <th scope="col"># {{'MY_ACCOUNT.ORDER_LIST.NUM_OF_ITEMS' | translate}}</th>
+        <th scope="col"><apt-output-field [record]="order" field="Status" [editable]="false" [labelOnly]="true"></apt-output-field></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let order of (orderList)">
         <th scope="row">
-         <a href="javascript:void(0)" [routerLink]="['/my-account', 'orders', order.Name]">{{order.Name}}</a></th>
+         <a href="javascript:void(0)" [routerLink]="['/Orders', order.Id]">{{order.Name}}</a></th>
         <td>{{(order | OrderPricePipe | async).netPrice$ | async}}</td>
         <td>{{order.CreatedDate | date : 'short'}}</td>
         <td>{{order.OrderLineItems?.length}}</td>
         <td>
-          <span class="badge w-75" 
+          <span class="badge w-100" 
             [class.badge-secondary]="order.Status === 'Pending'" 
             [class.badge-info]="order.Status === 'Processing' || order.Status === 'Activated' || order.Status === 'Fulfilled'"
             [class.badge-success]="order.Status === 'Completed'" 
@@ -34,8 +34,10 @@
     </tbody>
   </table>
 </div>
-<div class="d-flex justify-content-center mt-3" *ngIf="(orderAggregate$ | async)">
-  <pagination [totalItems]="(orderAggregate$ | async)?.total_records" [(ngModel)]="currentPage" (pageChanged)="loadOrders($event.page)"></pagination>
+<div class="d-flex justify-content-center mt-3">
+  <pagination [totalItems]="orderAggregate?.total_records" [(ngModel)]="currentPage"
+    (pageChanged)="loadOrders($event.page)" [firstText]="paginationButtonLabels.first" [previousText]="paginationButtonLabels.previous"
+    [nextText]="paginationButtonLabels.next" [lastText]="paginationButtonLabels.last"></pagination>
 </div>
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">

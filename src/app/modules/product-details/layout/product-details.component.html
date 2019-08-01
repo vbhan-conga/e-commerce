@@ -1,120 +1,136 @@
-<div class="py-4 container-fluid">
-  <apt-breadcrumb [sobject]="product"></apt-breadcrumb>
+<apt-detail [title]="viewState?.product?.Name" [subtitle]="productCode" [context]="viewState?.product" *ngIf="viewState$ | async as viewState; else loading">
 
-  <div *ngIf="product; else loading">
-    <div class="headerContainer">
-      <nav class="navbar navbar-light bg-light d-block pb-0 pt-3 px-4 nav-tabs" [ngClass]="headerClass">
-        <div class="d-flex">
-          <div class="flex-grow-1">
-            <h3>
-              {{product?.Name}}
-            </h3>
-            <span>Product ID: {{product?.ProductCode}}</span>
-          </div>
-          <div>
-            <form class="border-left pl-4 row">
-              <div class="form-group col mx-3">
-                <label>Standard Price</label>
-                <h5 class="pt-1">
-                  <apt-price [record]="product" *ngIf="product"></apt-price>
-                </h5>
-              </div>
-              <div *ngIf="!product?.HasOptions" class="form-group col mx-3">
-                <label>Net Price</label>
-                <h5 class="pt-1">
-                  <apt-price *ngIf="product" [record]="product" [quantity]="quantity" [options]="productOptionFormList" type="net"></apt-price>
-                </h5>
-              </div>
-            </form>
-          </div>
-        </div>
+  <div class="primary-actions">
+    <form class="d-flex">
+      <div class="form-group col my-0">
+        <small class="mb-2 d-block"> {{'PRODUCT_DETAILS.STANDARD_PRICE' | translate}} </small>
+        <h5>
+          <apt-price [record]="viewState?.product" type="list" [bundle]="true"></apt-price>
+        </h5>
+      </div>
+      <div class="form-group col my-0">
+        <small class="mb-2 d-block"> {{'COMMON.NET_PRICE' | translate}} </small>
+        <h5>
+          <apt-price [record]="cartItemList || viewState?.product" [quantity]="quantity" [bundle]="true" [type]="'net'"></apt-price>
+        </h5>
+      </div>
+    </form>
+  </div>
 
-        <div class="d-flex border-top mt-3 align-items-end">
-          <div *ngFor="let tab of tabList" (click)="scrollTo(tab)">
-            <a class="nav-link" [class.active]="tab.active" href="javascript:void(0)"
-              *ngIf="tab?.section?.nativeElement?.offsetTop > 0">
-              {{tab.label}}
-              <span *ngIf="isConfigurationChanged && tab.label === 'Configurations'">*</span>
-            </a>
-          </div>
-          <div class="ml-auto">
-            <form class="row my-2">
-              <div class="form-group col border-left d-flex align-items-center">
-                <label for="qty" class="m-0">Qty.</label>
-                <input type="number" class="form-control text-center ml-3" name="qty" id="qty" [(ngModel)]="quantity">
-              </div>
-              <div class="col d-flex align-items-center">
-                <apt-add-to-cart *ngIf="product && !cartItemId" [configurationEnabled]="false" [quantity]="quantity"
-                  [showQuantityControls]="false" [product]="product" [productAttributes]="[attributeValue]"
-                  [btnClass]="'btn-primary px-4'" [productOptions]="productOptionFormList"></apt-add-to-cart>
-
-                <button *ngIf="product && cartItemId" class="btn px-3 btn-outline-primary"
-                  (click)="updateConfiguration()" [ladda]="saving" data-style="zoom-in"
-                  data-spinner-color="black" [disabled]="setDisabled">Update Configuration</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </nav>
-    </div>
+  <div class="secondary-actions">
+    <!-- Simple Product Controls -->
+    <form class="row justify-content-end" *ngIf="!viewState?.product?.HasAttributes && !viewState?.product?.HasOptions; else complex">
+      <div class="form-group col-6 mx-3 my-0 d-flex align-items-center">
+        <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
+        <input type="number" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
+      </div>
+      <div class="col-4 d-flex align-items-center">
+        <apt-add-to-cart [showQuantityControls]="false" (onAddToCart)="onAddToCart($event)" [configurationEnabled]="false" [quantity]="quantity" [cartItems]="(cartItems?.length > 0) ? cartItems : null" [product]="viewState?.product" [btnClass]="'btn-primary px-3'"></apt-add-to-cart>
+      </div>
+    </form>
 
 
-    <div class="row" #details>
-      <h4 class="text-muted col-12">Product Details</h4>
+    <!-- Complex Product Controls -->
+    <ng-template #complex>
+      <div class="d-flex">
+        <ng-container *ngIf="viewState?.relatedTo; else newProduct">
+          <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
+            [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'"
+            (onAddToCart)="onAddToCart($event)"
+            [disabled]="!configurationChanged"
+            [label]="'Update Configuration'">
+          </apt-add-to-cart>
+        </ng-container>
+        <ng-template #newProduct>
+          <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
+            (onAddToCart)="onAddToCart($event)" [disabled]="!configurationChanged"
+            [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
+          </apt-add-to-cart>
+        </ng-template>
+        
+        <!--ToDo: Related to ABO configuration story -->
+        <!-- <button class="btn btn-outline-primary ml-2" *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions"
+          (click)="productConfigurationSummary.show();">Price Summary</button> -->
+      </div>
+    </ng-template>
+
+  </div>
+
+  <apt-detail-section [title]="'PRODUCT_DETAILS.DETAILS' | translate">
+    <div class="row">
+      <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.PRODUCT_DETAIL' | translate}} </h4>
       <div class="col-12 col-md-4">
-        <apt-product-images [product]="product"></apt-product-images>
+        <apt-product-images [product]="viewState?.product"></apt-product-images>
       </div>
       <div class="col-12 col-md-8">
         <div class="card">
           <div class="card-body">
-            <p [innerHTML]="product?.Description" class="p-2"></p>
+            <p [innerHTML]="viewState?.product?.Description" class="p-2"></p>
           </div>
         </div>
       </div>
     </div>
+  </apt-detail-section>
 
-
-    <div class="row mt-4" #config *ngIf="product?.HasAttributes || product?.HasOptions">
-      <h4 class="text-muted col-12">Configurations</h4>
+  <apt-detail-section [title]="'PRODUCT_DETAILS.CONFIGURATIONS' | translate"
+    *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions">
+    <div class="row mt-4">
+      <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.CONFIGURATIONS' | translate}} </h4>
       <div class="col-12">
-        <apt-product-configuration [productId]="product" [(optionFormList)]="productOptionFormList"
-          [(attributeValue)]="attributeValue" [cartItemId]="cartItemId"
-          [populateDefaults]="populateDefaults" (configurationChange)="onConfigurationChange()">
+        <apt-product-configuration [product]="viewState?.product" [relatedTo]="viewState?.relatedTo"
+          (configurationChange)="onConfigurationChange($event)">
         </apt-product-configuration>
       </div>
     </div>
+  </apt-detail-section>
 
-    <div class="row mt-4" #specifications *ngIf="product?.ProductFeatureValues?.length > 0">
-      <h4 class="text-muted col-12">Specifications</h4>
+  <apt-detail-section [title]="'PRODUCT_DETAILS.SPECIFICATIONS' | translate"
+    *ngIf="viewState?.product?.ProductFeatureValues?.length > 0">
+    <div class="row mt-4">
+      <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.SPECIFICATIONS' | translate}} </h4>
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <pdp-tab-features [product]="product" class="animated fadeIn d-block"></pdp-tab-features>
+            <pdp-tab-features [product]="viewState?.product" class="animated fadeIn d-block"></pdp-tab-features>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mt-4" #attachments *ngIf="product?.ProductInformation?.length > 0">
-      <h4 class="text-muted col-12">Attachments</h4>
+  </apt-detail-section>
+
+  <apt-detail-section [title]="'PRODUCT_DETAILS.ATTACHMENTS' | translate"
+    *ngIf="viewState?.product?.ProductInformation?.length > 0">
+    <div class="row mt-4">
+      <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.ATTACHMENTS' | translate}} </h4>
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <pdp-tab-attachments [product]="product"></pdp-tab-attachments>
+            <pdp-tab-attachments [product]="viewState?.product"></pdp-tab-attachments>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mt-4" #recommendations *ngIf="(recommendedProducts$ | async)?.length > 0">
-      <h4 class="text-muted col-12">Recommended Products</h4>
-      <div class="col-12">
-        <apt-product-carousel [productList]="(recommendedProducts$ | async)" slides="5"></apt-product-carousel>
-      </div>
-    </div>
-  </div>
+  </apt-detail-section>
 
-  <ng-template #loading>
+
+  <ng-container *ngIf="viewState?.recommendedProducts?.length > 0">
+    <apt-detail-section [title]="'PRODUCT_DETAILS.RECOMMENDED_PRODUCTS' | translate">
+      <div class="row mt-4">
+        <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.RECOMMENDED_PRODUCTS' | translate}} </h4>
+        <div class="col-12">
+          <apt-product-carousel [productList]="viewState?.recommendedProducts" slides="5"></apt-product-carousel>
+        </div>
+      </div>
+    </apt-detail-section>
+  </ng-container>
+
+  <apt-product-configuration-summary [product]="viewState?.product" [relatedTo]="viewState?.relatedTo" [changes]="cartItemList" [preload]="true"
+    #productConfigurationSummary position="right">
+  </apt-product-configuration-summary>
+</apt-detail>
+
+<ng-template #loading>
     <div class="d-flex justify-content-center pt-5">
       <apt-md-spinner></apt-md-spinner>
-    </div>
-  </ng-template>
-</div>
+   </div>
+</ng-template>

@@ -1,20 +1,21 @@
-import { Component, OnChanges, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import * as _ from 'lodash';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'pl-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="border p-2 d-flex align-items-center justify-content-between">
+    <div class="border p-2 d-flex align-items-center justify-content-between" *ngIf="recordCount > 0">
       <div>
-        Showing {{recordCount > 0 ? offset + 1 : 0}}-{{lastResult}} of {{totalRecords}} results
-          <span class="d-none d-md-inline" *ngIf="query"> for your search of&nbsp;<strong>{{query}}</strong></span>
+        {{showRecordsCountMessage}}
+        <span class="d-none d-md-inline" *ngIf="query"> for your search of&nbsp;<strong>{{query}}</strong></span>
       </div>
 
       <div class="d-flex align-items-center">
         <div class="input-group input-group-sm mr-3">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="sort">Show</label>
+            <label class="input-group-text" for="sort">{{'PRODUCT_LIST.SHOW' | translate}}</label>
           </div>
           <select class="custom-select custom-select-sm" id="size" [(ngModel)]="limit" name="limit" (change)="onPageSizeChange.emit($event.target.value)">
             <option value="4">4</option>
@@ -26,11 +27,11 @@ import * as _ from 'lodash';
 
         <div class="input-group input-group-sm mr-3">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="sort">Sort By</label>
+            <label class="input-group-text" for="sort">{{'PRODUCT_LIST.SORT_BY' | translate}}</label>
           </div>
           <select class="custom-select custom-select-sm" id="sort" (change)="onSortChange.emit($event.target.value)">
-            <option>Relevance</option>
-            <option [value]="'Name'">Name</option>
+            <option>{{'PRODUCT_LIST.SORT_BY_RELEVANCE' | translate}}</option>
+            <option [value]="'Name'">{{'COMMON.NAME' | translate}}</option>
           </select>
         </div>
         <a href="javascript:void(0)"
@@ -60,7 +61,7 @@ import * as _ from 'lodash';
   `]
 })
 export class ResultsComponent implements OnChanges{
-  @Input() recordCount: number = 0;
+  @Input() recordCount: number;
   @Input() limit: number = 12;
   @Input() offset: number = 0;
   @Input() page: number = 1;
@@ -71,9 +72,13 @@ export class ResultsComponent implements OnChanges{
   @Output() onSortChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() onPageSizeChange: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() {}
+  showRecordsCountMessage: string = '';
 
-  ngOnChanges() {}
+  constructor(private translateService: TranslateService) {}
+
+  ngOnChanges() {
+    this.prepareRecordsCountMessage();
+  }
 
   get totalRecords(): string{
     if(this.recordCount > 2000)
@@ -84,5 +89,12 @@ export class ResultsComponent implements OnChanges{
 
   get lastResult(){
     return ((this.limit * this.page) >= this.recordCount) ? this.recordCount : (this.limit * this.page);
+  }
+
+  prepareRecordsCountMessage() {
+    this.translateService.stream('PRODUCT_LIST.SHOW_COUNT_OF_RECORDS_MESSAGE', { minVal: this.recordCount > 0 ? this.offset + 1 : 0, maxVal: this.lastResult, totalVal: this.totalRecords })
+      .subscribe((message: string) => {
+        this.showRecordsCountMessage = message;
+    });      
   }
 }

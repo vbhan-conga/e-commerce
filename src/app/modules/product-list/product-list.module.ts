@@ -6,16 +6,14 @@ import { ComponentModule } from '../../components/component.module';
 import { ProductListRoutingModule } from './product-list-routing.module';
 import { ProductListComponent } from './layout/product-list.component';
 
-import { CatalogModule, StoreModule, PricingModule } from '@apttus/ecommerce';
+import { PricingModule } from '@apttus/ecommerce';
 import { ResultsComponent } from './component/results.component';
-
-import { ConstraintRulesModule } from '@apttus/constraint-rules';
-import { AboModule } from '@apttus/abo';
-import { MdSpinnerModule, BreadcrumbModule, ProductCardModule, FilterModule, InputFieldModule, ButtonModule, InputSelectModule } from '@apttus/elements';
+import { IconModule, BreadcrumbModule, ProductCardModule, FilterModule, InputFieldModule, ButtonModule, InputSelectModule } from '@apttus/elements';
 
 
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { NgxPageScrollModule } from 'ngx-page-scroll';
+
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -24,20 +22,16 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
     ReactiveFormsModule,
     FormsModule,
     ComponentModule,
-    StoreModule,
     PricingModule,
-    CatalogModule,
-    NgxPageScrollModule,
-    ConstraintRulesModule,
-    AboModule,
-    MdSpinnerModule,
+    IconModule,
     BreadcrumbModule,
     ProductCardModule,
     InputFieldModule,
     InputSelectModule,
     ButtonModule,
     FilterModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    TranslateModule.forChild()
   ],
   declarations: [ProductListComponent, ResultsComponent]
 })

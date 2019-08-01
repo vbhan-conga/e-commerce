@@ -1,7 +1,9 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { ConstraintRuleService } from '@apttus/constraint-rules';
+import { Observable } from 'rxjs';
+import { ConstraintRuleService } from '@apttus/ecommerce';
 
 @Injectable()
 export class ConstraintRuleGuard implements CanActivate {
@@ -14,7 +16,7 @@ export class ConstraintRuleGuard implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        return this.crService.hasPendingErrors().map(res => !res);
+        return this.crService.hasPendingErrors().pipe(map(res => !res));
     }
 
 }

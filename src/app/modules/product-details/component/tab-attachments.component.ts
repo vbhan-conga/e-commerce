@@ -1,16 +1,16 @@
 import { Input, Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Product, ProductInformation, ProductInformationService } from '@apttus/ecommerce';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 @Component({
     selector: 'pdp-tab-attachments',
     template: `
       <table class="table table-sm">
         <thead>
           <tr>
-            <th scope="col" class="border-top-0">File Name</th>
-            <th scope="col" class="border-top-0">Description</th>
-            <th scope="col" class="border-top-0">Created Date</th>
-            <th scope="col" class="border-top-0">Information Type</th>
+            <th scope="col" class="border-top-0">{{'PRODUCT_DETAILS.FILE_NAME' | translate}}</th>
+            <th scope="col" class="border-top-0">{{'PRODUCT_DETAILS.DESCRIPTION' | translate}}</th>
+            <th scope="col" class="border-top-0">{{'COMMON.CREATED_DATE' |  translate}}</th>
+            <th scope="col" class="border-top-0">{{'PRODUCT_DETAILS.INFORMATION_TYPE' | translate}}</th>
           </tr>
         </thead>
         <tbody>
