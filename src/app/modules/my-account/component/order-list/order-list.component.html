@@ -20,7 +20,7 @@
       <tr *ngFor="let order of (orderList)">
         <th scope="row">
          <a href="javascript:void(0)" [routerLink]="['/Orders', order.Id]">{{order.Name}}</a></th>
-        <td>{{(order | OrderPricePipe | async).netPrice$ | async}}</td>
+         <td><apt-price [record]="order"></apt-price></td>
         <td>{{order.CreatedDate | date : 'short'}}</td>
         <td>{{order.OrderLineItems?.length}}</td>
         <td>
