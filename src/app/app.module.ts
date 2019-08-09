@@ -39,10 +39,10 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AboGuard } from './services/aboGuard';
 
 export function createTranslateLoader(http: HttpClient) {
-  let base = '/';
-  if(window && window['sv'] && window['sv']['resource'])
+  let base = './';
+  if (window && window['sv'] && window['sv']['resource'])
     base = window['sv']['resource'] + '/';
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, base + 'assets/i18n/', '.json');
 }
 
 @NgModule({
@@ -54,7 +54,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     AppRoutingModule,
     ApttusModule.forRoot(environment),
-    CommerceModule.forRoot('*** Storefront Name ****'),
+    CommerceModule.forRoot('D-Commerce'),
     ProductDrawerModule,
     ModalModule.forRoot(),
     ApttusModalModule,
