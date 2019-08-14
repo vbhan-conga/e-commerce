@@ -1,0 +1,22 @@
+{
+  "credentials": {
+    "username": "omqa@apttus.com.winter18",
+    "password": "tier123$v4CX98hBAnhDRYrUX3QaECjZc",
+    "endpoint": "https://test.salesforce.com",
+    "enableCors": true
+  },
+  "domain": "cpqadminqa-apttus-qa.cs61.force.com",
+  "network": {
+    "attributes": {
+      "type": "Network",
+      "url": "/services/data/v42.0/sobjects/Network/0DB4C000000CaYSWA0"
+    },
+    "Id": "0DB4C000000CaYSWA0",
+    "Name": "ECommerce",
+    "UrlPathPrefix": "ecomm"
+  },
+  "initialized": true,
+  "pageName": "storestg",
+  "resourceName": "storestg",
+  "pageEnableCheck": true
+}
