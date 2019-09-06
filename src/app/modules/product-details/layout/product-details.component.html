@@ -11,7 +11,10 @@
       <div class="form-group col my-0">
         <small class="mb-2 d-block"> {{'COMMON.NET_PRICE' | translate}} </small>
         <h5>
-          <apt-price [record]="cartItemList || viewState?.product" [quantity]="quantity" [bundle]="true" [type]="'net'"></apt-price>
+          <apt-price [record]="cartItemList" *ngIf="cartItemList?.length > 0; else productPrice" [quantity]="quantity" [bundle]="true" [type]="'net'"></apt-price>
+          <ng-template #productPrice>
+            <apt-price [record]="viewState?.product" [quantity]="quantity" [bundle]="true" type="net"></apt-price>
+          </ng-template>
         </h5>
       </div>
     </form>
@@ -42,15 +45,22 @@
           </apt-add-to-cart>
         </ng-container>
         <ng-template #newProduct>
-          <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
-            (onAddToCart)="onAddToCart($event)" [disabled]="!configurationChanged"
-            [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
-          </apt-add-to-cart>
+          <div class="row justify-content-end">
+            <div class="form-group col-6 mx-3 my-0 d-flex align-items-center">
+              <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
+              <input type="number" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
+            </div>
+            <div class="col-4 d-flex align-items-center">
+              <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
+                (onAddToCart)="onAddToCart($event)" [disabled]="!configurationChanged"
+                [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
+              </apt-add-to-cart>
+            </div>
+          </div>
         </ng-template>
         
-        <!--ToDo: Related to ABO configuration story -->
-        <!-- <button class="btn btn-outline-primary ml-2" *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions"
-          (click)="productConfigurationSummary.show();">Price Summary</button> -->
+        <button class="btn btn-outline-primary ml-2" *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions"
+          (click)="productConfigurationSummary.show();">Price Summary</button>
       </div>
     </ng-template>
 
@@ -78,7 +88,7 @@
       <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.CONFIGURATIONS' | translate}} </h4>
       <div class="col-12">
         <apt-product-configuration [product]="viewState?.product" [relatedTo]="viewState?.relatedTo"
-          (configurationChange)="onConfigurationChange($event)">
+          (configurationChange)="onConfigurationChange($event)" (click)="configurationChanged = true">
         </apt-product-configuration>
       </div>
     </div>

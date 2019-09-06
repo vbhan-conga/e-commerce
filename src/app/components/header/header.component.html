@@ -19,21 +19,21 @@
       <!-- <a href="javascript:void(0)" (click)="openModal(storeModal)">
         <span class="oi oi-grid-two-up p-0"></span>
       </a> -->
-      <div class="dropdown" dropdown>
+      <!-- <div class="dropdown" dropdown>
         <a href="javascript:void(0)" class="dropdown-toggle" dropdownToggle>
           <span class="oi oi-globe p-0"></span>
         </a>
         <ul *dropdownMenu class="dropdown-menu">
-          <!-- <li *ngFor="let currency of (currencyTypes$ | async)">
+          <li *ngFor="let currency of (currencyTypes$ | async)">
             <a class="dropdown-item" href="javascript:void(0)" (click)="setCurrency(currency)">{{currency._currency?.currency}}</a>
-          </li> -->
+          </li>
           <li *ngFor="let locale of view?.localeTypes">
             <a class="dropdown-item" href="javascript:void(0)" (click)="setLanguage(locale.salesforceLocaleCode);">
               {{ locale.nativeLabel }}
             </a>
           </li>
         </ul>
-      </div>
+      </div> -->
   
       <a href="javascript:void(0)" (click)="openModal(searchModal)">
         <span class="oi oi-magnifying-glass p-0"></span>

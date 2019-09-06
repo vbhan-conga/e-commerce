@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.spent = new Price(this.localCurrencyPipe);
     this.subscription = combineLatest(
         // this.quoteService.getMyQuotes(),
-        this.orderService.getMyOrders(),
+        this.orderService.getMyOrders(null, 7, 10, 0),
         this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]),
         // this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0])
     ).subscribe(([orders, ag1]) => {

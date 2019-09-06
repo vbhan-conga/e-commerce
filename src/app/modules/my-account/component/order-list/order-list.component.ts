@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrderService, Order } from '@apttus/ecommerce';
 import { ACondition } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 
 /**
  * Displays all orders for the logged in user in grid view with pagination.
@@ -12,7 +14,7 @@ import { take } from 'rxjs/operators';
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss']
 })
-export class OrderListComponent implements OnInit {
+export class OrderListComponent implements OnInit, OnDestroy {
   /**
    * The current page used by the pagination component.
    */
@@ -38,6 +40,8 @@ export class OrderListComponent implements OnInit {
     last: ''
   };
 
+  subArray: Array<Subscription> = new Array<Subscription>();
+
   /**
    * @ignore 
    */
@@ -48,13 +52,13 @@ export class OrderListComponent implements OnInit {
    */
   ngOnInit() {
     this.loadOrders(this.currentPage);
-    this.orderService.aggregate([new ACondition(Order, 'Id', 'NotNull', null)]).pipe(take(1)).subscribe(res => this.orderAggregate = res);
-    this.translateService.stream('PAGINATION').subscribe((val: string) => {
+    this.subArray.push(this.orderService.aggregate([new ACondition(Order, 'Id', 'NotNull', null)]).pipe(take(1)).subscribe(res => this.orderAggregate = res));
+    this.subArray.push(this.translateService.stream('PAGINATION').subscribe((val: string) => {
       this.paginationButtonLabels.first = val['FIRST'];
       this.paginationButtonLabels.previous = val['PREVIOUS'];
       this.paginationButtonLabels.next = val['NEXT'];
       this.paginationButtonLabels.last = val['LAST'];
-    });
+    }));
   }
 
   /**
@@ -63,6 +67,10 @@ export class OrderListComponent implements OnInit {
    */
   loadOrders(page) {
     this.orderList = null;
-    this.orderService.getMyOrders(null, null, this.limit, page).subscribe((res: Array<Order>) => this.orderList = res);
+    this.subArray.push(this.orderService.getMyOrders(null, null, this.limit, page).subscribe((res: Array<Order>) => this.orderList = res));
+  }
+
+  ngOnDestroy() {
+    _.forEach(this.subArray, sub => sub.unsubscribe());
   }
 }
