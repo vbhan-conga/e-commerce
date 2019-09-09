@@ -45,7 +45,7 @@
       <apt-asset-list
         [pageAssets]="showingFullList ? groupedPageAssetLineItems : selectedPageItems"
         [operation]="operation"
-        [currentConditions]="conditions"
+        [totalAssets]="totalItems"
         (onSelectedAmountClick)="handleSelectedAmountClick($event)"
         (onFullListClick)="handleFullListClick()"
       ></apt-asset-list>

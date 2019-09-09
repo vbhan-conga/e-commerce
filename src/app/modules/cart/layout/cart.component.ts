@@ -192,15 +192,14 @@ export class CartComponent implements OnInit, OnDestroy {
    * Allows user to submit order. Convert a cart to order and submit it.
    */
   submitOrder() {
-    this.orderAmount = this.cart.SummaryGroups.filter(y => y.LineType === 'Grand Total')[0].NetPrice.toString();
+    const orderAmountGroup = _.find(_.get(this.cart, 'SummaryGroups'), c => _.get(c, 'LineType') === 'Grand Total');
+    this.orderAmount = _.defaultTo(_.get(orderAmountGroup, 'NetPrice', 0).toString(), '0');
     this.loading = true;
     if (this.isLoggedIn) {
-      let selectedAcc = {
-        billTo: this.model.billToAccountId,
-        shipTo: this.model.shipToAccountId
-      };
+      this.cart.BillToAccountId = this.model.billToAccountId;
+      this.cart.ShipToAccountId = this.model.shipToAccountId;
 
-      this.convertCartToOrder(this.order, this.primaryContact, null, selectedAcc);
+      this.convertCartToOrder(this.order, this.primaryContact, this.cart);
     }
     else {
       if (this.shippingEqualsBilling) {

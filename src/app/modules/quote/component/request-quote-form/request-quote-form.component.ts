@@ -62,23 +62,40 @@ export class RequestQuoteFormComponent implements OnInit {
    * @ignore
    */
   quoteChange() {
+    this.onQuoteUpdate.emit(this.quote);
+  }
+
+  shipToChange() {
     this.shipToAccount$ = this.accountService.get([this.quote.ShipToAccountId]).pipe(map(res => res[0]));
+    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => { 
+      this.quote.ShipToAccount = newShippingAccount; 
+      this.onQuoteUpdate.emit(this.quote);
+    });
+  }
+
+  billToChange() {
     this.billToAccount$ = this.accountService.get([this.quote.BillToAccountId]).pipe(map(res => res[0]));
-    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => { this.quote.ShipToAccount = newShippingAccount; });
-    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => { this.quote.BillToAccount = newBillingAccount; });
+    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => { 
+      this.quote.BillToAccount = newBillingAccount;
+      this.onQuoteUpdate.emit(this.quote);
+    });
+    
+  }
+
+  primaryContactChange() {
     this.contactService.get([this.quote.PrimaryContactId]).pipe(map(res => res[0]))
       .pipe(take(1))
-      .subscribe((newPrimaryContact) => { this.quote.PrimaryContact = newPrimaryContact; });
-    this.onQuoteUpdate.emit(this.quote);
+      .subscribe((newPrimaryContact) => { 
+        this.quote.PrimaryContact = newPrimaryContact;
+        this.onQuoteUpdate.emit(this.quote);
+      });
   }
 
   /**
    * Event handler for when the primary contact input changes.
    * @param event The event that was fired.
    */
-  handlePrimaryContactChange(event: any) {
-    console.log("Primary Contact is set to", event);
-  }
+  handlePrimaryContactChange(event: any) {}
   
 }
 

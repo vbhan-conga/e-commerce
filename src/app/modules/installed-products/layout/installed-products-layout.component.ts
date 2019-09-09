@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ACondition, APageInfo, ASort, ConfigurationService } from '@apttus/core';
-import { CartService, Cart, Storefront, StorefrontService, ProductService, AssetService, AssetLineItemExtended} from '@apttus/ecommerce';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { ACondition, APageInfo, ASort, ConfigurationService, QueryOptions } from '@apttus/core';
+import { CartService, Cart, Storefront, StorefrontService, ProductService, AssetService, AssetLineItemExtended, AccountService} from '@apttus/ecommerce';
+import { Observable, combineLatest, of } from 'rxjs';
+import { take, mergeMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { AssetSelectionService, AccordionRows } from '@apttus/elements';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +41,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
   /**
    * Array of conditions to be used for populating search results. Initialized to filter out assets that are bundle options.
    */
-  conditions: Array<ACondition> = [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option')];
+  conditions: Array<ACondition> = [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsInactive', 'NotEqual', true)];
   /**
    * Observable array of all assets that have been selected from the asset list.
    */
@@ -122,6 +122,10 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    */
   productFamilies: Array<string> = [];
   /**
+   * The current account id.
+   */
+  accountId: string;
+  /**
    * Object used for managing filters that are set on the asset list.
    */
   priceTypeFilters = {
@@ -166,7 +170,9 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     private storefrontService: StorefrontService,
     public fieldFilterServiceContext: ProductService,
     private translateService: TranslateService,
-    private config: ConfigurationService
+    private config: ConfigurationService,
+    private accountService: AccountService,
+    private productService: ProductService
   ) {
     this.subs.push(this.cartService.getMyCart().subscribe(cartRes => {
       this.cart = cartRes;
@@ -178,88 +184,92 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * @ignore
    */
   ngOnInit() {
-    this.assetService.getAssetLineItemForAccount(null, this.conditions)
-    .pipe(
-      take(1)
-    )
-    .subscribe(assets => {
-      this.productFamilies = _.uniqBy(
-        assets
-        .filter(asset => asset.IsPrimaryLine && asset.Product.Family != null)
-        .map(asset => asset.Product.Family)
-        ,
-        val => val
-      );
-    });
-    this.storefront$ = this.storefrontService.getStorefront();
-    this._selectedProductID = this.route.snapshot.params.productId;
-    this.operation = this.route.snapshot.params.operation;
-    this._isABOOperation = (this._selectedProductID != null && this._selectedProductID !== undefined && (this.operation === 'Renew' || this.operation === 'Terminate' || this.operation === 'Buy More' || this.operation === 'Change Configuration'));
-    if (this._isABOOperation) {
-      this.newIdentifiers = decodeURIComponent(this._selectedProductID).split(',');
-      this.conditions.push(new ACondition(this.assetService.type, 'ProductId', 'In', this.newIdentifiers));
-      this.assetService.getAssetLineItemForAccount(null, this.conditions, [new ASort(this.assetService.type, 'Product.Name')]).pipe(take(1)).subscribe(assets => {
-        this.newIdentifiers.forEach(identifier => {
-          this.assetSelectionService.addAssetToSelection(assets.filter(asset => asset.Product[this.identifier] === identifier)[0]);
-        });
-      });
-    }
-    this.selectedAssets$ = this.assetSelectionService.getSelectedAssets();
-    this.getResults();
-    this.assetService.getAssetLineItemForAccount().pipe(take(1)).subscribe(assets => {
-      let families = [];
-      if(_.get(assets, 'length', 0) > 0){
-        assets.forEach(asset => {
-          if (!_.includes(families, asset.Product.Family)) {
-            if (asset.Product.Family != null) families.push(asset.Product.Family);
-          }
+    this.subs.push(this.accountService.getMyAccount().subscribe(account => {
+      this.accountId = account.Id;
+      this.storefront$ = this.storefrontService.getStorefront();
+      this._selectedProductID = this.route.snapshot.params.productId;
+      this.operation = this.route.snapshot.params.operation;
+      this._isABOOperation = (this._selectedProductID != null && this._selectedProductID !== undefined && (this.operation === 'Renew' || this.operation === 'Terminate' || this.operation === 'Buy More' || this.operation === 'Change Configuration'));
+      if (this._isABOOperation) {
+        this.newIdentifiers = decodeURIComponent(this._selectedProductID).split(',');
+        this.conditions.push(new ACondition(this.assetService.type, 'ProductId', 'In', this.newIdentifiers));
+        this.assetService.getAssetLineItemForAccount(this.accountId, this.conditions, [new ASort(this.assetService.type, 'Product.Name')]).pipe(take(1)).subscribe(assets => {
+          this.newIdentifiers.forEach(identifier => {
+            this.assetSelectionService.addAssetToSelection(assets.filter(asset => asset.Product[this.identifier] === identifier)[0]);
+          });
         });
       }
+      this.getResults();
+    }));
+    this.assetService.query({groupBy: ['Product.Family']})
+    .pipe(take(1))
+    .subscribe(assets => {
+      this.productFamilies = _.filter(_.map(assets, asset => asset.Product.Family), value => value != null);
     });
-    this.translateService.stream('PAGINATION').subscribe((val: string) => {
+    this.selectedAssets$ = this.assetSelectionService.getSelectedAssets();
+    this.subs.push(this.translateService.stream('PAGINATION').subscribe((val: string) => {
       this.paginationButtonLabels.first = val['FIRST'];
       this.paginationButtonLabels.previous = val['PREVIOUS'];
       this.paginationButtonLabels.next = val['NEXT'];
       this.paginationButtonLabels.last = val['LAST'];
-    });
+    }));
   }
   /**
    * Gets the search results based on the current applied filters.
    */
   getResults() {
-    this.groupedAssetLineItems = [];
     this.groupedPageAssetLineItems = [];
-    if (this.searchQuery) {
-      this.assetService.search(this.searchQuery, this.conditions, 'AND', null, null, new APageInfo(999, 1))
-      .pipe(take(1)).subscribe(assets => {
-        assets.filter(asset => asset.IsPrimaryLine)
-        .forEach(primaryLine => {
-          this.groupedAssetLineItems.push({
-            parent: primaryLine,
-            children: assets.filter(asset => {
-              return (!asset.IsPrimaryLine && asset.BundleAssetId === primaryLine.Id);
-            })
-          });
+    let conditions = _.clone(this.conditions);
+    conditions.push(new ACondition(this.assetService.type, 'AccountId', 'Equal', this.accountId));
+    conditions.push(new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', true));
+    combineLatest(
+      this.assetService.query({
+        searchString: _.defaultTo(this.searchQuery, ''),
+        aggregate: true,
+        conditions: conditions,
+        expressionOperator: 'AND',
+        sortOrder: [new ASort(this.assetService.type, 'Product.Name')]
+      } as QueryOptions),
+      this.assetService.query({
+        searchString: _.defaultTo(this.searchQuery, ''),
+        conditions: conditions,
+        expressionOperator: 'AND',
+        sortOrder: [new ASort(this.assetService.type, 'Product.Name')],
+        page: new APageInfo(12, this.page)
+      } as QueryOptions),
+      this.assetService.query({
+        groupBy: ['Product.Family'],
+        searchString: _.defaultTo(this.searchQuery, ''),
+        expressionOperator: 'AND',
+        conditions: conditions
+      } as QueryOptions)
+    )
+    .pipe(
+      take(1),
+      mergeMap(([totalAssets, assets, assetFamilies]) => {
+        this.productFamilies = _.filter(_.map(assetFamilies, asset => asset.Product.Family), value => value != null);
+        this.totalItems = _.get(totalAssets, 'total_records', _.toString(_.size(totalAssets)));
+        let childConditions = _.clone(this.conditions);
+        childConditions.push(new ACondition(this.assetService.type, 'BundleAssetId', 'In', assets.map(asset => asset.Id)));
+        childConditions.push(new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false));
+        return combineLatest(
+          of(assets),
+          this.assetService.query({
+            conditions: childConditions,
+            expressionOperator: 'AND',
+          } as QueryOptions)
+        );
+      })
+    ).subscribe(([assets, childAssets]) => {
+      assets.forEach(asset => {
+        this.groupedPageAssetLineItems.push({
+          parent: asset,
+          children: _.filter(childAssets, child => {
+            return child.BundleAssetId === asset.Id;
+          })
         });
-        this.groupedPageAssetLineItems = this.groupedAssetLineItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
-        this.totalItems = this.groupedAssetLineItems.length;
       });
-    }
-    else {
-      this.assetService.getAssetLineItemForAccount(null, this.conditions, [new ASort(this.assetService.type, 'Product.Name')]).pipe(take(1)).subscribe(assets => {
-        assets.filter(asset => asset.IsPrimaryLine)
-        .forEach(primaryLine => {
-          this.groupedAssetLineItems.push({
-            parent: primaryLine,
-            children: assets.filter(asset => {
-              return (!asset.IsPrimaryLine && asset.BundleAssetId === primaryLine.Id);
-            })
-          });
-        });
-        this.groupedPageAssetLineItems = this.groupedAssetLineItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
-        this.totalItems = this.groupedAssetLineItems.length;
-      });
-    }
+    });
   }
   /**
    * Event handler for when the days to renew filter is changed.
@@ -271,6 +281,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
       this.renewFilter = event;
       this.conditions.push(this.renewFilter);
     }
+    this.page = 1;
     this.getResults();
   }
   /**
@@ -282,6 +293,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
       this.priceTypeFilters.addFilter(event);
     }
     else this.priceTypeFilters.removeFilters();
+    this.page = 1;
     this.getResults();
   }
   /**

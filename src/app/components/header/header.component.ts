@@ -11,7 +11,6 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { APageInfo, ConfigurationService } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
-import LocaleCode from 'locale-code';
 
 import * as _ from 'lodash';
 import { filter, flatMap, map } from 'rxjs/operators';
@@ -79,12 +78,6 @@ export class HeaderComponent implements OnInit {
             return new Array<any>(depth);
           }),
           contact: contact,
-          localeTypes: _.map(localeFields, (locale) => {
-            return {
-              salesforceLocaleCode: locale.value.replace('-', '_'),
-              nativeLabel: LocaleCode.getLanguageNativeName(locale.value)
-            };
-          }),
           me: user
         };
       })
@@ -175,6 +168,5 @@ interface HeaderView{
   categoryTree: Array<Category>;
   categoryBranch: Array<Category>;
   contact: Contact;
-  localeTypes: Array<LocaleType>;
   me: User;
 }

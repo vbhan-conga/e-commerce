@@ -51,12 +51,10 @@ export class ProductDetailsComponent implements OnInit {
      * isConfigurationChanged to true.
      */
     onConfigurationChange(result: any) {
-        const cartItemList: Array<CartItem> = result[0];
-        const disable: boolean = result[1];
+        const cartItemList: Array<CartItem> = _.first(result);
+        const disable: boolean = _.last(result);
         if (disable) {
             this.configurationChanged = !disable;
-        } else {
-            this.configurationChanged = _.some(cartItemList, c => _.includes([LineStatus.Amend, LineStatus.Cancel, LineStatus.New, LineStatus.Upgrade], _.get(c, 'LineStatus')));
         }
         this.cartItemList = cartItemList;
     }
