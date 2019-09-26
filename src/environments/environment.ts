@@ -1,7 +1,8 @@
 import { Configuration } from '@apttus/core';
 export const environment: Configuration = {
   production: false,
-  defaultImageSrc: './assets/images/default.png',
+  organizationId: '00D190000009iG8',
+  defaultImageSrc: '/assets/images/default.png',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
   enableErrorLogging: false,
@@ -10,24 +11,20 @@ export const environment: Configuration = {
   enableQueryLogs: true,
   enablePerformanceLogs: false,
   defaultCurrency: 'USD',
-  bufferTime: 50,
-  maxBufferSize: 10,
+  bufferTime: 20,
+  maxBufferSize: 3,
   disableBuffer: false,
   subqueryLimit: 10,
+  useIndexedDB: true,
   disableCache: false,
   encryptResponse: false,
-  cartRetryLimit: 20,
+  cartRetryLimit: 3,
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
+  endpoint: 'https://dc2-cpqqacommunity1.cs24.force.com/dc',
   proxy: 'https://apttus-proxy.herokuapp.com',
-  sentryDsn: '***sentry.io url***',
-  useIndexedDB: true,
- storefront: '*** Storefront Name ****',
- expandDepth: 8,
-
-  // Salesforce environment variables
-  organizationId: '****Salesforce Organization Id****',
-  endpoint: '****Salesforce Community URL****'
-
+  sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
+  storefront: 'D-Commerce',
+  expandDepth: 3
 };

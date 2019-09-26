@@ -37,7 +37,7 @@ export class ConfigureGuard implements CanActivate, CanDeactivate<ProductDetails
     }
 
     canDeactivate(component: ProductDetailsComponent, route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        if (component.configurationChanged) {
+        if (component.configurationChanged && (_.get(component.productConfigurationSummary, 'product.HasAttributes') || _.get(component.productConfigurationSummary, 'product.HasOptions'))) {
             if (confirm('You have unsaved changes to the product configuration! Are you sure you want to proceed?'))
                 return true;
             else

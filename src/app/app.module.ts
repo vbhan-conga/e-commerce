@@ -47,7 +47,7 @@ import { OrderDetailsGuard } from '@apttus/ecommerce';
     BrowserAnimationsModule,
     AppRoutingModule,
     ApttusModule.forRoot(environment),
-    CommerceModule.forRoot('*** Storefront Name ****'),
+    CommerceModule.forRoot('D-Commerce'),
     ProductDrawerModule,
     ModalModule.forRoot(),
     ApttusModalModule,
