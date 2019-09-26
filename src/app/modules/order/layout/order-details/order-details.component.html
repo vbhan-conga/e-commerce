@@ -42,14 +42,14 @@
         </h5>
         <table class="table table-responsive border-bottom">
           <tbody>
-            <ng-container *ngFor="let item of order?.OrderLineItems; let i = index">
-              <apt-line-item-table-row *ngIf="item?.IsPrimaryLine"
-              [index]="i"
-              [parent]="item"
-              [children]="getChildItems(order?.OrderLineItems, item)"
-              [editableFields]="false"
-              >
-              </apt-line-item-table-row>
+              <ng-container *ngFor="let item of orderLineItems$ | async; let i = index">
+                <apt-line-item-table-row
+                [index]="i"
+                [parent]="item.MainLine"
+                [options]="item.Options"
+                [children]="item.SecondaryLines"
+                [editableFields]="false">
+                </apt-line-item-table-row>
             </ng-container>
           </tbody>
         </table>

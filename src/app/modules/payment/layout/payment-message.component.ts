@@ -9,6 +9,6 @@ export class PaymentMesageComponent implements OnInit {
   constructor() {}
 
    ngOnInit(){
-    window.parent.window.postMessage({'payment':'true'}, `https://${window.location.hostname}`);
+    window.parent.window.postMessage({'payment':'true'}, `${window.location.href}`);
    }
 }

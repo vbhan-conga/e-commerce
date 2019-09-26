@@ -72,31 +72,6 @@ pdp-tab-options{
     }
 }
 
-/**
- * Carousel adjustments
- */ 
-ngx-slick.slick-slider{
-    &.left-align-slick > .slick-list > .slick-track {
-        margin-left:0;
-        padding-bottom: 10px;
-    }
-    .slick-list {
-        overflow-y: auto !important;
-    }
-    div.slick-slide:focus{
-        outline: none;
-    }
-    .strike-text{
-        text-decoration: line-through;
-    }
-    .slick-prev:before, .slick-next:before, .slick-prev:hover:before, .slick-prev:focus:before, .slick-next:hover:before, .slick-next:focus:before{
-        color: $primary !important;
-    }
-}
-.carousel-item img{
-    width: 100%;
-}
-
 /*
 * Icon styles
 */

@@ -121,9 +121,8 @@ export class RenewalFilterComponent {
    */
   private dateGetter(days: number): SimpleDate {
     let today = new Date();
-    let date = new SimpleDate();
     today.setDate(today.getDate() + days);
-    date.setDate(today);
+    let date = new SimpleDate(today);
     return date;
   }
   /**

@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { _sanitizeStyle } from '@angular/core/src/sanitization/style_sanitizer';
 import { ConfigurationService } from '@apttus/core';
-import { ExceptionService, PriceSummaryComponent } from '@apttus/elements';
+import { ExceptionService, PriceSummaryComponent, BreadcrumbLink } from '@apttus/elements';
 
 /**
  * Cart component, contains details such as
@@ -120,7 +120,7 @@ export class CartComponent implements OnInit, OnDestroy {
     billToAccountId: '',
     shipToAccountId: ''
   };
-  breadcrumbs = [
+  breadcrumbs: Array<BreadcrumbLink> = [
     {
       label: 'Cart',
       route: ['/manage-cart']
@@ -326,7 +326,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.toastr.error(val['PAYMENT_METHOD_LABELS.ERROR_MSG'] + paymentStatus, val['PAYMENT_METHOD_LABELS.ERROR_TITLE']);
       });
     }
-    this.isPaymentCompleted = true;
+    else this.isPaymentCompleted = true;
     if (_.get(this.orderConfirmation, 'Id'))
       this.subscriptions.push(this.emailService.guestUserNewOrderNotification(this.orderConfirmation.Id, `https://${window.location.hostname}${window.location.pathname}#/Orders/${this.orderConfirmation.Id}`).subscribe());
   }
@@ -341,7 +341,9 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   onOrderConfirmed() {
-    this.confirmationModal = this.modalService.show(this.confirmationTemplate, { class: 'modal-lg' });
+    this.ngZone.run(() => {
+      this.confirmationModal = this.modalService.show(this.confirmationTemplate, { class: 'modal-lg' });
+    });
     if (_.get(this.orderConfirmation, 'Id'))
     this.subscriptions.push(this.emailService.guestUserNewOrderNotification(this.orderConfirmation.Id, `https://${window.location.hostname}${window.location.pathname}#/Orders/${this.orderConfirmation.Id}`).subscribe());
   }

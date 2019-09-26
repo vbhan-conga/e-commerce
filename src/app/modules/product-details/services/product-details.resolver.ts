@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ACondition } from '@apttus/core';
 import { Resolve, ParamMap, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Product, CartItem, ProductService, CartItemService, ConstraintRuleService } from '@apttus/ecommerce';
 import { Observable, combineLatest, zip, BehaviorSubject, Subscription } from 'rxjs';
@@ -25,7 +26,10 @@ export class ProductDetailsResolver implements Resolve<any> {
         this.subject.next(null);
         this.subscription  = zip(
             this.productService.get([_.get(routeParams, 'params.productCode')]),
-            this.cartItemService.get([_.get(routeParams, 'params.cartItemId')]),
+            this.cartItemService.query({
+                conditions: [new ACondition(CartItem, 'Id', 'In', [_.get(routeParams, 'params.cartItemId')])],
+                skipCache: true
+            }),
             this.crService.getRecommendationsForProducts([_.get(routeParams, 'params.productCode')])
         ).pipe(
             map(([productList, cartitemList, rProductList]) => {
@@ -41,7 +45,7 @@ export class ProductDetailsResolver implements Resolve<any> {
             filter(s => s != null)
             ,tap(state => {
                 if(!_.isNil(_.get(routeParams, 'params.cartItemId')) && _.isNil(state.relatedTo))
-                    this.router.navigate(['/product', _.get(state, 'product.Id')])
+                    this.router.navigate(['/product', _.get(state, 'product.Id')]);
             })
             ,take(1)
         );

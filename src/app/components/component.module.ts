@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
-import { SlickModule } from 'ngx-slick';
 import { RouterModule } from '@angular/router';
 import { LaddaModule } from 'angular2-ladda';
 import { FormsModule }   from '@angular/forms';
@@ -24,7 +23,6 @@ import { AutoFocusDirective } from '../directives/auto-focus.directive';
 @NgModule({
   imports: [
     CommonModule,
-    SlickModule,
     MiniProfileModule,
     MiniCartModule,
     ConstraintIconModule,

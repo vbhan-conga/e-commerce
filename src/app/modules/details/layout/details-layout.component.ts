@@ -4,8 +4,8 @@ import { DetailSectionComponent } from '../component/detail-section/detail-secti
 import { AObject } from '@apttus/core';
 /**
  * Details Layout Component shows the details of the placed order or the requested quote.
+ * @ignore
  */
-
 @Component({
   selector: 'apt-detail',
   templateUrl: './details-layout.component.html',

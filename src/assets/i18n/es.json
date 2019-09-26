@@ -584,7 +584,8 @@
         "USE_EXISTING_TERM": "es_MX Use Existing Term",
         "TERMINATION_DATE": "es_MX Termination Date",
         "NEW_START_DATE":"es_MX New Start Date",
-        "NEW_END_DATE":"es_MX New End Date"
+        "NEW_END_DATE":"es_MX New End Date",
+        "INVALID_TERMINATION_DATE": "es_MS Termination date must be between start and end date of all selected assets."
     },
     "APP": {
         "PAGE_RELOADED_TOASTR_MESSAGE": "es_MX This page has been reloaded.",
@@ -605,7 +606,7 @@
         "VIEW_YOUR_ORDER": "es_MX VIEW YOUR ORDER"
     },
     "SERVICES": {
-        "SELECTION_OF_ASSETS_MUST_TOOLTIP": "es_MX Must select asset(s) to perform batch actions.",
+        "SELECTION_OF_ASSETS_MUST_TOOLTIP": "es_MX Must select multiple assets to perform batch action.",
         "UNABLE_TO_RENEW_TOOLTIP": "es_MX One or more of the selected items are unabled to be renewed.",
         "UNABLE_TO_TERMINATE_TOOLTIP": "es_MX One or more of the selected items are unable to be terminated.",
         "ITEMS_ARE_ALREADY_ADDED_TO_CART_TOOLTIP": "es_MX One or more of the selected items are already added to cart.",

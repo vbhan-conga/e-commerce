@@ -21,9 +21,10 @@ export class ProductDetailsComponent implements OnInit {
     viewState$: BehaviorSubject<ProductDetailsState>;
 
     /**
-     * Flag to detect if their is change in product configuration.
+     * Flag to detect if there is change in product configuration.
      */
     configurationChanged: boolean = false;
+    onChangeDisabled: boolean = true;
 
     quantity: number = 1;
     /**
@@ -52,10 +53,10 @@ export class ProductDetailsComponent implements OnInit {
      */
     onConfigurationChange(result: any) {
         const cartItemList: Array<CartItem> = _.first(result);
-        const disable: boolean = _.last(result);
-        if (disable) {
-            this.configurationChanged = !disable;
-        }
+        const disable: boolean = result[1];
+        const configurationChanged: boolean = _.last(result);
+        this.configurationChanged = configurationChanged;
+        this.onChangeDisabled = disable;
         this.cartItemList = cartItemList;
     }
 

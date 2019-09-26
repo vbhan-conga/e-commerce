@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ElementRef, HostBinding } from '@angular/core';
 /**
  * Detail section component is used to display a section of the detail pages.
+ * @ignore
  */
 @Component({
   selector: 'apt-detail-section',

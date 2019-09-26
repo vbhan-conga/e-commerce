@@ -581,7 +581,8 @@
         "USE_EXISTING_TERM": "fr_FR Use Existing Term",
         "TERMINATION_DATE": "fr_FR Termination Date",
         "NEW_START_DATE":"fr_FR New Start Date",
-        "NEW_END_DATE":"fr_FR New End Date"
+        "NEW_END_DATE":"fr_FR New End Date",
+        "INVALID_TERMINATION_DATE": "fr_FR Termination date must be between start and end date of all selected assets."
     },
     "APP": {
         "PAGE_RELOADED_TOASTR_MESSAGE": "fr_FR This page has been reloaded.",
@@ -602,7 +603,7 @@
         "VIEW_YOUR_ORDER": "fr_FR VIEW YOUR ORDER"
     },
     "SERVICES": {
-        "SELECTION_OF_ASSETS_MUST_TOOLTIP": "fr_FR Must select asset(s) to perform batch actions.",
+        "SELECTION_OF_ASSETS_MUST_TOOLTIP": "fr_FR Must select multiple assets to perform batch action.",
         "UNABLE_TO_RENEW_TOOLTIP": "fr_FR One or more of the selected items are unabled to be renewed.",
         "UNABLE_TO_TERMINATE_TOOLTIP": "fr_FR One or more of the selected items are unable to be terminated.",
         "ITEMS_ARE_ALREADY_ADDED_TO_CART_TOOLTIP": "fr_FR One or more of the selected items are already added to cart.",

@@ -19,6 +19,7 @@
       <!-- <a href="javascript:void(0)" (click)="openModal(storeModal)">
         <span class="oi oi-grid-two-up p-0"></span>
       </a> -->
+      <!-- As a part of DC-3271 we need to remove locale change from application interface. -->
       <!-- <div class="dropdown" dropdown>
         <a href="javascript:void(0)" class="dropdown-toggle" dropdownToggle>
           <span class="oi oi-globe p-0"></span>
@@ -87,7 +88,7 @@
           <div class="d-flex justify-content-between align-items-start p-2">
             <div class="media p-2">
               <img [src]="view?.me?.SmallPhotoUrl | image : null" class="img-circle" width="45" />
-              <div class="media-body ml-3">
+              <div class="ml-3">
                 <ng-container *ngIf="view?.me?.Alias !== 'guest'; else guest">
                   <h5 class="my-0">{{view?.me?.FirstName}} {{view?.me?.LastName}}</h5>
                   <small class="d-block">{{'HEADER.LAST_LOGIN' | translate}}
