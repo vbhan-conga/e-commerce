@@ -7,6 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { take, flatMap } from 'rxjs/operators';
+import { SummaryState } from '../../../cart/component/summary.component';
 
 @Component({
   selector: 'app-cart-summary',
@@ -116,9 +117,9 @@ export class CartSummaryComponent implements OnInit, OnChanges {
   }
 }
 
-export interface SummaryState {
-  configurationMessage: string;
-  downloadLoading: boolean;
-  requestQuoteMessage: string;
-  requestQuoteLoading: boolean;
-}
+// export interface SummaryState {
+//   configurationMessage: string;
+//   downloadLoading: boolean;
+//   requestQuoteMessage: string;
+//   requestQuoteLoading: boolean;
+// }

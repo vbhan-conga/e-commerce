@@ -54,6 +54,7 @@ export class ManageCartComponent implements OnInit {
   }
 }
 
+/** @ignore */
 export interface View{
   cart: Cart;
   lineItems: Array<ItemGroup>;

@@ -89,9 +89,24 @@ export class SummaryComponent implements OnChanges {
   }
 }
 
+/**
+ * Used to hold state information about a cart summary.
+ */
 export interface SummaryState{
+  /**
+   * Configuration message.
+   */
   configurationMessage: string;
+  /**
+   * Flag to check if download is currently loading.
+   */
   downloadLoading: boolean;
+  /**
+   * Request quote message.
+   */
   requestQuoteMessage: string;
+  /**
+   * Flag to check if request quote is loading.
+   */
   requestQuoteLoading: boolean;
 }
