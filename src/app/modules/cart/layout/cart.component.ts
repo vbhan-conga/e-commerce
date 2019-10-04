@@ -241,7 +241,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
   convertCartToOrder(order: Order, primaryContact: Contact, cart?: Cart, selectedAccount?: any) {
     this.loading = true;
-    this.orderService.convertCartToOrder(order, primaryContact, cart, selectedAccount)
+    this.subscriptions.push(this.orderService.convertCartToOrder(order, primaryContact, cart, selectedAccount)
     .subscribe(
       orderResponse => this.ngZone.run(() => {
           this.loading = false;
@@ -252,7 +252,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.exceptionService.showError(err);
         this.loading = false;
       }
-    );
+    ));
   }
 
   /**
