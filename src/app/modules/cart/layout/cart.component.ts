@@ -227,7 +227,7 @@ export class CartComponent implements OnInit, OnDestroy {
    * @param id ids such as 'firstName', 'lastName', 'email', etc
    * @returns uniqueid
    */
-  public getId(id: string): string {
+  getId(id: string): string {
     return this.uniqueId + '_' + id;
   }
 
@@ -241,17 +241,18 @@ export class CartComponent implements OnInit, OnDestroy {
 
   convertCartToOrder(order: Order, primaryContact: Contact, cart?: Cart, selectedAccount?: any) {
     this.loading = true;
-    this.orderService.convertCartToOrder(order, primaryContact, cart, selectedAccount)
-      .subscribe(orderResponse => {
-        this.loading = false;
-        this.orderConfirmation = orderResponse;
-        (this.paymentState === 'PAYNOW') ? this.requestForPayment(this.orderConfirmation) : this.onOrderConfirmed();
-
-      },
-        err => {
-          this.exceptionService.showError(err);
+    this.subscriptions.push(this.orderService.convertCartToOrder(order, primaryContact, cart, selectedAccount)
+    .subscribe(
+      orderResponse => this.ngZone.run(() => {
           this.loading = false;
-        });
+          this.orderConfirmation = orderResponse;
+          (this.paymentState === 'PAYNOW') ? this.requestForPayment(this.orderConfirmation) : this.onOrderConfirmed();
+      }),
+      err => {
+        this.exceptionService.showError(err);
+        this.loading = false;
+      }
+    ));
   }
 
   /**

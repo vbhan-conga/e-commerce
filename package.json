@@ -1,6 +1,6 @@
 {
   "name": "@apttus/template-core",
-  "version": "1902.0.3",
+  "version": "1902.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -25,9 +25,9 @@
     "@angular/pwa": "^0.7.5",
     "@angular/router": "^7.2.15",
     "@angular/service-worker": "^7.2.15",
-    "@apttus/core": "~1902.0.3",
-    "@apttus/ecommerce": "~1902.0.3",
-    "@apttus/elements": "~1902.0.3",
+    "@apttus/core": "~1902.0.4",
+    "@apttus/ecommerce": "~1902.0.4",
+    "@apttus/elements": "~1902.0.4",
     "@ng-select/ng-select": "^2.19.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",

@@ -52,8 +52,20 @@ export class ProductDetailsResolver implements Resolve<any> {
     }
 }
 
+/**
+ * View object type for the product details page.
+ */
 export interface ProductDetailsState {
+    /**
+     * The product to display.
+     */
     product: Product;
+    /**
+     * Array of products to act as recommendations.
+     */
     recommendedProducts: Array<Product>;
+    /**
+     * The CartItem related to this product.
+     */
     relatedTo: CartItem;
 }

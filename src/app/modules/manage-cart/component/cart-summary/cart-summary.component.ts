@@ -7,6 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { take, flatMap } from 'rxjs/operators';
+import { SummaryState } from '../../../cart/component/summary.component';
 
 @Component({
   selector: 'app-cart-summary',
@@ -21,7 +22,7 @@ import { take, flatMap } from 'rxjs/operators';
 export class CartSummaryComponent implements OnInit, OnChanges {
   @Input() cart: Cart;
   @ViewChild('discardChangesTemplate') discardChangesTemplate: TemplateRef<any>;
-  
+
   loading:boolean = false;
   discardChangesModal: BsModalRef;
   _cart: Cart;
@@ -45,7 +46,7 @@ export class CartSummaryComponent implements OnInit, OnChanges {
   totalEstimatedTax: number = 0;
   taxPopHoverModal:BsModalRef;
 
-  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService, private storefrontService: StorefrontService, private router :Router, private userService: UserService, private cartService: CartService, 
+  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService, private storefrontService: StorefrontService, private router: Router, private userService: UserService, private cartService: CartService,
     private taxService:TaxService) {
     this.state = {
       configurationMessage: null,
@@ -96,7 +97,7 @@ export class CartSummaryComponent implements OnInit, OnChanges {
       });
   }
 
-  /** 
+  /**
    * Opens estimated tax pop hover and shows calulated tax for the cart
    */
   openEstimateTaxPopup() {
@@ -114,11 +115,4 @@ export class CartSummaryComponent implements OnInit, OnChanges {
       this.totalEstimatedTax = ((_.get(this.cart, 'LineItems.length') > 0)) ? _.sum(taxBreakup.map(res => res.TaxAmount)) : 0;
     });
   }
-}
-
-export interface SummaryState {
-  configurationMessage: string;
-  downloadLoading: boolean;
-  requestQuoteMessage: string;
-  requestQuoteLoading: boolean;
 }
