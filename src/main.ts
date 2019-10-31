@@ -9,11 +9,12 @@ declare var __webpack_public_path__: string;
 const sv = (<any>window).sv;
 
 if (environment.production) {
-  enableProdMode();
+  if(!environment.runTimeDebugMode) enableProdMode();
   if (sv && sv.resource) {
     __webpack_public_path__ = sv.resource + '/';
   }
 }
+
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
