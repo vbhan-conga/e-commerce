@@ -5,7 +5,8 @@ import * as _ from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
-import { LineStatus } from '@apttus/ecommerce';
+
+
 
 @Component({
     selector: 'app-product-details',
@@ -19,6 +20,7 @@ export class ProductDetailsComponent implements OnInit {
 
     cartItemList: Array<CartItem>;
     viewState$: BehaviorSubject<ProductDetailsState>;
+    cloneCartItemList: Array<CartItem>;
 
     /**
      * Flag to detect if there is change in product configuration.
@@ -53,9 +55,15 @@ export class ProductDetailsComponent implements OnInit {
      */
     onConfigurationChange(result: any) {
         const cartItemList: Array<CartItem> = _.first(result);
-        const disable: boolean = result[1];
-        const configurationChanged: boolean = _.last(result);
-        this.configurationChanged = configurationChanged;
+        const cartItemListChanged = !_.isEqual(_.get(this.cloneCartItemList,'length'), _.get(cartItemList,'length'));
+        const disable: boolean = _.get(_.last(result), 'errorMsgs');
+        const optionChanged: boolean =  _.get(_.last(result), 'optionChanged');
+        const attributeChanged: boolean =  _.get(_.last(result), 'attributeChanged');
+        if(attributeChanged) this.configurationChanged = true;
+        if (cartItemListChanged) {
+            this.cloneCartItemList = _.cloneDeep(cartItemList);
+            if(optionChanged) this.configurationChanged = true;
+        }
         this.onChangeDisabled = disable;
         this.cartItemList = cartItemList;
     }
