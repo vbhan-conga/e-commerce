@@ -5,6 +5,8 @@
         "MIN-TOTAL-QUANTITY": "fr_FR You must have a total of {{value}} options.",
         "MAX-TOTAL-QUANTITY": "fr_FR You can select no more than a total of {{value}} options.",
         "UNABLE_TO_RENEW": "fr_FR An error occurred renewing this asset(s)",
+        "MAX_OPTION_ERROR" : "fr_FR Select upto {{value}} option(s)",
+        "MIN_OPTION_ERROR" : "fr_FR Select {{value}} option(s)",
         "CART": {
             "TOO_MANY_ATTEMPTS": "fr_FR An item in your cart could not be priced. Please try removing an item / items and try again.",
             "SERVER_ERROR": "fr_FR Oops something went wrong.",

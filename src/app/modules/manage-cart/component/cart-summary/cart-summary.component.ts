@@ -116,3 +116,10 @@ export class CartSummaryComponent implements OnInit, OnChanges {
     });
   }
 }
+
+// export interface SummaryState {
+//   configurationMessage: string;
+//   downloadLoading: boolean;
+//   requestQuoteMessage: string;
+//   requestQuoteLoading: boolean;
+// }

@@ -12,7 +12,7 @@
                     <app-request-quote-form [cart]="cart" (onQuoteUpdate)="onUpdate($event)"></app-request-quote-form>
                 </div>
                 <div class="col-12 col-md-3">
-                    <apt-price-summary [disableSubmit]="disableSubmit" [record]="cart" [loading]="loading" [page]="'create-proposal'" (onRequestQuote)="convertCartToQuote()"></apt-price-summary>
+                    <apt-price-summary [disableSubmit]="disableSubmit" [record]="cart" [loading]="loading" [page]="'create-proposal'" (onRequestQuote)="convertCartToQuote(cart)"></apt-price-summary>
                 </div>
             </div>
         </div>

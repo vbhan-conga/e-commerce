@@ -56,9 +56,11 @@ export class CreateQuoteComponent implements OnInit {
    * @param instance of quote
    * @returns quote object.
    */
-  convertCartToQuote() {
+  convertCartToQuote(cart: Cart) {
     if (this.quoteRequestObj.PrimaryContactId) {
       this.loading = true;
+      const quoteAmountGroup = _.find(_.get(cart, 'SummaryGroups'), c => _.get(c, 'LineType') === 'Grand Total');
+      this.quoteRequestObj.Total_Quote_Amount = _.defaultTo(_.get(quoteAmountGroup, 'NetPrice', 0).toString(), '0');
       this.quoteService.convertCartToQuote(this.quoteRequestObj).pipe(take(1)).subscribe(
         res => {
           this.loading = false;

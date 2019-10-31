@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, SearchResults, SearchService, ProductCategory, ProductService, AccountService, AssetService } from '@apttus/ecommerce';
+import { CategoryService, Category, SearchResults, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
-import { Observable, of, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { map, take, mergeMap, tap } from 'rxjs/operators';
 
@@ -67,7 +67,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * @ignore
    */
-  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService, private accountService: AccountService, private assetService: AssetService) { }
+  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService) { }
 
   /**
    * @ignore
@@ -136,25 +136,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
           return of(null);
         }
       }),
-      mergeMap(() => combineLatest(this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins), this.accountService.getCurrentAccount())),
-      mergeMap(([r, account]) => {
-        return combineLatest(
-          of(r),
-          this.assetService.query({
-            groupBy: ['ProductId'],
-            conditions: [new ACondition(this.assetService.type, 'AccountId', 'Equal', account.Id)]
-          })
-        );
-      })
-    ).subscribe(([products, assets]) => {
-      products.productList = _.map(products.productList, product => {
-        if (!_.isEmpty(_.get(product, 'AssetLineItems')) && !_.some(assets, asset => asset.ProductId === product.Id)) {
-          product.AssetLineItems = null;
-          return product;
-        }
-        else return product;
-      });
-      this.searchResults$.next(products);
+      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins))
+    ).subscribe(r => {
+      this.searchResults$.next(r);
     });
   }
 
