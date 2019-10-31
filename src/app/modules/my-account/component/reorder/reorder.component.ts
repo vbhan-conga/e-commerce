@@ -55,6 +55,7 @@ export class ReorderComponent implements OnInit {
 
 }
 
+/** @ignore */
 export interface ProductQuantityMap{
   quantity: number;
   product: Product;

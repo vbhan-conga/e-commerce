@@ -158,11 +158,13 @@ export class HeaderComponent implements OnInit {
   }
 }
 
+/** @ignore */
 interface LocaleType {
   salesforceLocaleCode: string;
   nativeLabel: string;
 }
 
+/** @ignore */
 interface HeaderView{
   storefront: Storefront;
   categoryTree: Array<Category>;

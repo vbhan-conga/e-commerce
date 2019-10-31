@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ACondition, APageInfo, ASort, ConfigurationService, QueryOptions } from '@apttus/core';
 import { CartService, Cart, Storefront, StorefrontService, ProductService, AssetService, AssetLineItemExtended, AccountService} from '@apttus/ecommerce';
 import { Observable, combineLatest, of } from 'rxjs';
-import { take, mergeMap } from 'rxjs/operators';
+import { take, mergeMap, map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { AssetSelectionService, AccordionRows } from '@apttus/elements';
 import { ActivatedRoute } from '@angular/router';
@@ -41,7 +41,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
   /**
    * Array of conditions to be used for populating search results. Initialized to filter out assets that are bundle options.
    */
-  conditions: Array<ACondition> = [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsInactive', 'NotEqual', true)];
+  conditions: Array<ACondition> = [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsInactive', 'NotEqual', true), new ACondition(this.assetService.type, 'Product.ConfigurationType', 'NotEqual', 'Option')];
   /**
    * Observable array of all assets that have been selected from the asset list.
    */
@@ -218,18 +218,26 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * Gets the search results based on the current applied filters.
    */
   getResults() {
-    this.groupedPageAssetLineItems = [];
+    this.groupedPageAssetLineItems = null;
     let conditions = _.clone(this.conditions);
     conditions.push(new ACondition(this.assetService.type, 'AccountId', 'Equal', this.accountId));
     conditions.push(new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', true));
+    const aggregateQuery$ = (_.get(this, 'searchQuery.length', 0) >= 2)
+    ? this.assetService.query({
+      searchString: _.get(this, 'searchQuery'),
+      conditions: conditions,
+      expressionOperator: 'AND',
+      groupBy: ['Id']
+    } as QueryOptions).pipe(map(searchResults => {
+      return { total_records: searchResults.length };
+    }))
+    : this.assetService.query({
+      aggregate: true,
+      conditions: conditions,
+      expressionOperator: 'AND'
+    } as QueryOptions);
     combineLatest(
-      this.assetService.query({
-        searchString: _.defaultTo(this.searchQuery, ''),
-        aggregate: true,
-        conditions: conditions,
-        expressionOperator: 'AND',
-        sortOrder: [new ASort(this.assetService.type, 'Product.Name')]
-      } as QueryOptions),
+      aggregateQuery$,
       this.assetService.query({
         searchString: _.defaultTo(this.searchQuery, ''),
         conditions: conditions,
@@ -256,19 +264,21 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
           of(assets),
           this.assetService.query({
             conditions: childConditions,
-            expressionOperator: 'AND',
+            expressionOperator: 'AND'
           } as QueryOptions)
         );
       })
     ).subscribe(([assets, childAssets]) => {
+      let accordionRows: Array<AccordionRows> = [];
       assets.forEach(asset => {
-        this.groupedPageAssetLineItems.push({
+        accordionRows.push({
           parent: asset,
           children: _.filter(childAssets, child => {
             return child.BundleAssetId === asset.Id;
           })
         });
       });
+      this.groupedPageAssetLineItems = accordionRows;
     });
   }
   /**
@@ -316,14 +326,6 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     }
   }
   /**
-   * Gets the array of selected assets for the current page.
-   * @returns Selected assets for the current page.
-   * @ignore
-   */
-  private getPageForSelectedList(): Array<AccordionRows> {
-    return this.selectedTotalItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
-  }
-  /**
    * Event handler for showing only the selected assets in the asset list.
    * @param event Array of asset line items that was fired on this event.
    */
@@ -364,12 +366,20 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     this.getResults();
   }
 
- /**
-  * @ignore
- */
+  /**
+   * @ignore
+   */
   ngOnDestroy() {
     this.assetSelectionService.clearSelection();
     this.subs.forEach(sub => sub.unsubscribe());
+  }
+  /**
+   * Gets the array of selected assets for the current page.
+   * @returns Selected assets for the current page.
+   * @ignore
+   */
+  private getPageForSelectedList(): Array<AccordionRows> {
+    return this.selectedTotalItems.slice(this.pageSize * (this.page - 1), this.pageSize * this.page);
   }
 
 }
