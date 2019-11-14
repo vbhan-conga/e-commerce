@@ -4,7 +4,7 @@
         <apt-breadcrumb [label]="'COMMON.MANAGE_CART' | translate"></apt-breadcrumb>
     </ng-template>
     
-    
+    <apt-alert message="ERROR.CART.VALIDATE" [record]="view?.cart"></apt-alert>
     <div class="container-fluid py-4">
         <div class="px-4">
             <apt-cr-constraint-alert [detailPageAlert]='false'></apt-cr-constraint-alert>

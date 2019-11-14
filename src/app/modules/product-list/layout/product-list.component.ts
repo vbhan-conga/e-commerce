@@ -41,6 +41,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * Condition to filter products from all products.
    */
   conditions: Array<ACondition> = new Array<ACondition>();
+  /**
+   * Used to hold the current array of subcategories that are selected.
+   */
+  subCategories: Array<Category> = [];
   joins: Array<AJoin> = new Array<AJoin>();
   /**
    * Search query to filter products list from grid.
@@ -124,7 +128,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       mergeMap(params => {
         this.searchString = _.get(params, 'query');
 
-        if (!_.isNil(_.get(params, 'categoryName')))
+        if (!_.isNil(_.get(params, 'categoryName')) && _.isEmpty(this.subCategories))
           return this.categoryService.getCategoryByName(_.get(params, 'categoryName')).pipe(
             tap(category => this.category = category),
             mergeMap(category => this.categoryService.getCategoryBranchChildren([category.Id])),
@@ -132,11 +136,18 @@ export class ProductListComponent implements OnInit, OnDestroy {
               this.joins = [new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(c => c.Id))])];
             })
           );
+        else if (!_.isEmpty(this.subCategories)) {
+          _.remove(this.joins, (j) => j.type === ProductCategory);
+          this.joins.push(new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', this.subCategories.map(category => category.Id))]));
+          return of(null);
+        }
         else {
           return of(null);
         }
       }),
-      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins))
+      mergeMap(() => {
+        return this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins);
+    })
     ).subscribe(r => {
       this.searchResults$.next(r);
     });
@@ -187,12 +198,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * @param categoryList Array of Category.
    */
   onSubcategoryFilter(categoryList: Array<Category>) {
-    _.remove(this.joins, (j) => j.type === ProductCategory);
+    this.subCategories = categoryList;
     this.page = 1;
-
-    if (_.get(categoryList, 'length', 0) > 0)
-      this.joins.push(new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(category => category.Id))]));
-
     this.getResults();
   }
 

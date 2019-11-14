@@ -54,18 +54,7 @@ export class ProductDetailsComponent implements OnInit {
      * isConfigurationChanged to true.
      */
     onConfigurationChange(result: any) {
-        const cartItemList: Array<CartItem> = _.first(result);
-        const cartItemListChanged = !_.isEqual(_.get(this.cloneCartItemList,'length'), _.get(cartItemList,'length'));
-        const disable: boolean = _.get(_.last(result), 'errorMsgs');
-        const optionChanged: boolean =  _.get(_.last(result), 'optionChanged');
-        const attributeChanged: boolean =  _.get(_.last(result), 'attributeChanged');
-        if(attributeChanged) this.configurationChanged = true;
-        if (cartItemListChanged) {
-            this.cloneCartItemList = _.cloneDeep(cartItemList);
-            if(optionChanged) this.configurationChanged = true;
-        }
-        this.onChangeDisabled = disable;
-        this.cartItemList = cartItemList;
+        this.cartItemList = _.first(result);
     }
 
     /**

@@ -1,17 +1,19 @@
 {
     "ERROR": {
-        "MIN-OPTIONS": "fr_FR You must select at least {{value}} options.",
-        "MAX-OPTIONS": "fr_FR You can select no more than {{value}} options.",
-        "MIN-TOTAL-QUANTITY": "fr_FR You must have a total of {{value}} options.",
-        "MAX-TOTAL-QUANTITY": "fr_FR You can select no more than a total of {{value}} options.",
+        "OPTION_GROUP" : {
+            "ERROR" : "fr_FR Option Group Errors",
+            "MIN_OPTIONS": "fr_FR You must select at least {{value}} options.",
+            "MAX_OPTIONS": "fr_FR You can select no more than {{value}} options.",
+            "MIN_TOTAL_QUANTITY": "fr_FR You must have a total of {{value}} options.",
+            "MAX_TOTAL_QUANTITY": "fr_FR You can select no more than a total of {{value}} options."
+        },
         "UNABLE_TO_RENEW": "fr_FR An error occurred renewing this asset(s)",
-        "MAX_OPTION_ERROR" : "fr_FR Select upto {{value}} option(s)",
-        "MIN_OPTION_ERROR" : "fr_FR Select {{value}} option(s)",
         "CART": {
             "TOO_MANY_ATTEMPTS": "fr_FR An item in your cart could not be priced. Please try removing an item / items and try again.",
             "SERVER_ERROR": "fr_FR Oops something went wrong.",
             "PRICE_CHANGE": "fr_FR The price of your cart has been updated",
-            "PRICE_CHANGE_TOASTR_TITLE": "fr_FR Price Update"
+            "PRICE_CHANGE_TOASTR_TITLE": "fr_FR Price Update",
+            "VALIDATE" : "fr_FR There are errors in your cart"
         },
         "CONSTRAINT_RULE": {
             "ASSOCIATE_AND_APPLY": "fr_FR An error ocurred getting the constraint rules for your cart."

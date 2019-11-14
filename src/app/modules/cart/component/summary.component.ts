@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, TemplateRef, ViewChild  } from '@angular/core';
-import { Cart, QuoteService, TemplateService, CartItem, Quote, ItemGroup, CartItemService } from '@apttus/ecommerce';
+import { Cart, QuoteService, TemplateService, CartItem, Quote, ItemGroup, CartItemService, LineItemService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { PlatformService } from '@apttus/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -58,7 +58,7 @@ export class SummaryComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.lineItems = _.map(this.cartItemService.groupItems(_.get(this, 'cart.LineItems')), i => _.get(i, 'MainLine'));
+    this.lineItems = _.map(LineItemService.groupItems(_.get(this, 'cart.LineItems')), i => _.get(i, 'MainLine'));
   }
 
   createQuote() {

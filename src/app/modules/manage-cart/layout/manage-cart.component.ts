@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup } from '@apttus/ecommerce';
+import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup, LineItemService } from '@apttus/ecommerce';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -38,7 +38,7 @@ export class ManageCartComponent implements OnInit {
         map(cart => {
           return {
             cart: cart,
-            lineItems: this.cartItemService.groupItems(_.get(cart, 'LineItems'))
+            lineItems: LineItemService.groupItems(_.get(cart, 'LineItems'))
           } as View;
         })
       );
