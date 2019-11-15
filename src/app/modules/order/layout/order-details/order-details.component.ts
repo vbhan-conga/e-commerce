@@ -38,7 +38,7 @@ export class OrderDetailsComponent implements OnInit {
       );
     this.isLoggedIn$ = this.userService.isLoggedIn();
     this.orderLineItems$ = this.order$.pipe(
-      map(order => this.lineItemService.groupItems(order.OrderLineItems))
+      map(order => LineItemService.groupItems(order.OrderLineItems))
     );
   }
 

@@ -1,17 +1,24 @@
 {
     "ERROR": {
-        "MIN-OPTIONS": "You must select at least {{value}} options.",
-        "MAX-OPTIONS": "You can select no more than {{value}} options.",
-        "MIN-TOTAL-QUANTITY": "You must have a total of {{value}} options.",
-        "MAX-TOTAL-QUANTITY": "You can select no more than a total of {{value}} options.",
+        "RECORD_ERROR" : "This record has pending errors",
+        "OPTION_GROUP" : {
+            "ERROR" : "Option Group Errors",
+            "MIN_OPTIONS": "You must select at least {{value}} options.",
+            "MAX_OPTIONS": "You can select no more than {{value}} options.",
+            "MIN_TOTAL_QUANTITY": "The total minimum quantity is {{value}}.",
+            "MAX_TOTAL_QUANTITY": "The total maximum quantity is {{value}}."
+        },
         "UNABLE_TO_RENEW": "An error occurred renewing this asset(s)",
-        "MAX_OPTION_ERROR" : "Select upto {{value}} option(s)",
-        "MIN_OPTION_ERROR" : "Select {{value}} option(s)",
         "CART": {
             "TOO_MANY_ATTEMPTS": "An item in your cart could not be priced. Please try removing an item / items and try again.",
             "SERVER_ERROR": "Oops something went wrong.",
             "PRICE_CHANGE": "The price of your cart has been updated",
-            "PRICE_CHANGE_TOASTR_TITLE": "Price Update"
+            "PRICE_CHANGE_TOASTR_TITLE": "Price Update",
+            "VALIDATE" : "There are errors in your cart.",
+            "CONSTRAINT_RULES" : "An item in your cart violated 1 or more constraint rules."
+        },
+        "CART_ITEM" : {
+            "VALIDATE" : "The are errors with this cart item."
         },
         "CONSTRAINT_RULE": {
             "ASSOCIATE_AND_APPLY": "An error ocurred getting the constraint rules for your cart."

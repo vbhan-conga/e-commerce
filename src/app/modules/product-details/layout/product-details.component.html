@@ -28,7 +28,7 @@
       *ngIf="!viewState?.product?.HasAttributes && !viewState?.product?.HasOptions; else complex">
       <div class="form-group mx-3 my-0 d-flex align-items-center">
         <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
-        <input type="number" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
+        <input type="number" min="1" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
       </div>
       <div class="d-flex align-items-center">
         <apt-add-to-cart [showQuantityControls]="false" (onAddToCart)="onAddToCart($event)"
@@ -44,18 +44,18 @@
         <ng-container *ngIf="viewState?.relatedTo; else newProduct">
           <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
             [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'"
-            (onAddToCart)="onAddToCart($event)" [disabled]="onChangeDisabled" [label]="'Update Configuration'">
+            (onAddToCart)="onAddToCart($event)" [label]="'Update Configuration'">
           </apt-add-to-cart>
         </ng-container>
         <ng-template #newProduct>
           <div class="d-flex justify-content-end">
             <div class="form-group mx-3 my-0 d-flex align-items-center">
               <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
-              <input type="number" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
+              <input type="number" min="1" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
             </div>
             <div class="d-flex align-items-center">
               <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
-                (onAddToCart)="onAddToCart($event)" [disabled]="onChangeDisabled" [cartItems]="cartItemList"
+                (onAddToCart)="onAddToCart($event)" [cartItems]="cartItemList"
                 [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
               </apt-add-to-cart>
             </div>
