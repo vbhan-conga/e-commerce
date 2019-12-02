@@ -5,6 +5,7 @@ import { Observable, zip, of } from 'rxjs';
 import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account } from '@apttus/ecommerce';
 import { map, take } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { LookupOptions } from '@apttus/elements';
 
 @Component({
   selector: 'app-request-quote-form',
@@ -25,6 +26,10 @@ export class RequestQuoteFormComponent implements OnInit {
 
   shipToAccount$: Observable<Account>;
   billToAccount$: Observable<Account>;
+  lookupOptions: LookupOptions = {
+    primaryTextField: 'Name',
+    secondaryTextField: 'Email'
+  };
 
   constructor(public quoteService: QuoteService, private accountService: AccountService, private userService :UserService, private noteService:NoteService
     , private contactService: ContactService) { }
@@ -62,23 +67,40 @@ export class RequestQuoteFormComponent implements OnInit {
    * @ignore
    */
   quoteChange() {
+    this.onQuoteUpdate.emit(this.quote);
+  }
+
+  shipToChange() {
     this.shipToAccount$ = this.accountService.get([this.quote.ShipToAccountId]).pipe(map(res => res[0]));
+    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => { 
+      this.quote.ShipToAccount = newShippingAccount; 
+      this.onQuoteUpdate.emit(this.quote);
+    });
+  }
+
+  billToChange() {
     this.billToAccount$ = this.accountService.get([this.quote.BillToAccountId]).pipe(map(res => res[0]));
-    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => { this.quote.ShipToAccount = newShippingAccount; });
-    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => { this.quote.BillToAccount = newBillingAccount; });
+    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => { 
+      this.quote.BillToAccount = newBillingAccount;
+      this.onQuoteUpdate.emit(this.quote);
+    });
+    
+  }
+
+  primaryContactChange() {
     this.contactService.get([this.quote.PrimaryContactId]).pipe(map(res => res[0]))
       .pipe(take(1))
-      .subscribe((newPrimaryContact) => { this.quote.PrimaryContact = newPrimaryContact; });
-    this.onQuoteUpdate.emit(this.quote);
+      .subscribe((newPrimaryContact) => { 
+        this.quote.PrimaryContact = newPrimaryContact;
+        this.onQuoteUpdate.emit(this.quote);
+      });
   }
 
   /**
    * Event handler for when the primary contact input changes.
    * @param event The event that was fired.
    */
-  handlePrimaryContactChange(event: any) {
-    console.log("Primary Contact is set to", event);
-  }
+  handlePrimaryContactChange(event: any) {}
   
 }
 

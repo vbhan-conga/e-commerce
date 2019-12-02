@@ -7,6 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { take, flatMap } from 'rxjs/operators';
+import { SummaryState } from '../../../cart/component/summary.component';
 
 @Component({
   selector: 'app-cart-summary',
@@ -20,7 +21,7 @@ import { take, flatMap } from 'rxjs/operators';
 
 export class CartSummaryComponent implements OnInit, OnChanges {
   @Input() cart: Cart;
-  @ViewChild('discardChangesTemplate') discardChangesTemplate: TemplateRef<any>;
+  @ViewChild('discardChangesTemplate', { static: false }) discardChangesTemplate: TemplateRef<any>;
   
   loading:boolean = false;
   discardChangesModal: BsModalRef;
@@ -38,7 +39,7 @@ export class CartSummaryComponent implements OnInit, OnChanges {
   totalPromotions: number = 0;
   storefront$: Observable<Storefront>;
   /** @ignore */
-  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
+  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
   /** tax related local properties */
   showTaxPopUp: boolean = false;
   taxItems: Array<TaxBreakup>;
@@ -91,7 +92,7 @@ export class CartSummaryComponent implements OnInit, OnChanges {
       )
       .subscribe(()  => {
         this.loading = false;
-        this.router.navigate(['/Proposals', this.cart.Quote.Id]);
+        this.router.navigate(['/proposals', this.cart.Quote.Id]);
         this.discardChangesModal.hide();
       });
   }
@@ -114,11 +115,4 @@ export class CartSummaryComponent implements OnInit, OnChanges {
       this.totalEstimatedTax = ((_.get(this.cart, 'LineItems.length') > 0)) ? _.sum(taxBreakup.map(res => res.TaxAmount)) : 0;
     });
   }
-}
-
-export interface SummaryState {
-  configurationMessage: string;
-  downloadLoading: boolean;
-  requestQuoteMessage: string;
-  requestQuoteLoading: boolean;
 }

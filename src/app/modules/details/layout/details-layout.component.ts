@@ -4,8 +4,8 @@ import { DetailSectionComponent } from '../component/detail-section/detail-secti
 import { AObject } from '@apttus/core';
 /**
  * Details Layout Component shows the details of the placed order or the requested quote.
+ * @ignore
  */
-
 @Component({
   selector: 'apt-detail',
   templateUrl: './details-layout.component.html',
@@ -14,9 +14,9 @@ import { AObject } from '@apttus/core';
 export class DetailsLayoutComponent implements AfterContentInit {
 
   @ContentChildren(DetailSectionComponent) sections: QueryList<DetailSectionComponent>;
-  @ViewChild('primaryActions') primaryActions: any;
-  @ViewChild('secondaryActions') secondaryActions: any;
-  @ViewChild('headerNav') headerNav: ElementRef<any>;
+  @ViewChild('primaryActions', { static: true }) primaryActions: any;
+  @ViewChild('secondaryActions', { static: true }) secondaryActions: any;
+  @ViewChild('headerNav', { static: true }) headerNav: ElementRef<any>;
 
   @Input() title: string;
   @Input() subtitle: string;

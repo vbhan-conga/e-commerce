@@ -77,7 +77,8 @@ export class ChangePasswordLayoutComponent {
   }
 }
 
-export interface PasswordForm{
+/** @ignore */
+interface PasswordForm{
   passwordA: string;
   passwordB: string;
 }

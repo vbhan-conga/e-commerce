@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { ProductService, Product, ConstraintRuleService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { ACondition, ConfigurationService } from '@apttus/core';
-import { ProductDetailsComponent } from '../modules/product-details/layout/product-details.component';
+import { ProductDetailComponent } from '../modules/products/detail/product-detail.component';
 import { map, filter, distinctUntilKeyChanged, flatMap } from 'rxjs/operators';
 
 @Injectable()
-export class ConfigureGuard implements CanActivate, CanDeactivate<ProductDetailsComponent>{
+export class ConfigureGuard implements CanActivate, CanDeactivate<ProductDetailComponent>{
 
     constructor(private router: Router, private productService: ProductService, private constraintRuleService: ConstraintRuleService, private config: ConfigurationService) { }
 
@@ -27,7 +27,7 @@ export class ConfigureGuard implements CanActivate, CanDeactivate<ProductDetails
                                         || (_.get(product, 'Apttus_Config2__HasOptions__c') && _.get(product, 'Apttus_Config2__OptionGroups__r', []).totalSize > 0))
                                     && rules.filter(rule => rule.ConstraintRuleActions.filter(action => action.ActionType === 'Replacement').length > 0).length === 0;
                                 if (!activate)
-                                    this.router.navigate(['/product', product[this.config.get('productIdentifier')]]);
+                                    this.router.navigate(['/products', product[this.config.get('productIdentifier')]]);
                                 return activate;
                             })
                         )
@@ -36,7 +36,7 @@ export class ConfigureGuard implements CanActivate, CanDeactivate<ProductDetails
             );
     }
 
-    canDeactivate(component: ProductDetailsComponent, route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    canDeactivate(component: ProductDetailComponent, route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
         if (component.configurationChanged) {
             if (confirm('You have unsaved changes to the product configuration! Are you sure you want to proceed?'))
                 return true;

@@ -11,7 +11,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './layout/home.component';
 import { ComponentModule } from '../../components/component.module';
 
-import { ProductCarouselModule, JumbotronModule } from '@apttus/elements';
+import { ProductCarouselModule, JumbotronModule, IconModule } from '@apttus/elements';
 
 @NgModule({
   imports: [
@@ -19,7 +19,8 @@ import { ProductCarouselModule, JumbotronModule } from '@apttus/elements';
     HomeRoutingModule,
     ComponentModule,
     JumbotronModule,
-    ProductCarouselModule
+    ProductCarouselModule,
+    IconModule
   ],
   declarations: [HomeComponent]
 })

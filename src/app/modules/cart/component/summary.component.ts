@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, TemplateRef, ViewChild  } from '@angular/core';
-import { Cart, QuoteService, TemplateService, CartItem, Quote, ItemGroup, CartItemService } from '@apttus/ecommerce';
+import { Cart, QuoteService, TemplateService, CartItem, Quote, ItemGroup, CartItemService, LineItemService } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { PlatformService } from '@apttus/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -27,8 +27,8 @@ import {ProductConfigurationSummaryComponent} from "@apttus/elements";
 })
 export class SummaryComponent implements OnChanges {
   @Input() cart: Cart;
-  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
-  @ViewChild(ProductConfigurationSummaryComponent)
+  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
+  @ViewChild(ProductConfigurationSummaryComponent, { static: false })
   public configSummaryModal: ProductConfigurationSummaryComponent;
 
   state: SummaryState;
@@ -58,7 +58,7 @@ export class SummaryComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.lineItems = _.map(this.cartItemService.groupItems(_.get(this, 'cart.LineItems')), i => _.get(i, 'MainLine'));
+    this.lineItems = _.map(LineItemService.groupItems(_.get(this, 'cart.LineItems')), i => _.get(i, 'MainLine'));
   }
 
   createQuote() {
@@ -89,9 +89,25 @@ export class SummaryComponent implements OnChanges {
   }
 }
 
+/**
+ * Used to hold state information about a cart summary.
+ * @ignore
+ */
 export interface SummaryState{
+  /**
+   * Configuration message.
+   */
   configurationMessage: string;
+  /**
+   * Flag to check if download is currently loading.
+   */
   downloadLoading: boolean;
+  /**
+   * Request quote message.
+   */
   requestQuoteMessage: string;
+  /**
+   * Flag to check if request quote is loading.
+   */
   requestQuoteLoading: boolean;
 }

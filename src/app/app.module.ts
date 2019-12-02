@@ -7,7 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ApttusModule } from '@apttus/core';
 import { CommerceModule, TranslatorLoaderService } from '@apttus/ecommerce';
 
 import { environment } from '../environments/environment';
@@ -46,8 +45,7 @@ import { OrderDetailsGuard } from '@apttus/ecommerce';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    ApttusModule.forRoot(environment),
-    CommerceModule.forRoot('*** Storefront Name ****'),
+    CommerceModule.forRoot(environment),
     ProductDrawerModule,
     ModalModule.forRoot(),
     ApttusModalModule,
@@ -57,7 +55,7 @@ import { OrderDetailsGuard } from '@apttus/ecommerce';
     HttpClientModule,
     ComponentModule,
     ServiceWorkerModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: false })
   ],
   providers: [RouteGuard, AuthGuard, AboGuard, ConfigureGuard, ConstraintRuleGuard, OrderDetailsGuard],
   bootstrap: [AppComponent]

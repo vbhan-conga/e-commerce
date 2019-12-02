@@ -1,4 +1,4 @@
-<apt-detail *ngIf="order$ | async as order" [context]="(isLoggedIn$ | async) ? order : null">
+<apt-detail *ngIf="order$ | async as order; else loading" [context]="(isLoggedIn$ | async) ? order : null">
   <div class="detail-header">
     <div class="d-flex align-items-center mb-2">
       <h3 class="m-0">{{order?.Name}}</h3>
@@ -18,7 +18,7 @@
           <div class="row mt-4">
             <dl class="col-12 col-md-6">
               <apt-output-field [record]="order" field="CreatedDate" layout="inline" [editable]="false"></apt-output-field>
-              <apt-output-field [record]="order" field="CreatedBy" layout="inline" [editable]="false"></apt-output-field>
+              <apt-output-field [record]="order" field="CreatedById" layout="inline" label="Created By" [editable]="false" [showQuickView]="true"></apt-output-field>
               <apt-output-field [record]="order" field="PrimaryContactId" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
               <apt-output-field [record]="order" field="BillToAccountId" label="BillToAccount.Name" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field>
             </dl>
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="col-12 col-md-4">
-          <apt-price-summary [record]="order" [page]="'order-details'"></apt-price-summary>
+          <apt-price-summary [record]="order" [page]="'orders'"></apt-price-summary>
         </div>
       </div>
     </apt-detail-section>
@@ -56,3 +56,9 @@
       </apt-detail-section>
 
 </apt-detail>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center pt-5">
+    <apt-spinner></apt-spinner>
+  </div>
+</ng-template>

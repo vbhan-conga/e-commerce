@@ -1,9 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "variables";
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/v4-shims";
 @import "~bootstrap/scss/bootstrap";
 @import '~ngx-toastr/toastr-bs4-alert';
 @import '~ngx-bootstrap/datepicker/bs-datepicker.css';
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 .px-6{
     padding-left: 4rem;
@@ -59,9 +64,14 @@ typeahead-container {
     }
 }
 
-apt-md-spinner.small svg{
+apt-spinner.small svg{
     height: 30px;
     width: 30px;
+}
+
+apt-breadcrumb{
+    display: block;
+    padding-top: 1rem;
 }
 
 pdp-tab-options{
@@ -70,31 +80,6 @@ pdp-tab-options{
             height: calc(1.65rem + 2px) !important;
         }
     }
-}
-
-/**
- * Carousel adjustments
- */ 
-ngx-slick.slick-slider{
-    &.left-align-slick > .slick-list > .slick-track {
-        margin-left:0;
-        padding-bottom: 10px;
-    }
-    .slick-list {
-        overflow-y: auto !important;
-    }
-    div.slick-slide:focus{
-        outline: none;
-    }
-    .strike-text{
-        text-decoration: line-through;
-    }
-    .slick-prev:before, .slick-next:before, .slick-prev:hover:before, .slick-prev:focus:before, .slick-next:hover:before, .slick-next:focus:before{
-        color: $primary !important;
-    }
-}
-.carousel-item img{
-    width: 100%;
 }
 
 /*
@@ -139,9 +124,19 @@ a:hover, a:focus, a:active, button.btn-link:focus, button.btn-link:active, butto
 }
 
 /**
+ * Font awesome styles
+ */
+button.chevron:before, button.minus:before{
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+}
+/**
  * Button styles
  */ 
 button{
+    .btn:not(.btn-link){
+        text-transform: uppercase;
+    }
     &.btn-icon{
         font-size: smaller;
     }
@@ -149,6 +144,29 @@ button{
         .ladda-spinner>div>div>div{
             background: $primary !important;
         }
+    }
+
+    &.chevron, &.minus{
+        display: flex;
+        align-items: center;
+    }
+    &.chevron[aria-expanded="true"]:before{
+        content: "\f0d7";
+        margin-right: .8rem;
+    }
+    &.chevron[aria-expanded="false"]:before{
+        content: "\f0da"; 
+        margin-right: .8rem;  
+    }
+    &.minus[aria-expanded="true"]:before{
+        content: "\f068";
+        font-size: smaller;
+        margin-right: 5px;
+    }
+    &.minus[aria-expanded="false"]:before{
+        content: "\f067";   
+        font-size: smaller;
+        margin-right: 5px;
     }
 }
 
@@ -196,9 +214,7 @@ dl{
 /**
  * Helpers
  */
-.btn{
-  text-transform: uppercase;
-}
+
 .text-faded {
     opacity: 0.5;
 }

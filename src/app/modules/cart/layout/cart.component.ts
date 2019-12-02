@@ -1,18 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef, OnDestroy, NgZone } from '@angular/core';
-import { User, Account, Cart, CartService, Order, OrderService, Contact, ContactService, UserService, AccountService, EmailService, PaymentTransaction } from '@apttus/ecommerce';
+import { User, Account, Cart, CartService, Order, OrderService, Contact, ContactService, UserService, AccountService, EmailService, PaymentTransaction, AccountInfo } from '@apttus/ecommerce';
 import { Observable, Subscription } from 'rxjs';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Card } from '../component/card-form/card-form.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
-import { _sanitizeStyle } from '@angular/core/src/sanitization/style_sanitizer';
 import { ConfigurationService } from '@apttus/core';
-import { ExceptionService, PriceSummaryComponent } from '@apttus/elements';
+import { ExceptionService, PriceSummaryComponent, BreadcrumbLink } from '@apttus/elements';
 
 /**
  * Cart component, contains details such as
@@ -31,11 +30,11 @@ import { ExceptionService, PriceSummaryComponent } from '@apttus/elements';
   styleUrls: ['./cart.component.scss']
 })
 export class CartComponent implements OnInit, OnDestroy {
-  @ViewChild('addressTabs') addressTabs: any;
-  @ViewChild('addressInfo') addressInfo: ElementRef;
-  @ViewChild('staticTabs') staticTabs: TabsetComponent;
-  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
-  @ViewChild('priceSummary') priceSummary: PriceSummaryComponent;
+  @ViewChild('addressTabs', {static: false}) addressTabs: any;
+  @ViewChild('addressInfo', { static: false }) addressInfo: ElementRef;
+  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
+  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
+  @ViewChild('priceSummary', { static: false }) priceSummary: PriceSummaryComponent;
 
   /**
    * An Observable containing the current contact record
@@ -117,15 +116,11 @@ export class CartComponent implements OnInit, OnDestroy {
   billToAccount$: Observable<Account>;
   pricingSummaryType: 'checkout' | 'paymentForOrder' | '' = 'checkout';
   model = {
-    billToAccountId: '',
-    shipToAccountId: ''
+    BillToAccountId: '',
+    ShipToAccountId: '',
+    SoldToAccountId: ''
   };
-  breadcrumbs = [
-    {
-      label: 'Cart',
-      route: ['/manage-cart']
-    }
-  ];
+  breadcrumbs;
 
   private subscriptions: Subscription[] = [];
 
@@ -157,17 +152,24 @@ export class CartComponent implements OnInit, OnDestroy {
       this.cart = cart;
 
       // Setting default values
-      this.model.billToAccountId = _.get(cart, 'AccountId');
-      this.model.shipToAccountId = _.get(cart, 'AccountId');
+      this.model.BillToAccountId = _.get(cart, 'AccountId');
+      this.model.ShipToAccountId = _.get(cart, 'AccountId');
+      this.model.SoldToAccountId = _.get(cart, 'AccountId');
     }));
     this.subscriptions.push(this.contactService.getMyContact().subscribe(c => this.primaryContact = c));
     this.order = new Order();
     this.card = {} as Card;
     this.user$ = this.userService.me();
-    this.translate.stream('PRIMARY_CONTACT').subscribe((val: string) => {
-      this.errMessages.requiredFirstName = val['INVALID_FIRSTNAME'];
-      this.errMessages.requiredLastName = val['INVALID_LASTNAME'];
-      this.errMessages.requiredEmail = val['INVALID_EMAIL'];
+    this.translate.stream(['PRIMARY_CONTACT', 'AOBJECTS']).subscribe((val: string) => {
+      this.errMessages.requiredFirstName = val['PRIMARY_CONTACT']['INVALID_FIRSTNAME'];
+      this.errMessages.requiredLastName = val['PRIMARY_CONTACT']['INVALID_LASTNAME'];
+      this.errMessages.requiredEmail = val['PRIMARY_CONTACT']['INVALID_EMAIL'];
+      this.breadcrumbs = [
+        {
+          label: val['AOBJECTS']['CART'],
+          route: [`/carts/active`]
+        }
+      ];
     });
 
     this.onBillToChange();
@@ -192,12 +194,14 @@ export class CartComponent implements OnInit, OnDestroy {
    * Allows user to submit order. Convert a cart to order and submit it.
    */
   submitOrder() {
-    this.orderAmount = this.cart.SummaryGroups.filter(y => y.LineType === 'Grand Total')[0].NetPrice.toString();
+    const orderAmountGroup = _.find(_.get(this.cart, 'SummaryGroups'), c => _.get(c, 'LineType') === 'Grand Total');
+    this.orderAmount = _.defaultTo(_.get(orderAmountGroup, 'NetPrice', 0).toString(), '0');
     this.loading = true;
     if (this.isLoggedIn) {
-      let selectedAcc = {
-        billTo: this.model.billToAccountId,
-        shipTo: this.model.shipToAccountId
+      let selectedAcc: AccountInfo = {
+        BillToAccountId: this.model.BillToAccountId,
+        ShipToAccountId: this.model.ShipToAccountId,
+        SoldToAccountId: this.model.SoldToAccountId
       };
 
       this.convertCartToOrder(this.order, this.primaryContact, null, selectedAcc);
@@ -233,26 +237,27 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   onBillToChange() {
-    this.billToAccount$ = this.accountService.get([this.model.billToAccountId]).pipe(map(res => res[0]));
+    this.billToAccount$ = this.accountService.get([this.model.BillToAccountId]).pipe(map(res => res[0]));
   }
 
   onShipToChange() {
-    this.shipToAccount$ = this.accountService.get([this.model.shipToAccountId]).pipe(map(res => res[0]));
+    this.shipToAccount$ = this.accountService.get([this.model.ShipToAccountId]).pipe(map(res => res[0]));
   }
 
-  convertCartToOrder(order: Order, primaryContact: Contact, cart?: Cart, selectedAccount?: any) {
+  convertCartToOrder(order: Order, primaryContact: Contact, cart?: Cart, selectedAccount?: AccountInfo) {
     this.loading = true;
     this.orderService.convertCartToOrder(order, primaryContact, cart, selectedAccount)
-      .subscribe(orderResponse => {
-        this.loading = false;
-        this.orderConfirmation = orderResponse;
-        (this.paymentState === 'PAYNOW') ? this.requestForPayment(this.orderConfirmation) : this.onOrderConfirmed();
-
-      },
+      .subscribe(
+        orderResponse => this.ngZone.run(() => {
+          this.loading = false;
+          this.orderConfirmation = orderResponse;
+          (this.paymentState === 'PAYNOW') ? this.requestForPayment(this.orderConfirmation) : this.onOrderConfirmed();
+        }),
         err => {
           this.exceptionService.showError(err);
           this.loading = false;
-        });
+        }
+      );
   }
 
   /**
@@ -327,9 +332,11 @@ export class CartComponent implements OnInit, OnDestroy {
         this.toastr.error(val['PAYMENT_METHOD_LABELS.ERROR_MSG'] + paymentStatus, val['PAYMENT_METHOD_LABELS.ERROR_TITLE']);
       });
     }
-    this.isPaymentCompleted = true;
+    else {
+      this.isPaymentCompleted = true;
+    }
     if (_.get(this.orderConfirmation, 'Id'))
-      this.subscriptions.push(this.emailService.guestUserNewOrderNotification(this.orderConfirmation.Id, `https://${window.location.hostname}${window.location.pathname}#/Orders/${this.orderConfirmation.Id}`).subscribe());
+      this.emailService.guestUserNewOrderNotification(this.orderConfirmation.Id, `${this.configurationService.resourceLocation()}#/orders/${this.orderConfirmation.Id}`).pipe(take(1)).subscribe();
   }
 
   /**
@@ -337,14 +344,16 @@ export class CartComponent implements OnInit, OnDestroy {
    */
   redirectOrderPage() {
     this.ngZone.run(() => {
-      this.router.navigate(['/Orders', this.orderConfirmation.Id]);
+      this.router.navigate(['/orders', this.orderConfirmation.Id]);
     });
   }
 
   onOrderConfirmed() {
-    this.confirmationModal = this.modalService.show(this.confirmationTemplate, { class: 'modal-lg' });
+    this.ngZone.run(() => {
+      this.confirmationModal = this.modalService.show(this.confirmationTemplate, { class: 'modal-lg' });
+    });
     if (_.get(this.orderConfirmation, 'Id'))
-    this.subscriptions.push(this.emailService.guestUserNewOrderNotification(this.orderConfirmation.Id, `https://${window.location.hostname}${window.location.pathname}#/Orders/${this.orderConfirmation.Id}`).subscribe());
+      this.emailService.guestUserNewOrderNotification(this.orderConfirmation.Id, `${this.configurationService.resourceLocation()}#/orders/${this.orderConfirmation.Id}`).pipe(take(1)).subscribe();
   }
 
 

@@ -10,8 +10,8 @@ export class ConstraintRuleGuard implements CanActivate {
 
     constructor(private router: Router, private crService: ConstraintRuleService) { 
         this.crService.hasPendingErrors().subscribe(hasErrors => {
-            if(hasErrors && this.router.url === '/cart')
-                this.router.navigate(['/manage-cart']);
+            if(hasErrors && this.router.url === '/checkout')
+                this.router.navigate(['/cart']);
         });
     }
 

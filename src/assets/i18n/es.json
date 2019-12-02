@@ -1,15 +1,23 @@
 {
     "ERROR": {
-        "MIN-OPTIONS": "es_MX You must select at least {{value}} options.",
-        "MAX-OPTIONS": "es_MX You can select no more than {{value}} options.",
-        "MIN-TOTAL-QUANTITY": "es_MX You must have a total of {{value}} options.",
-        "MAX-TOTAL-QUANTITY": "es_MX You can select no more than a total of {{value}} options.",
+        "OPTION_GROUP" : {
+            "ERROR" : "es_MX Option Group Errors",
+            "MIN_OPTIONS": "es_MX You must select at least {{value}} options.",
+            "MAX_OPTIONS": "es_MX You can select no more than {{value}} options.",
+            "MIN_TOTAL_QUANTITY": "es_MX The total minimum quantity is {{value}}.",
+            "MAX_TOTAL_QUANTITY": "es_MX The total maximum quantity is {{value}}."
+        },
         "UNABLE_TO_RENEW": "es_MX An error occurred renewing this asset(s)",
         "CART": {
             "TOO_MANY_ATTEMPTS": "es_MX An item in your cart could not be priced. Please try removing an item / items and try again.",
             "SERVER_ERROR": "es_MX Oops something went wrong.",
             "PRICE_CHANGE": "es_MX The price of your cart has been updated",
-            "PRICE_CHANGE_TOASTR_TITLE": "es_MX Price Update"
+            "PRICE_CHANGE_TOASTR_TITLE": "es_MX Price Update",
+            "VALIDATE" : "es_MX There are errors in your cart.",
+            "CONSTRAINT_RULES": "es_MX An item in your cart violated 1 or more constraint rules."
+        },
+        "CART_ITEM": {
+            "VALIDATE": "The are errors with this cart item."
         },
         "CONSTRAINT_RULE": {
             "ASSOCIATE_AND_APPLY": "es_MX An error ocurred getting the constraint rules for your cart."
@@ -201,6 +209,7 @@
         "DELETE": "es_MX Delete",
         "EDIT": "es_MX Edit",
         "CANCEL": "es_MX Cancel",
+        "UPDATE": "es_MX Update",
         "SAVE": "es_MX Save",
         "USERNAME": "es_MX Username",
         "PRODUCT_CATALOG": "es_MX Product Catalog",
@@ -252,6 +261,7 @@
         "TOTAL_PRICE": "es_MX Total Price",
         "PROMOTIONS_APPLIED": "es_MX Promotion(s) Applied",
         "SUB_TOTAL": "es_MX Sub Total",
+        "REQUEST_QUOTE": "es_MX Request Quote",
         "COMMENTS": "es_MX Comments",
         "ATTACHMENTS": "es_MX Attachments",
         "ACCEPT_QUOTE": "es_MX Accept Quote",
@@ -263,10 +273,21 @@
         "CHANGE_BILLING_ADDRESS":"es_MX Change Billing Address",
         "EDIT_LINE_ITEMS": "es_MX Edit Line Items",
         "PLACE_ORDER": "es_MX PLACE ORDER",
+        "PLACE_ORDER_PAY": "es_MX PLACE ORDER & PAY",
         "ON": "es_MX on",
+        "CONFIRM_CHANGES": "es_MX Confirm Changes",
         "UPLOAD": "es_MX Upload",
         "CLEAR": "es_MX Clear",
-        "ADD_COMMENT": "es_MX Add Comment"
+        "ADD_COMMENT": "es_MX Add Comment",
+        "DAYS": "es_MX Days",
+        "NO_COMMENTS_TO_DISPLAY": "es_MX There has not been any comments yet",
+        "ADD_NEW_COMMENT": "es_MX Add new comment",
+        "ALL": "es_MX All",
+        "CHANGES_ONLY": "es_MX Changes Only",
+        "OPTION_TOTAL": "es_MX Option Total",
+        "ITEMIZED_OPTIONS": "es_MX Itemized Options",
+        "NO_DATA": "es_MX n/a",
+        "CHECKOUT": "es_MX Checkout"
     },
     "CREATE_QUOTE":{
         "QUOTE_SUMMARY": "es_MX QUOTE SUMMARY",
@@ -276,8 +297,8 @@
         "SHIP_TO_ACCOUNT": "es_MX Ship to Account",
         "BILL_TO_ACCOUNT": "es_MX Bill to Account",
         "SEARCH_CONTACTS": "es_MX Search Contacts",
-        "FINALIZE_AND_SUBMIT" : "es_MX Finalize & Submit Quote"
-
+        "FINALIZE_AND_SUBMIT" : "es_MX Finalize & Submit Quote",
+        "PRIMARY_CONTACT_IS_MANDATORY": "ES_mx Primary contact is mandatory"
     },
     "QUOTE_CONFIRMATION_MODAL": {
         "THANK_YOU":"es_MX Thank You",
@@ -371,7 +392,18 @@
             "CREDITCARD": "es_MX Add Credit/Debit card",
             "DEBITCARD": "es_MX Debit card",
             "PONUMBER": "es_MX PO Number",
-            "PAYMENT_SubTitle": "es_MX Please choose your payment method"
+            "PAYNOW": "es_MX Pay Now",
+            "PAYMENT_SubTitle": "es_MX Please choose your payment method",
+            "PAYMENT_INPUT": "es_MX Enter Credit/Debit Card Information",
+            "PAYMENT_INPUTSAVE": "es_MX Save this card information for future payment",
+            "SUCCESSFUL_PAYMENT_ORDER_MESSAGE_SubTitle": "es_MX You will be notified the order details to your email address {{emailAddress}}",
+            "Invoice_Me_Later": "es_MX Invoice Me Later",
+            "USE_NEW_METHOD": "es_MX Use new credit/debit card",
+            "SUCCESSFUL_PAYMENT_ORDER_MESSAGE": "es_MX Your payment was successfull and order has been placed.",
+            "ORDER_CONFIRMATION_MESSAGE": "es_MX Your order has been placed successfully!",
+            "ORDER_NUMBER": "es_MX Order Number :",
+            "ORDER_SUBTITLE": "es_MX Please make the payment to complete the checkout process.",
+            "ENTER_PO_NUMBER":"es_MX Enter a purchase order number..."
         },
         "SUBMIT_ORDER": "es_MX Submit Order",
         "CONTINUE_SHIPPING": "es_MX Continue Shopping",
@@ -518,7 +550,9 @@
         "REMEMBER_ME": "es_MX Remember me",
         "SIGN_IN": "es_MX Sign in",
         "INCORRECT_CREDENTIALS_TOASTR_MESSAGE": "es_MX Your username or password is incorrect.",
-        "INCORRECT_CREDENTIALS_TOASTR_TITLE": "es_MX Login Fail"
+        "INCORRECT_CREDENTIALS_TOASTR_TITLE": "es_MX Login Fail",
+        "COULD_NOT_REGISTER": "es_MX Could not complete registration. Please contact your administrator.",
+        "WRONG_CREDENTIALS": "es_MX Please check your username and password. If you still can't log in, contact your administrator."
     },
     "PRODUCT_DETAILS": {
         "PRODUCT_DETAIL": "es_MX Product Details",
@@ -584,7 +618,8 @@
         "USE_EXISTING_TERM": "es_MX Use Existing Term",
         "TERMINATION_DATE": "es_MX Termination Date",
         "NEW_START_DATE":"es_MX New Start Date",
-        "NEW_END_DATE":"es_MX New End Date"
+        "NEW_END_DATE":"es_MX New End Date",
+        "INVALID_TERMINATION_DATE": "es_MS Termination date must be between start and end date of all selected assets."
     },
     "APP": {
         "PAGE_RELOADED_TOASTR_MESSAGE": "es_MX This page has been reloaded.",
@@ -605,7 +640,7 @@
         "VIEW_YOUR_ORDER": "es_MX VIEW YOUR ORDER"
     },
     "SERVICES": {
-        "SELECTION_OF_ASSETS_MUST_TOOLTIP": "es_MX Must select asset(s) to perform batch actions.",
+        "SELECTION_OF_ASSETS_MUST_TOOLTIP": "es_MX Must select multiple assets to perform batch action.",
         "UNABLE_TO_RENEW_TOOLTIP": "es_MX One or more of the selected items are unabled to be renewed.",
         "UNABLE_TO_TERMINATE_TOOLTIP": "es_MX One or more of the selected items are unable to be terminated.",
         "ITEMS_ARE_ALREADY_ADDED_TO_CART_TOOLTIP": "es_MX One or more of the selected items are already added to cart.",
@@ -615,7 +650,8 @@
         "TOO_MANY_PRODUCTS_SELECTED_TO_RENEW_TOOLTIP": "es_MX Too many product selected to renew.",
         "SELECT_MORE_PRODUCTS_TO_RENEW_TOOLTIP": "es_MX Select more products to renew.",
         "TOO_MANY_PRODUCTS_SELECTED_TO_TERMINATE_TOOLTIP": "es_MX Too many product selected to terminate.",
-        "SELECT_MORE_PRODUCTS_TO_TERMINATE_TOOLTIP": "es_MX Select more products to terminate."
+        "SELECT_MORE_PRODUCTS_TO_TERMINATE_TOOLTIP": "es_MX Select more products to terminate.",
+        "ONE_OR_MORE_ITEMS_CANNOT_RENEW": "es_MX One or more of the selected items are unabled to be renewed."
     },
     "PRICE_SUMMARY": {
         "TAX": "es_MX Tax ({{taxPercent}}%)"
@@ -625,5 +661,34 @@
         "TOTAL_ESTIMATED_TAX": "es_MX Total Estimated Tax",
         "COMPUTE_TAX_SUCCESS": "es_MX Estimated tax has been calculated for the cart",
         "COMPUTE_TAX_SUCCESS_TITLE": "es_MX Estimated Tax"
+    },
+    "PAYMENT_METHOD_LABELS": {
+        "SUCCESS_TITLE": "es_MX Card Added",
+        "SUCCESS_MSG": "es_MX Your new Credit/Debit card is added.",
+        "ERROR_TITLE": "es_MX Card Not Added",
+        "ERROR_MSG": "es_MX Card not added due to following reason: ",
+        "DELETE_TITLE": "es_MX Card Deleted",
+        "DELETE_MSG": "es_MX Your Credit/Debit card is deleted.",
+        "Detail_Item1":"es_MX Your Saved Cards",
+        "Detail_Item2":"es_MX Name on card",
+        "Detail_Item3":"es_MX Expires on",        
+        "Detail_Ending":"es_MX ending",   
+        "DEFAULT_TITLE":"es_MX Default Card",   
+        "DEFAULT_MSG":"es_MX Cannot delete default method",
+        "Expired_MSG"   :"es_MX Expired",
+        "CHOOSE_PAYMENT_METHOD": "es_MX Choose a payment method",
+        "MAKE_PAYMENT": "es_MX Make Payment"
+    },
+    "CONFIGURATION" : {
+        "EMPTY" : "es_MX This product has not been configured",
+        "NO_CONFIGURATION" : "es_MX This product does not have any configuration options"
+    },
+    "AOBJECTS": {
+        "PROPOSALS": "es_MX Proposals",
+        "ORDERS": "es_MX Orders",
+        "CARTS": "es_MX Carts",
+        "PROPOSAL": "es_MX Proposal",
+        "ORDER": "es_MX Order",
+        "CART": "es_MX Cart"
     }
 }

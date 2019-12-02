@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import Chart from 'chart.js';
+import * as Chart from 'chart.js';
 import { OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order, UserService, User } from '@apttus/ecommerce';
 import { AObject, ACondition } from '@apttus/core';
 import { Observable, combineLatest } from 'rxjs';
@@ -15,8 +15,8 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  @ViewChild('quoteChart') quoteChart: ElementRef;
-  @ViewChild('orderChart') orderChart: ElementRef;
+  @ViewChild('quoteChart', { static: false }) quoteChart: ElementRef;
+  @ViewChild('orderChart', { static: false }) orderChart: ElementRef;
 
   /**
    * Number of order count for logged in user.
@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       data: {
         datasets: [
           {
-            data: Object.values(data),
+            data: Object.values(data) as Array<number> | Array<Chart.ChartPoint>,
             backgroundColor: [
               'rgba(255, 99, 132, 1)',
               'rgba(54, 162, 235, 1)',

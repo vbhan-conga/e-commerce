@@ -26,7 +26,6 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.json",
-              "src/apttus-worker.js",
               {
                 "glob": "**/*",
                 "input": "./node_modules/crypto-js",
@@ -34,17 +33,10 @@
               }
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "./node_modules/roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss",
+              "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss",
               "src/styles.scss",
-              "./node_modules/open-iconic/font/css/open-iconic-bootstrap.css",
-              "./node_modules/slick-carousel/slick/slick.css",
-              "./node_modules/slick-carousel/slick/slick-theme.css",
-              "./node_modules/animate.css/animate.min.css",
-              "./node_modules/ladda/dist/ladda-themeless.min.css",
-              "./node_modules/font-awesome/css/font-awesome.css",
-              "./node_modules/@ng-select/ng-select/themes/default.theme.css"
+              "node_modules/open-iconic/font/css/open-iconic-bootstrap.css",
+              "node_modules/ladda/dist/ladda-themeless.min.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -54,8 +46,7 @@
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "./node_modules/slick-carousel/slick/slick.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {

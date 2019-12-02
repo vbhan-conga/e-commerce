@@ -32,11 +32,11 @@
       "@apttus/ecommerce/*": [
         "../path/to/ecommerce-core/resources/projects/apttus/ecommerce/src/public_api.ts"
       ],
-      "@apttus/constraint-rules": [
-        "../path/to/ecommerce-core/resources/projects/apttus/constraint-rules/src/public_api.ts"
+      "@apttus/elements": [
+        "../path/to/ecommerce-core/resources/projects/apttus/elements/src/public_api.ts"
       ],
-      "@apttus/constraint-rules/*": [
-        "../path/to/ecommerce-core/resources/projects/apttus/constraint-rules/src/public_api.ts"
+      "@apttus/elements/*": [
+        "../path/to/ecommerce-core/resources/projects/apttus/elements/src/public_api.ts"
       ],
       "@angular/platform-browser": [
         "./node_modules/@angular/platform-browser"

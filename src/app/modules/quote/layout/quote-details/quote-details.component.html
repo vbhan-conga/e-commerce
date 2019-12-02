@@ -5,7 +5,7 @@
       <span class="badge badge-light ml-3 px-3 py-1 border text-uppercase" *ngIf="quote?.Approval_Stage">{{quote?.Approval_Stage}}</span>
       <div *ngIf="quote?.Approval_Stage === 'Accepted' && order$ | async as order" class="ml-auto">
         <span class="pr-4 d-flex">
-          <apt-output-field [record]="order" field="Name" labelClass="d-none" layout="inline" [editable]="false" [showQuickView]="true"></apt-output-field> | <span
+          <apt-output-field [record]="order" field="Name" labelClass="d-none" layout="inline" [editable]="false" [showQuickView]="true" [lookupOptions]="{secondaryTextField : 'Email'}"></apt-output-field> | <span
             class="ml-2">{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_STATUS' | translate}}: {{order?.Status}}</span>
         </span>
       </div>
@@ -28,8 +28,8 @@
             <apt-output-field [record]="quote" field="RFP_Response_Due_Date" layout="inline" 
             [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'"></apt-output-field>
             <apt-output-field [record]="quote" field="PrimaryContactId" layout="inline" 
-            [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'" [showQuickView]="true" ></apt-output-field>
-            <apt-output-field [record]="quote" field="BillToAccountId" label="BillToAccount.Name" layout="inline" 
+            [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'" [showQuickView]="true" [lookupOptions]="lookupOptions"></apt-output-field>
+            <apt-output-field [record]="quote" field="AccountId" label="Account.Name" layout="inline" 
             [editable]="false" [showQuickView]="true"></apt-output-field>
           </dl>
           <dl class="col-12 col-md-6">
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="col-12 col-md-4">
-        <apt-price-summary [record]="quote" [page]="'quote-details'"></apt-price-summary>
+        <apt-price-summary [record]="quote" [page]="'quotes'"></apt-price-summary>
       </div>
     </div>
   </apt-detail-section>
@@ -59,6 +59,7 @@
           <apt-line-item-table-row
             [index]="i"
             [parent]="item.MainLine"
+            [options]="item.Options"
             [children]="item.SecondaryLines"
             [editableFields]="false">
           </apt-line-item-table-row>
@@ -72,7 +73,7 @@
         {{'DETAILS.COMMENTS' | translate}} <span *ngIf="quote?.Notes?.length > 0">({{quote?.Notes?.length}})</span>
     </h5>
     <div class="row">
-      <ng-scrollbar class="col-12 col-md-6 border-right note-container">
+      <ng-scrollbar class="col-12 col-md-6 border-right note-container" track="horizontal">
         <ng-container *ngIf="quote?.Notes?.length > 0; else emptyNotes">
           <div class="my-3 pb-3" *ngFor="let note of quote?.Notes">
             <!-- <strong class="d-block">{{note?.Title}}</strong> -->

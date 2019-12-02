@@ -35,11 +35,11 @@
     <hr class="mt-2 mb-3" />
     <div class="d-flex justify-content-end" *ngIf="!cart.Quote?.Id">
         <button *ngIf="(isLoggedIn$ | async) && (storefront$ | async)?.EnableRequestQuote" class="btn btn-link"
-          [routerLink]="['/Proposals/create']" [ladda]="cart?._state === 'pending'" data-style="zoom-in"
+          [routerLink]="['/proposals/create']" [ladda]="cart?._state === 'pending'" data-style="zoom-in"
           [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
           {{'COMMON.REQUEST_QUOTE' | translate }}
         </button>
-        <button class="btn btn-primary" [routerLink]="['/cart']" [ladda]="cart?._state === 'pending'" data-style="zoom-in"
+        <button class="btn btn-primary" [routerLink]="['/checkout']" [ladda]="cart?._state === 'pending'" data-style="zoom-in"
           [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
           {{'MANAGE_CART.CART_SUMMARY.CHECKOUT' | translate }}
         </button>
@@ -50,7 +50,7 @@
       [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
         {{'MANAGE_CART.CART_SUMMARY.DISCARD_CHANGES' | translate }}
       </button>
-      <button class="btn btn-primary px-2" [routerLink]="['/Proposals/create']"  [ladda]="cart?._state === 'pending'" data-style="zoom-in"
+      <button class="btn btn-primary px-2" [routerLink]="['/proposals/create']"  [ladda]="cart?._state === 'pending'" data-style="zoom-in"
       [disabled]="!cart?.LineItems || cart?.LineItems?.length === 0 || hasErrors === true">
         {{'MANAGE_CART.CART_SUMMARY.FINALIZE_AND_SUBMIT' | translate }}
       </button>

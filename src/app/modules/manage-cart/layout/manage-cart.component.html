@@ -3,8 +3,8 @@
     <ng-template #cartBreadcrumb>
         <apt-breadcrumb [label]="'COMMON.MANAGE_CART' | translate"></apt-breadcrumb>
     </ng-template>
-    
-    
+
+    <apt-alert message="ERROR.CART.VALIDATE" [record]="view?.cart"></apt-alert>
     <div class="container-fluid py-4">
         <div class="px-4">
             <apt-cr-constraint-alert [detailPageAlert]='false'></apt-cr-constraint-alert>
@@ -21,7 +21,7 @@
                         <table class="table" *ngIf="view?.lineItems?.length > 0; else empty">
                             <tbody>
                                 <apt-line-item-table-row *ngFor="let item of view?.lineItems; let i = index; trackBy: trackById" [index]="i"
-                                    [cart]="view?.cart" [parent]="item.MainLine" [children]="item.SecondaryLines" [editableFields]="false">
+                                    [cart]="view?.cart" [parent]="item.MainLine" [children]="item.SecondaryLines" [editableFields]="false" [options]="view?.cart?.LineItems">
                                 </apt-line-item-table-row>
                             </tbody>
                         </table>
@@ -30,7 +30,7 @@
                                 <i class="fa fa-shopping-cart fa-5x text-primary xl text-faded"></i>
                                 <h3 class="mt-4">{{'MANAGE_CART.CART_TABLE.CART_EMPTY' | translate}}</h3>
                                 <div class="mt-3">
-                                    <a href="javascript:void(0)" [routerLink]="['/product-list']" class="mr-2">{{'MANAGE_CART.CART_TABLE.ALL_PRODUCTS' | translate}}</a>
+                                    <a href="javascript:void(0)" [routerLink]="['/products']" class="mr-2">{{'MANAGE_CART.CART_TABLE.ALL_PRODUCTS' | translate}}</a>
                                     <button class="btn btn-primary">{{'MANAGE_CART.CART_TABLE.HOMEPAGE' | translate}}</button>
                                 </div>
                             </div>
@@ -38,14 +38,14 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
-                    <apt-price-summary [record]="view?.cart" [page]="'manage-cart'"></apt-price-summary>
+                    <apt-price-summary [record]="view?.cart" [page]="'carts'"></apt-price-summary>
                     <apt-promotion class="mt-3" [cart]="view?.cart" ></apt-promotion>
                 </div>
             </div>
-            <div class="row mt-4" *ngIf="productList$ | async as productList">
+            <div class="row mt-4" *ngIf="view?.productList">
                 <div class="col-12">
                     <h4 class="mb-3 text-muted"> {{ 'COMMON.YOU_MAY_ALSO_LIKE' | translate }} </h4>
-                    <apt-product-carousel [productList]="productList"></apt-product-carousel>
+                    <apt-product-carousel [productList]="view?.productList"></apt-product-carousel>
                 </div>
             </div>
         </div>
@@ -54,6 +54,6 @@
 
 <ng-template #loadingTemplate>
     <div class="d-flex justify-content-center pt-5 mt-5">
-        <apt-md-spinner></apt-md-spinner>
+        <apt-spinner></apt-spinner>
     </div>
 </ng-template>

@@ -83,7 +83,7 @@
                     <div class="media-body d-flex flex-column justify-content-between">
                       <div>
                         <h6 class="m-0">
-                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Product[identifier]]">{{lineItem.Product?.Name}}</a>
+                          <a href="javascript:void(0)" [routerLink]="['/products', lineItem.Product[identifier]]">{{lineItem.Product?.Name}}</a>
                         </h6>
                         <small>
                           <strong>{{'COMMON.PRODUCT_CODE' | translate}}:</strong>&nbsp;{{lineItem.Product.ProductCode}}
@@ -122,6 +122,6 @@
 
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">
-    <apt-md-spinner></apt-md-spinner>
+    <apt-spinner></apt-spinner>
   </div>
 </ng-template>
