@@ -11,7 +11,6 @@ import { InputFieldModule } from '@apttus/elements';
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AddressModule } from '@apttus/elements';
 import { DetailSectionComponent } from './component/detail-section/detail-section.component';
-import { CommentsComponent } from './component/comments/comments.component';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
@@ -38,7 +37,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     TooltipModule.forRoot(),
     BsDropdownModule.forRoot()
   ],
-  declarations: [DetailsLayoutComponent, DetailSectionComponent, CommentsComponent],
+  declarations: [DetailsLayoutComponent, DetailSectionComponent],
   exports: [DetailsLayoutComponent, DetailSectionComponent]
 })
 export class DetailsModule { }

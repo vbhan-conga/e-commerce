@@ -2,16 +2,19 @@
 
   <div class="primary-actions">
     <form class="d-flex">
-      <div class="form-group col my-0">
+      <div class="form-group my-0 mr-5">
         <small class="mb-2 d-block"> {{'PRODUCT_DETAILS.STANDARD_PRICE' | translate}} </small>
         <h5>
           <apt-price [record]="viewState?.product" type="list" [bundle]="true"></apt-price>
         </h5>
       </div>
-      <div class="form-group col my-0">
+      <div class="form-group my-0 mr-3">
         <small class="mb-2 d-block"> {{'COMMON.NET_PRICE' | translate}} </small>
         <h5>
-          <apt-price [record]="cartItemList || viewState?.product" [quantity]="quantity" [bundle]="true" [type]="'net'"></apt-price>
+          <apt-price [record]="cartItemList" *ngIf="cartItemList?.length > 0; else productPrice" [quantity]="quantity" [bundle]="true" [type]="'net'"></apt-price>
+          <ng-template #productPrice>
+            <apt-price [record]="viewState?.product" [quantity]="quantity" [bundle]="true" type="net"></apt-price>
+          </ng-template>
         </h5>
       </div>
     </form>
@@ -19,12 +22,12 @@
 
   <div class="secondary-actions">
     <!-- Simple Product Controls -->
-    <form class="row justify-content-end" *ngIf="!viewState?.product?.HasAttributes && !viewState?.product?.HasOptions; else complex">
-      <div class="form-group col-6 mx-3 my-0 d-flex align-items-center">
+    <form class="d-flex justify-content-end" *ngIf="!viewState?.product?.HasAttributes && !viewState?.product?.HasOptions; else complex">
+      <div class="form-group mx-3 my-0 d-flex align-items-center">
         <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
-        <input type="number" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
+        <input type="number" min="1" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
       </div>
-      <div class="col-4 d-flex align-items-center">
+      <div class="d-flex align-items-center">
         <apt-add-to-cart [showQuantityControls]="false" (onAddToCart)="onAddToCart($event)" [configurationEnabled]="false" [quantity]="quantity" [cartItems]="(cartItems?.length > 0) ? cartItems : null" [product]="viewState?.product" [btnClass]="'btn-primary px-3'"></apt-add-to-cart>
       </div>
     </form>
@@ -36,21 +39,26 @@
         <ng-container *ngIf="viewState?.relatedTo; else newProduct">
           <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
             [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'"
-            (onAddToCart)="onAddToCart($event)"
-            [disabled]="!configurationChanged"
-            [label]="'Update Configuration'">
+            (onAddToCart)="onAddToCart($event)"  [label]="'Update Configuration'">
           </apt-add-to-cart>
         </ng-container>
         <ng-template #newProduct>
-          <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
-            (onAddToCart)="onAddToCart($event)" [disabled]="!configurationChanged"
-            [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
-          </apt-add-to-cart>
+          <div class="d-flex justify-content-end">
+            <div class="form-group mx-3 my-0 d-flex align-items-center">
+              <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
+              <input type="number" min="1" class="w-75 form-control" [(ngModel)]="quantity" name="quantity" />
+            </div>
+            <div class="d-flex align-items-center">
+              <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="quantity"
+                (onAddToCart)="onAddToCart($event)"
+                [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
+              </apt-add-to-cart>
+            </div>
+          </div>
         </ng-template>
-        
-        <!--ToDo: Related to ABO configuration story -->
-        <!-- <button class="btn btn-outline-primary ml-2" *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions"
-          (click)="productConfigurationSummary.show();">Price Summary</button> -->
+
+        <button class="btn btn-outline-primary ml-2" *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions"
+          (click)="productConfigurationSummary.show();">{{'DETAILS.PRICE_SUMMARY' | translate}}</button>
       </div>
     </ng-template>
 
@@ -131,6 +139,6 @@
 
 <ng-template #loading>
     <div class="d-flex justify-content-center pt-5">
-      <apt-md-spinner></apt-md-spinner>
+      <apt-spinner></apt-spinner>
    </div>
 </ng-template>

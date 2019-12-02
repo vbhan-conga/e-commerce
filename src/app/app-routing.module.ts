@@ -12,21 +12,80 @@ import { AuthGuard } from './services/auth.guard';
 import { AboGuard } from './services/aboGuard';
 
 const routes: Routes = [
-  { path: 'ChangePassword', loadChildren: './modules/change-password/change-password.module#ChangePasswordModule', data: { title: 'Change Password' }},
-  { path: '', loadChildren: './modules/home/home.module#HomeModule', data: { title: 'B2B E-commerce' } },
-  { path: 'product', loadChildren: './modules/product-details/product-details.module#ProductDetailsModule', data: { title: 'Product' } },
-  { path: 'compare', loadChildren: './modules/compare/compare.module#CompareModule', data: { title: 'Product Comparison' } },
-  { path: 'product-list', loadChildren: './modules/product-list/product-list.module#ProductListModule', data: { title: 'Product List' } },
-  { path: 'installed-products', canActivate: [RouteGuard, AuthGuard, AboGuard], loadChildren: './modules/installed-products/installed-products.module#InstalledProductsModule', data: { title: 'Installed Products' } },
-  { path: 'search/:query', loadChildren: './modules/product-list/product-list.module#ProductListModule', data: { title: 'Search' } },
-  { path: 'cart', loadChildren: './modules/cart/cart.module#CartModule', canActivate: [RouteGuard, ConstraintRuleGuard], data: { title: 'Checkout' } },
-  { path: 'my-account', loadChildren: './modules/my-account/my-account.module#MyAccountModule', data: { title: 'My Account' }, canActivate: [AuthGuard] },
-  { path: 'manage-cart', loadChildren: './modules/manage-cart/manage-cart.module#ManageCartModule', data: { title: 'Cart' } },
-  { path: 'login', loadChildren: './modules/login/login.module#LoginModule', data: { title: 'Login'}},
-  { path: 'Orders', loadChildren: './modules/order/order.module#OrderModule', data: { title: 'Orders' }, canActivate: [OrderDetailsGuard] },
-  { path: 'Proposals', loadChildren: './modules/quote/quote.module#QuoteModule', data: { title: 'Proposals'}, canActivate: [AuthGuard]},
-  { path: 'payment-message', loadChildren: './modules/payment/payment-message.module#PaymentMessageModule', data: { title: 'PaymentMessage'} },
-  { path: '**', redirectTo: '' }
+  {
+    path: '',
+    loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
+    data: { title: 'B2B E-commerce' }
+  },
+  {
+    path: 'change-password',
+    loadChildren: () => import('./modules/change-password/change-password.module').then(m => m.ChangePasswordModule),
+    data: { title: 'Change Password' }
+  },
+  {
+    path: 'products',
+    loadChildren: () => import('./modules/products/products.module').then(m => m.ProductsModule),
+    data: { title: 'Product' }
+  },
+  {
+    path: 'assets',
+    canActivate: [RouteGuard, AuthGuard, AboGuard],
+    loadChildren: () => import('./modules/installed-products/installed-products.module').then(m => m.InstalledProductsModule),
+    data: { title: 'Installed Products' }
+  },
+  {
+    path: 'search/:query',
+    loadChildren: () => import('./modules/products/products.module').then(m => m.ProductsModule),
+    data: { title: 'Search' }
+  },
+  {
+    path: 'checkout',
+    loadChildren: () => import('./modules/cart/cart.module').then(m => m.CartModule),
+    canActivate: [RouteGuard, ConstraintRuleGuard],
+    data: { title: 'Checkout' }
+  },
+  {
+    path: 'my-account',
+    loadChildren: () => import('./modules/my-account/my-account.module').then(m => m.MyAccountModule),
+    data: { title: 'My Account' },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'carts',
+    loadChildren: () => import('./modules/manage-cart/manage-cart.module').then(m => m.ManageCartModule),
+    data: { title: 'Cart' }
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./modules/login/login.module').then(m => m.LoginModule),
+    data: { title: 'Login'}
+  },
+  {
+    path: 'orders',
+    loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule),
+    data: { title: 'Orders' },
+    canActivate: [OrderDetailsGuard]
+  },
+  {
+    path: 'proposals',
+    loadChildren: () => import('./modules/quote/quote.module').then(m => m.QuoteModule),
+    data: { title: 'Proposals'},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'payment-message',
+    loadChildren: () => import('./modules/payment/payment-message.module').then(m => m.PaymentMessageModule),
+    data: { title: 'Payment Message'}
+  },
+  {
+    path: 'Assets',
+    loadChildren: () => import('./modules/asset/asset.module').then(m => m.AssetModule),
+    data: {title: 'Assets'}
+  },
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];
 
 /**

@@ -12,7 +12,7 @@
                     <app-request-quote-form [cart]="cart" (onQuoteUpdate)="onUpdate($event)"></app-request-quote-form>
                 </div>
                 <div class="col-12 col-md-3">
-                    <apt-price-summary [disableSubmit]="disableSubmit" [record]="cart" [loading]="loading" [page]="'create-proposal'" (onRequestQuote)="convertCartToQuote()"></apt-price-summary>
+                    <apt-price-summary [disableSubmit]="disableSubmit" [record]="cart" [loading]="loading" [page]="'create-proposal'" (onRequestQuote)="convertCartToQuote(cart)"></apt-price-summary>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
     <ng-template #confirmationTemplate>
         <div class="modal-header">
             <h5 class="modal-title pull-left"> {{'QUOTE_CONFIRMATION_MODAL.QUOTE_REQUEST' | translate}} </h5>
-            <button type="button" class="close pull-right" aria-label="Close" (click)="confirmationModal.hide()" [routerLink]="['/Proposals', quoteConfirmation.Id]">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="confirmationModal.hide()" [routerLink]="['/proposals', quoteConfirmation.Id]">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -40,13 +40,13 @@
             <h5 class="text-center my-3">{{ 'QUOTE_CONFIRMATION_MODAL.QUOTE_CONFIRMATION_NO' | translate }}
                 {{quoteConfirmation.Name}}</h5>
             <button class="btn btn-outline-primary w-35 mx-auto" (click)="confirmationModal.hide()"
-                [routerLink]="['/Proposals', quoteConfirmation.Id]">{{ 'QUOTE_CONFIRMATION_MODAL.REVIEW_YOUR_QUOTE' | translate }}</button>
+                [routerLink]="['/proposals', quoteConfirmation.Id]">{{ 'QUOTE_CONFIRMATION_MODAL.REVIEW_YOUR_QUOTE' | translate }}</button>
         </div>
     </ng-template>
 </ng-container>
 
 <ng-template #loadingTemplate>
     <div class="d-flex justify-content-center pt-5 mt-5">
-        <apt-md-spinner></apt-md-spinner>
+        <apt-spinner></apt-spinner>
     </div>
 </ng-template>

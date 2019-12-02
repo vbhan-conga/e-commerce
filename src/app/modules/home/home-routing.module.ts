@@ -11,10 +11,7 @@ import { HomeResolver } from './services/home.resolver';
 const routes: Routes = [
     {
         path: '',
-        component: HomeComponent,
-        resolve: {
-            state: HomeResolver
-        }
+        component: HomeComponent
     }
 ];
 

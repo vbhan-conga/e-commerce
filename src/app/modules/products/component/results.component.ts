@@ -95,6 +95,6 @@ export class ResultsComponent implements OnChanges{
     this.translateService.stream('PRODUCT_LIST.SHOW_COUNT_OF_RECORDS_MESSAGE', { minVal: this.recordCount > 0 ? this.offset + 1 : 0, maxVal: this.lastResult, totalVal: this.totalRecords })
       .subscribe((message: string) => {
         this.showRecordsCountMessage = message;
-    });      
+    });
   }
 }

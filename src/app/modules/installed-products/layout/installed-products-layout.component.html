@@ -5,7 +5,7 @@
         <input type="search" class="form-control" placeholder= "{{'INSTALLED_PRODUCTS.SEARCH_ASSETS' | translate}}" [(ngModel)]="searchQuery"
           (change)="handleSearchChange()" autocomplete="off">
         <div class="input-group-append">
-          <button class="btn" type="button">
+          <button class="btn btn-outline-primary" type="button">
             <span class="oi oi-magnifying-glass p-0"></span>
           </button>
         </div>
@@ -45,7 +45,7 @@
       <apt-asset-list
         [pageAssets]="showingFullList ? groupedPageAssetLineItems : selectedPageItems"
         [operation]="operation"
-        [currentConditions]="conditions"
+        [totalAssets]="totalItems"
         (onSelectedAmountClick)="handleSelectedAmountClick($event)"
         (onFullListClick)="handleFullListClick()"
       ></apt-asset-list>

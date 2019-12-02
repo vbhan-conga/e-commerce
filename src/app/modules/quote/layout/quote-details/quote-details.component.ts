@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef } from '@angular/core';
-import { UserService, QuoteService, Quote, Order, OrderService, QuoteLineItem, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService } from '@apttus/ecommerce';
+import { UserService, QuoteService, Quote, Order, OrderService, QuoteLineItem, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService, LineItemService } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, flatMap, map, take, mergeMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Observable, of } from 'rxjs';
-import { ExceptionService } from '@apttus/elements';
+import { ExceptionService, LookupOptions } from '@apttus/elements';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ACondition } from '@apttus/core';
+
 
 @Component({
   selector: 'app-quote-details',
@@ -29,7 +30,12 @@ export class QuoteDetailsComponent implements OnInit {
   comments_loader: boolean = false;
   attachments_loader: boolean = false;
 
-  @ViewChild('intimationTemplate') intimationTemplate: TemplateRef<any>;
+  @ViewChild('intimationTemplate', { static: false }) intimationTemplate: TemplateRef<any>;
+
+  lookupOptions: LookupOptions = {
+    primaryTextField: 'Name',
+    secondaryTextField: 'Email'
+  };
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -54,7 +60,7 @@ export class QuoteDetailsComponent implements OnInit {
       );
     this.quoteLineItems$ = this.quote$.pipe(
       map(
-        quote => this.quoteItemService.groupItems(quote.QuoteLineItems)
+        quote => LineItemService.groupItems(quote.QuoteLineItems)
       )
     );
     this.order$ = this.quote$.pipe(
@@ -112,7 +118,7 @@ export class QuoteDetailsComponent implements OnInit {
     this.edit_loader = true;
     this.quoteService.convertQuoteToCart(quoteId).pipe(take(1)).subscribe(res => {
       this.edit_loader = false;
-      this.router.navigate(['/manage-cart']);
+      this.router.navigate(['/carts', 'active']);
     },
       err => {
         this.exceptionService.showError(err),

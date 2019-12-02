@@ -2,10 +2,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ComponentModule } from '../../components/component.module';
-import { ProductDetailsRoutingModule } from './product-details-routing.module';
-import { ProductDetailsComponent } from './layout/product-details.component';
-
-import { NgxGalleryModule } from 'ngx-gallery';
+import { ProductsRoutingModule } from './products.routing.module';
+import { ProductDetailComponent } from './detail/product-detail.component';
 
 import { PricingModule} from '@apttus/ecommerce';
 import { ApttusModule } from '@apttus/core';
@@ -14,12 +12,15 @@ import { TabFeaturesComponent } from './component/tab-features.component';
 import { TabAttachmentsComponent } from './component/tab-attachments.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ProductReplacementsComponent } from './component/product-replacements.component';
+import { ResultsComponent } from './component/results.component';
 
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { ConfigureGuard } from '../../services/configure.guard';
-import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, IconModule, InputDateModule, ProductImagesModule, ProductConfigurationSummaryModule } from '@apttus/elements';
-import { TranslateModule } from '@ngx-translate/core'; 
+import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, IconModule, InputDateModule, ProductImagesModule, ProductConfigurationSummaryModule, ProductCardModule, FilterModule, InputFieldModule, InputSelectModule } from '@apttus/elements';
+import { TranslateModule } from '@ngx-translate/core';
 import { DetailsModule } from '../details/details.module';
+import { ProductListComponent } from './list/product-list.component';
 
 @NgModule({
   imports: [
@@ -33,20 +34,26 @@ import { DetailsModule } from '../details/details.module';
     ProductImagesModule,
     PriceModule,
     FormsModule,
-    ProductDetailsRoutingModule,
-    NgxGalleryModule,
+    ProductsRoutingModule,
     ComponentModule,
     PricingModule,
     ApttusModule,
     TabsModule.forRoot(),
     InputDateModule,
     TranslateModule.forChild(),
-    DetailsModule
+    DetailsModule,
+    PaginationModule.forRoot(),
+    ProductCardModule,
+    InputSelectModule,
+    InputFieldModule,
+    FilterModule
   ],
   providers : [ConfigureGuard],
-  declarations: [ProductDetailsComponent,
+  declarations: [ProductDetailComponent,
                 TabFeaturesComponent,
                 ProductReplacementsComponent,
-                TabAttachmentsComponent]
+                TabAttachmentsComponent,
+                ProductListComponent,
+                ResultsComponent]
 })
-export class ProductDetailsModule { }
+export class ProductsModule { }

@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { OrderDetailsComponent } from './layout/order-details/order-details.component';
+import { OrderListComponent } from '../my-account/component/order-list/order-list.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,7 @@ const routes: Routes = [
     component: OrderDetailsComponent
   },
   {
-    path : '',
+    path: '',
     redirectTo: '/my-account/orders',
     pathMatch: 'full'
   }

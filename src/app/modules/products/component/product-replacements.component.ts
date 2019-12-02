@@ -16,7 +16,7 @@ import { ConfigurationService } from '@apttus/core';
             <apt-price [record]="product"></apt-price>
           </div>
           <small class="d-block">{{product.ProductCode}}</small>
-          <button class="btn btn-link btn btn-link p-0 mx-0 mt-2" [routerLink]="['/product', product[identifier]]">
+          <button class="btn btn-link btn btn-link p-0 mx-0 mt-2" [routerLink]="['/products', product[identifier]]">
             <span class="oi oi-chevron-right"></span>Go To Product
           </button>
         </div>

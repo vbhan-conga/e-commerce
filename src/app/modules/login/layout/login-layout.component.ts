@@ -43,7 +43,7 @@ export class LoginLayoutComponent {
       () => {
         this.loading = false;
         this.cacheService.refresh(this.userService.type);
-        (_.get(this.activatedRoute.snapshot.params,'orderId')) ? this.router.navigate(['/Orders', _.get(this.activatedRoute.snapshot.params,'orderId')]) : this.router.navigate(['/']);
+        (_.get(this.activatedRoute.snapshot.params,'orderId')) ? this.router.navigate(['/orders', _.get(this.activatedRoute.snapshot.params,'orderId')]) : this.router.navigate(['/']);
       },
       (e) => {
         this.loading = false;

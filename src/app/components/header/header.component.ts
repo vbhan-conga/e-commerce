@@ -11,7 +11,6 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { APageInfo, ConfigurationService } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
-import LocaleCode from 'locale-code';
 
 import * as _ from 'lodash';
 import { filter, flatMap, map } from 'rxjs/operators';
@@ -23,9 +22,9 @@ import { filter, flatMap, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild('searchModal') searchModal: ElementRef;
-  @ViewChild('profile') profile: MiniProfileComponent;
-  @ViewChild('searchBox') searchBox: ElementRef;
+  @ViewChild('searchModal', { static: false }) searchModal: ElementRef;
+  @ViewChild('profile', { static: false }) profile: MiniProfileComponent;
+  @ViewChild('searchBox', { static: false }) searchBox: ElementRef;
 
   index: number = 0;
   searchQuery: string;
@@ -79,12 +78,6 @@ export class HeaderComponent implements OnInit {
             return new Array<any>(depth);
           }),
           contact: contact,
-          localeTypes: _.map(localeFields, (locale) => {
-            return {
-              salesforceLocaleCode: locale.value.replace('-', '_'),
-              nativeLabel: LocaleCode.getLanguageNativeName(locale.value)
-            };
-          }),
           me: user
         };
       })
@@ -131,7 +124,7 @@ export class HeaderComponent implements OnInit {
   typeaheadOnSelect(evt){
     this.modalRef.hide();
     this.typeaheadLoading = false;
-    this.router.navigate(['/product', evt.item[this.config.get('productIdentifier')]]);
+    this.router.navigate(['/products', evt.item[this.config.get('productIdentifier')]]);
   }
 
   goToAddress(){
@@ -165,16 +158,17 @@ export class HeaderComponent implements OnInit {
   }
 }
 
+/** @ignore */
 interface LocaleType {
   salesforceLocaleCode: string;
   nativeLabel: string;
 }
 
+/** @ignore */
 interface HeaderView{
   storefront: Storefront;
   categoryTree: Array<Category>;
   categoryBranch: Array<Category>;
   contact: Contact;
-  localeTypes: Array<LocaleType>;
   me: User;
 }

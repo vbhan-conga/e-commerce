@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Order, Quote, AttachmentService } from '@apttus/ecommerce';
 import { take } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ import { take } from 'rxjs/operators';
   templateUrl: './attachment.component.html',
   styleUrls: ['./attachment.component.scss']
 })
-export class AttachmentComponent {
+export class AttachmentComponent implements OnChanges {
   @Input() item: Order | Quote;
   attachments: any = null;
   parentId: string = null;

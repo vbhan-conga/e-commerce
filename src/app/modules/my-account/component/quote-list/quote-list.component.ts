@@ -35,6 +35,7 @@ export class QuoteListComponent implements OnInit, OnDestroy {
   quote: Quote = new Quote();
   quoteAggregate: any;
   quotesByStatus: Object;
+  amountsByStatus: Object;
   quotesByDueDate: Object;
   totalQuoteAmount: number = 0;
   subscriptions: Array<Subscription> = [];
@@ -63,12 +64,17 @@ export class QuoteListComponent implements OnInit, OnDestroy {
       const quoteListData = res;
       this.totalQuoteAmount = 0;
       this.quotesByStatus = {};
+      this.amountsByStatus = {};
       this.quotesByDueDate = {};
       this.colorPalette = [];
       _.filter(quoteListData, 'QuoteLineItems').map(quote => {
         this.totalQuoteAmount += _.sum(_.filter(_.get(quote, 'QuoteLineItems'),lineItem => (lineItem.LineType === 'Product/Service' || lineItem.LineType === 'Misc')).map(res => (res.NetPrice) ? res.NetPrice : 0));
       });
       if(quoteListData){
+        _.filter(quoteListData, 'QuoteLineItems').forEach(quote => {
+          if (_.isNil(this.amountsByStatus[_.get(quote, 'Approval_Stage')])) this.amountsByStatus[_.get(quote, 'Approval_Stage')] = 0;
+          this.amountsByStatus[_.get(quote, 'Approval_Stage')] += _.sum(_.filter(_.get(quote, 'QuoteLineItems'), lineItem => (lineItem.LineType === 'Product/Service' || lineItem.LineType === 'Misc')).map(q => (q.NetPrice) ? q.NetPrice : 0));
+        });
         quoteListData.map(r => r['Approval_Stage']).forEach(a => this.quotesByStatus[a] = (!this.quotesByStatus[a]) ? 1 : this.quotesByStatus[a] + 1);
         quoteListData.map(r => {
           let res = this.generateLabels(r['RFP_Response_Due_Date']);
@@ -141,7 +147,7 @@ export class QuoteListComponent implements OnInit, OnDestroy {
         map(res => res[0]),
         flatMap(cart => this.cartService.setCartActive(cart))
       )
-      .subscribe(() => this.router.navigate(['/cart']));
+      .subscribe(() => this.router.navigate(['/checkout']));
   }
 
   /** @ignore */

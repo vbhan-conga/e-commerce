@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { map, mergeMap, tap } from 'rxjs/operators';
+import { ManageCartResolver, ManageCartState } from '../services/manage-cart.resolver';
 
 @Component({
   selector: 'app-manage-cart',
@@ -15,46 +16,22 @@ import { map, mergeMap, tap } from 'rxjs/operators';
  * Manage Cart component is used to show the list of cart line item(s)  and summary of the cart.
  */
 export class ManageCartComponent implements OnInit {
-  @ViewChild('discardChangesTemplate') discardChangesTemplate: TemplateRef<any>;
+  @ViewChild('discardChangesTemplate', { static: false }) discardChangesTemplate: TemplateRef<any>;
 
 
   discardChangesModal: BsModalRef;
-
   /**
-   * Observable of cart
+   * Observable of the information for rendering this view.
    */
-  view$: Observable<View>;
-    /**
-   * Observable of Array of Product
-   */
-  productList$: Observable<Array<Product>>;
+  view$: Observable<ManageCartState>;
 
-  constructor(private cartService: CartService, private cartItemService: CartItemService, private crService: ConstraintRuleService) { }
+  constructor(private cartService: CartService, private cartItemService: CartItemService, private crService: ConstraintRuleService, private resolver: ManageCartResolver) { }
 
   ngOnInit() {
-
-    this.view$ = this.cartService.getMyCart()
-      .pipe(
-        map(cart => {
-          return {
-            cart: cart,
-            lineItems: this.cartItemService.groupItems(_.get(cart, 'LineItems'))
-          } as View;
-        })
-      );
-
-    this.productList$ = this.cartService.getMyCart()
-      .pipe(
-        mergeMap(cart => this.crService.getRecommendationsForCart(cart))
-      );
+    this.view$ = this.resolver.state();
   }
 
   trackById(index, record): string {
     return _.get(record, 'MainLine.Id');
   }
-}
-
-export interface View{
-  cart: Cart;
-  lineItems: Array<ItemGroup>;
 }

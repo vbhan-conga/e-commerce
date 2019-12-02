@@ -53,18 +53,26 @@ export class HomeResolver implements Resolve<any> {
 }
 
 /**
- * Interface structure for the home page
+ * Interface structure for the home page.
+ * @ignore
  */
 export interface HomeState{
-    // The array of products for the first carousel
+    /**
+     * The array of products for the first carousel.
+     */
     productListA: Array<Product>;
-
-    // The array of products for the second carousel
+    /**
+     * The array of products for the second carousel.
+     */
     productListB: Array<Product>;
 
-    // The reference to the storefront record
+    /**
+     * The reference to the storefront record.
+     */
     storefront: Storefront;
 
-    // The list of categories to use for the product carousels
+    /**
+     * The list of categories to use for the product carousels.
+     */
     categories: Array<Category>;
 }

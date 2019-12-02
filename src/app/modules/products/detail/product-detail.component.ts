@@ -8,20 +8,20 @@ import { ProductDetailsState, ProductDetailsResolver } from '../services/product
 import { LineStatus } from '@apttus/ecommerce';
 
 @Component({
-    selector: 'app-product-details',
-    templateUrl: './product-details.component.html',
-    styleUrls: ['./product-details.component.scss']
+    selector: 'app-product-detail',
+    templateUrl: './product-detail.component.html',
+    styleUrls: ['./product-detail.component.scss']
 })
 /**
  * Product Details Component is the details of the product for standalone and bundle products with attributes and options.
  */
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailComponent implements OnInit {
 
     cartItemList: Array<CartItem>;
     viewState$: BehaviorSubject<ProductDetailsState>;
 
     /**
-     * Flag to detect if their is change in product configuration.
+     * Flag to detect if there is change in product configuration.
      */
     configurationChanged: boolean = false;
 
@@ -38,7 +38,7 @@ export class ProductDetailsComponent implements OnInit {
     /** @ignore */
     productCode: string;
 
-    @ViewChild('productConfigurationSummary') productConfigurationSummary: ProductConfigurationSummaryComponent;
+    @ViewChild('productConfigurationSummary', { static: false }) productConfigurationSummary: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService, private resolver: ProductDetailsResolver, private router: Router) { }
 
@@ -51,14 +51,8 @@ export class ProductDetailsComponent implements OnInit {
      * isConfigurationChanged to true.
      */
     onConfigurationChange(result: any) {
-        const cartItemList: Array<CartItem> = result[0];
-        const disable: boolean = result[1];
-        if (disable) {
-            this.configurationChanged = !disable;
-        } else {
-            this.configurationChanged = _.some(cartItemList, c => _.includes([LineStatus.Amend, LineStatus.Cancel, LineStatus.New, LineStatus.Upgrade], _.get(c, 'LineStatus')));
-        }
-        this.cartItemList = cartItemList;
+        this.cartItemList = _.first(result);
+        if (_.get(result[1],'optionChanged') || _.get(result[1],'attributeChanged')) this.configurationChanged = true;
     }
 
     /**
@@ -76,7 +70,7 @@ export class ProductDetailsComponent implements OnInit {
         this.configurationChanged = false;
         const primaryItem = _.find(cartItems, i => _.get(i, 'IsPrimaryLine') === true && _.isNil(_.get(i, 'Option')) && _.get(i, 'LineNumber') === _.get(i, 'PrimaryLineNumber'));
         if (!_.isNil(primaryItem))
-            this.router.navigate(['/product', _.get(this, 'viewState$.value.product.Id'), _.get(primaryItem, 'Id')]);
+            this.router.navigate(['/products', _.get(this, 'viewState$.value.product.Id'), _.get(primaryItem, 'Id')]);
     }
 
     /**

@@ -104,7 +104,7 @@
                         <tr *ngFor="let order of orderList; let i = index" class="px-2">
                             <ng-container *ngIf="i < 6">
                                 <th scope="row" class="pl-3">
-                                    <a href="javascript:void(0)" [routerLink]="['/Orders', order.Id]">{{order.Name}}</a>
+                                    <a href="javascript:void(0)" [routerLink]="['/orders', order.Id]">{{order.Name}}</a>
                                 </th>
                                 <td>{{(order | OrderPricePipe | async)?.netPrice$ | async}}</td>
                                 <td class="pr-3">{{order.CreatedDate | date:'shortDate'}}</td>

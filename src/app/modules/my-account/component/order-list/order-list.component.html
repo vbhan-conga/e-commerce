@@ -19,7 +19,7 @@
     <tbody>
       <tr *ngFor="let order of (orderList)">
         <th scope="row">
-         <a href="javascript:void(0)" [routerLink]="['/Orders', order.Id]">{{order.Name}}</a></th>
+         <a href="javascript:void(0)" [routerLink]="['/orders', order.Id]">{{order.Name}}</a></th>
         <td>{{(order | OrderPricePipe | async).netPrice$ | async}}</td>
         <td>{{order.CreatedDate | date : 'short'}}</td>
         <td>{{order.OrderLineItems?.length}}</td>
@@ -41,6 +41,6 @@
 </div>
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">
-    <apt-md-spinner></apt-md-spinner>
+    <apt-spinner></apt-spinner>
   </div>
 </ng-template>

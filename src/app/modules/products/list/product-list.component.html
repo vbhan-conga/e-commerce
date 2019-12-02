@@ -59,7 +59,7 @@
       </nav>
 
       <div class="d-flex justify-content-center my-5 py-5" *ngIf="!searchResults?.productList">
-        <apt-md-spinner></apt-md-spinner>
+        <apt-spinner></apt-spinner>
       </div>
 
       <div class="row" *ngIf="view == 'grid' && searchResults?.productList">
@@ -88,6 +88,6 @@
 
 <ng-template #loading>
   <div class="d-flex justify-content-center pt-5">
-    <apt-md-spinner></apt-md-spinner>
+    <apt-spinner></apt-spinner>
   </div>
 </ng-template>

@@ -139,6 +139,9 @@ $sizes: map-merge((
 ), $sizes);
 // stylelint-enable
 
+// Material variables
+$bmd-help-size-ratio: 0;
+
 // Body
 //
 // Settings for the `<body>` element.
@@ -454,7 +457,7 @@ $input-group-addon-color:               $input-color !default;
 $input-group-addon-bg:                  transparent !default;
 $input-group-addon-border-color:        $input-border-color !default;
 
-$custom-control-gutter:                 1.5rem !default;
+$custom-control-gutter:                 .5rem !default;
 $custom-control-spacer-x:               1rem !default;
 
 $custom-control-indicator-size:         1rem !default;
