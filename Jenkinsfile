@@ -61,27 +61,21 @@ spec:
                                     
                                     sh "ls -lrt"
 
-                                    uiLibraryProps=readProperties file: propertiesPath
+                                    uiServiceProps=readProperties file: propertiesPath
 
                                     //Fetch Inputs from build.properties file
-                                    channel=uiLibraryProps['CHANNEL']
-
-                                    uiCiLibraryEnabled="TRUE"
-                                    uiCiLibraryEnabledPropsInfo=uiLibraryProps['AIC_UI_LIBRARIES_CI_ENABLED']
-                                    if(uiCiLibraryEnabledPropsInfo){
-                                        uiCiLibraryEnabled=uiCiLibraryEnabledPropsInfo.toUpperCase()
-                                    }
+                                    channel=uiServiceProps['CHANNEL']
 
                                     uiCiServiceEnabled="TRUE"
-                                    uiCiServiceEnabledPropsInfo=uiLibraryProps['AIC_UI_SERVICE_CI_ENABLED']
+                                    uiCiServiceEnabledPropsInfo=uiServiceProps['AIC_UI_SERVICE_CI_ENABLED']
                                     if(uiCiServiceEnabledPropsInfo){
                                         uiCiServiceEnabled=uiCiServiceEnabledPropsInfo.toUpperCase()
                                     }
 
-                                    if((uiCiLibraryEnabled == "TRUE") || (uiCiServiceEnabled == "TRUE")) {
+                                    if( uiCiServiceEnabled == "TRUE") {
 
-                                        aicJenkinsArtifactoryCredId=uiLibraryProps.AIC_JENKINS_ARTIFACTORY_CREDS_ID
-                                        aicJenkinsBitbucketCredId=uiLibraryProps.AIC_JENKINS_BITBUCKET_CREDS_ID
+                                        aicJenkinsArtifactoryCredId=uiServiceProps.AIC_JENKINS_ARTIFACTORY_CREDS_ID
+                                        aicJenkinsBitbucketCredId=uiServiceProps.AIC_JENKINS_BITBUCKET_CREDS_ID
 
                                         //Check ci-skip in the last commit message
                                         ciskipResult = checkCISkip(jenkinsFilePath, channel, aicJenkinsBitbucketCredId)
@@ -93,129 +87,71 @@ spec:
                                         sendCommitIdMsgInfo(jenkinsFilePath, channel, aicJenkinsBitbucketCredId)
 
                                         //Execute npm instal in the build context path to install modules
-                                        npmInstallPath = uiLibraryProps['AIC_UI_BUILD_CONTEXT_PATH']
+                                        npmInstallPath = uiServiceProps['AIC_UI_BUILD_CONTEXT_PATH']
                                         installNpmPackages(npmInstallPath, channel, aicJenkinsArtifactoryCredId)
-
+                                        
+                                        // Update Patch Version
+                                        updateNpmPackagePatchVersion(npmInstallPath, channel)
+                                        
                                         //Execute build package and test command
                                         buildPackgeCommand="npm run build" //Default Command
-                                        buildPackgeCommandPropsInput = uiLibraryProps['AIC_UI_BUILD_PKG_CMD'].toString()
+                                        buildPackgeCommandPropsInput = uiServiceProps['AIC_UI_BUILD_PKG_CMD'].toString()
                                         if(buildPackgeCommandPropsInput){
                                             buildPackgeCommand=buildPackgeCommandPropsInput //Override defaut command
                                         }
                                         createBuildPackage(npmInstallPath, channel, buildPackgeCommand)
 
-                                        if(uiCiLibraryEnabled == "TRUE"){
-                                            uiLibraryProjCount=uiLibraryProps['UI_PACAKGE_COUNT'].toInteger()
-
-                                            if(uiLibraryProjCount > 0){
-                                                def uiProjects = []
-                                                for(int i = 0;i<uiLibraryProjCount;i++){
-                                                    uiProjects[i]=i
-                                                }
-
-                                                uiProjects.each { uiProjectIndex ->
-                                                    uiPackageName='AIC_UI_PACAKGE_NAME_' + "${uiProjectIndex}"
-                                                    uiPackageName=uiLibraryProps[uiPackageName]
-
-                                                    uiPackgeJsonFolderPath='AIC_UI_PACKAGEJSON_FOLDER_PATH_' + "${uiProjectIndex}"
-                                                    uiPackgeJsonFolderPath=uiLibraryProps[uiPackgeJsonFolderPath]
-
-                                                    uiPackgePath='AIC_UI_PACKAGE_PATH_' + "${uiProjectIndex}"
-                                                    uiPackgePath=uiLibraryProps[uiPackgePath]
-
-                                                    //Create npm artifact
-                                                    npmPackageVersion=createNpmPackage(uiPackageName, uiPackgeJsonFolderPath, uiPackgePath, channel)
-                                                    //Publish npm artifact
-                                                    publishNpmPackage(aicJenkinsArtifactoryCredId, uiPackageName, npmPackageVersion, channel)
-                                                }
-                                            } else {
-                                                sendNotifications("WARN","${channel}","CICD", "Library Project count is invalid or 0.")
-                                                
-                                            }
+                                        buildUiServiceCommandCount=uiServiceProps["AIC_UI_SERVICE_BUILD_CMD_COUNT"].toInteger()
+                                        def buildUiServiceCommands = []
+                                        for(int i = 0;i<buildUiServiceCommandCount;i++){
+                                            buildUiServiceCommands[i]=i
                                         }
 
-                                        if(uiCiServiceEnabled == "TRUE"){
-                                            
-                                            //Build and Package Deployable UI package
-                                            uiServiceCdEnabled=uiLibraryProps["AIC_UI_SERVICE_CD_ENABLED"].toUpperCase()
+                                        buildUiServiceCommands.each { buildUiServiceCommandIndex ->
+                                            buildUiServiceCommand='AIC_UI_SERVICE_BUILD_CMD_' + "${buildUiServiceCommandIndex}"
+                                            buildUiServiceCommand=uiServiceProps[buildUiServiceCommand]
+                                            executeCustomBuildPackageCmd(npmInstallPath, channel, buildUiServiceCommand, "${buildUiServiceCommandIndex}")
+                                        }
 
-                                            buildUiServiceCommandCount=uiLibraryProps["AIC_UI_SERVICE_BUILD_CMD_COUNT"].toInteger()
-                                            def buildUiServiceCommands = []
-                                            for(int i = 0;i<buildUiServiceCommandCount;i++){
-                                                buildUiServiceCommands[i]=i
-                                            }
+                                        // pacakge name
+                                        uiServicePackageName=uiServiceProps['AIC_UI_SERVICE_PACAKGE_NAME']
+                                        // Folder containing package.json for a specific ui project
+                                        uiServicePackgeJsonFolderPath=uiServiceProps['AIC_UI_SERVICE_PACKAGEJSON_FOLDER_PATH']
+                                        // Folder Path to the ui pacakge that gets created in the ng build process
+                                        uiServicePackgePath=uiServiceProps['AIC_UI_SERVICE_PACKAGE_PATH']
+                                        // Create the artifactory ui package
+                                        npmServicePackageVersion=createNpmPackage(uiServicePackageName, uiServicePackgeJsonFolderPath, uiServicePackgePath, channel)
+                                        // Publish the artifactory ui package on npm registry
+                                        publishNpmPackage(aicJenkinsArtifactoryCredId, uiServicePackageName, npmServicePackageVersion, channel)
 
-                                            buildUiServiceCommands.each { buildUiServiceCommandIndex ->
-                                                buildUiServiceCommand='AIC_UI_SERVICE_BUILD_CMD_' + "${buildUiServiceCommandIndex}"
-                                                buildUiServiceCommand=uiLibraryProps[buildUiServiceCommand]
-                                                executeCustomBuildPackageCmd(npmInstallPath, channel, buildUiServiceCommand, "${buildUiServiceCommandIndex}")
-                                            }
+                                        sendNotifications("INFO","${channel}","CICD", "Successfully Published pacakage : ${uiServicePackageName} of version : ${npmServicePackageVersion}")
+                                        //========================================================================
 
-                                            // Create pacakge and Publish package for each deployable ui pacakge======
-                                            deployableUiServiceCount=uiLibraryProps["DEPLOYABLE_UI_PACAKGE_COUNT"].toInteger()
-                                            def deployableUiServices = []
-                                            for(int i = 0;i<deployableUiServiceCount;i++){
-                                                deployableUiServices[i]=i
-                                            }
-
-                                            def deployableServiceNameVersionMap= [:]
-
-                                            deployableUiServices.each { deployableUiServiceIndex ->
-                                                // pacakge name
-                                                uiServicePackageName='AIC_UI_SERVICE_PACAKGE_NAME_' + "${deployableUiServiceIndex}"
-                                                uiServicePackageName=uiLibraryProps[uiServicePackageName]
-                                                // Folder containing package.json for a specific ui project
-                                                uiServicePackgeJsonFolderPath='AIC_UI_SERVICE_PACKAGEJSON_FOLDER_PATH_' + "${deployableUiServiceIndex}"
-                                                uiServicePackgeJsonFolderPath=uiLibraryProps[uiServicePackgeJsonFolderPath]
-                                                // Folder Path to the ui pacakge that gets created in the ng build process
-                                                uiServicePackgePath='AIC_UI_SERVICE_PACKAGE_PATH_' + "${deployableUiServiceIndex}"
-                                                uiServicePackgePath=uiLibraryProps[uiServicePackgePath]
-                                                // Create the artifactory ui package
-                                                npmServicePackageVersion=createNpmPackage(uiServicePackageName, uiServicePackgeJsonFolderPath, uiServicePackgePath, channel)
-                                                // Publish the artifactory ui package on npm registry
-                                                publishNpmPackage(aicJenkinsArtifactoryCredId, uiServicePackageName, npmServicePackageVersion, channel)
-                                                //Make the entry of the pacakge name and corresponding version in the map varibale
-                                                deployableServiceNameVersionMap[uiServicePackageName]=npmServicePackageVersion
-
-                                                sendNotifications("INFO","${channel}","CICD", "Successfully Published pacakage : ${uiServicePackageName} of version : ${npmServicePackageVersion}")
-                                            }
-                                            //========================================================================
-
-                                            // tagEnabled=uiLibraryProps["ENABLE_TAGGING"].toUpperCase()
-                                            // if(tagEnabled == "TRUE"){
-                                            //     //Tag Git repo
-                                            //     pushUpdatedPackageJson=uiLibraryProps["ENABLE_AUTOMATIC_PATCH_VERSION"].toUpperCase()
-                                            //     npmServicePackageVersion=""
-                                            //     tagGitRepoAndPushUpdatedPackageJson(npmServicePackageVersion, aicJenkinsBitbucketCredId, channel, pushUpdatedPackageJson, npmInstallPath)
-                                            //     sendNotifications("WARN","${channel}","CICD", "Git repo is tagged with the version ${npmServicePackageVersion}")
-
-                                            // }
-
-                                            if(uiServiceCdEnabled == "TRUE"){
-                                                deployableUiServices.each { deployableUiServiceIndex ->
-                                                    //downstream jobs
-                                                    uiServiceDownstreamJobsVar='DOWNSTREAM_JOBS_' + "${deployableUiServiceIndex}"
-                                                    uiServiceDownstreamJobs=uiLibraryProps[uiServiceDownstreamJobsVar]
-
-                                                    // pacakge name
-                                                    uiServicePackageName='AIC_UI_SERVICE_PACAKGE_NAME_' + "${deployableUiServiceIndex}"
-                                                    uiServicePackageName=uiLibraryProps[uiServicePackageName]
-
-                                                    // package version
-                                                    npmServicePackageVersion=deployableServiceNameVersionMap[uiServicePackageName]
-
-                                                    if(uiServiceDownstreamJobs) {
-                                                        println "Triggering downstream job for deployment of package ${uiServicePackageName} of version ${npmServicePackageVersion}"
-                                                        def downstreamJobs=uiServiceDownstreamJobs.split(',')
-
-                                                        triggerDownStreamJobs(channel, downstreamJobs, npmServicePackageVersion, uiServicePackageName)
-                                                    }
-                                                }
-                                            }
-                                            
-                                            sendNotifications("INFO","${channel}","CICD", "Successfully Completed.")
+                                        tagEnabled=uiServiceProps["ENABLE_TAGGING"].toUpperCase()
+                                        if(tagEnabled == "TRUE"){
+                                            //Tag Git repo
+                                            pushUpdatedPackageJson=uiServiceProps["ENABLE_AUTOMATIC_PATCH_VERSION"].toUpperCase()
+                                            tagGitRepoAndPushUpdatedPackageJson(npmServicePackageVersion, aicJenkinsBitbucketCredId, channel, pushUpdatedPackageJson, npmInstallPath)
+                                            sendNotifications("WARN","${channel}","CICD", "Git repo is tagged with the version ${npmServicePackageVersion}")
 
                                         }
+
+                                        //Build and Package Deployable UI package
+                                        uiServiceCdEnabled=uiServiceProps["AIC_UI_SERVICE_CD_ENABLED"].toUpperCase()
+
+                                        if(uiServiceCdEnabled == "TRUE"){
+                                            //downstream jobs
+                                            uiServiceDownstreamJobs=uiServiceProps['DOWNSTREAM_JOBS']
+
+                                            if(uiServiceDownstreamJobs) {
+                                                println "Triggering downstream job for deployment of package ${uiServicePackageName} of version ${npmServicePackageVersion}"
+                                                def downstreamJobs=uiServiceDownstreamJobs.split(',')
+
+                                                triggerDownStreamJobs(channel, downstreamJobs, npmServicePackageVersion, uiServicePackageName)
+                                            }
+                                        }
+                                        
+                                        sendNotifications("INFO","${channel}","CICD", "Successfully Completed.")
                                         
                                     } else {
                                         //Send msg on channel that CI is disabled.
