@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService, User } from '@apttus/ecommerce';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ConfigurationService } from '@apttus/core';
 
 /**

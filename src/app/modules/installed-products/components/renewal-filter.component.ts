@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { ACondition, SimpleDate } from '@apttus/core';
-import { AssetLineItem } from '@apttus/abo';
+import { AssetLineItem } from '@apttus/ecommerce';
 /**
  * Renewal filter component is used to create an asset filter on the period until renewal.
  */
@@ -10,7 +10,7 @@ import { AssetLineItem } from '@apttus/abo';
     <div class="card animated fadeIn">
       <div class="card-body">
         <form>
-          <h5 class="card-title">Days To Renew</h5>
+          <h5 class="card-title">{{'INSTALLED_PRODUCTS.RENEW_FILTER.DAYS_TO_RENEW' | translate}}</h5>
           <ul class="list-unstyled pl-2">
             <li>
               <div class="custom-control custom-radio">
@@ -24,7 +24,7 @@ import { AssetLineItem } from '@apttus/abo';
                   checked
                 >
                 <label class="custom-control-label" for="all">
-                  All
+                {{'INSTALLED_PRODUCTS.RENEW_FILTER.ALL' | translate}}
                 </label>
               </div>
             </li>
@@ -39,7 +39,7 @@ import { AssetLineItem } from '@apttus/abo';
                   (change)="handleCheckChange($event)"
                 >
                 <label class="custom-control-label" for="less30">
-                  < 30 Days
+                {{'INSTALLED_PRODUCTS.RENEW_FILTER.LT30DAYS' | translate}}
                 </label>
               </div>
             </li>
@@ -54,7 +54,7 @@ import { AssetLineItem } from '@apttus/abo';
                   (change)="handleCheckChange($event)"
                 >
                   <label class="custom-control-label" for="30-60">
-                  < 60 Days
+                  {{'INSTALLED_PRODUCTS.RENEW_FILTER.LT60DAYS' | translate}}
                 </label>
               </div>
             </li>
@@ -69,7 +69,7 @@ import { AssetLineItem } from '@apttus/abo';
                   (change)="handleCheckChange($event)"
                 >
                 <label class="custom-control-label" for="60-90">
-                  < 90 Days
+                {{'INSTALLED_PRODUCTS.RENEW_FILTER.LT90DAYS' | translate}}
                 </label>
               </div>
             </li>
@@ -84,7 +84,7 @@ import { AssetLineItem } from '@apttus/abo';
                   (change)="handleCheckChange($event)"
                 >
                 <label class="custom-control-label" for="more90">
-                  > 90 Days
+                {{'INSTALLED_PRODUCTS.RENEW_FILTER.GT90DAYS' | translate}}
                 </label>
               </div>
             </li>
@@ -121,9 +121,8 @@ export class RenewalFilterComponent {
    */
   private dateGetter(days: number): SimpleDate {
     let today = new Date();
-    let date = new SimpleDate();
     today.setDate(today.getDate() + days);
-    date.setDate(today);
+    let date = new SimpleDate(today);
     return date;
   }
   /**

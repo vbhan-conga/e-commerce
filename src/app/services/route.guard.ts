@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 const sv = (<any>window).sv;
 
@@ -32,6 +32,7 @@ export class RouteGuard implements CanActivate {
     }
 }
 
+/** @ignore */
 export interface Params{
     fromFrontdoor: string;
     retURL: string;

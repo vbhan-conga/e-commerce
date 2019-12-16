@@ -1,6 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { UserService } from '@apttus/ecommerce';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Change password component, takes new password and update with old
@@ -35,7 +36,7 @@ export class ChangePasswordLayoutComponent {
    */
   loading: boolean = false;
 
-  constructor(private userService: UserService, private router: Router, private ngZone: NgZone) { }
+  constructor(private userService: UserService, private router: Router, private ngZone: NgZone, private translateService: TranslateService) { }
 
 
   /**
@@ -44,8 +45,11 @@ export class ChangePasswordLayoutComponent {
    * Shows error if there are any
    */
   setPassword(){
-    if(this.passwordForm.passwordA !== this.passwordForm.passwordB)
-      this.message = 'Your passwords do not match';
+    if(this.passwordForm.passwordA !== this.passwordForm.passwordB) {
+      this.translateService.stream('CHANGE_PASSWORD.PASSWORD_DO_NOT_MATCH_ERROR').subscribe((val: string) => {
+        this.message = val;
+      });
+    }
     else{
       this.loading = true;
       this.userService.setPassword(this.passwordForm.passwordA).subscribe(
@@ -56,10 +60,16 @@ export class ChangePasswordLayoutComponent {
             this.router.navigate(['']);
         }),
         err => this.ngZone.run(() => {
-          if(err.indexOf('invalid repeated password') >= 0)
-            this.message = 'Cannot reuse this old password.';
-          else
-            this.message = 'An error ocurred. Please contact your administrator.';
+          if(err.indexOf('invalid repeated password') >= 0) {
+            this.translateService.stream('CHANGE_PASSWORD.OLD_PASSWORD_CAN_NOT_BE_USED_ERROR').subscribe((val: string) => {
+              this.message = val;
+            });
+          }
+          else {
+            this.translateService.stream('CHANGE_PASSWORD.OCURRED_SERVER_ERROR').subscribe((val: string) => {
+              this.message = val;
+            });
+          }
           this.loading = false;
         })
       );
@@ -67,7 +77,8 @@ export class ChangePasswordLayoutComponent {
   }
 }
 
-export interface PasswordForm{
+/** @ignore */
+interface PasswordForm{
   passwordA: string;
   passwordB: string;
 }

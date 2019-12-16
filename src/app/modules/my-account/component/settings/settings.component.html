@@ -1,8 +1,8 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
-    My Settings
+    {{'MY_ACCOUNT.SETTING.MY_SETTINGS' | translate}}
   </span>
-  <button class="btn btn-outline-primary" [routerLink]="['/ChangePassword']">Change Password</button>
+  <button class="btn btn-outline-primary" [routerLink]="['/change-password']">{{'MY_ACCOUNT.SETTING.CHANGE_PASSWORD' | translate}}</button>
 </nav>
 
 <div class="row mt-3">
@@ -10,24 +10,18 @@
     <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title d-flex justify-content-between">
-          <span>User Information</span>
-          <button class="btn btn-sm btn-link"><span class="oi oi-pencil"></span></button>
+          <span>{{'MY_ACCOUNT.SETTING.USER_INFO' | translate}}</span>
         </h5>
-        <dl class="mt-4">
-          <dt>First Name:</dt>
-          <dd>{{(user$ | async)?.FirstName}}</dd>
-        
-          <dt>Last Name:</dt>
-          <dd>{{(user$ | async)?.LastName}}</dd>
-        
-          <dt>Email Address:</dt>
-          <dd>{{(user$ | async)?.Email}}</dd>
+        <dl class="mt-4" *ngIf="user$ | async as user">
+          <dd><apt-output-field [record]="user" field="FirstName" [layout]="'inline'"></apt-output-field></dd>
 
-          <dt>Username:</dt>
-          <dd>{{(user$ | async)?.Username}}</dd>
+          <dd><apt-output-field [record]="user" field="LastName" [layout]="'inline'"></apt-output-field></dd>
 
-          <dt>Locale:</dt>
-          <dd>{{(user$ | async)?.LocaleSidKey}}</dd>
+          <dd><apt-output-field [record]="user" field="Email" [layout]="'inline'"></apt-output-field></dd>
+
+          <dd><apt-output-field [record]="user" field="Username" [layout]="'inline'"></apt-output-field></dd>
+
+          <dd><apt-output-field [record]="user" field="LocaleSidKey" [layout]="'inline'"></apt-output-field></dd>
         </dl>
       </div>
     </div>
@@ -35,16 +29,13 @@
   <div class="col-12 col-md-6">
     <div class="card h-100">
       <div class="card-body">
-        <h5 class="card-title mb-3">Account Information</h5>
-        <dl class="mt-4">
-          <dt>Name:</dt>
-          <dd>{{(account$ | async)?.Name}}</dd>
+        <h5 class="card-title mb-3">{{'MY_ACCOUNT.SETTING.ACCOUNT_INFO' | translate}}</h5>
+        <dl class="mt-4" *ngIf="account$ | async as account">
+          <dd><apt-output-field [record]="account" field="Name" [layout]="'inline'" [editable]="false"></apt-output-field></dd>
 
-          <dt>Address:</dt>
-          <dd><apt-address [ngModel]="account$ | async" name="shippingAddress" type="billing" [readonly]="true"></apt-address></dd>
+          <dd><apt-output-field [record]="account" field="ShippingAddress" [layout]="'inline'" [editable]="false"></apt-output-field></dd>
 
-          <dt>Phone:</dt>
-          <dd>{{(account$ | async)?.Phone}}</dd>
+          <dd><apt-output-field [record]="account" field="Phone" [layout]="'inline'" [editable]="false"></apt-output-field></dd>
         </dl>
       </div>
     </div>

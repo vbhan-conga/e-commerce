@@ -5,33 +5,40 @@ import { CartRoutingModule } from './cart-routing.module';
 import { CartComponent } from './layout/cart.component';
 import { SummaryComponent } from './component/summary.component';
 
-import { CartModule as cModule, StoreModule, PricingModule } from '@apttus/ecommerce';
-import { ProductConfigurationSummaryModule } from '@apttus/elements';
-import { CybersourceComponent } from './component/cybersource/cybersource.component';
+import { ProductConfigurationSummaryModule,PaymentComponentModule, OutputFieldModule, MiniProfileModule, BreadcrumbModule, PriceSummaryModule, InputFieldModule } from '@apttus/elements';
 import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
-import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { AddressModule, PriceModule, MdSpinnerModule } from '@apttus/elements';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { AddressModule, PriceModule, IconModule } from '@apttus/elements';
+import { TranslateModule } from '@ngx-translate/core'; 
+import { ApttusModule } from '@apttus/core';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   imports: [
     CommonModule,
     CartRoutingModule,
-    cModule,
-    StoreModule,
-    PricingModule,
     FormsModule,
     ComponentModule,
-    NgxPageScrollModule,
     ProductConfigurationSummaryModule,
     PriceModule,
-    MdSpinnerModule,
+    IconModule,
     TabsModule.forRoot(),
     ModalModule.forRoot(),
-    AddressModule
+    AddressModule,
+    ApttusModule,
+    PaymentComponentModule,
+    OutputFieldModule,
+    TooltipModule.forRoot(),
+    TranslateModule.forChild(),    
+    BsDropdownModule.forRoot(),
+    MiniProfileModule,
+    BreadcrumbModule,
+    PriceSummaryModule,
+    InputFieldModule
   ],
-  declarations: [CartComponent, SummaryComponent, CybersourceComponent, CardFormComponent]
+  declarations: [CartComponent, SummaryComponent,CardFormComponent]
 })
 export class CartModule { }

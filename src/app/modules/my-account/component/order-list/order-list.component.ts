@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService, Order } from '@apttus/ecommerce';
-import { Observable } from 'rxjs/Observable';
 import { ACondition } from '@apttus/core';
+import { TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs/operators';
 
 /**
  * Displays all orders for the logged in user in grid view with pagination.
@@ -25,19 +26,35 @@ export class OrderListComponent implements OnInit {
    * List of orders for current page is stored here.
    */
   orderList: Array<Order>;
-  orderAggregate$: Observable<Array<any>>;
+  order: Order = new Order();
+  orderAggregate: any;
+  /**
+   * Control over button's text/label of pagination component for Multi-Language Support
+   */
+  paginationButtonLabels: any = {
+    first: '',
+    previous: '',
+    next: '',
+    last: ''
+  };
 
   /**
    * @ignore 
    */
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private translateService: TranslateService) {}
 
   /**
    * @ignore 
    */
   ngOnInit() {
     this.loadOrders(this.currentPage);
-    this.orderAggregate$ = this.orderService.aggregate([new ACondition(Order, 'Id', 'NotNull', null)]);
+    this.orderService.aggregate([new ACondition(Order, 'Id', 'NotNull', null)]).pipe(take(1)).subscribe(res => this.orderAggregate = res);
+    this.translateService.stream('PAGINATION').subscribe((val: string) => {
+      this.paginationButtonLabels.first = val['FIRST'];
+      this.paginationButtonLabels.previous = val['PREVIOUS'];
+      this.paginationButtonLabels.next = val['NEXT'];
+      this.paginationButtonLabels.last = val['LAST'];
+    });
   }
 
   /**
@@ -48,6 +65,4 @@ export class OrderListComponent implements OnInit {
     this.orderList = null;
     this.orderService.getMyOrders(null, null, this.limit, page).subscribe((res: Array<Order>) => this.orderList = res);
   }
-
 }
-
