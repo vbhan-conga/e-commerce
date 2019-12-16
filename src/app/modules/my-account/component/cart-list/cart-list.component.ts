@@ -3,8 +3,10 @@ import { ACondition } from '@apttus/core'
 import { CartService, Cart, PriceService } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as _ from 'lodash';
+import { TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs/operators';
 
 /**
  * Cart list Component loads and shows all the carts for logged in user.
@@ -19,13 +21,13 @@ export class CartListComponent implements OnInit {
   /**
    * All carts for logged in user.
    */
-  cartList: Array<Cart>;
-  myCart: Cart;
-  cart: Cart = new Cart();
-  cartAggregate$: Observable<Array<any>>;
+  cartList$: Observable<Array<Cart>>;
+  currentCart$: Observable<Cart>;
   modalRef: BsModalRef;
   message: string;
   loading: boolean = false;
+  cart: Cart;
+  cartAggregate: any;
   /**
    * Current page used by the pagination component. Default is 1.
    */
@@ -34,19 +36,34 @@ export class CartListComponent implements OnInit {
    * Number of records per page used by the pagination component. Default is 10.
    */
   limit: number = 10;
+  /**
+   * Control over button's text/label of pagination component for Multi-Language Support
+   */
+  paginationButtonLabels: any = {
+    first: '',
+    previous: '',
+    next: '',
+    last: ''
+  };
 
-  /** 
+  /**
    * @ignore
    */
-  constructor(private cartService: CartService, public priceService: PriceService, private modalService: BsModalService, private ngZone: NgZone) { }
+  constructor(private cartService: CartService, public priceService: PriceService, private modalService: BsModalService, private ngZone: NgZone, private translateService: TranslateService) { }
 
-  /** 
+  /**
    * @ignore
    */
   ngOnInit() {
-    this.cartService.getMyCart().subscribe(c =>  this.myCart = c);
+    this.currentCart$ = this.cartService.getMyCart();
+    this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]).pipe(take(1)).subscribe(res => this.cartAggregate = res);
     this.loadCarts(this.currentPage);
-    this.cartAggregate$ = this.cartService.aggregate([new ACondition(Cart, 'Id', 'NotNull', null)]);
+    this.translateService.stream('PAGINATION').subscribe((val: string) => {
+      this.paginationButtonLabels.first = val['FIRST'];
+      this.paginationButtonLabels.previous = val['PREVIOUS'];
+      this.paginationButtonLabels.next = val['NEXT'];
+      this.paginationButtonLabels.last = val['LAST'];
+    });
   }
 
   /**
@@ -54,8 +71,7 @@ export class CartListComponent implements OnInit {
    * @param page Page number to load cart list.
    */
   loadCarts(page) {
-    this.cartList = null;
-    this.cartService.getMyCarts(this.limit, page).take(1).subscribe(c => this.ngZone.run(() => this.cartList = c));
+    this.cartList$ = this.cartService.getMyCarts(this.limit, page);
   }
 
   /**
@@ -75,12 +91,10 @@ export class CartListComponent implements OnInit {
   deleteCart(cart: Cart){
     cart._metadata = { state: 'processing' };
     this.cartService.deleteCart(cart).subscribe(
-      res => {
-        this.cartService.refreshCart(cart.Id);
-        this.loading = false;
-        this.loadCarts(this.currentPage);
-      },
-      err => this.loading = false
+      res => {},
+      err => {
+        _.set(cart, '_metadata.state', 'ready');
+      }
     );
   }
 
@@ -110,13 +124,13 @@ export class CartListComponent implements OnInit {
       res => {
         this.loading = false;
         this.modalRef.hide();
-        this.loadCarts(this.currentPage);
       },
       err => {
         this.loading = false;
-        this.message = 'Could not create cart. Please contact your administrator.';
+        this.translateService.stream('MY_ACCOUNT.CART_LIST.CART_CREATION_FAILED').subscribe((val: string) => {
+          this.message = val;
+        });
       }
     );
   }
-
 }

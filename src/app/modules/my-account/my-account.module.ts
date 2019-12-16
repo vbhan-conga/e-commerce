@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MyAccountRoutingModule } from './my-account-routing.module';
 import { MyAccountLayoutComponent } from './layout/my-account-layout.component';
 
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { OrderListComponent } from './component/order-list/order-list.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { QuoteListComponent } from './component/quote-list/quote-list.component';
@@ -13,28 +12,26 @@ import { AddressBookComponent } from './component/address-book/address-book.comp
 import { SettingsComponent } from './component/settings/settings.component';
 import { ComponentModule } from '../../components/component.module';
 
-import { StoreModule, PricingModule } from '@apttus/ecommerce';
+import { PricingModule } from '@apttus/ecommerce';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { CartListComponent } from './component/cart-list/cart-list.component';
-import { ProductCatalogComponent } from './component/product-catalog/product-catalog.component';
 import { ApttusModule } from '@apttus/core';
 import { OrderDetailComponent } from './component/order-detail/order-detail.component';
-import { QuoteDetailComponent } from './component/quote-detail/quote-detail.component';
 import { ReorderComponent } from './component/reorder/reorder.component';
-import { MdSpinnerModule, AddressModule, PriceModule, InputQuantityModule, ProductConfigurationSummaryModule } from '@apttus/elements';
+import { IconModule, AddressModule, PriceModule, InputQuantityModule, ProductConfigurationSummaryModule, BreadcrumbModule, InputFieldModule, OutputFieldModule, ChartModule } from '@apttus/elements';
+
+
 
 @NgModule({
   imports: [
     CommonModule,
     ApttusModule,
     MyAccountRoutingModule,
-    LazyLoadImageModule,
-    StoreModule,
     PricingModule,
     ComponentModule,
-    MdSpinnerModule,
+    IconModule,
     AddressModule,
     PriceModule,
     FormsModule,
@@ -42,9 +39,13 @@ import { MdSpinnerModule, AddressModule, PriceModule, InputQuantityModule, Produ
     ProductConfigurationSummaryModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    BreadcrumbModule,
+    InputFieldModule,
+    OutputFieldModule,
+    ChartModule
   ],
-  declarations: [MyAccountLayoutComponent, OrderListComponent, DashboardComponent, QuoteListComponent, WishlistsComponent, AddressBookComponent, SettingsComponent, CartListComponent, ProductCatalogComponent, OrderDetailComponent, QuoteDetailComponent, ReorderComponent],
+  declarations: [MyAccountLayoutComponent, OrderListComponent, DashboardComponent, QuoteListComponent, WishlistsComponent, AddressBookComponent, SettingsComponent, CartListComponent, OrderDetailComponent, ReorderComponent],
   exports: []
 })
 export class MyAccountModule { }

@@ -48,7 +48,7 @@ export class CompareLayoutComponent implements OnInit, OnDestroy {
       let newIdentifiers = decodeURIComponent(params.products).split(',');
       if (newIdentifiers.length > 5) {
         newIdentifiers = newIdentifiers.splice(0, 5);
-        this.router.navigateByUrl(`/compare?products=${newIdentifiers.join(',')}`);
+        this.router.navigateByUrl(`/products/compare?products=${newIdentifiers.join(',')}`);
       }
       else {
         this.subs.push(this.productService.where([new ACondition(this.productService.type, this.identifier, 'In', newIdentifiers)]).subscribe(products => {

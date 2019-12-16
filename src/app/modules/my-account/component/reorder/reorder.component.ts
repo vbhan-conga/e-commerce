@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService, Product, OrderService, Order, CartService, CartProductForm, Cart, CartItem } from '@apttus/ecommerce';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs/Observable';
+import { Observable, combineLatest } from 'rxjs';
 import { ACondition } from '@apttus/core';
+import { flatMap, take } from 'rxjs/operators';
 
 /** @ignore */
 @Component({
@@ -24,8 +25,10 @@ export class ReorderComponent implements OnInit {
 
   ngOnInit() {
     this.subList.push(this.route.params
-      .flatMap(r => this.orderService.getOrderByName(r.orderId))
-      .take(1)
+      .pipe(
+        flatMap(r => this.orderService.getOrderByName(r.orderId)),
+        take(1)
+      )
       .subscribe(order => {
         this.order = order;
         this.onOrder();
@@ -33,15 +36,15 @@ export class ReorderComponent implements OnInit {
   }
 
   onOrder(){
-      Observable.combineLatest(this.productService.where([new ACondition(Product, 'Id', 'NotNull', null)]), this.cartService.createNewCart(new Cart(), false))
+      combineLatest(this.productService.where([new ACondition(Product, 'Id', 'NotNull', null)]), this.cartService.createNewCart(new Cart(), false))
       .subscribe(([productList, cart]) =>{
         this.cart = cart;
         cart.LineItems = new Array<CartItem>();
         productList.forEach(product => {
           const lineItem = _.get(this.order, 'OrderLineItems', []).filter(x => x.ProductId === product.Id)[0];
-          const cartItem = this.cartService.getCartItem(product, (lineItem) ? lineItem.Quantity : 0, cart, false);
-          cartItem['Digital_Product_Family_LI__c'] = product['Digital_Product_Family__c'];
-          cart.LineItems.push(cartItem);
+          // const cartItem = this.cartService.getCartItem(product, (lineItem) ? lineItem.Quantity : 0, cart, false);
+          // cartItem['Digital_Product_Family_LI__c'] = product['Digital_Product_Family__c'];
+          // cart.LineItems.push(cartItem);
         });
       });
     }
@@ -52,6 +55,7 @@ export class ReorderComponent implements OnInit {
 
 }
 
+/** @ignore */
 export interface ProductQuantityMap{
   quantity: number;
   product: Product;

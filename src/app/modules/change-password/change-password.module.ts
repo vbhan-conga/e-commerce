@@ -7,12 +7,15 @@ import { ChangePasswordLayoutComponent } from './layout/change-password-layout.c
 import { FormsModule } from '@angular/forms';
 import { LaddaModule } from 'angular2-ladda';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @NgModule({
   imports: [
     CommonModule,
     ChangePasswordRoutingModule,
     FormsModule,
-    LaddaModule
+    LaddaModule,
+    TranslateModule.forChild()
   ],
   declarations: [ChangePasswordLayoutComponent]
 })

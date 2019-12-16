@@ -1,3 +1,8 @@
+/**
+ * Apttus Digital Commerce
+ *
+ * Dedicated routing module for the my account module
+ */
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MyAccountLayoutComponent } from './layout/my-account-layout.component';
@@ -8,10 +13,8 @@ import { WishlistsComponent } from './component/wishlists/wishlists.component';
 import { AddressBookComponent } from './component/address-book/address-book.component';
 import { SettingsComponent } from './component/settings/settings.component';
 import { CartListComponent } from './component/cart-list/cart-list.component';
-import { ProductCatalogComponent } from './component/product-catalog/product-catalog.component';
-import { OrderDetailComponent } from './component/order-detail/order-detail.component';
-import { QuoteDetailComponent } from './component/quote-detail/quote-detail.component';
-import { ReorderComponent } from './component/reorder/reorder.component';
+
+
 
 const routes: Routes = [
   {
@@ -27,20 +30,8 @@ const routes: Routes = [
         component : OrderListComponent
       },
       {
-        path : 'orders/:orderId',
-        component : OrderDetailComponent
-      },
-      {
-        path: 'orders/:orderId/reorder',
-        component: ReorderComponent
-      },
-      {
         path : 'quotes',
         component : QuoteListComponent
-      },
-      {
-        path: 'quotes/:quoteId',
-        component : QuoteDetailComponent
       },
       {
         path : 'wishlists',
@@ -59,10 +50,6 @@ const routes: Routes = [
         component : CartListComponent
       },
       {
-        path : 'catalog',
-        component : ProductCatalogComponent
-      },
-      {
         path : '',
         redirectTo : 'dashboard',
         pathMatch : 'full'
@@ -71,6 +58,9 @@ const routes: Routes = [
   }
 ];
 
+/**
+ * @internal
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

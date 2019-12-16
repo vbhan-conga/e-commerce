@@ -1,73 +1,87 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { CategoryService, Category, Storefront, ContactService, StorefrontService,
   UserService, ConversionService, CurrencyType, User, ProductService, Product, Contact } from '@apttus/ecommerce';
 
 import { MiniProfileComponent } from '@apttus/elements';
 
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable, combineLatest } from 'rxjs';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { APageInfo, ConfigurationService } from '@apttus/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import * as _ from 'lodash';
+import { filter, flatMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild('searchModal') searchModal: ElementRef;
-  @ViewChild('profile') profile: MiniProfileComponent;
-  @ViewChild('searchBox') searchBox: ElementRef;
+  @ViewChild('searchModal', { static: false }) searchModal: ElementRef;
+  @ViewChild('profile', { static: false }) profile: MiniProfileComponent;
+  @ViewChild('searchBox', { static: false }) searchBox: ElementRef;
 
-  categoryTree$: Observable<Array<Category>>;
-  categoryBranch: Array<Category>;
   index: number = 0;
-  storefront$: Observable<Storefront>;
-  contact$: Observable<Contact>;
-  currencyTypes$: Observable<Array<CurrencyType>>;
   searchQuery: string;
   postalCode: number;
   pageTop: boolean = true;
-  isAIC: boolean = false;
   modalRef: BsModalRef;
-  me$: Observable<User>;
 
   typeahead$: Observable<Array<Product>> = new Observable<Array<Product>>();
   typeaheadLoading: boolean = false;
   keyupEvent: any;
 
+  view$: Observable<HeaderView>;
+
   constructor(private categoryService: CategoryService,
               private storefrontService: StorefrontService,
               private userService: UserService,
-              private conversionService: ConversionService,
               private router: Router,
               private productService: ProductService,
               private config: ConfigurationService,
               private contactService: ContactService,
-              private modalService: BsModalService) {
+              private modalService: BsModalService,
+              private translateService: TranslateService) {
 
                 this.typeahead$ = Observable.create((observer: any) => {
                   observer.next(this.searchQuery);
                 })
-                .filter(query => query.trim().length >= 2)
-                .flatMap(query => this.productService.search(query, null, 'AND', null, null, new APageInfo(10, 0)));
+                .pipe(
+                  filter((query: string) => query.trim().length >= 2),
+                  flatMap((query: string) => this.productService.search(query, null, 'AND', null, null, new APageInfo(10, 0))),
+                  flatMap(productList => {
+                    const productIds = _.map(productList, (product) => product.Id);
+                    return this.productService.get(productIds);
+                  })
+                );
   }
 
   ngOnInit() {
-    this.storefront$ = this.storefrontService.getStorefront();
-    this.categoryTree$ = this.categoryService.getCategoryTree();
-    this.contact$ = this.contactService.getMyContact();
-    this.categoryTree$.subscribe(r => {
-      r.forEach(c => {
-        const depth = this.getDepth(c);
-        this.categoryBranch = (!this.categoryBranch || depth > this.categoryBranch.length) ? new Array<any>(depth) : this.categoryBranch;
-      });
-    });
-    this.currencyTypes$ = this.conversionService.getConversionRates();
-    this.me$ = this.userService.me();
-    this.isAIC = this.config.platform() === 'AIC';
+    this.view$ = combineLatest(
+      this.storefrontService.getStorefront()
+      ,this.categoryService.getCategoryTree()
+      ,this.contactService.getMyContact()
+      ,this.userService.me()
+      ,this.storefrontService.describe(null, 'DefaultLocale', true)
+    ).pipe(
+      map(([storefront, categoryTree, contact, user, localeFields]) => {
+        return {
+          storefront: storefront,
+          categoryTree: categoryTree,
+          categoryBranch: _.map(categoryTree, (c) => {
+            const depth = this.getDepth(c);
+            return new Array<any>(depth);
+          }),
+          contact: contact,
+          me: user
+        };
+      })
+    );
   }
 
   getDepth(obj) {
@@ -92,6 +106,11 @@ export class HeaderComponent implements OnInit {
     this.userService.setCurrency(currency.IsoCode).subscribe(() => {});
   }
 
+  setLanguage(lang: string) {
+    this.translateService.use(lang);
+    localStorage.setItem('locale', lang);
+  }
+
   setStorefront(storefront: Storefront){
     this.modalRef.hide();
     this.storefrontService.cacheService._set('storefront', storefront.Id, true);
@@ -105,20 +124,20 @@ export class HeaderComponent implements OnInit {
   typeaheadOnSelect(evt){
     this.modalRef.hide();
     this.typeaheadLoading = false;
-    this.router.navigate(['/product', evt.item[this.config.get('productIdentifier')]]);
+    this.router.navigate(['/products', evt.item[this.config.get('productIdentifier')]]);
   }
 
   goToAddress(){
      this.router.navigate(['/address']);
   }
 
-  goToCategory(category: Category){
-    this.categoryBranch[this.index] = category;
+  goToCategory(category: Category, view: HeaderView){
+    _.set(view, `categoryBranch[${this.index}]`, category);
     this.index += 1;
   }
 
-  goBack(){
-    this.categoryBranch[this.index] = new Category();
+  goBack(view: HeaderView){
+    _.set(view, `categoryBranch[${this.index}]`, new Category());
     this.index -= 1;
   }
 
@@ -137,4 +156,19 @@ export class HeaderComponent implements OnInit {
   onScroll(event){
       this.pageTop = window.pageYOffset <= 0;
   }
+}
+
+/** @ignore */
+interface LocaleType {
+  salesforceLocaleCode: string;
+  nativeLabel: string;
+}
+
+/** @ignore */
+interface HeaderView{
+  storefront: Storefront;
+  categoryTree: Array<Category>;
+  categoryBranch: Array<Category>;
+  contact: Contact;
+  me: User;
 }

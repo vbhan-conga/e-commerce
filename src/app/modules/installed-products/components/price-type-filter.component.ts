@@ -7,7 +7,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
   template: `
     <div class="card animated fadeIn">
       <div class="card-body">
-        <h5 class="card-title">Price Type</h5>
+        <h5 class="card-title">{{'INSTALLED_PRODUCTS.PRICE_TYPE_FILTER.PRICE_TYPE' | translate}} </h5>
         <ul class="list-unstyled pl-2">
           <li>
             <div class="custom-control custom-radio">
@@ -21,7 +21,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
                   checked
                 >
               <label class="custom-control-label" for="priceTypeAll">
-                All
+              {{'INSTALLED_PRODUCTS.PRICE_TYPE_FILTER.ALL' | translate}}
               </label>
             </div>
           </li>
@@ -36,7 +36,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
                 (change)="handleCheckChange($event)"
               >
               <label class="custom-control-label" for="oneTime">
-                One Time
+              {{'INSTALLED_PRODUCTS.PRICE_TYPE_FILTER.ONE_TIME' | translate}}
               </label>
             </div>
           </li>
@@ -51,7 +51,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
                 (change)="handleCheckChange($event)"
               >
               <label class="custom-control-label" for="recurring">
-                Recurring
+              {{'INSTALLED_PRODUCTS.PRICE_TYPE_FILTER.RECURRING' | translate}}
               </label>
             </div>
           </li>
@@ -66,7 +66,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
                 (change)="handleCheckChange($event)"
               >
               <label class="custom-control-label" for="usage">
-                Usage
+              {{'INSTALLED_PRODUCTS.PRICE_TYPE_FILTER.USAGE' | translate}}
               </label>
             </div>
           </li>

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-light bg-white d-flex justify-content-between">
   <span class="navbar-brand">
-    Order {{order?.Name}}
+    {{'COMMON.ORDER' | translate}} {{order?.Name}}
   </span>
 </nav>
 
@@ -9,7 +9,7 @@
     <div class="col-12 col-md-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Billing Address</h5>
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.BILLING_ADDRESS' | translate}}</h5>
           {{order?.PrimaryContact?.FirstName}} {{order?.PrimaryContact?.LastName}}
           <apt-address [ngModel]="order?.PrimaryContact" name="billingAddress" [readonly]="true"></apt-address>
         </div>
@@ -18,7 +18,7 @@
     <div class="col-12 col-md-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Shipping Address</h5>
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.SHIPPING_ADDRESS' | translate}}</h5>
           {{order?.PrimaryContact?.FirstName}} {{order?.PrimaryContact?.LastName}}
           <apt-address [ngModel]="order?.PrimaryContact" name="shippingAddress" type="shipping" [readonly]="true"></apt-address>
         </div>
@@ -29,15 +29,15 @@
     <div class="col-12 col-md-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Payment Information</h5>
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.PAYMENT_INFO' | translate}}</h5>
           <dl>
-            <dt>Payment Type:</dt>
-            <dd>Purchase Order</dd>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.PAYMENT_TYPE' | translate}}:</dt>
+            <dd>{{'MY_ACCOUNT.ORDER_DETAIL.PURCHASE_ORDER' | translate}}</dd>
 
-            <dt>PO Number:</dt>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.PO_NUMBER' | translate}}:</dt>
             <dd>{{order?.PONumber}}</dd>
 
-            <dt>Total Amount:</dt>
+            <dt>{{'COMMON.TOTAL_AMOUNT' | translate}}:</dt>
             <dd>{{(order | OrderPricePipe | async)?.netPrice$ | async}}</dd>
           </dl>
         </div>
@@ -46,15 +46,15 @@
     <div class="col-12 col-md-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Order Summary</h5>
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_SUMMARY' | translate}}</h5>
           <dl>
-            <dt>Order Id:</dt>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_ID' | translate}}:</dt>
             <dd>{{order?.Name}}</dd>
 
-            <dt>Order Date:</dt>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_DATE' | translate}}:</dt>
             <dd>{{order?.CreatedDate | date:'short'}}</dd>
 
-            <dt>Order Status:</dt>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_STATUS' | translate}}:</dt>
             <dd>{{order?.Status}}</dd>
           </dl>
         </div>
@@ -68,9 +68,9 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Items</th>
-              <th scope="col">Your Price</th>
-              <th scope="col" class="text-center">Quantity</th>
+              <th scope="col">{{'COMMON.ITEMS' | translate}}</th>
+              <th scope="col">{{'COMMON.YOUR_PRICE' | translate}}</th>
+              <th scope="col" class="text-center">{{'COMMON.QUANTITY' | translate}}</th>
             </tr>
           </thead>
           <tbody>
@@ -83,10 +83,10 @@
                     <div class="media-body d-flex flex-column justify-content-between">
                       <div>
                         <h6 class="m-0">
-                          <a href="javascript:void(0)" [routerLink]="['/product', lineItem.Product[identifier]]">{{lineItem.Product?.Name}}</a>
+                          <a href="javascript:void(0)" [routerLink]="['/products', lineItem.Product[identifier]]">{{lineItem.Product?.Name}}</a>
                         </h6>
                         <small>
-                          <strong>Product Code:</strong>&nbsp;{{lineItem.Product.ProductCode}}
+                          <strong>{{'COMMON.PRODUCT_CODE' | translate}}:</strong>&nbsp;{{lineItem.Product.ProductCode}}
                           <!-- <a class="d-block mt-1" href="javascript:void(0)" *ngIf="lineItem.HasOptions" (click)="openModal(configurationTemplate, lineItem)">
                             <span class="oi oi-wrench mr-1"></span>Configuration
                           </a> -->
@@ -110,18 +110,18 @@
 
 <ng-template #configurationTemplate>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Product Configuration</h4>
+    <h4 class="modal-title pull-left">{{'MY_ACCOUNT.ORDER_DETAIL.PRODUCT_CONFIG' | translate}}</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <apt-product-configuration-summary [item]="selectedLineItem"></apt-product-configuration-summary>
+    <!-- <apt-product-configuration-summary [item]="selectedLineItem"></apt-product-configuration-summary> -->
   </div>
 </ng-template>
 
 <ng-template #loading>
   <div class="d-flex justify-content-center py-5">
-    <apt-md-spinner></apt-md-spinner>
+    <apt-spinner></apt-spinner>
   </div>
 </ng-template>
