@@ -24,6 +24,7 @@ export const environment: Configuration = {
   sentryDsn: '*** sentry.io url ***',
   storefront: '*** Storefront Name ****',
   expandDepth: 6,
+  hashRouting: true,
 
   // Salesforce environment variables
   organizationId: '****Salesforce Organization Id****',

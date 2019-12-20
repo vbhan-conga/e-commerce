@@ -10,6 +10,7 @@ import { RouteGuard } from './services/route.guard';
 import { ConstraintRuleGuard } from './services/constraint-rule.guard';
 import { AuthGuard } from './services/auth.guard';
 import { AboGuard } from './services/aboGuard';
+import { environment } from '../environments/environment';
 
 const routes: Routes = [
   {
@@ -92,7 +93,7 @@ const routes: Routes = [
  * @internal
  */
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'enabled' })],
+  imports: [RouterModule.forRoot(routes, { useHash: environment.hashRouting, scrollPositionRestoration: 'enabled' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
