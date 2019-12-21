@@ -23,8 +23,9 @@ export const environment: Configuration = {
   proxy: 'https://apttus-proxy.herokuapp.com',
   sentryDsn: '***sentry.io url***',
   useIndexedDB: true,
- storefront: '*** Storefront Name ****',
- expandDepth: 8,
+  storefront: '*** Storefront Name ****',
+  expandDepth: 8,
+  hashRouting: true,
 
   // Salesforce environment variables
   organizationId: '****Salesforce Organization Id****',
