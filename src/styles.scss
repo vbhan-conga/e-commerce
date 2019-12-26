@@ -117,6 +117,9 @@ a:hover, a:focus, a:active, button.btn-link:focus, button.btn-link:active, butto
  * Button styles
  */ 
 button{
+    .btn:not(.btn-link){
+        text-transform: uppercase;
+    }
     &.btn-icon{
         font-size: smaller;
     }
@@ -171,9 +174,6 @@ dl{
 /**
  * Helpers
  */
-.btn{
-  text-transform: uppercase;
-}
 .text-faded {
     opacity: 0.5;
 }

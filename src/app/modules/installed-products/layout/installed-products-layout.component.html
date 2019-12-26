@@ -1,29 +1,33 @@
 <div class="container-fluid py-4">
-  <div class="d-flex mb-2">
-    <div class="mr-auto">
-      <div class="input-group">
-        <input type="search" class="form-control" placeholder= "{{'INSTALLED_PRODUCTS.SEARCH_ASSETS' | translate}}" [(ngModel)]="searchQuery"
-          (change)="handleSearchChange()" autocomplete="off">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button">
-            <span class="oi oi-magnifying-glass p-0"></span>
-          </button>
+  <div class="row">
+    <div class="col-12 col-lg-3">
+      <div class="mr-auto">
+        <div class="input-group">
+          <input type="search" class="form-control" placeholder= "{{'INSTALLED_PRODUCTS.SEARCH_ASSETS' | translate}}" [(ngModel)]="searchQuery"
+            (change)="handleSearchChange()" autocomplete="off">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button">
+              <span class="oi oi-magnifying-glass p-0"></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <div>
-      <pagination
-        (pageChanged)="onPage($event)"
-        [totalItems]="totalItems"
-        [(ngModel)]="page"
-        [boundaryLinks]="true"
-        [itemsPerPage]="pageSize"
-        [maxSize]="5"
-        [firstText]="paginationButtonLabels.first"
-        [previousText]="paginationButtonLabels.previous"
-      [nextText]="paginationButtonLabels.next" 
-      [lastText]="paginationButtonLabels.last"
-      ></pagination>
+    <div class="col-12 col-lg-9">
+      <div class="d-flex justify-content-center">
+        <pagination
+          (pageChanged)="onPage($event)"
+          [totalItems]="totalItems"
+          [(ngModel)]="page"
+          [boundaryLinks]="true"
+          [itemsPerPage]="pageSize"
+          [maxSize]="5"
+          [firstText]="paginationButtonLabels.first"
+          [previousText]="paginationButtonLabels.previous"
+          [nextText]="paginationButtonLabels.next" 
+          [lastText]="paginationButtonLabels.last"
+        ></pagination>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -49,6 +53,20 @@
         (onSelectedAmountClick)="handleSelectedAmountClick($event)"
         (onFullListClick)="handleFullListClick()"
       ></apt-asset-list>
+      <div class="d-flex justify-content-center mt-3">
+        <pagination
+          (pageChanged)="onPage($event)"
+          [totalItems]="totalItems"
+          [(ngModel)]="page"
+          [boundaryLinks]="true"
+          [itemsPerPage]="pageSize"
+          [maxSize]="5"
+          [firstText]="paginationButtonLabels.first"
+          [previousText]="paginationButtonLabels.previous"
+          [nextText]="paginationButtonLabels.next" 
+          [lastText]="paginationButtonLabels.last"
+        ></pagination>
+      </div>
     </div>
   </div>
 </div>

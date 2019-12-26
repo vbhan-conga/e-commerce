@@ -1,4 +1,4 @@
-<apt-detail *ngIf="order$ | async as order" [context]="(isLoggedIn$ | async) ? order : null">
+<apt-detail *ngIf="order$ | async as order; else loading" [context]="(isLoggedIn$ | async) ? order : null">
   <div class="detail-header">
     <div class="d-flex align-items-center mb-2">
       <h3 class="m-0">{{order?.Name}}</h3>
@@ -56,3 +56,9 @@
       </apt-detail-section>
 
 </apt-detail>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center pt-5">
+    <apt-md-spinner></apt-md-spinner>
+  </div>
+</ng-template>

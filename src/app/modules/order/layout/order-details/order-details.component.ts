@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, flatMap, map } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { ACondition } from '@apttus/core';
 import { Order, OrderLineItem, OrderService, UserService, ItemGroup, LineItemService } from '@apttus/ecommerce';
 
 /**
@@ -33,7 +34,10 @@ export class OrderDetailsComponent implements OnInit {
     this.order$ = this.activatedRoute.params
       .pipe(
         filter(params => _.get(params, 'id') != null),
-        flatMap(params => this.orderService.get([_.get(params, 'id')])),
+        flatMap(params => this.orderService.query({
+          conditions: [new ACondition(this.orderService.type, 'Id', 'In', [_.get(params, 'id')])],
+          waitForExpansion: false
+          })),
         map(orderList => _.get(orderList, '[0]'))
       );
     this.isLoggedIn$ = this.userService.isLoggedIn();
@@ -48,7 +52,7 @@ export class OrderDetailsComponent implements OnInit {
   getTotalPromotions(order: Order): number{
     return ((_.get(order,'OrderLineItems.length') > 0)) ?_.sum(_.get(order,'OrderLineItems').map(res => res.IncentiveAdjustmentAmount)):0;
   }
-  
+
   /**
    * @ignore
    */
