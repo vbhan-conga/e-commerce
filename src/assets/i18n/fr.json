@@ -167,7 +167,9 @@
         "ASSETS": "fr_FR Assets",
         "CATEGORIES": "fr_FR Categories",
         "WRONG_INPUT": "fr_FR Category filter input must be an id or category",
-        "PRICE_RANGE": "fr_FR Price Range"
+        "PRICE_RANGE": "fr_FR Price Range",
+        "ADVANCED_FILTERS": "fr_FR Advanced Filters",
+        "ADD_CRITERIA": "fr_FR Add Criteria"
     },
     "INPUT_SELECT": {
         "FIELD_TYPE_INVALID_ERROR": "fr_FR Field value does not contain picklist or multipicklist data.",
@@ -196,6 +198,10 @@
         "LAST": "fr_FR Last"
     },
     "COMMON": {
+        "FIELD": "fr_FR Field",
+        "OPERATOR": "fr_FR Operator",
+        "VALUE": "fr_FR Value",
+        "APPLY": "fr_FR Apply",
         "ORDERS": "fr_FR Orders",
         "CARTS": "fr_FR Carts",
         "ADDRESS_BOOK": "fr_FR Address Book",
@@ -584,6 +590,9 @@
             "ONE_TIME": "fr_FR One Time",
             "RECURRING": "fr_FR Recurring",
             "USAGE": "fr_FR Usage"
+        },
+        "ASSET_ACTION_FILTER": {
+            "ASSET_ACTION": "fr_FR Asset Action"
         }
     },
     "MINI_CART": {
@@ -681,6 +690,13 @@
     "CONFIGURATION" : {
         "EMPTY" : "fr_FR This product has not been configured",
         "NO_CONFIGURATION" : "fr_FR This product does not have any configuration options"
+    },
+    "TABLE" : {
+        "SEARCH" : "fr_FR Search",
+        "SELECTED" : "fr_FR Selected",
+        "OF": "fr_FR of",
+        "PER_PAGE": "fr_FR per page",
+        "NO_DATA_TO_DISPLAY": "fr_FR No data to display"
     },
     "AOBJECTS": {
         "PROPOSALS": "fr_FR Proposals",

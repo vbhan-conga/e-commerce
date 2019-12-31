@@ -11,204 +11,204 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import "~@ng-select/ng-select/themes/default.theme.css";
 
 .px-6{
-  padding-left: 4rem;
-  padding-right: 4rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
 body{
-  overflow-y: scroll;
+    overflow-y: scroll;
 }
 .animated{
-  -webkit-animation-duration: 0.5s !important;
-  animation-duration: 0.5s !important;
+    -webkit-animation-duration: 0.5s !important;
+    animation-duration: 0.5s !important;
 }
 .dashed-border{
-  border-style: dashed;
+    border-style: dashed;
 }
 app-header{
-  nav.navbar-dark{
-    a.dropdown-toggle>span, a.header-button>span{
-      color: $white;
+    nav.navbar-dark{
+        a.dropdown-toggle>span, a.header-button>span{
+            color: $white;
+        }
     }
-  }
-  button.btn-link{
-    margin: 0;
-    padding: 0;
-  }
+    button.btn-link{
+        margin: 0;
+        padding: 0;
+    }
 }
 
 popover-container.CRPopover {
-  width: 400px;
-  max-width: 400px;
-  &.show{
-    animation: showPopover .4s ease-in forwards;
-  }
-  box-shadow: 0px 1px 4px 0px rgba(0,0,0,.24);
-  border-radius: 4px;
+    width: 400px;
+    max-width: 400px;
+    &.show{
+        animation: showPopover .4s ease-in forwards;
+    }
+    box-shadow: 0px 1px 4px 0px rgba(0,0,0,.24);
+    border-radius: 4px;
 }
 popover-container.optionPopover {
-  width: 600px;
-  max-width: 600px;
+    width: 600px;
+    max-width: 600px;
 }
 
 ngx-gallery-image{
-  background-color: $white;
-  .ngx-gallery-arrow-wrapper{
-    z-index: 100 !important;
-  }
+    background-color: $white;
+    .ngx-gallery-arrow-wrapper{
+        z-index: 100 !important;
+    }
 }
 
 typeahead-container {
-  padding-bottom: 0 !important;
-  .dropdown-item{
-    padding: 0;
-  }
+    padding-bottom: 0 !important;
+    .dropdown-item{
+        padding: 0;
+    }
 }
 
 apt-spinner.small svg{
-  height: 30px;
-  width: 30px;
+    height: 30px;
+    width: 30px;
 }
 
 apt-breadcrumb{
-  display: block;
-  padding-top: 1rem;
+    display: block;
+    padding-top: 1rem;
 }
 
 pdp-tab-options{
-  .row-filter{
-    input{
-      height: calc(1.65rem + 2px) !important;
+    .row-filter{
+        input{
+            height: calc(1.65rem + 2px) !important;
+        }
     }
-  }
 }
 
 /*
 * Icon styles
 */
 a .oi{
-  top: 0;
+    top: 0;
 }
 .oi, i{
-  &.vertical{
-    transform: rotate(90deg);
-  }
-  &.circle{
-    border-radius: 50%;
-    border: 1px solid $link-color;
-    padding: 3px 3px 2px 2px;
-    font-size: smaller;
-  }
-  &.oi-xl, &.xl{
-    font-size: 100px;
-  }
-  &.oi-lg, &.lg{
-    font-size: 24px;
-  }
-  &.oi-sm, &.sm{
-    font-size: $font-size-sm;
-  }
+    &.vertical{
+        transform: rotate(90deg);
+    }
+    &.circle{
+        border-radius: 50%;
+        border: 1px solid $link-color;
+        padding: 3px 3px 2px 2px;
+        font-size: smaller;
+    }
+    &.oi-xl, &.xl{
+        font-size: 100px;
+    }
+    &.oi-lg, &.lg{
+        font-size: 24px;
+    }
+    &.oi-sm, &.sm{
+        font-size: $font-size-sm;
+    }
 }
 
 /**
  * Table Badges
  */
 .table .badge{
-  padding: 5px 5px 7px 5px;
+    padding: 5px 5px 7px 5px;
 }
 
 /**
  * Reset anchor and button decoration
- */
+ */ 
 a:hover, a:focus, a:active, button.btn-link:focus, button.btn-link:active, button.btn-link:hover{
-  text-decoration: none;
+    text-decoration: none;
 }
 
 /**
  * Font awesome styles
  */
 button.chevron:before, button.minus:before{
-  font-family: "Font Awesome 5 Free";
-  font-weight: 400;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
 }
 /**
  * Button styles
- */
+ */ 
 button{
-  .btn:not(.btn-link){
-    text-transform: uppercase;
-  }
-  &.btn-icon{
-    font-size: smaller;
-  }
-  &.ladda-button[class*="btn-outline-"], &.ladda-button[class*="btn-link"]{
-    .ladda-spinner>div>div>div{
-      background: $primary !important;
+    .btn:not(.btn-link){
+        text-transform: uppercase;
     }
-  }
+    &.btn-icon{
+        font-size: smaller;
+    }
+    &.ladda-button[class*="btn-outline-"], &.ladda-button[class*="btn-link"]{
+        .ladda-spinner>div>div>div{
+            background: $primary !important;
+        }
+    }
 
-  &.chevron, &.minus{
-    display: flex;
-    align-items: center;
-  }
-  &.chevron[aria-expanded="true"]:before{
-    content: "\f0d7";
-    margin-right: .8rem;
-  }
-  &.chevron[aria-expanded="false"]:before{
-    content: "\f0da";
-    margin-right: .8rem;
-  }
-  &.minus[aria-expanded="true"]:before{
-    content: "\f068";
-    font-size: smaller;
-    margin-right: 5px;
-  }
-  &.minus[aria-expanded="false"]:before{
-    content: "\f067";
-    font-size: smaller;
-    margin-right: 5px;
-  }
+    &.chevron, &.minus{
+        display: flex;
+        align-items: center;
+    }
+    &.chevron[aria-expanded="true"]:before{
+        content: "\f0d7";
+        margin-right: .8rem;
+    }
+    &.chevron[aria-expanded="false"]:before{
+        content: "\f0da"; 
+        margin-right: .8rem;  
+    }
+    &.minus[aria-expanded="true"]:before{
+        content: "\f068";
+        font-size: smaller;
+        margin-right: 5px;
+    }
+    &.minus[aria-expanded="false"]:before{
+        content: "\f067";   
+        font-size: smaller;
+        margin-right: 5px;
+    }
 }
 
 /**
  * Add margin to the main section to accomodate header
- */
+ */ 
 main{
-  margin-top: $navbar-brand-height;
-  min-height: calc(100vh - #{$navbar-brand-height});
+    margin-top: $navbar-brand-height;
+    min-height: calc(100vh - #{$navbar-brand-height});
 }
 
 /**
  * Dropdown fixes
- */
+ */ 
 .dropdown-toggle::after{
-  display: none;
+    display: none;
 }
 .dropdown-menu {
-  z-index: 1500;
-  right: 0;
-  left: auto;
+    z-index: 1500;
+    right: 0;
+    left: auto;
 }
 
 .thumbnail{
-  max-width: 3rem;
-  max-height: 3rem;
+    max-width: 3rem;
+    max-height: 3rem;
 }
 
 dl{
-  dd, dt{
-    display: inline-block;
-  }
-  dt{
-    vertical-align: top;
-  }
-  dd{
-    width: 66%;
-  }
+    dd, dt{
+        display: inline-block;
+    }
+    dt{
+        vertical-align: top;
+    }
+    dd{
+        width: 66%;
+    }
 }
 
 .bs-datepicker-head {
-  background-color: $primary !important;
+    background-color: $primary !important;
 }
 
 /**
@@ -216,7 +216,7 @@ dl{
  */
 
 .text-faded {
-  opacity: 0.5;
+    opacity: 0.5;
 }
 .text-underline{
   text-decoration: underline;
@@ -225,14 +225,14 @@ dl{
   cursor: pointer;
 }
 .hide-hscroll{
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 .note-container, .attachment-container{
-  height: 35vh;
+    height: 35vh;
 }
 .form-control{
-  font-size: inherit;
+    font-size: inherit;
 }
 .collapse, .collapsing{
-  background-color: $white;
+    background-color: $white;
 }

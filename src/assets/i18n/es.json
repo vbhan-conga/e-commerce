@@ -169,7 +169,9 @@
         "ASSETS": "es_MX Assets",
         "CATEGORIES": "es_MX Categories",
         "WRONG_INPUT": "es_MX Category filter input must be an id or category",
-        "PRICE_RANGE": "es_MX Price Range"
+        "PRICE_RANGE": "es_MX Price Range",
+        "ADVANCED_FILTERS": "es_MX Advanced Filters",
+        "ADD_CRITERIA": "es_MX Add Criteria"
     },
     "INPUT_SELECT": {
         "FIELD_TYPE_INVALID_ERROR": "es_MX Field value does not contain picklist or multipicklist data.",
@@ -198,6 +200,10 @@
         "LAST": "es_MX Last"
     },
     "COMMON": {
+        "FIELD": "es_MX Field",
+        "OPERATOR": "es_MX Operator",
+        "VALUE": "es_MX Value",
+        "APPLY": "es_MX Apply",
         "ORDERS": "es_MX Orders",
         "CARTS": "es_MX Carts",
         "ADDRESS_BOOK": "es_MX Address Book",
@@ -588,6 +594,9 @@
             "ONE_TIME": "es_MX One Time",
             "RECURRING": "es_MX Recurring",
             "USAGE": "es_MX Usage"
+        },
+        "ASSET_ACTION_FILTER": {
+            "ASSET_ACTION": "es_MX Asset Action"
         }
     },
     "MINI_CART": {
@@ -683,6 +692,13 @@
     "CONFIGURATION" : {
         "EMPTY" : "es_MX This product has not been configured",
         "NO_CONFIGURATION" : "es_MX This product does not have any configuration options"
+    },
+    "TABLE" : {
+        "SEARCH" : "es_MX Search",
+        "SELECTED" : "es_MX Selected",
+        "OF": "es_MX of",
+        "PER_PAGE": "es_MX per page",
+        "NO_DATA_TO_DISPLAY": "es_MX No data to display"
     },
     "AOBJECTS": {
         "PROPOSALS": "es_MX Proposals",
