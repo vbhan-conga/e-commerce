@@ -39,7 +39,7 @@ export class InstalledProductsLayoutComponent implements OnInit {
    * Value of the asset action filter.
    */
   assetActionFilter: AFilter;
-  /**
+  /**z
    * Value of the product family field filter.
    */
   productFamilyFilter: AFilter;
