@@ -1,6 +1,6 @@
 {
-  "name": "getting-started",
-  "short_name": "getting-started",
+  "name": "ecommerce",
+  "short_name": "ecommerce",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

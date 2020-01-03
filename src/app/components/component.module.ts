@@ -14,11 +14,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ToastrModule } from 'ngx-toastr';
 
-import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSideMenuModule, IconModule, PriceModule } from '@apttus/elements';
+import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSideMenuModule, IconModule, PriceModule, DirectivesModule } from '@apttus/elements';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { AutoFocusDirective } from '../directives/auto-focus.directive';
 
 @NgModule({
   imports: [
@@ -39,21 +38,20 @@ import { AutoFocusDirective } from '../directives/auto-focus.directive';
     PriceModule,
     NgScrollbarModule,
     TooltipModule.forRoot(),
-    ToastrModule.forRoot({ onActivateTick: true })
+    ToastrModule.forRoot({ onActivateTick: true }),
+    DirectivesModule
   ],
   exports : [
     HeaderComponent,
     LaddaModule,
     FooterComponent,
-    ToastrModule,
-    AutoFocusDirective
+    ToastrModule
   ],
   declarations: [
     HeaderComponent,
     NavAccountComponent,
     FooterComponent,
-    AttachmentComponent,
-    AutoFocusDirective
+    AttachmentComponent
   ]
 })
 export class ComponentModule { }

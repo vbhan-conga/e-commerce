@@ -21,7 +21,7 @@ import { ApttusModule } from '@apttus/core';
 import { OrderDetailComponent } from './component/order-detail/order-detail.component';
 import { ReorderComponent } from './component/reorder/reorder.component';
 import { IconModule, AddressModule, PriceModule, InputQuantityModule, ProductConfigurationSummaryModule, BreadcrumbModule, InputFieldModule, OutputFieldModule, ChartModule } from '@apttus/elements';
-
+import { TableModule } from '@apttus/elements';
 
 
 @NgModule({
@@ -43,7 +43,8 @@ import { IconModule, AddressModule, PriceModule, InputQuantityModule, ProductCon
     BreadcrumbModule,
     InputFieldModule,
     OutputFieldModule,
-    ChartModule
+    ChartModule,
+    TableModule
   ],
   declarations: [MyAccountLayoutComponent, OrderListComponent, DashboardComponent, QuoteListComponent, WishlistsComponent, AddressBookComponent, SettingsComponent, CartListComponent, OrderDetailComponent, ReorderComponent],
   exports: []

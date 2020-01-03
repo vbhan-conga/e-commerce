@@ -26,7 +26,8 @@
             "INVALID_TOASTR_MESSAGE": "Promotion {{name}} is not applied.",
             "INVALID_TOASTR_TITLE": "Promotion Not Applied"
         },
-        "APPLICATION_ERROR_TOASTR_TITLE": "Application Error"
+        "APPLICATION_ERROR_TOASTR_TITLE": "Application Error",
+        "INVALID_QUANTITY": "Cannot add a quantity less than 1"
     },
     "SUCCESS": {
         "TITLE": "Success",
@@ -169,7 +170,9 @@
         "ASSETS": "Assets",
         "CATEGORIES": "Categories",
         "WRONG_INPUT": "Category filter input must be an id or category",
-        "PRICE_RANGE": "Price Range"
+        "PRICE_RANGE": "Price Range",
+        "ADVANCED_FILTERS": "Advanced Filters",
+        "ADD_CRITERIA": "Add Criteria"
     },
     "INPUT_SELECT": {
         "FIELD_TYPE_INVALID_ERROR": "Field value does not contain picklist or multipicklist data.",
@@ -198,6 +201,10 @@
         "LAST": "Last"
     },
     "COMMON": {
+        "FIELD": "Field",
+        "OPERATOR": "Operator",
+        "VALUE": "Value",
+        "APPLY": "Apply",
         "ORDERS": "Orders",
         "CARTS": "Carts",
         "ADDRESS_BOOK": "Address Book",
@@ -601,6 +608,9 @@
             "ONE_TIME": "One Time",
             "RECURRING": "Recurring",
             "USAGE": "Usage"
+        },
+        "ASSET_ACTION_FILTER": {
+            "ASSET_ACTION": "Asset Action"
         }
     },
     "MINI_CART": {
@@ -709,6 +719,13 @@
     "CONFIGURATION": {
         "EMPTY": "This product has not been configured",
         "NO_CONFIGURATION": "This product does not have any configuration options"
+    },
+    "TABLE" : {
+        "SEARCH" : "Search",
+        "SELECTED" : "Selected",
+        "OF": "of",
+        "PER_PAGE": "per page",
+        "NO_DATA_TO_DISPLAY": "No data to display"
     },
     "AOBJECTS": {
         "PROPOSALS": "Proposals",
