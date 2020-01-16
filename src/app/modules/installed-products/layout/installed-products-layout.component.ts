@@ -51,8 +51,44 @@ export class InstalledProductsLayoutComponent implements OnInit {
    * Configuration object used to configure the data filter.
    */
   advancedFilterOptions: FilterOptions = {
-    visibleFields: ['Name', 'SellingFrequency', 'StartDate', 'EndDate', 'NetPrice', 'Quantity', 'AssetStatus', 'PriceType'],
-    visibleOperators: [Operator.CONTAINS, Operator.DOES_NOT_CONTAIN, Operator.BEGINS_WITH, Operator.EQUAL, Operator.NOT_EQUAL, Operator.IN, Operator.NOT_IN, Operator.GREATER_THAN, Operator.GREATER_EQUAL, Operator.LESS_THAN, Operator.LESS_EQUAL]
+    visibleFieldsDependendOperators: [
+      {
+        field: 'Name',
+        operators: [Operator.CONTAINS, Operator.DOES_NOT_CONTAIN, Operator.BEGINS_WITH, Operator.EQUAL, Operator.NOT_EQUAL]
+      },
+      {
+        field: 'SellingFrequency',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.IN, Operator.NOT_IN]
+      },
+      {
+        field: 'StartDate',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.GREATER_THAN, Operator.GREATER_EQUAL, Operator.LESS_THAN, Operator.LESS_EQUAL]
+      },
+      {
+        field: 'EndDate',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.GREATER_THAN, Operator.GREATER_EQUAL, Operator.LESS_THAN, Operator.LESS_EQUAL]
+      },
+      {
+        field: 'NetPrice',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.GREATER_THAN, Operator.GREATER_EQUAL, Operator.LESS_THAN, Operator.LESS_EQUAL]
+      },
+      {
+        field: 'Quantity',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.GREATER_THAN, Operator.GREATER_EQUAL, Operator.LESS_THAN, Operator.LESS_EQUAL]
+      },
+      {
+        field: 'AssetStatus',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.IN, Operator.NOT_IN]
+      },
+      {
+        field: 'PriceType',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.IN, Operator.NOT_IN]
+      },
+      {
+        field: 'ProductId',
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.IN, Operator.NOT_IN]
+      }
+    ]
   };
   /**
    * Default filters that will be applied to the table and chart components.
@@ -182,7 +218,7 @@ export class InstalledProductsLayoutComponent implements OnInit {
             { prop: 'AssetStatus' },
             { prop: 'PriceType' }
           ],
-          actions: _.filter(this.massActions, action => _.includes(storefront.ABO_actions, _.get(action, 'label'))),
+          actions: _.filter(this.massActions, action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
             inCondition: new ACondition(this.assetService.type, 'BundleAssetId', 'In', []),
