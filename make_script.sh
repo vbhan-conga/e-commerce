@@ -23,7 +23,7 @@ function npm_install {
     cd $packageJSON_Folder
     rm -rf node_modules
     LOG_INFO "NPM Install"
-    npm install
+    npm install --no-package-lock
 }
 
 function npm_version_update_patch {
