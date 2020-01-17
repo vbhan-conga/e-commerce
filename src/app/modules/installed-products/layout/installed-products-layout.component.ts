@@ -221,7 +221,7 @@ export class InstalledProductsLayoutComponent implements OnInit {
           actions: _.filter(this.massActions, action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
-            inCondition: new ACondition(this.assetService.type, 'BundleAssetId', 'In', []),
+            relationshipField: 'BundleAssetId',
             childRecordFields: ['ChargeType', 'SellingFrequency', 'StartDate', 'EndDate', 'NetPrice', 'Quantity', 'AssetStatus', 'PriceType']
           } as ChildRecordOptions,
           preselectItemsInGroups: this.preselectItemsInGroups
