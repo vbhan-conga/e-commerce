@@ -32,9 +32,11 @@ function npm_version_update_patch {
     LOG_INFO "PackageJSON Folder $packageJSON_Folder"
     cd $packageJSON_Folder
     LOG_INFO "Update version"
-    git diff
     git config --global user.email 'DevOps-J2B-ibm@apttus.com'
     git config --global user.name 'ic-cicd'
+    git add .
+    git commit -m "Updating package lock [ci skip]"
+    git push origin
     npm version patch -m "Updated to patch version: %s with auto increment with Jenkins job. [ci skip]"
     git status
 }
