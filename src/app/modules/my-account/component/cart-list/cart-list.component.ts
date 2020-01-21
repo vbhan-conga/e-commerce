@@ -7,7 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable, Subscription, of } from 'rxjs';
 import * as _ from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
-import { take, mergeMap } from 'rxjs/operators';
+import { take, mergeMap, map } from 'rxjs/operators';
 
 /**
  * Cart list Component loads and shows all the carts for logged in user.
@@ -75,7 +75,7 @@ export class CartListComponent implements OnInit, OnDestroy {
         label: 'Set Active',
         theme: 'primary',
         validate: (record: Cart) => this.canActivate(this.currentCart, record),
-        action: (recordList: Array<Cart>) => _.forEach(recordList, (cart) => this.setCartActive(cart))
+        action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList)).pipe(map(cart => null))
       } as TableAction,
       {
         enabled: true,
@@ -84,7 +84,7 @@ export class CartListComponent implements OnInit, OnDestroy {
         label: 'Delete',
         theme: 'danger',
         validate: (record: Cart) => this.canDelete(record),
-        action: (recordList: Array<Cart>) => _.forEach(recordList, (cart) => this.deleteCart(cart))
+        action: (recordList: Array<Cart>) => this.cartService.deleteCarts(recordList).pipe(map(res => null))
       } as TableAction
     ],
     highlightRow: (record: Cart) => of(this.isCartActive(this.currentCart, record))
@@ -134,28 +134,6 @@ export class CartListComponent implements OnInit, OnDestroy {
     this.cart = new Cart();
     this.message = null;
     this.modalRef = this.modalService.show(template);
-  }
-
-  /**
-   * Deletes given cart for logged in user.
-   * @param cart Cart to delete.
-   */
-  deleteCart(cart: Cart) {
-    this.subscriptions.push(this.cartService.deleteCart(cart).subscribe(
-      res => { _.set(cart, '_metadata.state', 'ready'); },
-      err => { _.set(cart, '_metadata.state', 'ready'); }
-    ));
-  }
-
-  /**
-   * Sets given cart to active state.
-   * @param cart Cart that needs to be Active.
-   */
-  setCartActive(cart: Cart) {
-    this.subscriptions.push(this.cartService.setCartActive(cart).subscribe(
-      res => { _.set(cart, '_metadata.state', 'ready'); },
-      err => { _.set(cart, '_metadata.state', 'ready'); }
-    ));
   }
 
   /**
