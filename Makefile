@@ -51,7 +51,7 @@ npm-install: configure-npm
 
 npm-version-update-patch:
 	$(call check_var_defined,$(BUILD_NUMBER),BUILD_NUMBER)
-	@source make_script.sh; npm_version_update_patch $(PACKAGEJSON_FOLDERPATH) $(AIC_SSH_KEY_LOCATION) $(GIT_BRANCH)
+	@source make_script.sh; npm_version_update_patch $(PACKAGEJSON_FOLDERPATH)
 
 build-package:
 	@echo "$(INFO) executing the package command: $(PACKAGE_CMD)"
