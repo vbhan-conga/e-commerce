@@ -1,8 +1,31 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/app",
-    "types": []
+    "outDir": "./out-tsc/app",
+    "types": [],
+    "paths": {
+      "@apttus/core": [
+        "../core/resources/projects/apttus/core/src/public_api.ts"
+      ],
+      "@apttus/core/*": [
+        "../core/resources/projects/apttus/core/src/public_api.ts"
+      ],
+      "@apttus/ecommerce": [
+        "../core/resources/projects/apttus/ecommerce/src/public_api.ts"
+      ],
+      "@apttus/ecommerce/*": [
+        "../core/resources/projects/apttus/ecommerce/src/public_api.ts"
+      ],
+      "@apttus/elements": [
+        "../core/resources/projects/apttus/elements/src/public_api.ts"
+      ],
+      "@apttus/elements/*": [
+        "../core/resources/projects/apttus/elements/src/public_api.ts"
+      ],
+      "*": [
+        "./node_modules/*"
+      ]
+    }
   },
   "files": [
     "src/main.ts",
