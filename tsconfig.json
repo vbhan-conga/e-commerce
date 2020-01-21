@@ -16,14 +16,6 @@
     "lib": [
       "es2017",
       "dom"
-    ],
-    "paths" : {
-      "jsforce": [
-        "./node_modules/jsforce/build/jsforce.min.js"
-      ],
-      "jsforce/*": [
-        "./node_modules/jsforce/*"
-      ]
-    }
+    ]
   }
 }
