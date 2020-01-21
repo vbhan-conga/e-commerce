@@ -36,7 +36,7 @@ function npm_version_update_patch {
     git config --global user.name 'ic-cicd'
     git add .
     git commit -m "Updating package lock [ci skip]"
-    git push origin
+    git push origin HEAD:master
     npm version patch -m "Updated to patch version: %s with auto increment with Jenkins job. [ci skip]"
     git status
 }
