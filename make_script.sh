@@ -36,7 +36,8 @@ function npm_version_update_patch {
     git config --global user.name 'ic-cicd'
     git add .
     git commit -m "Updating package lock [ci skip]"
-    GIT_SSH_COMMAND="ssh  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${AIC_SSH_KEY_LOCATION}" git push origin HEAD:${branch}
+    LOG INFO ${branch}
+    GIT_SSH_COMMAND="ssh  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${AIC_SSH_KEY_LOCATION}" git push origin master
     npm version patch -m "Updated to patch version: %s with auto increment with Jenkins job. [ci skip]"
     git status
 }
