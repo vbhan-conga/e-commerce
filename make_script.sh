@@ -29,17 +29,11 @@ function npm_install {
 
 function npm_version_update_patch {
     packageJSON_Folder=${1}
-    AIC_SSH_KEY_LOCATION=${2}
-    branch=${3}
     LOG_INFO "PackageJSON Folder $packageJSON_Folder"
     cd $packageJSON_Folder
     LOG_INFO "Update version"
     git config --global user.email 'DevOps-J2B-ibm@apttus.com'
     git config --global user.name 'ic-cicd'
-    git add .
-    git commit -m "Updating package lock [ci skip]"
-    LOG_INFO ${branch}
-    GIT_SSH_COMMAND="ssh  -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${AIC_SSH_KEY_LOCATION}" git push origin HEAD:${branch}
     npm version patch -m "Updated to patch version: %s with auto increment with Jenkins job. [ci skip]"
     git status
 }
