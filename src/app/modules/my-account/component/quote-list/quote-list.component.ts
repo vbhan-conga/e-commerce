@@ -65,9 +65,15 @@ export class QuoteListComponent implements OnInit {
         return {
           total: _.get(aggregateData, 'total_records', _.sumBy(aggregateData, 'total_records')),
           totalAmount: _.get(aggregateData, 'SUM_Grand_Total', _.sumBy(aggregateData, 'SUM_Grand_Total')),
+
+          amountsByStatus: _.isArray(aggregateData)
+          ? _.omit(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'SUM_Grand_Total')), 'null')
+          : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(aggregateData, 'SUM_Grand_Total'))),
+
           quotesByStatus: _.isArray(aggregateData)
             ? _.omit(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'total_records')), 'null')
             : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(aggregateData, 'total_records'))),
+
           quotesByDueDate: _.isArray(aggregateData)
             ? _.omit(_.mapKeys(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c'), s => _.sumBy(s, 'total_records')), _.bind(this.generateLabels, this)), 'null')
             : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c')], key => _.get(aggregateData, 'total_records')))

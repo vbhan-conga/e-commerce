@@ -8,7 +8,7 @@
         <strong class="text-uppercase d-block">{{'MY_ACCOUNT.QUOTE_DETAIL.QUOTES_BY_STATUS' | translate}}</strong>
       </div>
       <div class="card-body border border-top-0">
-        <apt-chart [data]="aggregateData.quotesByStatus" [type]="'bar'" [amountsByStatus]="amountsByStatus" [showLegend]="false"></apt-chart>
+        <apt-chart [data]="aggregateData.quotesByStatus" [type]="'bar'" [amountsByStatus]="aggregateData.amountsByStatus" [showLegend]="false"></apt-chart>
       </div>
     </div>
     <div class="col-12 col-md-6">
