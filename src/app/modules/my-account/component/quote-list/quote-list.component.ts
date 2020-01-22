@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { QuoteService, Quote, CartService, PriceService } from '@apttus/ecommerce';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { QuoteActions } from './quote-actions.component';
 import { Router } from '@angular/router';
 import { ACondition, APageInfo, ASort } from '@apttus/core';
@@ -18,7 +18,7 @@ import * as _ from 'lodash';
   templateUrl: './quote-list.component.html',
   styleUrls: ['./quote-list.component.scss']
 })
-export class QuoteListComponent implements OnInit, OnDestroy {
+export class QuoteListComponent implements OnInit {
   /**
    * The current page used by the pagination component.
    */
@@ -33,15 +33,12 @@ export class QuoteListComponent implements OnInit, OnDestroy {
    */
   quoteList$: Observable<Array<Quote>>;
   quote: Quote = new Quote();
-  quoteAggregate: any;
-  quotesByStatus: Object;
-  amountsByStatus: Object;
-  quotesByDueDate: Object;
-  totalQuoteAmount: number = 0;
-  subscriptions: Array<Subscription> = [];
+  aggregateData$: Observable<QuoteListView>;
+  quotesByStatus$: Observable<Object>;
+  quotesByDueDate$: Observable<Object>;
+  minDaysFromDueDate: number = 7;
+  maxDaysFromDueDate: number = 14;
   actionConfiguration: object;
-  minDaysFromDueDate: number;
-  maxDaysFromDueDate: number;
   colorPalette: Array<String> = [];
   /** @ignore */
   paginationButtonLabels: any = {
@@ -59,33 +56,24 @@ export class QuoteListComponent implements OnInit, OnDestroy {
   /** @ignore */
   ngOnInit() {
     this.loadQuotes(this.currentPage);
-    this.quoteService.aggregate([new ACondition(Quote, 'Id', 'NotNull', null)]).pipe(take(1)).subscribe(res => this.quoteAggregate = res);
-    this.subscriptions.push(this.quoteService.where([new ACondition(this.quoteService.type,'Id','NotNull',null)]).subscribe((res: Array<Quote>) => {
-      const quoteListData = res;
-      this.totalQuoteAmount = 0;
-      this.quotesByStatus = {};
-      this.amountsByStatus = {};
-      this.quotesByDueDate = {};
-      this.colorPalette = [];
-      _.filter(quoteListData, 'QuoteLineItems').map(quote => {
-        this.totalQuoteAmount += _.sum(_.filter(_.get(quote, 'QuoteLineItems'),lineItem => (lineItem.LineType === 'Product/Service' || lineItem.LineType === 'Misc')).map(res => (res.NetPrice) ? res.NetPrice : 0));
-      });
-      if(quoteListData){
-        _.filter(quoteListData, 'QuoteLineItems').forEach(quote => {
-          if (_.isNil(this.amountsByStatus[_.get(quote, 'Approval_Stage')])) this.amountsByStatus[_.get(quote, 'Approval_Stage')] = 0;
-          this.amountsByStatus[_.get(quote, 'Approval_Stage')] += _.sum(_.filter(_.get(quote, 'QuoteLineItems'), lineItem => (lineItem.LineType === 'Product/Service' || lineItem.LineType === 'Misc')).map(q => (q.NetPrice) ? q.NetPrice : 0));
-        });
-        quoteListData.map(r => r['Approval_Stage']).forEach(a => this.quotesByStatus[a] = (!this.quotesByStatus[a]) ? 1 : this.quotesByStatus[a] + 1);
-        quoteListData.map(r => {
-          let res = this.generateLabels(r['RFP_Response_Due_Date']);
-          if(!this.quotesByDueDate[res]){
-            this.quotesByDueDate[res] = 1;
-            this.loadPalette(res);
-          }
-          else this.quotesByDueDate[res] = this.quotesByDueDate[res] + 1;
-        });
-      }
-    }));
+    this.aggregateData$ = this.quoteService.query({
+      aggregate: true,
+      groupBy: ['Approval_Stage', 'RFP_Response_Due_Date']
+    })
+    .pipe(
+      map(aggregateData => {
+        return {
+          total: _.get(aggregateData, 'total_records', _.sumBy(aggregateData, 'total_records')),
+          totalAmount: _.get(aggregateData, 'SUM_Grand_Total', _.sumBy(aggregateData, 'SUM_Grand_Total')),
+          quotesByStatus: _.isArray(aggregateData)
+            ? _.omit(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'total_records')), 'null')
+            : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(aggregateData, 'total_records'))),
+          quotesByDueDate: _.isArray(aggregateData)
+            ? _.omit(_.mapKeys(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c'), s => _.sumBy(s, 'total_records')), _.bind(this.generateLabels, this)), 'null')
+            : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c')], key => _.get(aggregateData, 'total_records')))
+        };
+      })
+    );
     this.translateService.stream('PAGINATION').subscribe((val: string) => {{}
       this.paginationButtonLabels.first = val['FIRST'];
       this.paginationButtonLabels.previous = val['PREVIOUS'];
@@ -107,16 +95,21 @@ export class QuoteListComponent implements OnInit, OnDestroy {
 
 /**@ignore
  */
-  generateLabels(date): string{
+  generateLabels(date): string {
     const today = moment(new Date());
     const dueDate = (date) ? moment(date) : null;
-      if(dueDate && dueDate.diff(today,'days') < this.minDaysFromDueDate ) {
-        return '< '+ this.minDaysFromDueDate +' Days';
-      }
-      else if (dueDate && dueDate.diff(today,'days') > this.minDaysFromDueDate && dueDate.diff(today,'days') < this.maxDaysFromDueDate) {
-        return '< '+ this.maxDaysFromDueDate + ' Days';
-      }
-      else return '> ' + this.maxDaysFromDueDate +' Days';
+    if (dueDate && dueDate.diff(today, 'days') < this.minDaysFromDueDate) {
+      if (!_.includes(this.colorPalette, 'rgba(208, 2, 27, 1)')) this.colorPalette.push('rgba(208, 2, 27, 1)');
+      return '< ' + this.minDaysFromDueDate + ' Days';
+    }
+    else if (dueDate && dueDate.diff(today, 'days') > this.minDaysFromDueDate && dueDate.diff(today, 'days') < this.maxDaysFromDueDate) {
+      if (!_.includes(this.colorPalette, 'rgba(245, 166, 35, 1)')) this.colorPalette.push('rgba(245, 166, 35, 1)');
+      return '< ' + this.maxDaysFromDueDate + ' Days';
+    }
+    else {
+      if (!_.includes(this.colorPalette, 'rgba(43, 180, 39, 1)')) this.colorPalette.push('rgba(43, 180, 39, 1)');
+      return '> ' + this.maxDaysFromDueDate + ' Days';
+    }
   }
   /** @ignore */
   downloadPdf(){
@@ -154,23 +147,12 @@ export class QuoteListComponent implements OnInit, OnDestroy {
   send(){
 
   }
-  /**
-   * @ignore
-   */
-  loadPalette(res){
-    switch(res) {
-      case '< '+ this.minDaysFromDueDate +' Days':
-      this.colorPalette.push('rgba(208, 2, 27, 1)');
-      break;
-      case '< '+ this.maxDaysFromDueDate +' Days':
-      this.colorPalette.push('rgba(245, 166, 35, 1)');
-      break;
-      case '> '+ this.maxDaysFromDueDate +' Days':
-      this.colorPalette.push('rgba(43, 180, 39, 1)');
-      break;
-    }
-  }
-  ngOnDestroy(){
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
+}
+
+/** @ignore */
+export interface QuoteListView {
+  total: number;
+  totalAmount: number;
+  quotesByStatus: object;
+  quotesByDueDate: object;
 }
