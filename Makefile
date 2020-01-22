@@ -61,7 +61,7 @@ execute-custom-cmd:
 	@echo "$(INFO) executing the custom build and package command: $(PACKAGE_CMD)"
 	@source make_script.sh; execute_custom_cmd $(PACKAGEJSON_FOLDERPATH) "$(PACKAGE_CMD)"
 
-create-npm-package: 
+create-npm-package:
 	@source make_script.sh; create_npm_package $(PACKAGEJSON_FOLDERPATH) $(PACKAGE_NAME) "$(PACKAGE_PATH)"
 
 publish-npm-package: | check-build-defined
