@@ -22,8 +22,11 @@ function npm_install {
     LOG_INFO "PackageJSON Folder $packageJSON_Folder"
     cd $packageJSON_Folder
     rm -rf node_modules
+    LOG_INFO "Update NPM"
+    npm install -g npm
+    LOG_INFO "Set Registry"
+    npm config set registry https://registry.npmjs.com/
     LOG_INFO "NPM Install"
-    npm view google-closure-compiler version
     npm install
 }
 
