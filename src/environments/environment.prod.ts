@@ -24,7 +24,7 @@ export const environment: Configuration = {
   useIndexedDB: true,
   expandDepth: 8,
   hashRouting: true,
-
+  packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'D-Commerce',
   organizationId: '00D3I0000008n7g',
