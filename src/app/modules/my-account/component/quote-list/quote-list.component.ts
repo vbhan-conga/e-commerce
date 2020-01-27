@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QuoteService, Quote, CartService, PriceService } from '@apttus/ecommerce';
 import { Observable } from 'rxjs';
 import { QuoteActions } from './quote-actions.component';
 import { Router } from '@angular/router';
-import { ACondition, APageInfo, ASort } from '@apttus/core';
+import { ACondition, AFilter } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
 import { take, map, flatMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { TableOptions } from '@apttus/elements';
 
 /** @ignore */
 /**
@@ -19,34 +20,50 @@ import * as _ from 'lodash';
   styleUrls: ['./quote-list.component.scss']
 })
 export class QuoteListComponent implements OnInit {
-  /**
-   * The current page used by the pagination component.
-   */
-  currentPage: number = 1;
-  /**
-   * Number of records per page used by the pagination component.
-   */
-  limit: number = 10;
 
+  type = Quote;
+
+  tableOptions: TableOptions = {
+    columns: [
+      {
+        prop: 'Name'
+      },
+      {
+        prop: 'Proposal_Name'
+      },
+      {
+        prop: 'Approval_Stage'
+      },
+      {
+        prop: 'PriceListId'
+      },
+      {
+        prop: 'Grand_Total'
+      },
+      {
+        prop: 'ExpectedStartDate'
+      },
+      {
+        prop: 'ExpectedEndDate'
+      },
+      {
+        prop: 'LastModifiedDate'
+      }
+    ]
+  };
   /**
    * Array of quotes for current page number.
    */
   quoteList$: Observable<Array<Quote>>;
   quote: Quote = new Quote();
-  aggregateData$: Observable<QuoteListView>;
+  view$: Observable<QuoteListView>;
   quotesByStatus$: Observable<Object>;
   quotesByDueDate$: Observable<Object>;
   minDaysFromDueDate: number = 7;
   maxDaysFromDueDate: number = 14;
   actionConfiguration: object;
-  colorPalette: Array<String> = [];
-  /** @ignore */
-  paginationButtonLabels: any = {
-    first: '',
-    previous: '',
-    next: '',
-    last: ''
-  };
+  colorPalette: Array<String> = ['#D22233', '#F2A515', '#6610f2', '#008000', '#17a2b8', '#0079CC', '#CD853F', '#6f42c1', '#20c997', '#fd7e14'];
+  filterList: Array<AFilter> = [];
 
   /** @ignore */
   constructor(private quoteService: QuoteService, private cartService: CartService, private router: Router, private translateService: TranslateService, private priceService: PriceService) {
@@ -55,48 +72,38 @@ export class QuoteListComponent implements OnInit {
 
   /** @ignore */
   ngOnInit() {
-    this.loadQuotes(this.currentPage);
-    this.aggregateData$ = this.quoteService.query({
-      aggregate: true,
-      groupBy: ['Approval_Stage', 'RFP_Response_Due_Date']
-    })
-    .pipe(
-      map(aggregateData => {
-        return {
-          total: _.get(aggregateData, 'total_records', _.sumBy(aggregateData, 'total_records')),
-          totalAmount: _.get(aggregateData, 'SUM_Grand_Total', _.sumBy(aggregateData, 'SUM_Grand_Total')),
-
-          amountsByStatus: _.isArray(aggregateData)
-          ? _.omit(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'SUM_Grand_Total')), 'null')
-          : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(aggregateData, 'SUM_Grand_Total'))),
-
-          quotesByStatus: _.isArray(aggregateData)
-            ? _.omit(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'total_records')), 'null')
-            : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(aggregateData, 'total_records'))),
-
-          quotesByDueDate: _.isArray(aggregateData)
-            ? _.omit(_.mapKeys(_.mapValues(_.groupBy(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c'), s => _.sumBy(s, 'total_records')), _.bind(this.generateLabels, this)), 'null')
-            : _.zipObject([_.get(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c')], _.map([_.get(aggregateData, 'Apttus_Proposal__RFP_Response_Due_Date__c')], key => _.get(aggregateData, 'total_records')))
-        };
-      })
-    );
-    this.translateService.stream('PAGINATION').subscribe((val: string) => {{}
-      this.paginationButtonLabels.first = val['FIRST'];
-      this.paginationButtonLabels.previous = val['PREVIOUS'];
-      this.paginationButtonLabels.next = val['NEXT'];
-      this.paginationButtonLabels.last = val['LAST'];
-   });
+    this.loadViewData();
   }
 
-  /**
-   * Loads quotes for logged in user by current page number.
-   * @param page Current page number used by pagination component.
-   */
-  loadQuotes(page){
-    this.minDaysFromDueDate = 7;
-    this.maxDaysFromDueDate = 14;
-    // this.quoteList$ = this.quoteService.getMyQuotes(null, this.limit, page);
-    this.quoteList$ = this.quoteService.where(null, 'AND', null, [new ASort(this.quoteService.type, 'CreatedDate', 'DESC')], new APageInfo(this.limit, page));
+  loadViewData() {
+    this.view$ = this.quoteService.query({
+      aggregate: true,
+      groupBy: ['Approval_Stage', 'RFP_Response_Due_Date'],
+      filters: this.filterList
+    })
+    .pipe(
+      map(data => {
+        return {
+          tableOptions: _.clone(_.assign(this.tableOptions, {filters: this.filterList})),
+          total: _.get(data, 'total_records', _.sumBy(data, 'total_records')),
+          totalAmount: _.get(data, 'SUM_Grand_Total', _.sumBy(data, 'SUM_Grand_Total')),
+          amountsByStatus: _.isArray(data)
+          ? _.omit(_.mapValues(_.groupBy(data, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'SUM_Grand_Total')), 'null')
+          : _.zipObject([_.get(data, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(data, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(data, 'SUM_Grand_Total'))),
+          quotesByStatus: _.isArray(data)
+            ? _.omit(_.mapValues(_.groupBy(data, 'Apttus_Proposal__Approval_Stage__c'), s => _.sumBy(s, 'total_records')), 'null')
+            : _.zipObject([_.get(data, 'Apttus_Proposal__Approval_Stage__c')], _.map([_.get(data, 'Apttus_Proposal__Approval_Stage__c')], key => _.get(data, 'total_records'))),
+          quotesByDueDate: _.isArray(data)
+            ? _.omit(_.mapKeys(_.mapValues(_.groupBy(data, 'Apttus_Proposal__RFP_Response_Due_Date__c'), s => _.sumBy(s, 'total_records')), _.bind(this.generateLabels, this)), 'null')
+            : _.zipObject([_.get(data, 'Apttus_Proposal__RFP_Response_Due_Date__c')], _.map([_.get(data, 'Apttus_Proposal__RFP_Response_Due_Date__c')], key => _.get(data, 'total_records')))
+        } as QuoteListView;
+      })
+    );
+  }
+  /** @ignore */
+  handleFilterListChange(event: any) {
+    this.filterList = event;
+    this.loadViewData();
   }
 
 /**@ignore
@@ -157,6 +164,7 @@ export class QuoteListComponent implements OnInit {
 
 /** @ignore */
 export interface QuoteListView {
+  tableOptions: TableOptions;
   total: number;
   totalAmount: number;
   quotesByStatus: object;
