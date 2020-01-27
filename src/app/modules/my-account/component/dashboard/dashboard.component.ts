@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import * as Chart from 'chart.js';
-import { OrderService, PriceService, Price, LocalCurrencyPipe, Quote, Order, UserService, User } from '@apttus/ecommerce';
-import { AObject, ACondition } from '@apttus/core';
+import { Component, OnInit } from '@angular/core';
+import { OrderService, PriceService, LocalCurrencyPipe, Order, UserService, User } from '@apttus/ecommerce';
+import { ACondition, AFilter } from '@apttus/core';
 import { Observable, combineLatest } from 'rxjs';
 import * as _ from 'lodash';
 import { map } from 'rxjs/operators';
+import { TableOptions } from '@apttus/elements';
 
 /**
  * This component is for Apttus-ecommerce dashboard. This gives you glimpse of orders, quotes and total spending done for logged in user profile.
@@ -14,36 +14,25 @@ import { map } from 'rxjs/operators';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
-  @ViewChild('quoteChart', { static: false }) quoteChart: ElementRef;
-  @ViewChild('orderChart', { static: false }) orderChart: ElementRef;
+export class DashboardComponent implements OnInit {
+  type = Order;
+  view$: Observable<DashboardView>;
+  colorPalette = ['#D22233', '#F2A515', '#6610f2', '#008000', '#17a2b8', '#0079CC', '#CD853F', '#6f42c1', '#20c997', '#fd7e14'];
 
-  /**
-   * Number of order count for logged in user.
-   */
-  orderCount: number = 0;
-  /**
-   * Number of quote count for logged in user.
-   */
-  quoteCount: number = 0;
-  /**
-   * List of order for logged in user. -Array of order.
-   */
-  orderList: Array<Order>;
-  /**
-   * List of order for logged in user. -Array of quote.
-   */
-  quoteList: Array<Quote>;
-  /**
-   * Total spending done by logged-in user.
-   */
-  spent: Price;
-  /**
-   * Any current subscription availed by logged in user.
-   */
-  subscription: any;
-  user$: Observable<User>;
-  order: Order = new Order();
+  tableOptions: TableOptions = {
+    columns: [
+      {
+        prop: 'Name'
+      },
+      {
+        prop: 'OrderAmount'
+      },
+      {
+        prop: 'CreatedDate'
+      }
+    ],
+    filters: [new AFilter(Order, [new ACondition(Order, 'CreatedDate', 'LastXDays', 7)])]
+  };
 
   /**
   * @ignore
@@ -54,64 +43,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
   * @ignore
   */
   ngOnInit() {
-    this.user$ = this.userService.me();
-    this.spent = new Price(this.localCurrencyPipe);
-    this.subscription = combineLatest(
-        // this.quoteService.getMyQuotes(),
-        this.orderService.getMyOrders(),
-        this.orderService.aggregate([new ACondition(Order, 'CreatedDate', 'LastXDays', 7)]),
-        // this.quoteService.aggregate([new ACondition(Quote, 'CreatedDate', 'LastXDays', 7)]).map(res => res[0])
-    ).subscribe(([orders, ag1]) => {
-      this.orderList = orders;
-      // this.quoteList = quotes;
-      // this.renderPieWithData(this.quoteChart, quotes, 'Approval_Stage');
-      this.renderPieWithData(this.orderChart, orders, 'Status');
-      this.orderCount = _.get(ag1, 'total_records', 0);
-      // this.quoteCount = _.get(ag2, '[0].total_records', 0);
-
-      const orderPriceList$ = [];
-      orders.forEach(order => orderPriceList$.push(this.priceService.getOrderPrice(order)));
-      combineLatest(orderPriceList$).subscribe(prices => {
-        prices.forEach(price => this.spent.addPrice(price as Price));
-      });
-
-    });
+    this.view$ = combineLatest(
+      this.userService.me(),
+      this.orderService.query({
+        aggregate: true,
+        conditions: [new ACondition(Order, 'CreatedDate', 'LastXDays', 7)],
+        groupBy: ['Status']
+      }),
+      this.orderService.query({
+        aggregate: true
+      })
+    ).pipe(
+      map(([user, recentOrders, agg]) => {
+        console.log(user);
+        return {
+          user: user,
+          tableOptions: this.tableOptions,
+          recentOrders: _.isArray(recentOrders)
+          ? _.sumBy(recentOrders, order => _.get(order, 'total_records'))
+          : _.get(recentOrders, 'total_records'),
+          totalAmount: _.get(agg, 'SUM_OrderAmount'),
+          orderAmountByStatus: _.isArray(recentOrders)
+            ? _.omit(_.mapValues(_.groupBy(recentOrders, 'Apttus_Config2__Status__c'), s => _.sumBy(s, 'SUM_OrderAmount')), 'null')
+            : _.zipObject([_.get(recentOrders, 'Apttus_Config2__Status__c')], _.map([_.get(recentOrders, 'Apttus_Config2__Status__c')], key => _.get(recentOrders, 'SUM_OrderAmount')))
+        } as DashboardView;
+      })
+    );
   }
+}
 
-  /**
-  * @ignore
-  */
-  ngOnDestroy(){
-    if (this.subscription && this.subscription.unsubscribe){
-      this.subscription.unsubscribe();
-    }
-  }
-
-  /**
-   * @ignore
-   */
-  renderPieWithData(element: ElementRef, records: Array<AObject>, field: string){
-    const data = {};
-    records.map(r => r[field]).forEach(a => data[a] = (!data[a]) ? 1 : data[a] + 1);
-    const myDoughnutChart = new Chart(element.nativeElement, {
-      type: 'doughnut',
-      data: {
-        datasets: [
-          {
-            data: Object.values(data) as Array<number> | Array<Chart.ChartPoint>,
-            backgroundColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ]
-          }
-        ],
-        labels: Object.keys(data)
-      }
-    });
-  }
-
+/** @ignore */
+interface DashboardView {
+  user: User;
+  tableOptions: TableOptions;
+  recentOrders: number;
+  totalAmount: number;
+  orderAmountByStatus: object;
 }

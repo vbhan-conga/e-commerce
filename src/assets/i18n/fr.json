@@ -291,7 +291,8 @@
         "OPTION_TOTAL": "fr_FR Option Total",
         "ITEMIZED_OPTIONS": "fr_FR Itemized Options",
         "NO_DATA": "fr_FR n/a",
-        "CHECKOUT": "fr_FR Checkout"
+        "CHECKOUT": "fr_FR Checkout",
+        "TOTAL_ORDERS": "fr_FR Total Orders"
     },
     "CREATE_QUOTE": {
         "QUOTE_SUMMARY": "fr_FR QUOTE SUMMARY",
