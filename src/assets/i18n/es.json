@@ -295,7 +295,8 @@
         "OPTION_TOTAL": "es_MX Option Total",
         "ITEMIZED_OPTIONS": "es_MX Itemized Options",
         "NO_DATA": "es_MX n/a",
-        "CHECKOUT": "es_MX Checkout"
+        "CHECKOUT": "es_MX Checkout",
+        "TOTAL_ORDERS": "es_MX Total Orders"
     },
     "CREATE_QUOTE":{
         "QUOTE_SUMMARY": "es_MX QUOTE SUMMARY",
