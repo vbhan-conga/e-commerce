@@ -51,7 +51,7 @@ export class InstalledProductsLayoutComponent implements OnInit {
    * Configuration object used to configure the data filter.
    */
   advancedFilterOptions: FilterOptions = {
-    visibleFieldsDependendOperators: [
+    visibleFieldsWithOperators: [
       {
         field: 'Name',
         operators: [Operator.CONTAINS, Operator.DOES_NOT_CONTAIN, Operator.BEGINS_WITH, Operator.EQUAL, Operator.NOT_EQUAL]
