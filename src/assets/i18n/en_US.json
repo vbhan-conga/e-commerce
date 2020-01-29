@@ -302,7 +302,8 @@
         "OPTION_TOTAL": "Option Total",
         "ITEMIZED_OPTIONS": "Itemized Options",
         "NO_DATA": "n/a",
-        "CHECKOUT": "Checkout"
+        "CHECKOUT": "Checkout",
+        "TOTAL_ORDERS": "Total Orders"
     },
     "CREATE_QUOTE": {
         "QUOTE_SUMMARY": "QUOTE SUMMARY",
