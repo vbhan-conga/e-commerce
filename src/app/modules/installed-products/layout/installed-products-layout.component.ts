@@ -86,7 +86,7 @@ export class InstalledProductsLayoutComponent implements OnInit {
       },
       {
         field: 'ProductId',
-        operators: [Operator.EQUAL, Operator.NOT_EQUAL, Operator.IN, Operator.NOT_IN]
+        operators: [Operator.EQUAL, Operator.NOT_EQUAL]
       }
     ]
   };
