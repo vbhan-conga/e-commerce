@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ParamMap, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Product, CartItem, ProductService, CartItemService, ConstraintRuleService } from '@apttus/ecommerce';
-import { Observable, combineLatest, zip, BehaviorSubject, Subscription } from 'rxjs';
+import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import {
+  Product,
+  CartItem,
+  ProductService,
+  CartItemService,
+  ConstraintRuleService,
+  StorefrontService, Storefront
+} from '@apttus/ecommerce';
+import { Observable, zip, BehaviorSubject, Subscription } from 'rxjs';
 import { take, map, tap, filter } from 'rxjs/operators';
 import { ACondition } from '@apttus/core';
 import * as _ from 'lodash';
@@ -10,7 +17,11 @@ import * as _ from 'lodash';
     providedIn: 'root'
 })
 export class ProductDetailsResolver implements Resolve<any> {
-    constructor(private productService: ProductService, private cartItemService: CartItemService, private crService: ConstraintRuleService, private router: Router) { }
+    constructor(private productService: ProductService,
+                private cartItemService: CartItemService,
+                private crService: ConstraintRuleService,
+                private router: Router,
+                private storefrontService: StorefrontService) { }
 
     private subject: BehaviorSubject<ProductDetailsState> = new BehaviorSubject<ProductDetailsState>(null);
     private subscription: Subscription;
@@ -30,13 +41,15 @@ export class ProductDetailsResolver implements Resolve<any> {
                 conditions: [new ACondition(CartItem, 'Id', 'In', [_.get(routeParams, 'params.cartItem')])],
                 skipCache: true
             }),
-            this.crService.getRecommendationsForProducts([_.get(routeParams, 'params.id')])
+            this.crService.getRecommendationsForProducts([_.get(routeParams, 'params.id')]),
+            this.storefrontService.getStorefront(),
         ).pipe(
-            map(([productList, cartitemList, rProductList]) => {
+            map(([productList, cartitemList, rProductList, storefront]) => {
                 return {
                     product: _.first(productList),
                     recommendedProducts: rProductList,
-                    relatedTo: _.first(cartitemList)
+                    relatedTo: _.first(cartitemList),
+                    storefront: storefront
                 };
             })
         ).subscribe(r => this.subject.next(r));
@@ -69,4 +82,8 @@ export interface ProductDetailsState {
      * The CartItem related to this product.
      */
     relatedTo: CartItem;
+    /**
+     * The storefront.
+     */
+    storefront: Storefront;
 }
