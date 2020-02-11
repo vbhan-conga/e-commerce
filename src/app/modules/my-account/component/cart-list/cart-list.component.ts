@@ -22,7 +22,6 @@ export class CartListComponent implements OnInit, OnDestroy {
   /**
    * All carts for logged in user.
    */
-  cartList$: Observable<Array<Cart>>;
   currentCart$: Observable<Cart>;
   modalRef: BsModalRef;
   message: string;
@@ -116,14 +115,6 @@ export class CartListComponent implements OnInit, OnDestroy {
     this.currentCart$ = this.cartService.getMyCart();
     this.subscriptions.push(this.currentCart$.subscribe((currCart) => this.currentCart = currCart));
     this.cartAggregate$ = this.cartService.query({ conditions: [new ACondition(Cart, 'Id', 'NotNull', null)], aggregate: true });
-  }
-
-  /**
-   * It loads all the cart of logged in user for given page number.
-   * @param page Page number to load cart list.
-   */
-  loadCarts(page) {
-    this.cartList$ = this.cartService.getMyCarts(this.limit, page);
   }
 
   /**
