@@ -211,15 +211,11 @@ export class CartComponent implements OnInit, OnDestroy {
         this.primaryContact.OtherCity = this.primaryContact.MailingCity;
         this.primaryContact.OtherStreet = this.primaryContact.MailingStreet;
         this.primaryContact.OtherState = this.primaryContact.MailingState;
-        this.primaryContact.OtherStateCode = this.primaryContact.MailingStateCode;
-        this.primaryContact.OtherPostalCode = this.primaryContact.MailingPostalCode;
-        this.primaryContact.OtherCountryCode = this.primaryContact.MailingCountryCode;
       }
 
       // Removing MailingCountry, OtherCountry, OtherState and OtherStateCode from primary contact object
       delete this.primaryContact.OtherCountry;
       delete this.primaryContact.OtherState;
-      delete this.primaryContact.OtherStateCode;
 
       this.convertCartToOrder(this.order, this.primaryContact);
     }

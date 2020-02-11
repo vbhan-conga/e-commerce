@@ -13,7 +13,7 @@ import { APageInfo, ConfigurationService } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import * as _ from 'lodash';
-import { filter, flatMap, map } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -50,13 +50,13 @@ export class HeaderComponent implements OnInit {
 
                 this.typeahead$ = Observable.create((observer: any) => {
                   observer.next(this.searchQuery);
-                })
-                .pipe(
-                  filter((query: string) => query.trim().length >= 2),
-                  flatMap((query: string) => this.productService.search(query, null, 'AND', null, null, new APageInfo(10, 0))),
-                  flatMap(productList => {
-                    const productIds = _.map(productList, (product) => product.Id);
-                    return this.productService.get(productIds);
+                }).pipe(
+                  switchMap((query: string) => {
+                    return this.productService.query({
+                      searchString: query,
+                      page: new APageInfo(5, 0),
+                      groupBy: ['Name', 'Id', 'IconId', 'ProductCode']
+                    });
                   })
                 );
   }
