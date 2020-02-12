@@ -6,15 +6,13 @@ import {
   Quote,
   CartItemService,
   LineItemService,
-  Storefront,
-  StorefrontService
+  CmsService
 } from '@apttus/ecommerce';
 import * as _ from 'lodash';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ProductConfigurationSummaryComponent, ConfigurationSummaryComponent } from "@apttus/elements";
-import { Observable } from 'rxjs';
+import { ProductConfigurationSummaryComponent, ConfigurationSummaryComponent } from '@apttus/elements';
 
 @Component({
   selector: 'cart-summary',
@@ -36,7 +34,7 @@ import { Observable } from 'rxjs';
 })
 export class SummaryComponent implements OnChanges {
   @Input() cart: Cart;
-  storefront$: Observable<Storefront> = null;
+  isCmsEnabled = null;
   @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
   @ViewChild(ProductConfigurationSummaryComponent, { static: false })
   configSummaryModal: ProductConfigurationSummaryComponent;
@@ -64,7 +62,7 @@ export class SummaryComponent implements OnChanges {
               private cartItemService: CartItemService,
               private modalService: BsModalService,
               private translate: TranslateService,
-              private storefrontService: StorefrontService) {
+              private cmsService: CmsService) {
     this.state = {
       configurationMessage: null,
       downloadLoading: false,
@@ -72,7 +70,7 @@ export class SummaryComponent implements OnChanges {
       requestQuoteLoading: false
     };
 
-    this.storefront$ = this.storefrontService.getStorefront();
+    this.isCmsEnabled = this.cmsService.isCmsEnabled();
   }
 
   ngOnChanges() {

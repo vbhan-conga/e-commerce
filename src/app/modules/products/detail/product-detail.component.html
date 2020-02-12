@@ -86,7 +86,7 @@
       <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.CONFIGURATIONS' | translate}} </h4>
       <div class="col-12">
         <apt-product-configuration
-          *ngIf="!viewState?.storefront.CMS_Enabled"
+          *ngIf="!viewState?.isCmsEnabled"
           [product]="viewState?.product"
           [relatedTo]="viewState?.relatedTo"
           (configurationChange)="onConfigurationChange($event)"
@@ -94,7 +94,7 @@
         </apt-product-configuration>
 
         <apt-cms-product-configuration
-          *ngIf="viewState?.storefront.CMS_Enabled">
+          *ngIf="viewState?.isCmsEnabled">
         </apt-cms-product-configuration>
       </div>
     </div>
@@ -141,7 +141,7 @@
   </ng-container>
 
   <apt-product-configuration-summary
-    *ngIf="!viewState?.storefront.CMS_Enabled"
+    *ngIf="!viewState?.isCmsEnabled"
     [product]="viewState?.product"
     [relatedTo]="viewState?.relatedTo"
     [changes]="cartItemList"
@@ -151,7 +151,7 @@
   </apt-product-configuration-summary>
 
   <apt-cms-configuration-summary
-    *ngIf="viewState?.storefront.CMS_Enabled"
+    *ngIf="viewState?.isCmsEnabled"
     [product]="viewState?.product"
     [relatedTo]="viewState?.relatedTo"
     [changes]="cartItemList"
