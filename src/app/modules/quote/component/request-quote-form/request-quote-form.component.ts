@@ -42,7 +42,7 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
         this.quote.PrimaryContact = user.Contact;
-        this.quote.PrimaryContactId = (user && user.ContactId) ? user.ContactId : null;
+        this.quote.Primary_Contact = (user && user.ContactId) ? user.ContactId : null;
         if(_.get(this.cart, 'Quote.Id')) {
           this.quote = _.get(this.cart, 'Quote');
           this.comments = _.get(quote, '[0].Notes', []);
@@ -88,7 +88,7 @@ export class RequestQuoteFormComponent implements OnInit {
   }
 
   primaryContactChange() {
-    this.contactService.get([this.quote.PrimaryContactId]).pipe(map(res => res[0]))
+    this.contactService.get([this.quote.Primary_Contact]).pipe(map(res => res[0]))
       .pipe(take(1))
       .subscribe((newPrimaryContact) => { 
         this.quote.PrimaryContact = newPrimaryContact;
