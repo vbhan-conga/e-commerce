@@ -1,5 +1,6 @@
 <ng-container *ngIf="view$ | async as view; else loadingTemplate">
     <apt-breadcrumb [sobject]="view?.cart?.Quote" [label]="'COMMON.EDIT_LINE_ITEMS' | translate" *ngIf="view?.cart?.Quote?.Id; else cartBreadcrumb"></apt-breadcrumb>
+    <apt-constraint-rule-alert></apt-constraint-rule-alert>
     <ng-template #cartBreadcrumb>
         <apt-breadcrumb [label]="'COMMON.MANAGE_CART' | translate"></apt-breadcrumb>
     </ng-template>
@@ -7,7 +8,6 @@
     <apt-alert message="ERROR.CART.VALIDATE" [record]="view?.cart"></apt-alert>
     <div class="container-fluid py-4">
         <div class="px-4">
-            <apt-cr-constraint-alert [detailPageAlert]='false'></apt-cr-constraint-alert>
             <div class="row">
                 <div class="col-12 col-md-8 mb-4">
                     <div class="d-block border-bottom table-responsive">

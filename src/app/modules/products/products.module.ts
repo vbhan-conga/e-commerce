@@ -32,7 +32,8 @@ import {
   InputFieldModule,
   InputSelectModule,
   ConfigurationModule,
-  CmsModule
+  CmsModule,
+  ConstraintRuleModule
 } from '@apttus/elements';
 import { TranslateModule } from '@ngx-translate/core';
 import { DetailsModule } from '../details/details.module';
@@ -64,7 +65,8 @@ import { ProductListComponent } from './list/product-list.component';
     InputFieldModule,
     FilterModule,
     ConfigurationModule,
-    CmsModule
+    CmsModule,
+    ConstraintRuleModule
   ],
   providers : [ConfigureGuard],
   declarations: [ProductDetailComponent,
