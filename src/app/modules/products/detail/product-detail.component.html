@@ -58,7 +58,7 @@
         </ng-template>
 
         <button class="btn btn-outline-primary ml-2" *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions"
-          (click)="productConfigurationSummary.show();">{{'DETAILS.PRICE_SUMMARY' | translate}}</button>
+          (click)="showSummary();">{{'DETAILS.PRICE_SUMMARY' | translate}}</button>
       </div>
     </ng-template>
 
@@ -85,9 +85,17 @@
     <div class="row mt-4">
       <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.CONFIGURATIONS' | translate}} </h4>
       <div class="col-12">
-        <apt-product-configuration [product]="viewState?.product" [relatedTo]="viewState?.relatedTo"
-          (configurationChange)="onConfigurationChange($event)">
+        <apt-product-configuration
+          *ngIf="!viewState?.isCmsEnabled"
+          [product]="viewState?.product"
+          [relatedTo]="viewState?.relatedTo"
+          (configurationChange)="onConfigurationChange($event)"
+          (click)="configurationChanged = true">
         </apt-product-configuration>
+
+        <apt-cms-product-configuration
+          *ngIf="viewState?.isCmsEnabled">
+        </apt-cms-product-configuration>
       </div>
     </div>
   </apt-detail-section>
@@ -132,9 +140,25 @@
     </apt-detail-section>
   </ng-container>
 
-  <apt-product-configuration-summary [product]="viewState?.product" [relatedTo]="viewState?.relatedTo" [changes]="cartItemList" [preload]="true"
-    #productConfigurationSummary position="right">
+  <apt-product-configuration-summary
+    *ngIf="!viewState?.isCmsEnabled"
+    [product]="viewState?.product"
+    [relatedTo]="viewState?.relatedTo"
+    [changes]="cartItemList"
+    [preload]="true"
+    #productConfigurationSummary
+    position="right">
   </apt-product-configuration-summary>
+
+  <apt-cms-configuration-summary
+    *ngIf="viewState?.isCmsEnabled"
+    [product]="viewState?.product"
+    [relatedTo]="viewState?.relatedTo"
+    [changes]="cartItemList"
+    [preload]="true"
+    #cmsProductConfigurationSummary
+    position="right">
+  </apt-cms-configuration-summary>
 </apt-detail>
 
 <ng-template #loading>

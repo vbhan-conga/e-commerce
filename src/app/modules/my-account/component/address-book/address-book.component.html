@@ -16,13 +16,13 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <strong>
-              <span class="oi oi-check" *ngIf="address.IsDefault"></span>
+              <i class="fas fa-check" *ngIf="address.IsDefault"></i>
               {{address.Name}}
             </strong>
             <div class="btn-group info" dropdown>
               <button class="btn btn-icon btn-link dropdown-toggle" dropdownToggle [ladda]="address?._metadata?.loading"
                 [attr.data-style]="'zoom-in'">
-                <span class="oi oi-ellipses vertical"></span>
+                <i class="fas fa-ellipsis-v"></i>
               </button>
               <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu set-dropdown-for-address" role="menu"
                 aria-labelledby="button-basic">
