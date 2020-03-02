@@ -71,8 +71,20 @@ export class ProductDetailsResolver implements Resolve<any> {
 
 /** @ignore */
 export interface ProductDetailsState {
-  product: Product;
-  recommendedProducts: Array<Product>;
-  relatedTo: CartItem;
-  isCmsEnabled: boolean;
+    /**
+     * The product to display.
+     */
+    product: Product;
+    /**
+     * Array of products to act as recommendations.
+     */
+    recommendedProducts: Array<Product>;
+    /**
+     * The CartItem related to this product.
+     */
+    relatedTo: CartItem;
+    /**
+     * True if CMS Enabled.
+     */
+    isCmsEnabled: boolean;
 }
