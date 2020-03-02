@@ -17,7 +17,24 @@ import { ResultsComponent } from './component/results.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { ConfigureGuard } from '../../services/configure.guard';
-import { BreadcrumbModule, ButtonModule, PriceModule, ProductCarouselModule, ProductConfigurationModule, IconModule, InputDateModule, ProductImagesModule, ProductConfigurationSummaryModule, ProductCardModule, FilterModule, InputFieldModule, InputSelectModule } from '@apttus/elements';
+import {
+  BreadcrumbModule,
+  ButtonModule,
+  PriceModule,
+  ProductCarouselModule,
+  ProductConfigurationModule,
+  IconModule,
+  InputDateModule,
+  ProductImagesModule,
+  ProductConfigurationSummaryModule,
+  ProductCardModule,
+  FilterModule,
+  InputFieldModule,
+  InputSelectModule,
+  ConfigurationModule,
+  CmsModule,
+  ConstraintRuleModule
+} from '@apttus/elements';
 import { TranslateModule } from '@ngx-translate/core';
 import { DetailsModule } from '../details/details.module';
 import { ProductListComponent } from './list/product-list.component';
@@ -46,7 +63,10 @@ import { ProductListComponent } from './list/product-list.component';
     ProductCardModule,
     InputSelectModule,
     InputFieldModule,
-    FilterModule
+    FilterModule,
+    ConfigurationModule,
+    CmsModule,
+    ConstraintRuleModule
   ],
   providers : [ConfigureGuard],
   declarations: [ProductDetailComponent,
