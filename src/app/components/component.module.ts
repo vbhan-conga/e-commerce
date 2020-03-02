@@ -14,7 +14,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { ToastrModule } from 'ngx-toastr';
 
-import { MiniProfileModule, MiniCartModule, ConstraintIconModule, ConstraintSideMenuModule, IconModule, PriceModule, DirectivesModule } from '@apttus/elements';
+import { MiniProfileModule, MiniCartModule, ConstraintSideMenuModule, IconModule, PriceModule, DirectivesModule, ConstraintRuleModule } from '@apttus/elements';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -24,7 +24,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     CommonModule,
     MiniProfileModule,
     MiniCartModule,
-    ConstraintIconModule,
+    ConstraintRuleModule,
     ConstraintSideMenuModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),

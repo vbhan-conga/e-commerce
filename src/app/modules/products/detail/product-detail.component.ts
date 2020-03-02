@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CartService, CartItem } from '@apttus/ecommerce';
+import { CartService, CartItem, Storefront, StorefrontService } from '@apttus/ecommerce';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { BehaviorSubject } from 'rxjs';
-import { ProductConfigurationSummaryComponent } from '@apttus/elements';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ProductConfigurationSummaryComponent, ConfigurationSummaryComponent } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
-import { LineStatus } from '@apttus/ecommerce';
 
 @Component({
     selector: 'app-product-detail',
@@ -38,12 +37,22 @@ export class ProductDetailComponent implements OnInit {
     /** @ignore */
     productCode: string;
 
-    @ViewChild('productConfigurationSummary', { static: false }) productConfigurationSummary: ProductConfigurationSummaryComponent;
+    storefront$: Observable<Storefront> = null;
 
-    constructor(private cartService: CartService, private resolver: ProductDetailsResolver, private router: Router) { }
+    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+    configSummaryModal: ProductConfigurationSummaryComponent;
+
+    @ViewChild(ConfigurationSummaryComponent, { static: false })
+    cmsConfigSummaryModal: ConfigurationSummaryComponent;
+
+    constructor(private cartService: CartService,
+                private resolver: ProductDetailsResolver,
+                private router: Router,
+                private storefrontService: StorefrontService) { }
 
     ngOnInit() {
         this.viewState$ = this.resolver.state();
+        this.storefront$ = this.storefrontService.getStorefront();
     }
 
     /**
@@ -85,5 +94,14 @@ export class ProductDetailComponent implements OnInit {
      */
     handleEndDateChange(cartItem: CartItem) {
         this.cartService.updateCartItems([cartItem]);
+    }
+
+    showSummary() {
+        const modal = this.configSummaryModal || this.cmsConfigSummaryModal;
+
+        if (!modal)
+          return;
+
+        modal.show();
     }
 }
