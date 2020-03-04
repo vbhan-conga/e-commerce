@@ -11,7 +11,7 @@ export const environment: Configuration = {
   enablePerformanceLogs: true,
   defaultCurrency: 'USD',
   bufferTime: 20,
-  maxBufferSize: 3,
+  maxBufferSize: 10,
   disableBuffer: false,
   subqueryLimit: 10,
   disableCache: false,
@@ -24,10 +24,10 @@ export const environment: Configuration = {
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
-
+  packageNamespace: '',
   // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'D-Commerce',
+  storefront: 'E-Commerce',
   organizationId: '00D3I0000008n7g',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://dc4-cpqqacommunity1.cs123.force.com/ecom'
+  endpoint: 'https://apttusdc-developer-edition.na134.force.com/ecommerce'
 };
