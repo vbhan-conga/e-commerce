@@ -4,7 +4,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Observable, zip, of } from 'rxjs';
 import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account } from '@apttus/ecommerce';
 import { map, take } from 'rxjs/operators';
-import { get, set } from 'lodash';
+import * as _ from 'lodash';
 import { LookupOptions } from '@apttus/elements';
 
 @Component({
@@ -31,7 +31,7 @@ export class RequestQuoteFormComponent implements OnInit {
     secondaryTextField: 'Email'
   };
 
-  constructor(public quoteService: QuoteService, private accountService: AccountService, private userService: UserService, private noteService:NoteService
+  constructor(public quoteService: QuoteService, private accountService: AccountService, private userService :UserService, private noteService:NoteService
     , private contactService: ContactService) { }
 
   ngOnInit() {
@@ -42,10 +42,10 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
         this.quote.PrimaryContact = user.Contact;
-        set(this.quote, 'Primary_Contact', (user && user.ContactId) ? user.ContactId : null);
-        if(get(this.cart, 'Quote.Id')) {
-          this.quote = get(this.cart, 'Quote');
-          this.comments = get(quote, '[0].Notes', []);
+        this.quote.Primary_Contact = (user && user.ContactId) ? user.ContactId : null;
+        if(_.get(this.cart, 'Quote.Id')) {
+          this.quote = _.get(this.cart, 'Quote');
+          this.comments = _.get(quote, '[0].Notes', []);
         }
         this.quoteChange();
     });
@@ -72,24 +72,25 @@ export class RequestQuoteFormComponent implements OnInit {
 
   shipToChange() {
     this.shipToAccount$ = this.accountService.get([this.quote.ShipToAccountId]).pipe(map(res => res[0]));
-    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => {
-      this.quote.ShipToAccount = newShippingAccount;
+    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => { 
+      this.quote.ShipToAccount = newShippingAccount; 
       this.onQuoteUpdate.emit(this.quote);
     });
   }
 
   billToChange() {
     this.billToAccount$ = this.accountService.get([this.quote.BillToAccountId]).pipe(map(res => res[0]));
-    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => {
+    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => { 
       this.quote.BillToAccount = newBillingAccount;
       this.onQuoteUpdate.emit(this.quote);
     });
+    
   }
 
   primaryContactChange() {
-    this.contactService.get([get(this.quote, 'Primary_Contact')]).pipe(map(res => res[0]))
+    this.contactService.get([this.quote.Primary_Contact]).pipe(map(res => res[0]))
       .pipe(take(1))
-      .subscribe((newPrimaryContact) => {
+      .subscribe((newPrimaryContact) => { 
         this.quote.PrimaryContact = newPrimaryContact;
         this.onQuoteUpdate.emit(this.quote);
       });
@@ -100,6 +101,6 @@ export class RequestQuoteFormComponent implements OnInit {
    * @param event The event that was fired.
    */
   handlePrimaryContactChange(event: any) {}
-
+  
 }
 

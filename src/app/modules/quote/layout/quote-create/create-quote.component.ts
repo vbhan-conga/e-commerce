@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
-import { find, get } from 'lodash';
+import * as _ from 'lodash';
 import { Quote, QuoteService, StorefrontService, Storefront, Cart, CartService } from '@apttus/ecommerce';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -47,7 +47,7 @@ export class CreateQuoteComponent implements OnInit {
 
   onUpdate($event: Quote) {
     this.quoteRequestObj = $event;
-    this.disableSubmit = !get(this.quoteRequestObj, 'Primary_Contact');
+    this.disableSubmit = !this.quoteRequestObj.Primary_Contact;
   }
 
   /**
@@ -57,9 +57,9 @@ export class CreateQuoteComponent implements OnInit {
    * @returns quote object.
    */
   convertCartToQuote(cart: Cart) {
-    if (!get(this.quoteRequestObj, 'Primary_Contact')) {
+    if (this.quoteRequestObj.Primary_Contact) {
       this.loading = true;
-      const quoteAmountGroup = find(get(cart, 'SummaryGroups'), c => get(c, 'LineType') === 'Grand Total');
+      const quoteAmountGroup = _.find(_.get(cart, 'SummaryGroups'), c => _.get(c, 'LineType') === 'Grand Total');
       // this.quoteRequestObj.Total_Quote_Amount = _.defaultTo(_.get(quoteAmountGroup, 'NetPrice', 0).toString(), '0');
       this.quoteService.convertCartToQuote(this.quoteRequestObj).pipe(take(1)).subscribe(
         res => {
