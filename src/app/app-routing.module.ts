@@ -29,7 +29,7 @@ const routes: Routes = [
     data: { title: 'Product' }
   },
   {
-    path: 'assets',
+    path: 'asset-list',
     canActivate: [RouteGuard, AuthGuard, AboGuard],
     loadChildren: () => import('./modules/installed-products/installed-products.module').then(m => m.InstalledProductsModule),
     data: { title: 'Installed Products' }
