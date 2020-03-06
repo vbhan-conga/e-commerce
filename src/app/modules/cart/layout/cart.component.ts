@@ -272,8 +272,8 @@ export class CartComponent implements OnInit, OnDestroy {
     this.paymentTransaction.CustomerEmailAddress = _.get(this.primaryContact, 'Email');
     this.paymentTransaction.CustomerAddressLine1 = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'BillingStreet') : _.get(this.primaryContact, 'MailingStreet');
     this.paymentTransaction.CustomerAddressCity = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'BillingCity') : _.get(this.primaryContact, 'MailingCity');
-    this.paymentTransaction.CustomerAddressStateCode = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'BillingAddress.stateCode') : _.get(this.primaryContact, 'MailingStateCode');
-    this.paymentTransaction.CustomerAddressCountryCode = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'BillingAddress.countryCode') : _.get(this.primaryContact, 'MailingCountryCode');
+    this.paymentTransaction.CustomerAddressStateCode = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'BillingState') : _.get(this.primaryContact, 'MailingStateCode');
+    this.paymentTransaction.CustomerAddressCountryCode = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'Country_Code') : _.get(this.primaryContact, 'MailingCountryCode');
     this.paymentTransaction.CustomerAddressPostalCode = this.isLoggedIn ? _.get(orderDetails.BillToAccount, 'BillingAddress.postalCode') : _.get(this.primaryContact, 'MailingPostalCode');
     this.paymentTransaction.CustomerBillingAccountName = _.get(orderDetails.BillToAccount, 'Name');
     this.paymentTransaction.CustomerBillingAccountID = _.get(orderDetails.BillToAccount, 'Id');
