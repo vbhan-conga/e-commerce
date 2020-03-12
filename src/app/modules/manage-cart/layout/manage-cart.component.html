@@ -1,6 +1,6 @@
 <ng-container *ngIf="view$ | async as view; else loadingTemplate">
     <apt-breadcrumb [sobject]="view?.cart?.Quote" [label]="'COMMON.EDIT_LINE_ITEMS' | translate" *ngIf="view?.cart?.Quote?.Id; else cartBreadcrumb"></apt-breadcrumb>
-    <apt-constraint-rule-alert></apt-constraint-rule-alert>
+    <apt-cr-constraint-alert></apt-cr-constraint-alert>
     <ng-template #cartBreadcrumb>
         <apt-breadcrumb [label]="'COMMON.MANAGE_CART' | translate"></apt-breadcrumb>
     </ng-template>
