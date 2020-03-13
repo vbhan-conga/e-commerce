@@ -98,6 +98,8 @@
         </apt-product-configuration>
 
         <apt-cms-product-configuration
+          [productId]="viewState?.product?.Id"
+          [cartItemId]="viewState?.relatedTo?.Id"
           *ngIf="viewState?.isCmsEnabled">
         </apt-cms-product-configuration>
       </div>
