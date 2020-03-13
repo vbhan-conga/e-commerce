@@ -30,6 +30,7 @@ export class RequestQuoteFormComponent implements OnInit {
     primaryTextField: 'Name',
     secondaryTextField: 'Email'
   };
+  contactId: string;
 
   constructor(public quoteService: QuoteService, private accountService: AccountService, private userService :UserService, private noteService:NoteService
     , private contactService: ContactService) { }
@@ -41,7 +42,7 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.ShipToAccountId =  account.Id;
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
-        this.quote.Primary_Contact = user.Contact;
+        this.quote.Primary_Contact = _.get(user, 'Contact');
         if(_.get(this.cart, 'Quote.Id')) {
           this.quote = _.get(this.cart, 'Quote');
           this.comments = _.get(quote, '[0].Notes', []);
@@ -87,7 +88,7 @@ export class RequestQuoteFormComponent implements OnInit {
   }
 
   primaryContactChange() {
-    this.contactService.fetch(this.quote.Primary_Contact.Id)
+    this.contactService.fetch(this.contactId)
       .pipe(take(1))
       .subscribe((newPrimaryContact: Contact) => { 
         this.quote.Primary_Contact = newPrimaryContact;
