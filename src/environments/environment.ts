@@ -16,7 +16,7 @@ export const environment: Configuration = {
   subqueryLimit: 10,
   disableCache: false,
   encryptResponse: false,
-  cartRetryLimit: 3,
+  cartRetryLimit: 10,
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
@@ -24,8 +24,7 @@ export const environment: Configuration = {
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
-  packageNamespace: '',
-  // *** TODO: Replace with Salesforce environment variables ***
+    // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'E-Commerce',
   organizationId: '00D3I0000008n7g',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
