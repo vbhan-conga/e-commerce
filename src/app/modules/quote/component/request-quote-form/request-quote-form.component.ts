@@ -43,6 +43,7 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
         this.quote.Primary_Contact = _.get(user, 'Contact');
+        this.contactId = _.get(user, 'ContactId');
         if(_.get(this.cart, 'Quote.Id')) {
           this.quote = _.get(this.cart, 'Quote');
           this.comments = _.get(quote, '[0].Notes', []);
@@ -72,25 +73,25 @@ export class RequestQuoteFormComponent implements OnInit {
 
   shipToChange() {
     this.shipToAccount$ = this.accountService.get([this.quote.ShipToAccountId]).pipe(map(res => res[0]));
-    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => { 
-      this.quote.ShipToAccount = newShippingAccount; 
+    this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => {
+      this.quote.ShipToAccount = newShippingAccount;
       this.onQuoteUpdate.emit(this.quote);
     });
   }
 
   billToChange() {
     this.billToAccount$ = this.accountService.get([this.quote.BillToAccountId]).pipe(map(res => res[0]));
-    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => { 
+    this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => {
       this.quote.BillToAccount = newBillingAccount;
       this.onQuoteUpdate.emit(this.quote);
     });
-    
+
   }
 
   primaryContactChange() {
     this.contactService.fetch(this.contactId)
       .pipe(take(1))
-      .subscribe((newPrimaryContact: Contact) => { 
+      .subscribe((newPrimaryContact: Contact) => {
         this.quote.Primary_Contact = newPrimaryContact;
         this.onQuoteUpdate.emit(this.quote);
       });
@@ -101,6 +102,6 @@ export class RequestQuoteFormComponent implements OnInit {
    * @param event The event that was fired.
    */
   handlePrimaryContactChange(event: any) {}
-  
+
 }
 
