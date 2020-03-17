@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Cart, ItemGroup, CartService, CartItemService, ConstraintRuleService, Product, LineItemService } from '@apttus/ecommerce';
 import { Observable, combineLatest, of } from 'rxjs';
-import { take, map, tap, mergeMap } from 'rxjs/operators';
+import { take, map, tap, mergeMap, filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Injectable({
@@ -15,9 +15,10 @@ export class ManageCartResolver implements Resolve<any> {
   state(): Observable<ManageCartState> {
     return this.cartService.getMyCart()
       .pipe(
-        mergeMap(cart => {
-          return combineLatest(of(cart), this.crService.getRecommendationsForCart(cart));
-        }),
+        filter(c => !_.isNil(c)),
+        mergeMap(cart => 
+          combineLatest(of(cart), this.crService.getRecommendationsForCart(cart))
+        ),
         map(([cart, products]) => {
           return {
             cart: cart,
