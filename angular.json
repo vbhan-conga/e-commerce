@@ -114,7 +114,7 @@
                 }
               ]
             },
-            "prod": {
+            "perf": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
