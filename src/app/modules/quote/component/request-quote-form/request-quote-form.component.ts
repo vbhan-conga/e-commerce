@@ -57,9 +57,7 @@ export class RequestQuoteFormComponent implements OnInit {
    */
   addComment() {
     if (this.quote) {
-      if (!this.quote.Notes)
-        this.quote.Notes = Array<Note>();
-      this.quote.Notes[0] = this.note;
+      this.quote.Description = this.note.Body;
       this.onQuoteUpdate.emit(this.quote);
     }
   }
