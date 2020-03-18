@@ -1,11 +1,11 @@
 <ng-container *ngIf="cart$ | async as cart; else loadingTemplate">
-    <apt-breadcrumb *ngIf="!cart?.Quote?.Id" [label]="'COMMON.CREATE_QUOTE' | translate"></apt-breadcrumb>
-    <apt-breadcrumb *ngIf="cart?.Quote?.Id" [sobject]="quoteRequestObj" [label]="'CREATE_QUOTE.FINALIZE_AND_SUBMIT' | translate">
+    <apt-breadcrumb *ngIf="!cart?.Proposald?.Id" [label]="'COMMON.CREATE_QUOTE' | translate"></apt-breadcrumb>
+    <apt-breadcrumb *ngIf="cart?.Proposald?.Id" [sobject]="quoteRequestObj" [label]="'CREATE_QUOTE.FINALIZE_AND_SUBMIT' | translate">
     </apt-breadcrumb>
     <div class="container-fluid py-4 animated fadeIn">
         <div class="p-4">
-            <h4 *ngIf="!cart?.Quote?.Id">{{'COMMON.REQUEST_QUOTE' | translate }}</h4>
-            <h4 *ngIf="cart?.Quote?.Id">{{cart.Quote.Name}} /
+            <h4 *ngIf="!cart?.Proposald?.Id">{{'COMMON.REQUEST_QUOTE' | translate }}</h4>
+            <h4 *ngIf="cart?.Proposald?.Id">{{cart.Proposald.Name}} /
                 {{'MANAGE_CART.CART_SUMMARY.FINALIZE_AND_SUBMIT' | translate }}</h4>
             <div class="row">
                 <div class="col-12 col-md-9 mb-4">
@@ -31,10 +31,10 @@
                 <strong>{{ 'QUOTE_CONFIRMATION_MODAL.THANK_YOU' | translate }}
                     {{quoteConfirmation?.CreatedBy?.FirstName}}!</strong>
             </p>
-            <small class="text-center" *ngIf="!cart?.Quote?.Id"
+            <small class="text-center" *ngIf="!cart?.Proposald?.Id"
                 [translate]="'QUOTE_CONFIRMATION_MODAL.QUOTE_CONFIRMATION_MSG'"
                 [translateParams]="{Sellername: quoteConfirmation?.CreatedBy?.Name, RFP_value: quoteConfirmation.RFP_Response_Due_Date}"></small>
-            <small class="text-center" *ngIf="cart?.Quote?.Id"
+            <small class="text-center" *ngIf="cart?.Proposald?.Id"
                 [translate]="'QUOTE_CONFIRMATION_MODAL.QUOTE_CONFIRMATION_Update_MSG'"
                 [translateParams]="{Sellername: quoteConfirmation?.CreatedBy?.Name, RFP_value: quoteConfirmation.RFP_Response_Due_Date}"></small>
             <h5 class="text-center my-3">{{ 'QUOTE_CONFIRMATION_MODAL.QUOTE_CONFIRMATION_NO' | translate }}
