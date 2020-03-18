@@ -28,11 +28,11 @@
       </div>
       <div class="col-12 col-md-6">
            <div>
-                <h5 class="py-2" *ngIf="cart.Quote">
+                <h5 class="py-2" *ngIf="cart.Proposald">
                   {{'COMMON.COMMENTS' | translate}} <span *ngIf="comments?.length > 0">({{comments?.length}})</span>
                 </h5>
                 <div>
-                  <div class="note-container" *ngIf="cart?.Quote">
+                  <div class="note-container" *ngIf="cart?.Proposald">
                     <ng-scrollbar>
                       <ng-container *ngIf="comments?.length > 0; else emptyNotes">
                         <div class="my-3 pb-3 border-bottom" *ngFor="let note of comments">

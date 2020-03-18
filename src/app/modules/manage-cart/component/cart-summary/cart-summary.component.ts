@@ -22,7 +22,7 @@ import { SummaryState } from '../../../cart/component/summary.component';
 export class CartSummaryComponent implements OnInit, OnChanges {
   @Input() cart: Cart;
   @ViewChild('discardChangesTemplate', { static: false }) discardChangesTemplate: TemplateRef<any>;
-  
+
   loading:boolean = false;
   discardChangesModal: BsModalRef;
   _cart: Cart;
@@ -92,12 +92,12 @@ export class CartSummaryComponent implements OnInit, OnChanges {
       )
       .subscribe(()  => {
         this.loading = false;
-        this.router.navigate(['/proposals', this.cart.Quote.Id]);
+        this.router.navigate(['/proposals', this.cart.Proposald.Id]);
         this.discardChangesModal.hide();
       });
   }
 
-  /** 
+  /**
    * Opens estimated tax pop hover and shows calulated tax for the cart
    */
   openEstimateTaxPopup() {
