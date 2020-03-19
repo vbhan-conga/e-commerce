@@ -55,8 +55,12 @@ export class QuoteDetailsComponent implements OnInit {
     this.quote$ = this.activatedRoute.params
       .pipe(
         filter(params => _.get(params, 'id') != null),
-        flatMap(params => this.quoteService.get([_.get(params, 'id')])),
-        map(quoteList => _.get(quoteList, '[0]'))
+        mergeMap(params => {
+          return this.quoteService.get([_.get(params, 'id')], false);
+        }),
+        map(quoteList => {
+          return _.get(quoteList, '[0]');
+        })
       );
     this.quoteLineItems$ = this.quote$.pipe(
       map(
