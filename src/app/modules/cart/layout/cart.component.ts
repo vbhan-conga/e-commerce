@@ -150,7 +150,6 @@ export class CartComponent implements OnInit, OnDestroy {
     this.account$ = this.accountService.getCurrentAccount();
     this.subscriptions.push(this.cartService.getMyCart().subscribe(cart => {
       this.cart = cart;
-
       // Setting default values
       this.model.BillToAccountId = _.get(cart, 'AccountId');
       this.model.ShipToAccountId = _.get(cart, 'AccountId');
