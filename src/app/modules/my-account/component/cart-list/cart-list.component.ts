@@ -92,7 +92,6 @@ export class CartListComponent implements OnInit {
                 theme: 'danger',
                 validate:(record: Cart) => this.canDelete(record),
                 action:(recordList: Array<Cart>) => {
-                  this.loadView();
                   return this.cartService.deleteCart(recordList).pipe(map(res => null));
                 }
               } as TableAction
