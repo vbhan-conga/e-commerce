@@ -66,7 +66,8 @@
             "ORDER_NAME": "fr_FR Order Name"
         },
         "ORDER_LIST": {
-            "NUM_OF_ITEMS": "fr_FR of Items"
+            "NUM_OF_ITEMS": "fr_FR of Items",
+            "ORDERS_BY_STATUS": "fr_FR Orders by Status"
         },
         "ORDER_DETAIL": {
             "BILLING_ADDRESS": "fr_FR Billing Address",
@@ -292,7 +293,8 @@
         "ITEMIZED_OPTIONS": "fr_FR Itemized Options",
         "NO_DATA": "fr_FR n/a",
         "CHECKOUT": "fr_FR Checkout",
-        "TOTAL_ORDERS": "fr_FR Total Orders"
+        "TOTAL_ORDERS": "fr_FR Total Orders",
+        "ORDER_AMOUNT_BY_STATUS": "fr_FR ORDER AMOUNT BY STATUS"
     },
     "CREATE_QUOTE": {
         "QUOTE_SUMMARY": "fr_FR QUOTE SUMMARY",

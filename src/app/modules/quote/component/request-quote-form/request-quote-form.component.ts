@@ -37,7 +37,7 @@ export class RequestQuoteFormComponent implements OnInit {
 
   ngOnInit() {
     this.quote.Name = 'Test';
-    zip(this.accountService.getCurrentAccount(), this.userService.me(),(this.cart.Proposald? this.quoteService.get([this.cart.Proposald.Id]) : of(null))).pipe(take(1)).subscribe(([account, user, quote]) => {
+    zip(this.accountService.getCurrentAccount(), this.userService.me(),(this.cart.Proposald? this.quoteService.get([_.get(this.cart, 'Proposald.Id')]) : of(null))).pipe(take(1)).subscribe(([account, user, quote]) => {
         this.quote.ShipToAccount = account;
         this.quote.ShipToAccountId =  account.Id;
         this.quote.BillToAccount = account;
