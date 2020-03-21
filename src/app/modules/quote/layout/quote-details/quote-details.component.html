@@ -115,7 +115,7 @@
           <div class="mb-2 hide-hscroll" *ngFor="let attachment of quote?.Attachments">
             <div class="row">
               <div class="col-md-6"><div class="d-flex justify-content-between"><a class="text-underline" href="{{downloadAttachment(attachment.Id, quote.Id)}}" target="_blank">{{attachment?.Name}}</a><span>{{(attachment?.BodyLength/1024).toFixed(2)}} KB</span></div></div>
-              <div class="col-md-6">{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.BY' | translate}}<span class="pl-2">{{attachment?.CreatedBy.Name}},</span><span class="pl-3">{{attachment?.CreatedDate | date:'short'}}</span></div>
+              <div class="col-md-6">{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.BY' | translate}}<span class="pl-2">{{attachment?.CreatedBy?.Name}},</span><span class="pl-3">{{attachment?.CreatedDate | date:'short'}}</span></div>
             </div>
           </div>
         </ng-container>
