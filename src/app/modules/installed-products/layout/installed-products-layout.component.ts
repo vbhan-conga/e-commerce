@@ -219,6 +219,7 @@ export class InstalledProductsLayoutComponent implements OnInit {
             { prop: 'PriceType' }
           ],
           actions: _.filter(this.massActions, action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
+          actionValue: !_.isEmpty(_.get(this.route, 'snapshot.queryParams')) ? decodeURIComponent(_.get(this.route, 'snapshot.queryParams.action')) : 'All',
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
             relationshipField: 'BundleAssetId',
