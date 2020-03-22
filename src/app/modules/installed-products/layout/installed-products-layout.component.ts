@@ -318,7 +318,6 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
   }
 }
 
-}
 /** @ignore */
 interface AssetListView {
   tableOptions: TableOptions;
