@@ -109,7 +109,16 @@ export class InstalledProductsLayoutComponent implements OnInit {
     All: null,
     Renew: new AFilter(AssetLineItem, [new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')]),
     Terminate: new AFilter(AssetLineItem, [new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')]),
-    'Buy More': new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'PriceType', 'Equal', 'One Time'), new ACondition(Product, 'Product.ConfigurationType', 'Equal', 'Standalone')])
+    'Buy More': new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'PriceType', 'Equal', 'One Time'), new ACondition(Product, 'Product.ConfigurationType', 'Equal', 'Standalone')]),
+    'Change Configuration': new AFilter(this.assetService.type, [
+      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled'),
+      new ACondition(
+        Product,
+        'Product.ConfigurationType',
+        'Equal',
+        'Bundle'
+      )
+    ])
   };
   /**
    * Mass actions to be used with the table configuration options.
