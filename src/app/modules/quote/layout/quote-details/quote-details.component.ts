@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef } from '@angular/core';
-import { UserService, QuoteService, Quote, Order, OrderService, QuoteLineItem, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService, LineItemService } from '@apttus/ecommerce';
+import { UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService, LineItemService } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, flatMap, map, take, mergeMap } from 'rxjs/operators';
+import { filter, map, take, mergeMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Observable, of } from 'rxjs';
 import { ExceptionService, LookupOptions } from '@apttus/elements';
@@ -45,7 +45,6 @@ export class QuoteDetailsComponent implements OnInit {
               private modalService: BsModalService,
               private orderService: OrderService,
               private attachmentService: AttachmentService,
-              private quoteItemService: QuoteLineItemService,
               private productInformationService: ProductInformationService,
               private cdr: ChangeDetectorRef,
               private ngZone: NgZone,
@@ -56,7 +55,7 @@ export class QuoteDetailsComponent implements OnInit {
       .pipe(
         filter(params => _.get(params, 'id') != null),
         mergeMap(params => {
-          return this.quoteService.get([_.get(params, 'id')], false);
+          return this.quoteService.get([_.get(params, 'id')]);
         }),
         map(quoteList => {
           return _.get(quoteList, '[0]');
