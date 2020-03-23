@@ -38,7 +38,7 @@ export class QuoteListComponent implements OnInit {
         prop: 'PriceListId'
       },
       {
-        prop: 'Total_Quote_Amount'
+        prop: 'Grand_Total'
       },
       {
         prop: 'ExpectedStartDate'
