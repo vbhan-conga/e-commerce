@@ -25,8 +25,8 @@ export const environment: Configuration = {
   expandDepth: 7,
   hashRouting: false,
     // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'E-Commerce',
+  storefront: 'D-Commerce',
   organizationId: '00D3I0000008n7g',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://apttusdc-developer-edition.na134.force.com/ecommerce'
+  endpoint: 'https://dc1-cpqqacommunity1.cs2.force.com/ecom'
 };
