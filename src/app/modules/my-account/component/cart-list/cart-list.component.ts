@@ -96,7 +96,8 @@ export class CartListComponent implements OnInit {
                 }
               } as TableAction
             ],
-            highlightRow:(record: Cart) => of(this.isCartActive(currentCart, record))
+            highlightRow:(record: Cart) => of(this.isCartActive(currentCart, record)),
+            children: ['SummaryGroups']
           },
           totalCarts: _.get(cartList, 'total_records'),
           type: Cart
