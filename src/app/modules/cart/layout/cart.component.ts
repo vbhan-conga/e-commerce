@@ -277,7 +277,8 @@ export class CartComponent implements OnInit, OnDestroy {
     this.paymentTransaction.CustomerBillingAccountName = _.get(orderDetails.BillToAccount, 'Name');
     this.paymentTransaction.CustomerBillingAccountID = _.get(orderDetails.BillToAccount, 'Id');
     this.paymentTransaction.isUserLoggedIn = this.isLoggedIn;
-    this.paymentTransaction.OrderAmount =  this.orderAmount;
+    // Rounding off the string amount to 2 decimal places as cybersource doesn't allow higher numeric scale on order amount.
+    this.paymentTransaction.OrderAmount = _.toString(_.round(parseFloat(this.orderAmount), 2));
     this.paymentTransaction.Locale = this.currentUserLocale ;
     this.paymentTransaction.OrderName = _.get(orderDetails, 'Name') ;
     this.paymentTransaction.OrderGeneratedID = _.get(orderDetails, 'Id');
