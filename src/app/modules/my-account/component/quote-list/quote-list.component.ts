@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { QuoteService, Quote, CartService, PriceService } from '@apttus/ecommerce';
-import { Observable } from 'rxjs';
+import { QuoteService, Quote, CartService, PriceService, LocalCurrencyPipe } from '@apttus/ecommerce';
+import { Observable, of } from 'rxjs';
 import { QuoteActions } from './quote-actions.component';
 import { Router } from '@angular/router';
 import { ACondition, AFilter } from '@apttus/core';
@@ -38,7 +38,10 @@ export class QuoteListComponent implements OnInit {
         prop: 'PriceListId'
       },
       {
-        prop: 'Grand_Total'
+        prop: 'Grand_Total',
+        value: (record) => {
+          return this.currencyPipe.transform(_.get(_.find(_.get(record, 'ProposalSummaryGroups'), {LineType : 'Grand Total'}), 'NetPrice'));
+        }
       },
       {
         prop: 'ExpectedStartDate'
@@ -49,7 +52,8 @@ export class QuoteListComponent implements OnInit {
       {
         prop: 'LastModifiedDate'
       }
-    ]
+    ],
+    children : ['ProposalSummaryGroups']
   };
   /**
    * Array of quotes for current page number.
@@ -66,7 +70,7 @@ export class QuoteListComponent implements OnInit {
   filterList: Array<AFilter> = [];
 
   /** @ignore */
-  constructor(private quoteService: QuoteService, private cartService: CartService, private router: Router, private translateService: TranslateService, private priceService: PriceService) {
+  constructor(private quoteService: QuoteService, private cartService: CartService, private router: Router, private currencyPipe: LocalCurrencyPipe) {
     this.actionConfiguration = new QuoteActions().actionConfiguration;
   }
 
