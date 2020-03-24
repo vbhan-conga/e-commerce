@@ -111,7 +111,19 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     Terminate: new AFilter(AssetLineItem, [new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')]),
     'Buy More': new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'PriceType', 'Equal', 'One Time'), new ACondition(Product, 'Product.ConfigurationType', 'Equal', 'Standalone')]),
     'Change Configuration': new AFilter(this.assetService.type, [
-      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled')
+      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled')], [
+      new AFilter(this.assetService.type, [
+        new ACondition(Product,
+          'Product.ConfigurationType',
+          'Equal',
+          'Bundle'
+        ),
+        new ACondition(Product,
+          'Product.HasAttributes',
+          'Equal',
+          true
+        )
+      ], null, 'OR')
     ])
   };
 
@@ -124,7 +136,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     protected cartService: CartService,
     protected toastr: ToastrService,
     private storefrontService: StorefrontService
-  ) {}
+  ) { }
 
   /**
    * @ignore
@@ -169,7 +181,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
             { prop: 'AssetStatus' },
             { prop: 'PriceType' }
           ],
-          actions:  _.filter(this.getMassActions(cart), action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
+          actions: _.filter(this.getMassActions(cart), action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
             relationshipField: 'BundleAssetId',
@@ -193,7 +205,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.subscription)
+    if (this.subscription)
       this.subscription.unsubscribe();
   }
   /**
@@ -243,7 +255,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     return _.concat(this.defaultFilters, this.advancedFilters, this.renewFilter, this.priceTypeFilter, this.assetActionFilter, this.productFamilyFilter);
   }
 
-  private getMassActions(cart: Cart): Array<TableAction>{
+  private getMassActions(cart: Cart): Array<TableAction> {
     return [
       {
         icon: 'fa-sync',
