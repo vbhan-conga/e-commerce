@@ -93,7 +93,12 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
   /**
    * Default filters that will be applied to the table and chart components.
    */
-  defaultFilters: Array<AFilter> = [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', true)])];
+  defaultFilters: Array<AFilter> = [
+    new AFilter(this.assetService.type, [
+      new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'),
+      new ACondition(this.assetService.type, 'Product.ConfigurationType', 'NotEqual', 'Option'),
+      new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', true),
+      new ACondition(this.assetService.type, 'AssetStatus', 'Equal', 'Activated')])];
   /**
    * Flag to pre-select items in the table component.
    */
