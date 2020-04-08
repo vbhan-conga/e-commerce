@@ -1,6 +1,6 @@
 {
   "name": "apttus.ui.ecom.rc",
-  "version": "2001.0.138",
+  "version": "2002.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -42,7 +42,7 @@
     "jsforce": "^1.9.3",
     "lodash-decorators": "^6.0.1",
     "moment": "^2.24.0",
-    "ngx-bootstrap": "^5.3.2",
+    "ngx-bootstrap": "5.3.2",
     "ngx-gallery": "^5.10.0",
     "ngx-indexed-db": "^2.2.0",
     "ngx-scrollbar": "7.1.0",
