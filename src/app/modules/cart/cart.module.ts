@@ -5,7 +5,7 @@ import { CartRoutingModule } from './cart-routing.module';
 import { CartComponent } from './layout/cart.component';
 import { SummaryComponent } from './component/summary.component';
 import {
-  ProductConfigurationSummaryModule,
+  ConfigurationSummaryModule,
   PaymentComponentModule,
   OutputFieldModule,
   MiniProfileModule,
@@ -31,7 +31,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     CartRoutingModule,
     FormsModule,
     ComponentModule,
-    ProductConfigurationSummaryModule,
+    ConfigurationSummaryModule,
     PriceModule,
     IconModule,
     TabsModule.forRoot(),

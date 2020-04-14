@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApttusModule } from '@apttus/core';
 import { PricingModule } from '@apttus/ecommerce';
-import { BreadcrumbModule, IconModule, InputDateModule, PriceModule, PromotionModule, ProductConfigurationSummaryModule, ConstraintRuleModule } from '@apttus/elements';
+import { BreadcrumbModule, IconModule, InputDateModule, PriceModule, PromotionModule, ConfigurationSummaryModule, ConstraintRuleModule } from '@apttus/elements';
 
 import { DetailsLayoutComponent } from './layout/details-layout.component';
 import { TranslateModule } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     PromotionModule,
     PricingModule,
     TranslateModule.forChild(),
-    ProductConfigurationSummaryModule,
+    ConfigurationSummaryModule,
     FormsModule,
     InputFieldModule,
     DatepickerModule.forRoot(),
