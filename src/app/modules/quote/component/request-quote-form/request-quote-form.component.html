@@ -10,7 +10,7 @@
           </apt-input-field>
         </div>
         <div class="form-group">
-          <apt-input-field placeholder="{{'CREATE_QUOTE.SEARCH_CONTACTS' | translate }}" [entity]="quote" [field]="'PrimaryContactId'" [lookupOptions]="lookupOptions" [required]="true" [(ngModel)]="quote.PrimaryContactId" (ngModelChange)="primaryContactChange()" [errorMsg]="'Primary contact is mandatory'">
+          <apt-input-field placeholder="{{'CREATE_QUOTE.SEARCH_CONTACTS' | translate }}" [entity]="quote" [field]="'_PrimaryContactId'" [lookupOptions]="lookupOptions" [required]="true" [(ngModel)]="contactId" (ngModelChange)="primaryContactChange()" [errorMsg]="'Primary contact is mandatory'">
           </apt-input-field>
         </div>
         <div class="form-group">
@@ -28,11 +28,11 @@
       </div>
       <div class="col-12 col-md-6">
            <div>
-                <h5 class="py-2" *ngIf="cart.Quote">
+                <h5 class="py-2" *ngIf="cart.Proposald">
                   {{'COMMON.COMMENTS' | translate}} <span *ngIf="comments?.length > 0">({{comments?.length}})</span>
                 </h5>
                 <div>
-                  <div class="note-container" *ngIf="cart?.Quote">
+                  <div class="note-container" *ngIf="cart?.Proposald">
                     <ng-scrollbar>
                       <ng-container *ngIf="comments?.length > 0; else emptyNotes">
                         <div class="my-3 pb-3 border-bottom" *ngFor="let note of comments">

@@ -68,7 +68,8 @@
             "ORDER_NAME": "es_MX Order Name"
         },
         "ORDER_LIST": {
-            "NUM_OF_ITEMS": "es_MX of Items"
+            "NUM_OF_ITEMS": "es_MX of Items",
+            "ORDERS_BY_STATUS": "es_MX Orders by Status"
         },
         "ORDER_DETAIL": {
             "BILLING_ADDRESS": "es_MX Billing Address",
@@ -296,7 +297,8 @@
         "ITEMIZED_OPTIONS": "es_MX Itemized Options",
         "NO_DATA": "es_MX n/a",
         "CHECKOUT": "es_MX Checkout",
-        "TOTAL_ORDERS": "es_MX Total Orders"
+        "TOTAL_ORDERS": "es_MX Total Orders",
+        "ORDER_AMOUNT_BY_STATUS": "es_MX ORDER AMOUNT BY STATUS"
     },
     "CREATE_QUOTE":{
         "QUOTE_SUMMARY": "es_MX QUOTE SUMMARY",

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService, PriceService, LocalCurrencyPipe, Order, UserService, User } from '@apttus/ecommerce';
+import { OrderService, Order, UserService, User } from '@apttus/ecommerce';
 import { ACondition, AFilter } from '@apttus/core';
 import { Observable, combineLatest } from 'rxjs';
 import * as _ from 'lodash';
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
   /**
   * @ignore
   */
-  constructor(private orderService: OrderService, private priceService: PriceService, private localCurrencyPipe: LocalCurrencyPipe, private userService: UserService) {}
+  constructor(private orderService: OrderService, private userService: UserService) {}
 
   /**
   * @ignore
@@ -55,7 +55,6 @@ export class DashboardComponent implements OnInit {
       })
     ).pipe(
       map(([user, recentOrders, agg]) => {
-        console.log(user);
         return {
           user: user,
           tableOptions: this.tableOptions,

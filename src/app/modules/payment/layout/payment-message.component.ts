@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-payment-message',
-  templateUrl: './payment-message.component.html'
+  template: ``
 })
 export class PaymentMesageComponent implements OnInit {
 

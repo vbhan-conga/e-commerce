@@ -150,7 +150,6 @@ export class CartComponent implements OnInit, OnDestroy {
     this.account$ = this.accountService.getCurrentAccount();
     this.subscriptions.push(this.cartService.getMyCart().subscribe(cart => {
       this.cart = cart;
-
       // Setting default values
       this.model.BillToAccountId = _.get(cart, 'AccountId');
       this.model.ShipToAccountId = _.get(cart, 'AccountId');
@@ -214,12 +213,8 @@ export class CartComponent implements OnInit, OnDestroy {
         this.primaryContact.OtherStateCode = this.primaryContact.MailingStateCode;
         this.primaryContact.OtherPostalCode = this.primaryContact.MailingPostalCode;
         this.primaryContact.OtherCountryCode = this.primaryContact.MailingCountryCode;
+        this.primaryContact.OtherCountry = this.primaryContact.MailingCountry;
       }
-
-      // Removing MailingCountry, OtherCountry, OtherState and OtherStateCode from primary contact object
-      delete this.primaryContact.OtherCountry;
-      delete this.primaryContact.OtherState;
-      delete this.primaryContact.OtherStateCode;
 
       this.convertCartToOrder(this.order, this.primaryContact);
     }
@@ -282,7 +277,8 @@ export class CartComponent implements OnInit, OnDestroy {
     this.paymentTransaction.CustomerBillingAccountName = _.get(orderDetails.BillToAccount, 'Name');
     this.paymentTransaction.CustomerBillingAccountID = _.get(orderDetails.BillToAccount, 'Id');
     this.paymentTransaction.isUserLoggedIn = this.isLoggedIn;
-    this.paymentTransaction.OrderAmount =  this.orderAmount;
+    // Rounding off the string amount to 2 decimal places as cybersource doesn't allow higher numeric scale on order amount.
+    this.paymentTransaction.OrderAmount = _.toString(_.round(parseFloat(this.orderAmount), 2));
     this.paymentTransaction.Locale = this.currentUserLocale ;
     this.paymentTransaction.OrderName = _.get(orderDetails, 'Name') ;
     this.paymentTransaction.OrderGeneratedID = _.get(orderDetails, 'Id');
