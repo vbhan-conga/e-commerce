@@ -14,8 +14,7 @@ import {
   InputFieldModule,
   AddressModule,
   PriceModule,
-  IconModule,
-  CmsModule
+  IconModule
 } from '@apttus/elements';
 import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
@@ -33,7 +32,6 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     FormsModule,
     ComponentModule,
     ProductConfigurationSummaryModule,
-    CmsModule,
     PriceModule,
     IconModule,
     TabsModule.forRoot(),

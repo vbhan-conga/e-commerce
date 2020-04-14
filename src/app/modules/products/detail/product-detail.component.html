@@ -146,25 +146,14 @@
     </apt-detail-section>
   </ng-container>
 
-  <apt-product-configuration-summary
-    *ngIf="!viewState?.isCmsEnabled"
+  <apt-configuration-summary-wrapper
     [product]="viewState?.product"
     [relatedTo]="viewState?.relatedTo"
     [changes]="cartItemList"
     [preload]="true"
-    #productConfigurationSummary
-    position="right">
-  </apt-product-configuration-summary>
-
-  <apt-cms-configuration-summary
-    *ngIf="viewState?.isCmsEnabled"
-    [product]="viewState?.product"
-    [relatedTo]="viewState?.relatedTo"
-    [changes]="cartItemList"
-    [preload]="true"
-    #cmsProductConfigurationSummary
-    position="right">
-  </apt-cms-configuration-summary>
+    position="right"
+    #configSummary>
+  </apt-configuration-summary-wrapper>
 </apt-detail>
 
 <ng-template #loading>
