@@ -3,7 +3,9 @@ import { CartService, CartItem, Storefront, StorefrontService } from '@apttus/ec
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ProductConfigurationSummaryComponent, ConfigurationSummaryComponent } from '@apttus/elements';
+import {
+  ConfigurationSummaryWrapperComponent
+} from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
 
 @Component({
@@ -39,11 +41,8 @@ export class ProductDetailComponent implements OnInit {
 
     storefront$: Observable<Storefront> = null;
 
-    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
-    configSummaryModal: ProductConfigurationSummaryComponent;
-
-    @ViewChild(ConfigurationSummaryComponent, { static: false })
-    cmsConfigSummaryModal: ConfigurationSummaryComponent;
+    @ViewChild(ConfigurationSummaryWrapperComponent, { static: false })
+    configSummaryModal: ConfigurationSummaryWrapperComponent;
 
     constructor(private cartService: CartService,
                 private resolver: ProductDetailsResolver,
@@ -97,11 +96,6 @@ export class ProductDetailComponent implements OnInit {
     }
 
     showSummary() {
-        const modal = this.configSummaryModal || this.cmsConfigSummaryModal;
-
-        if (!modal)
-          return;
-
-        modal.show();
+      this.configSummaryModal.show();
     }
 }
