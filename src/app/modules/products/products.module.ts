@@ -26,13 +26,12 @@ import {
   IconModule,
   InputDateModule,
   ProductImagesModule,
-  ProductConfigurationSummaryModule,
+  ConfigurationSummaryModule,
   ProductCardModule,
   FilterModule,
   InputFieldModule,
   InputSelectModule,
   ConfigurationModule,
-  CmsModule,
   ConstraintRuleModule
 } from '@apttus/elements';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,7 +44,7 @@ import { ProductListComponent } from './list/product-list.component';
     BreadcrumbModule,
     ProductCarouselModule,
     ProductConfigurationModule,
-    ProductConfigurationSummaryModule,
+    ConfigurationSummaryModule,
     IconModule,
     ButtonModule,
     ProductImagesModule,
@@ -65,7 +64,6 @@ import { ProductListComponent } from './list/product-list.component';
     InputFieldModule,
     FilterModule,
     ConfigurationModule,
-    CmsModule,
     ConstraintRuleModule
   ],
   providers : [ConfigureGuard],
