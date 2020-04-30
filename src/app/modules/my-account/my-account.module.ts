@@ -20,7 +20,7 @@ import { CartListComponent } from './component/cart-list/cart-list.component';
 import { ApttusModule } from '@apttus/core';
 import { OrderDetailComponent } from './component/order-detail/order-detail.component';
 import { ReorderComponent } from './component/reorder/reorder.component';
-import { IconModule, AddressModule, PriceModule, InputQuantityModule, ProductConfigurationSummaryModule, BreadcrumbModule, InputFieldModule, OutputFieldModule, ChartModule, DataFilterModule, ConstraintRuleModule } from '@apttus/elements';
+import { IconModule, AddressModule, PriceModule, InputQuantityModule, ConfigurationSummaryModule, BreadcrumbModule, InputFieldModule, OutputFieldModule, ChartModule, DataFilterModule, ConstraintRuleModule } from '@apttus/elements';
 import { TableModule } from '@apttus/elements';
 
 
@@ -38,7 +38,7 @@ import { TableModule } from '@apttus/elements';
     DataFilterModule,
     FormsModule,
     InputQuantityModule,
-    ProductConfigurationSummaryModule,
+    ConfigurationSummaryModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     PaginationModule.forRoot(),
