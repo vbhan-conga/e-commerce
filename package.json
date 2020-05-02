@@ -1,10 +1,10 @@
 {
   "name": "apttus.ui.ecom.rc",
-  "version": "2002.0.3",
+  "version": "2002.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration=dc1",
+    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
