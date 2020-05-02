@@ -12,8 +12,8 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { CartTableComponent } from './component/cart-table/cart-table.component';
 import { CartSummaryComponent } from './component/cart-summary/cart-summary.component';
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { ProductCarouselModule, ConstraintAlertModule, ProductConfigurationSummaryModule, PriceModule, PromotionModule, InputDateModule, LineItemTableRowModule, BreadcrumbModule, IconModule, TaxPopHoverModule, PriceSummaryModule, AlertModule, ConstraintRuleModule } from '@apttus/elements';
-import { TranslateModule } from '@ngx-translate/core'; 
+import { ProductCarouselModule, ConstraintAlertModule, ConfigurationSummaryModule, PriceModule, PromotionModule, InputDateModule, LineItemTableRowModule, BreadcrumbModule, IconModule, TaxPopHoverModule, PriceSummaryModule, AlertModule, ConstraintRuleModule } from '@apttus/elements';
+import { TranslateModule } from '@ngx-translate/core';
 import { QuoteModule } from '../quote/quote.module';
 
 @NgModule({
@@ -27,7 +27,7 @@ import { QuoteModule } from '../quote/quote.module';
     FormsModule,
     ComponentModule,
     ConstraintAlertModule,
-    ProductConfigurationSummaryModule,
+    ConfigurationSummaryModule,
     PriceModule,
     PromotionModule,
     TabsModule.forRoot(),

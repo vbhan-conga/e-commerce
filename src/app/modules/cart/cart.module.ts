@@ -5,7 +5,7 @@ import { CartRoutingModule } from './cart-routing.module';
 import { CartComponent } from './layout/cart.component';
 import { SummaryComponent } from './component/summary.component';
 import {
-  ProductConfigurationSummaryModule,
+  ConfigurationSummaryModule,
   PaymentComponentModule,
   OutputFieldModule,
   MiniProfileModule,
@@ -14,8 +14,7 @@ import {
   InputFieldModule,
   AddressModule,
   PriceModule,
-  IconModule,
-  CmsModule
+  IconModule
 } from '@apttus/elements';
 import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
@@ -32,8 +31,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     CartRoutingModule,
     FormsModule,
     ComponentModule,
-    ProductConfigurationSummaryModule,
-    CmsModule,
+    ConfigurationSummaryModule,
     PriceModule,
     IconModule,
     TabsModule.forRoot(),
