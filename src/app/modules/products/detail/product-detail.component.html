@@ -101,7 +101,8 @@
         <apt-cms-product-configuration
           [productId]="viewState?.product?.Id"
           [relatedTo]="viewState?.relatedTo"
-          *ngIf="viewState?.isCmsEnabled">
+          *ngIf="viewState?.isCmsEnabled"
+          (configurationChange)="onConfigurationChange($event)">
         </apt-cms-product-configuration>
       </div>
     </div>

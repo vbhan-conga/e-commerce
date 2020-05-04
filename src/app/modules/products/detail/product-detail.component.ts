@@ -60,7 +60,10 @@ export class ProductDetailComponent implements OnInit {
      */
     onConfigurationChange(result: any) {
         this.cartItemList = _.first(result);
-        if (_.get(result[1],'optionChanged') || _.get(result[1],'attributeChanged')) this.configurationChanged = true;
+        if ((_.get(result[1], 'optionChanged') || _.get(result[1], 'attributeChanged')) ||
+          (_.get(this.viewState$, 'isCmsEnabled') && _.get(this.viewState$, 'relatedTo'))) {
+          this.configurationChanged = true;
+        }
     }
 
     /**
