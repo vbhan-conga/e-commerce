@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit {
       }),
       this.orderService.query({
         aggregate: true
-      })
+      }).pipe(map(res => _.first(res)))
     ).pipe(
       map(([user, recentOrders, agg]) => {
         return {
