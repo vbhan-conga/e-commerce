@@ -209,7 +209,7 @@ export class QuoteDetailsComponent implements OnInit {
    */
   uploadAttachment(parentId: string) {
     this.attachments_loader = true;
-    this.attachmentService.uploadAttachment(this.file, parentId).subscribe(res => {
+    this.attachmentService.uploadAttachment(this.file, parentId).pipe(take(1)).subscribe(res => {
       this.attachmentService.query({
         conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
       }).subscribe(att => { if(att.length > 0) this.attachmentList.push(att[0]); });
