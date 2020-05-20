@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef } from '@angular/core';
-import { UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService, LineItemService } from '@apttus/ecommerce';
+import { UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService, LineItemService, Attachment } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -20,6 +20,8 @@ export class QuoteDetailsComponent implements OnInit {
   quoteLineItems$: Observable<Array<ItemGroup>>;
   order$: Observable<Order>;
   note: Note = new Note();
+  noteList = new Array<Note>();
+  attachmentList = new Array<Attachment>();
   newlyGeneratedOrder: Order;
   intimationModal: BsModalRef;
   hasSizeError: boolean;
@@ -67,7 +69,10 @@ export class QuoteDetailsComponent implements OnInit {
       );
     this.quoteLineItems$ = this.quote$.pipe(
       map(
-        quote => LineItemService.groupItems(quote.QuoteLineItems)
+        quote => {
+          this.noteList = _.get(quote, 'Notes') ? _.get(quote, 'Notes') : new Array<Note>();
+          this.attachmentList = _.get(quote, 'Attachments') ? _.get(quote, 'Attachments') : new Array<Attachment>();
+          return LineItemService.groupItems(quote.QuoteLineItems); }
       )
     );
     this.order$ = this.quote$.pipe(
@@ -85,6 +90,10 @@ export class QuoteDetailsComponent implements OnInit {
     }
     this.noteService.create([this.note])
       .subscribe(r => {
+        this.noteService.query({
+            conditions: [new ACondition(this.noteService.type, 'Id', 'In', (_.get(_.first(r), 'Id')))],
+            waitForExpansion: false
+          }).subscribe(comment => this.noteList.push(comment[0]));
         this.clear();
         this.comments_loader = false;
       },
@@ -200,7 +209,10 @@ export class QuoteDetailsComponent implements OnInit {
    */
   uploadAttachment(parentId: string) {
     this.attachments_loader = true;
-    this.attachmentService.uploadAttachment(this.file, parentId).pipe(take(1)).subscribe(res => {
+    this.attachmentService.uploadAttachment(this.file, parentId).subscribe(res => {
+      this.attachmentService.query({
+        conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
+      }).subscribe(att => { if(att.length > 0) this.attachmentList.push(att[0]); });
       this.attachments_loader = false;
       this.clearFiles();
       this.cdr.detectChanges();
