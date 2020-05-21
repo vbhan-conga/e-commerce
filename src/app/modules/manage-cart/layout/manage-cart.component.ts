@@ -1,16 +1,15 @@
-import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup } from '@apttus/ecommerce';
-import { Observable } from 'rxjs';
-import * as _ from 'lodash';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup, LineItemService } from '@apttus/ecommerce';
+import { Observable, of, combineLatest } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { map, mergeMap, tap } from 'rxjs/operators';
-import { ManageCartResolver, ManageCartState } from '../services/manage-cart.resolver';
+import { map as rmap } from 'rxjs/operators';
+import { get } from 'lodash';
 
 @Component({
   selector: 'app-manage-cart',
   templateUrl: './manage-cart.component.html',
   styleUrls: ['./manage-cart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 /**
  * Manage Cart component is used to show the list of cart line item(s)  and summary of the cart.
@@ -25,13 +24,32 @@ export class ManageCartComponent implements OnInit {
    */
   view$: Observable<ManageCartState>;
 
-  constructor(private cartService: CartService, private cartItemService: CartItemService, private crService: ConstraintRuleService, private resolver: ManageCartResolver) { }
+  constructor(private cartService: CartService, private cartItemService: CartItemService, private crService: ConstraintRuleService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.view$ = this.resolver.state();
+    this.view$ = combineLatest(
+      this.cartService.getMyCart(),
+      this.crService.getRecommendationsForCart())
+      .pipe(
+        rmap(([cart, products]) => {
+          this.cdr.detectChanges();
+          return {
+            cart: cart,
+            lineItems: LineItemService.groupItems(get(cart, 'LineItems')),
+            productList: products
+          } as ManageCartState;
+        })
+      );
   }
 
   trackById(index, record): string {
-    return _.get(record, 'MainLine.Id');
+    return get(record, 'MainLine.Id');
   }
+}
+
+/** @ignore */
+export interface ManageCartState {
+  cart: Cart;
+  lineItems: Array<ItemGroup>;
+  productList: Array<Product>;
 }
