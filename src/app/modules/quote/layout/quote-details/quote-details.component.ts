@@ -210,7 +210,6 @@ export class QuoteDetailsComponent implements OnInit {
    */
   uploadAttachment(parentId: string) {
     this.attachments_loader = true;
-
     this.attachmentService.uploadAttachment(this.file, parentId)
     .pipe(
       switchMap((res) => this.attachmentService.query({
