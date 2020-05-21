@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef } from '@angular/core';
-import { UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService, ProductInformationService, ItemGroup, QuoteLineItemService, LineItemService, Attachment } from '@apttus/ecommerce';
+import { UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
+  ProductInformationService, ItemGroup, LineItemService, Attachment } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, map, take, mergeMap } from 'rxjs/operators';
+import { filter, map, take, mergeMap, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { Observable, of } from 'rxjs';
 import { ExceptionService, LookupOptions } from '@apttus/elements';
@@ -209,17 +210,21 @@ export class QuoteDetailsComponent implements OnInit {
    */
   uploadAttachment(parentId: string) {
     this.attachments_loader = true;
-    this.attachmentService.uploadAttachment(this.file, parentId).pipe(take(1)).subscribe(res => {
-      this.attachmentService.query({
-        conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
-      }).subscribe(att => { if(att.length > 0) this.attachmentList.push(att[0]); });
-      this.attachments_loader = false;
-      this.clearFiles();
-      this.cdr.detectChanges();
-    }, err => {
-      this.clearFiles();
-      this.exceptionService.showError(err);
-    });
+
+    this.attachmentService.uploadAttachment(this.file, parentId)
+    .pipe(
+      switchMap((res) => this.attachmentService.query({
+                          conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
+        })), take(1)
+      ).subscribe(documentList => {
+        if(documentList.length > 0)  this.attachmentList.push(_.first(documentList));
+        this.attachments_loader = false;
+        this.clearFiles();
+        this.cdr.detectChanges();
+      }, err => {
+        this.clearFiles();
+        this.exceptionService.showError(err);
+      });
   }
 
   /**
