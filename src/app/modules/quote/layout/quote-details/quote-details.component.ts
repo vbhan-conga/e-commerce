@@ -212,18 +212,20 @@ export class QuoteDetailsComponent implements OnInit {
     this.attachments_loader = true;
     this.attachmentService.uploadAttachment(this.file, parentId)
     .pipe(
-      switchMap((res) => this.attachmentService.query({
-                          conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
-        })), take(1)
-      ).subscribe(documentList => {
-        if(documentList.length > 0)  this.attachmentList.push(_.first(documentList));
-        this.attachments_loader = false;
-        this.clearFiles();
-        this.cdr.detectChanges();
-      }, err => {
-        this.clearFiles();
-        this.exceptionService.showError(err);
-      });
+      switchMap((res) =>
+        this.attachmentService.query({
+            conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
+        })), take(1))
+        .subscribe(documentList => {
+            if(documentList.length > 0)
+              this.attachmentList.push(_.first(documentList));
+            this.attachments_loader = false;
+            this.clearFiles();
+            this.cdr.detectChanges();
+        }, err => {
+            this.clearFiles();
+            this.exceptionService.showError(err);
+        });
   }
 
   /**
