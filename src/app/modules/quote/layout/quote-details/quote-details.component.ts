@@ -214,7 +214,7 @@ export class QuoteDetailsComponent implements OnInit {
     .pipe(
       switchMap((res) =>
         this.attachmentService.query({
-            conditions: [new ACondition(this.attachmentService.type, 'Id', 'In', (_.get(_.first(res), 'Id')))]
+            conditions: [new ACondition(this.attachmentService.type, 'ParentId', 'In', parentId)]
         })), take(1))
         .subscribe(documentList => {
             if(documentList.length > 0)
