@@ -313,5 +313,8 @@
       }
     }
   },
-  "defaultProject": "reference-base"
+  "defaultProject": "reference-base",
+  "cli": {
+    "analytics": "e0cf922c-4f45-48f5-8203-4b7de9df8043"
+  }
 }

@@ -1,7 +1,7 @@
 import { Configuration } from '@apttus/core';
 export const environment: Configuration = {
   production: false,
-  defaultImageSrc: './assets/images/default.png',
+  defaultImageSrc: 'https://loremflickr.com/320/240/hardware,computer,server/all',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
   enableErrorLogging: false,
@@ -20,13 +20,10 @@ export const environment: Configuration = {
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
-  proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
     // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'E-Commerce',
-  organizationId: '00D3I0000008mFM',
-  sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://dc5-cpqqacommunity1.cs123.force.com/ecomm'
+  storefront: 'ECommerce',
+  endpoint: '	https://apttusdc-developer-edition.na134.force.com/ecommerce'
 };
