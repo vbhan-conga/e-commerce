@@ -4,18 +4,18 @@ import { CartService, AssetService, AssetLineItemExtended, AssetLineItem, Storef
 import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { AssetModalService, TableOptions, TableAction, ChildRecordOptions, FilterOptions } from '@apttus/elements';
+import { AssetModalService, TableOptions, TableAction, ChildRecordOptions, FilterOptions, CheckState } from '@apttus/elements';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { ClassType } from 'class-transformer/ClassTransformer';
 
 /**
-* Installed Product Layout is used to set the structure of the installed products page.
-*
-* @example
-* <app-installed-products-layout></app-installed-products-layout>
-*/
+ * Installed Product Layout is used to set the structure of the installed products page.
+ *
+ * @example
+ * <app-installed-products-layout></app-installed-products-layout>
+ */
 @Component({
   selector: 'app-installed-products-layout',
   templateUrl: './installed-products-layout.component.html',
@@ -174,7 +174,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
           groupBy: 'Product.Name',
           filters: this.getFilters(),
           defaultSort: {
-            column: 'Product.Name',
+            column: 'CreatedDate',
             direction: 'ASC'
           },
           columns: [
@@ -193,7 +193,13 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
             relationshipField: 'BundleAssetId',
             childRecordFields: ['ChargeType', 'SellingFrequency', 'StartDate', 'EndDate', 'NetPrice', 'Quantity', 'AssetStatus', 'PriceType']
           } as ChildRecordOptions,
-          preselectItemsInGroups: this.preselectItemsInGroups
+          preselectItemsInGroups: this.preselectItemsInGroups,
+          selectItemsInGroupFunc: (recordData => {
+            _.forEach(_.values(_.groupBy(recordData, 'Product.Name')), v => {
+              const recentAsset = _.last(_.filter(v, x => !_.isEmpty(x.get('actions'))));
+              if (recentAsset) recentAsset.set('state', CheckState.CHECKED);
+            });
+          })
         } as TableOptions,
         assetType: AssetLineItemExtended,
         colorPalette: this.colorPalette,
@@ -340,3 +346,4 @@ interface AssetListView {
   assetActionValue?: string;
   advancedFilterList?: Array<AFilter>;
 }
+
