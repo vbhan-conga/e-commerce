@@ -68,7 +68,7 @@
     </table>
   </apt-detail-section>
 
-  <apt-detail-section [title]="'DETAILS.COMMENTS' | translate" class="mt-4">
+  <apt-detail-section [title]="'DETAILS.COMMENTS' | translate" class="mt-4" *ngIf="noteList$ | async as noteList">
     <h5 class="py-2 text-uppercase">
         {{'DETAILS.COMMENTS' | translate}} <span *ngIf="noteList?.length > 0">({{noteList?.length}})</span>
     </h5>
@@ -104,7 +104,7 @@
     </div>
   </apt-detail-section>
 
-  <apt-detail-section [title]="'DETAILS.ATTACHMENTS' | translate" class="mt-4">
+  <apt-detail-section [title]="'DETAILS.ATTACHMENTS' | translate" class="mt-4" *ngIf="attachmentList$ | async as attachmentList">
     <h5 class="py-2 text-uppercase">
         {{'DETAILS.ATTACHMENTS' | translate}} <span *ngIf="attachmentList?.length > 0">({{attachmentList?.length}})</span>
     </h5>
