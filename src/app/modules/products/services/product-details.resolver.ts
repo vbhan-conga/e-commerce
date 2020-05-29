@@ -54,7 +54,8 @@ export class ProductDetailsResolver implements Resolve<any> {
           product: product,
           recommendedProducts: rProductList,
           relatedTo: _.first(cartitemList),
-          isCmsEnabled: isCmsEnabled
+          isCmsEnabled: isCmsEnabled,
+          quantity: _.get(_.first(cartitemList), 'Quantity', 1)
         };
       })
     ).subscribe(r => this.subject.next(r));
@@ -88,4 +89,8 @@ export interface ProductDetailsState {
      * True if CMS Enabled.
      */
     isCmsEnabled: boolean;
+    /**
+    * Quantity to set to child components
+    */
+    quantity: number;
 }
