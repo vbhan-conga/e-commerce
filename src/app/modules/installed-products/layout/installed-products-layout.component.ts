@@ -192,13 +192,12 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
             relationshipField: 'BundleAssetId',
             childRecordFields: ['ChargeType', 'SellingFrequency', 'StartDate', 'EndDate', 'NetPrice', 'Quantity', 'AssetStatus', 'PriceType']
           } as ChildRecordOptions,
-          preselectItemsInGroups: this.preselectItemsInGroups,
-          selectItemsInGroupFunc: (recordData => {
+          selectItemsInGroupFunc: this.preselectItemsInGroups ? (recordData => {
             _.forEach(_.values(_.groupBy(recordData, 'Product.Name')), v => {
               const recentAsset = _.last(_.filter(v, x => !_.isEmpty(x.get('actions'))));
               if (recentAsset) recentAsset.set('state', CheckState.CHECKED);
             });
-          })
+          }) : null
         } as TableOptions,
         assetType: AssetLineItemExtended,
         colorPalette: this.colorPalette,
