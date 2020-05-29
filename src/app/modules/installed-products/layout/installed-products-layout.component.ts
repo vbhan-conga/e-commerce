@@ -116,7 +116,8 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     Terminate: new AFilter(AssetLineItem, [new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')]),
     'Buy More': new AFilter(this.assetService.type, [new ACondition(Product, 'Product.ConfigurationType', 'Equal', 'Standalone')]),
     'Change Configuration': new AFilter(this.assetService.type, [
-      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled')], [
+      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled'),
+      new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')], [
       new AFilter(this.assetService.type, [
         new ACondition(Product,
           'Product.ConfigurationType',
