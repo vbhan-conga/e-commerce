@@ -60,7 +60,9 @@ export class ProductDetailsResolver implements Resolve<any> {
           product: product,
           recommendedProducts: rProductList,
           relatedTo: first(cartitemList),
-          isCmsEnabled: isCmsEnabled
+          isCmsEnabled: isCmsEnabled,
+          quantity: get(first(cartitemList), 'Quantity', 1)
+
         };
       })
     ).subscribe(r => this.subject.next(r));
@@ -78,20 +80,24 @@ export class ProductDetailsResolver implements Resolve<any> {
 
 /** @ignore */
 export interface ProductDetailsState {
-  /**
-   * The product to display.
-   */
-  product: Product;
-  /**
-   * Array of products to act as recommendations.
-   */
-  recommendedProducts: Array<Product>;
-  /**
-   * The CartItem related to this product.
-   */
-  relatedTo: CartItem;
-  /**
-   * True if CMS Enabled.
-   */
-  isCmsEnabled: boolean;
+    /**
+     * The product to display.
+     */
+    product: Product;
+    /**
+     * Array of products to act as recommendations.
+     */
+    recommendedProducts: Array<Product>;
+    /**
+     * The CartItem related to this product.
+     */
+    relatedTo: CartItem;
+    /**
+     * True if CMS Enabled.
+     */
+    isCmsEnabled: boolean;
+    /**
+    * Quantity to set to child components
+    */
+    quantity: number;
 }
