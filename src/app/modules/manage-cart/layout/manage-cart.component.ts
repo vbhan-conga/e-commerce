@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup, LineItemService } from '@apttus/ecommerce';
-import { Observable, of, combineLatest } from 'rxjs';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { Observable, combineLatest } from 'rxjs';
 import { map as rmap } from 'rxjs/operators';
 import { get } from 'lodash';
 
@@ -15,10 +14,9 @@ import { get } from 'lodash';
  * Manage Cart component is used to show the list of cart line item(s)  and summary of the cart.
  */
 export class ManageCartComponent implements OnInit {
+
   @ViewChild('discardChangesTemplate', { static: false }) discardChangesTemplate: TemplateRef<any>;
 
-
-  discardChangesModal: BsModalRef;
   /**
    * Observable of the information for rendering this view.
    */
@@ -32,7 +30,6 @@ export class ManageCartComponent implements OnInit {
       this.crService.getRecommendationsForCart())
       .pipe(
         rmap(([cart, products]) => {
-          this.cdr.detectChanges();
           return {
             cart: cart,
             lineItems: LineItemService.groupItems(get(cart, 'LineItems')),
