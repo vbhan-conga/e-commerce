@@ -8,7 +8,7 @@ import { get } from 'lodash';
   selector: 'app-manage-cart',
   templateUrl: './manage-cart.component.html',
   styleUrls: ['./manage-cart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 /**
  * Manage Cart component is used to show the list of cart line item(s)  and summary of the cart.
