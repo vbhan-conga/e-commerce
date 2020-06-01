@@ -42,7 +42,8 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
 
   lookupOptions: LookupOptions = {
     primaryTextField: 'Name',
-    secondaryTextField: 'Email'
+    secondaryTextField: 'Email',
+    fieldList: ['Id', 'Name', 'Email']
   };
 
   constructor(private activatedRoute: ActivatedRoute,
