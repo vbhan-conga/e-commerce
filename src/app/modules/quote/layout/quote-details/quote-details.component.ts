@@ -1,14 +1,16 @@
-import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
-  ProductInformationService, ItemGroup, LineItemService, Attachment } from '@apttus/ecommerce';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter, map, take, mergeMap, switchMap } from 'rxjs/operators';
+import {Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {
+  UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
+  ProductInformationService, ItemGroup, LineItemService, Attachment
+} from '@apttus/ecommerce';
+import {ActivatedRoute, Router} from '@angular/router';
+import {filter, map, take, mergeMap, switchMap} from 'rxjs/operators';
 import * as _ from 'lodash';
-import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
-import { ExceptionService, LookupOptions } from '@apttus/elements';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { ACondition } from '@apttus/core';
+import {Observable, of, BehaviorSubject, Subscription} from 'rxjs';
+import {ExceptionService, LookupOptions} from '@apttus/elements';
+import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import {BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
+import {ACondition} from '@apttus/core';
 
 
 @Component({
@@ -36,7 +38,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   attachemntSubscription: Subscription;
   quoteSubscription: Subscription;
 
-  @ViewChild('intimationTemplate', { static: false }) intimationTemplate: TemplateRef<any>;
+  @ViewChild('intimationTemplate', {static: false}) intimationTemplate: TemplateRef<any>;
 
   lookupOptions: LookupOptions = {
     primaryTextField: 'Name',
@@ -45,24 +47,25 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   };
 
   constructor(private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private quoteService: QuoteService,
-    private noteService: NoteService,
-    private exceptionService: ExceptionService,
-    private modalService: BsModalService,
-    private orderService: OrderService,
-    private attachmentService: AttachmentService,
-    private productInformationService: ProductInformationService,
-    private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
-    private userService: UserService) { }
+              private router: Router,
+              private quoteService: QuoteService,
+              private noteService: NoteService,
+              private exceptionService: ExceptionService,
+              private modalService: BsModalService,
+              private orderService: OrderService,
+              private attachmentService: AttachmentService,
+              private productInformationService: ProductInformationService,
+              private cdr: ChangeDetectorRef,
+              private ngZone: NgZone,
+              private userService: UserService) {
+  }
 
   ngOnInit() {
     this.getQuote();
   }
 
   getQuote() {
-    if(this.quoteSubscription) this.quoteSubscription.unsubscribe();
+    if (this.quoteSubscription) this.quoteSubscription.unsubscribe();
     this.quoteSubscription = this.activatedRoute.params
       .pipe(
         filter(params => _.get(params, 'id') != null),
@@ -98,11 +101,11 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   getNotes() {
-    if(this.notesSubscription) this.notesSubscription.unsubscribe();
+    if (this.notesSubscription) this.notesSubscription.unsubscribe();
     this.notesSubscription = this.activatedRoute.params
-    .pipe(
-      switchMap(params => this.noteService.getNotes(_.get(params, 'id')))
-    ).subscribe((notes: Array<Note>) => this.noteList$.next(notes));
+      .pipe(
+        switchMap(params => this.noteService.getNotes(_.get(params, 'id')))
+      ).subscribe((notes: Array<Note>) => this.noteList$.next(notes));
   }
 
   addComment(quoteId: string) {
@@ -115,14 +118,14 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
     }
     this.noteService.create([this.note])
       .subscribe(r => {
-        this.getNotes();
-        this.clear();
-        this.comments_loader = false;
-      },
-      err => {
-        this.exceptionService.showError(err);
-        this.comments_loader = false;
-      });
+          this.getNotes();
+          this.clear();
+          this.comments_loader = false;
+        },
+        err => {
+          this.exceptionService.showError(err);
+          this.comments_loader = false;
+        });
   }
 
   clear() {
@@ -155,12 +158,12 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   editQuoteItems(quoteId: string) {
     this.edit_loader = true;
     this.quoteService.convertQuoteToCart(quoteId).pipe(take(1)).subscribe(res => {
-      this.edit_loader = false;
-      this.router.navigate(['/carts', 'active']);
-    },
+        this.edit_loader = false;
+        this.ngZone.run(() => this.router.navigate(['/carts', 'active']));
+      },
       err => {
-        this.exceptionService.showError(err),
-          this.edit_loader = false;
+        this.exceptionService.showError(err);
+        this.edit_loader = false;
       });
   }
 
@@ -227,11 +230,11 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   getAttachments() {
-    if(this.attachemntSubscription) this.attachemntSubscription.unsubscribe();
+    if (this.attachemntSubscription) this.attachemntSubscription.unsubscribe();
     this.attachemntSubscription = this.activatedRoute.params
-    .pipe(
-      switchMap(params => this.attachmentService.getAttachments(_.get(params, 'id')))
-    ).subscribe((attachments: Array<Attachment>) => this.attachmentList$.next(attachments));
+      .pipe(
+        switchMap(params => this.attachmentService.getAttachments(_.get(params, 'id')))
+      ).subscribe((attachments: Array<Attachment>) => this.attachmentList$.next(attachments));
   }
 
   /**
@@ -275,11 +278,11 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
    * @ignore
    */
   ngOnDestroy() {
-    if(this.notesSubscription)
+    if (this.notesSubscription)
       this.notesSubscription.unsubscribe();
-    if(this.attachemntSubscription)
+    if (this.attachemntSubscription)
       this.attachemntSubscription.unsubscribe();
-    if(this.quoteSubscription)
+    if (this.quoteSubscription)
       this.quoteSubscription.unsubscribe();
   }
 }
