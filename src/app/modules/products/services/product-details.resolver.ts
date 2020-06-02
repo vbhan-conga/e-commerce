@@ -67,7 +67,7 @@ export class ProductDetailsResolver implements Resolve<any> {
     return this.subject.pipe(
       filter(s => s != null)
       , tap(state => {
-        if (!isNil(get(routeParams, 'params.cartItem')) && _.isNil(state.relatedTo))
+        if (!isNil(get(routeParams, 'params.cartItem')) && isNil(state.relatedTo))
           this.router.navigate(['/products', get(state, 'product.Id')]);
       })
       , take(1)
