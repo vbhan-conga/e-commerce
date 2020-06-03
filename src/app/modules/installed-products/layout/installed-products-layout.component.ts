@@ -187,6 +187,19 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
             { prop: 'AssetStatus' },
             { prop: 'PriceType' }
           ],
+          lookups: [
+            {
+              field: 'AttributeValueId'
+            },
+            {
+              field: 'ProductId',
+              children: [
+                {
+                  field: 'AssetLineItems'
+                }
+              ]
+            }
+          ],
           actions: _.filter(this.getMassActions(cart), action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
