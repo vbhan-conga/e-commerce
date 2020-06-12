@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfigurationSummaryWrapperComponent } from '@apttus/elements';
+import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 
 @Component({
   selector: 'cart-summary',
@@ -34,8 +34,8 @@ import { ConfigurationSummaryWrapperComponent } from '@apttus/elements';
 export class SummaryComponent implements OnChanges {
   @Input() cart: Cart;
   @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
-  @ViewChild(ConfigurationSummaryWrapperComponent, { static: false })
-  summaryModal: ConfigurationSummaryWrapperComponent;
+  @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+  summaryModal: ProductConfigurationSummaryComponent;
 
   state: SummaryState;
   modalRef: BsModalRef;

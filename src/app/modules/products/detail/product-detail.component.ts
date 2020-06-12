@@ -3,9 +3,7 @@ import { CartService, CartItem, Storefront, StorefrontService } from '@apttus/ec
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  ConfigurationSummaryWrapperComponent
-} from '@apttus/elements';
+import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
 
 @Component({
@@ -41,8 +39,8 @@ export class ProductDetailComponent implements OnInit {
 
     storefront$: Observable<Storefront> = null;
 
-    @ViewChild(ConfigurationSummaryWrapperComponent, { static: false })
-    configSummaryModal: ConfigurationSummaryWrapperComponent;
+    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+    configSummaryModal: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService,
                 private resolver: ProductDetailsResolver,
@@ -60,7 +58,7 @@ export class ProductDetailComponent implements OnInit {
      */
     onConfigurationChange(result: any) {
         this.cartItemList = _.first(result);
-        if (_.get(result[1],'optionChanged') || _.get(result[1],'attributeChanged') || (_.isBoolean(result[1])) && result[1]) this.configurationChanged = true;
+        if (_.get(result[1],'optionChanged') || _.get(result[1],'attributeChanged')) this.configurationChanged = true;
     }
 
     /**
