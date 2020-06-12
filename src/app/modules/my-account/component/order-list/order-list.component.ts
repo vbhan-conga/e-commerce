@@ -50,6 +50,17 @@ export class OrderListComponent implements OnInit {
       {
         prop: 'ActivatedDate'
       }
+    ],
+    lookups: [
+      {
+        field: 'PriceListId'
+      },
+      {
+        field: 'BillToAccountId'
+      },
+      {
+        field: 'ShipToAccountId'
+      }
     ]
   };
 
