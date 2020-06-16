@@ -92,19 +92,11 @@
       <div class="col-12">
         <apt-constraint-rule-alert [showProductConfig]="true"></apt-constraint-rule-alert>
         <apt-product-configuration
-          *ngIf="!viewState?.isCmsEnabled"
           [product]="viewState?.product"
           [relatedTo]="viewState?.relatedTo"
           (configurationChange)="onConfigurationChange($event)"
           (click)="configurationChanged = true">
         </apt-product-configuration>
-
-        <apt-cms-product-configuration
-          [productId]="viewState?.product?.Id"
-          [relatedTo]="viewState?.relatedTo"
-          *ngIf="viewState?.isCmsEnabled"
-          (configurationChange)="onConfigurationChange($event)">
-        </apt-cms-product-configuration>
       </div>
     </div>
   </apt-detail-section>
@@ -149,15 +141,14 @@
     </apt-detail-section>
   </ng-container>
 
-  <apt-configuration-summary-wrapper
+  <apt-product-configuration-summary
     [product]="viewState?.product"
     [relatedTo]="viewState?.relatedTo"
     [changes]="cartItemList"
     [preload]="true"
-    [config]="true"
-    position="right"
-    #configSummary>
-  </apt-configuration-summary-wrapper>
+    #productConfigurationSummary
+    position="right">
+  </apt-product-configuration-summary>
 </apt-detail>
 
 <ng-template #loading>

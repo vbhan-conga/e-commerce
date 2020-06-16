@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { ApiService, ACondition } from '@apttus/core';
 import {
   Product,
   CartItem,
-  ProductService,
   CartItemService,
   ConstraintRuleService,
-  StorefrontService,
   TranslatorLoaderService
 } from '@apttus/ecommerce';
 import { Observable, zip, BehaviorSubject, Subscription } from 'rxjs';
@@ -24,12 +21,9 @@ export class ProductDetailsResolver implements Resolve<any> {
   private subscription: Subscription;
 
   constructor(private apiService: ApiService,
-    private productService: ProductService,
     private cartItemService: CartItemService,
     private crService: ConstraintRuleService,
     private router: Router,
-    private http: HttpClient,
-    private storefrontService: StorefrontService,
     private translatorService: TranslatorLoaderService) { }
 
 
@@ -52,15 +46,13 @@ export class ProductDetailsResolver implements Resolve<any> {
         conditions: [new ACondition(this.cartItemService.type, 'Id', 'In', [get(routeParams, 'params.cartItem')])],
         skipCache: true
       }),
-      this.crService.getRecommendationsForProducts([get(routeParams, 'params.id')]),
-      this.storefrontService.isCmsEnabled()
+      this.crService.getRecommendationsForProducts([get(routeParams, 'params.id')])
     ).pipe(
-      map(([product, cartitemList, rProductList, isCmsEnabled]) => {
+      map(([product, cartitemList, rProductList]) => {
         return {
           product: product,
           recommendedProducts: rProductList,
           relatedTo: first(cartitemList),
-          isCmsEnabled: isCmsEnabled,
           quantity: get(first(cartitemList), 'Quantity', 1)
         };
       })
@@ -91,10 +83,6 @@ export interface ProductDetailsState {
      * The CartItem related to this product.
      */
     relatedTo: CartItem;
-    /**
-     * True if CMS Enabled.
-     */
-    isCmsEnabled: boolean;
     /**
     * Quantity to set to child components
     */
