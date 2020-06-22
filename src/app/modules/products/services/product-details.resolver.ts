@@ -6,7 +6,8 @@ import {
   CartItem,
   CartItemService,
   ConstraintRuleService,
-  TranslatorLoaderService
+  TranslatorLoaderService,
+  ProductService
 } from '@apttus/ecommerce';
 import { Observable, zip, BehaviorSubject, Subscription } from 'rxjs';
 import { take, map, tap, filter, switchMap } from 'rxjs/operators';
@@ -24,7 +25,8 @@ export class ProductDetailsResolver implements Resolve<any> {
     private cartItemService: CartItemService,
     private crService: ConstraintRuleService,
     private router: Router,
-    private translatorService: TranslatorLoaderService) { }
+    private translatorService: TranslatorLoaderService,
+    private productService: ProductService) { }
 
 
   state(): BehaviorSubject<ProductDetailsState> {
@@ -37,20 +39,16 @@ export class ProductDetailsResolver implements Resolve<any> {
       this.subscription.unsubscribe();
     this.subject.next(null);
     this.subscription = zip(
-      this.apiService.get(`/products/${get(routeParams, 'params.id')}?cacheStrategy=performance`, Product)
-        .pipe(
-          switchMap(data => this.translatorService.translateData(new Array(data))),
-          map(res => first(res))
-        ),
+      this.productService.get([get(routeParams, 'params.id')]),
       this.cartItemService.query({
         conditions: [new ACondition(this.cartItemService.type, 'Id', 'In', [get(routeParams, 'params.cartItem')])],
         skipCache: true
       }),
       this.crService.getRecommendationsForProducts([get(routeParams, 'params.id')])
     ).pipe(
-      map(([product, cartitemList, rProductList]) => {
+      map(([productList, cartitemList, rProductList]) => {
         return {
-          product: product,
+          product: first(productList),
           recommendedProducts: rProductList,
           relatedTo: first(cartitemList),
           quantity: get(first(cartitemList), 'Quantity', 1)
