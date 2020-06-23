@@ -37,7 +37,7 @@ export class ProductDetailsResolver implements Resolve<any> {
       this.subscription.unsubscribe();
     this.subject.next(null);
     this.subscription = zip(
-      this.apiService.get(`/products/${get(routeParams, 'params.id')}?cacheStrategy=performance`, Product)
+      this.apiService.get(`/products/${get(routeParams, 'params.id')}?children=ProductGroups,ProductFeatureValues&cacheStrategy=performance`, Product)
         .pipe(
           switchMap(data => this.translatorService.translateData(new Array(data))),
           map(res => first(res))
