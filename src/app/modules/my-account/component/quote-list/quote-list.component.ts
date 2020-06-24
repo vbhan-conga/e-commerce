@@ -55,7 +55,10 @@ export class QuoteListComponent implements OnInit {
     lookups: [
       {
         field: 'PriceListId'
-      }
+      },
+      {
+        field: 'Account'
+      },
     ],
     children : ['ProposalSummaryGroups']
   };
