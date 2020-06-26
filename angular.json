@@ -68,7 +68,6 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "tsConfig": "tsconfig.prod.json",
               "serviceWorker": false,
               "budgets": [
                 {
