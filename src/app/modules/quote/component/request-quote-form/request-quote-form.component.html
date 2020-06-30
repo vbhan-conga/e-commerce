@@ -10,19 +10,19 @@
           </apt-input-field>
         </div>
         <div class="form-group">
-          <apt-input-field placeholder="{{'CREATE_QUOTE.SEARCH_CONTACTS' | translate }}" [entity]="quote" [field]="'_PrimaryContactId'" [lookupOptions]="lookupOptions" [required]="true" [(ngModel)]="contactId" (ngModelChange)="primaryContactChange()" [errorMsg]="'Primary contact is mandatory'">
+          <apt-input-field placeholder="{{'CREATE_QUOTE.SEARCH_CONTACTS' | translate }}" [entity]="quote" [field]="'Primary_Contact'" [lookupOptions]="lookupOptions" [required]="true" [(ngModel)]="contactId" (ngModelChange)="primaryContactChange()" [errorMsg]="'Primary contact is mandatory'">
           </apt-input-field>
         </div>
         <div class="form-group">
           <apt-input-field [entity]="quote" [field]="'ShipToAccountId'" [(ngModel)]="quote.ShipToAccountId" (ngModelChange)="shipToChange()"></apt-input-field>
           <small class="px-3 font-italic d-block" *ngIf="shipToAccount$ | async as shipToAccount">
-            <apt-address [(ngModel)]="shipToAccount" [readonly]="true" type="Shipping"></apt-address>
+            <apt-address [ngModel]="shipToAccount" [readonly]="true" type="Shipping"></apt-address>
           </small>
         </div> 
         <div class="form-group">
           <apt-input-field [entity]="quote" [field]="'BillToAccountId'" [(ngModel)]="quote.BillToAccountId" (ngModelChange)="billToChange()"> </apt-input-field>
           <small class="px-3 font-italic d-block" *ngIf="billToAccount$ | async as billToAccount">
-            <apt-address [(ngModel)]="billToAccount" [readonly]="true" type="Billing"></apt-address>
+            <apt-address [ngModel]="billToAccount" [readonly]="true" type="Billing"></apt-address>
           </small>
         </div>
       </div>
