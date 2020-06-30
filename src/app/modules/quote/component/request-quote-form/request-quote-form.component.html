@@ -10,7 +10,7 @@
           </apt-input-field>
         </div>
         <div class="form-group">
-          <apt-input-field placeholder="{{'CREATE_QUOTE.SEARCH_CONTACTS' | translate }}" [entity]="quote" [field]="'_PrimaryContactId'" [lookupOptions]="lookupOptions" [required]="true" [(ngModel)]="contactId" (ngModelChange)="primaryContactChange()" [errorMsg]="'Primary contact is mandatory'">
+          <apt-input-field placeholder="{{'CREATE_QUOTE.SEARCH_CONTACTS' | translate }}" [entity]="quote" [field]="'Primary_ContactId'" [lookupOptions]="lookupOptions" [required]="true" [(ngModel)]="contactId" (ngModelChange)="primaryContactChange()" [errorMsg]="'Primary contact is mandatory'">
           </apt-input-field>
         </div>
         <div class="form-group">
