@@ -1,6 +1,6 @@
 {
   "name": "apttus.ui.ecom.rc",
-  "version": "2001.1.23",
+  "version": "2001.1.27",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -23,9 +23,9 @@
     "@angular/pwa": "~0.802.0",
     "@angular/router": "^8.2.3",
     "@angular/service-worker": "^8.2.3",
-    "@apttus/core": "^2001.1.30",
-    "@apttus/ecommerce": "^2001.1.30",
-    "@apttus/elements": "^2001.1.30",
+    "@apttus/core": "^2001.1.43",
+    "@apttus/ecommerce": "^2001.1.43",
+    "@apttus/elements": "^2001.1.43",
     "@fortawesome/fontawesome-free": "^5.12.0",
     "@ng-select/ng-option-highlight": "0.0.4",
     "@ng-select/ng-select": "^3.0.6",
@@ -94,7 +94,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run build"
+      "pre-push": "ng build"
     }
   }
 }
