@@ -54,7 +54,7 @@
               <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" name="quantity" />
             </div>
             <div class="d-flex align-items-center">
-              <apt-add-to-cart [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
+              <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
                 (onAddToCart)="onAddToCart($event)"
                 [cartItems]="cartItemList" [product]="viewState?.product" [btnClass]="'btn-primary px-3'">
               </apt-add-to-cart>
