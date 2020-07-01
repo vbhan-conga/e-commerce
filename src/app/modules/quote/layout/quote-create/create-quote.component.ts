@@ -47,7 +47,7 @@ export class CreateQuoteComponent implements OnInit {
 
   onUpdate($event: Quote) {
     this.quoteRequestObj = $event;
-    this.disableSubmit = !this.quoteRequestObj.Primary_Contact__r;
+    this.disableSubmit = !this.quoteRequestObj.Primary_Contact;
   }
 
   /**
@@ -57,10 +57,9 @@ export class CreateQuoteComponent implements OnInit {
    * @returns quote object.
    */
   convertCartToQuote(cart: Cart) {
-    if (this.quoteRequestObj.Primary_Contact__r) {
+    if (this.quoteRequestObj.Primary_Contact) {
       this.loading = true;
       const quoteAmountGroup = _.find(_.get(cart, 'SummaryGroups'), c => _.get(c, 'LineType') === 'Grand Total');
-      this.quoteRequestObj.Primary_Contact = this.quoteRequestObj.Primary_Contact__r.Id;
       _.set(this.quoteRequestObj, 'Total_Quote_Amount', _.defaultTo(_.get(quoteAmountGroup, 'NetPrice', 0).toString(), '0'));
       this.quoteService.convertCartToQuote(this.quoteRequestObj).pipe(take(1)).subscribe(
         res => {
