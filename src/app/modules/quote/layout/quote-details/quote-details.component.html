@@ -31,8 +31,7 @@
             </apt-output-field>
             <apt-output-field [record]="quote" field="Primary_ContactId" layout="inline" 
               [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'" 
-              [showQuickView]="true" [lookupOptions]="lookupOptions" 
-              (onChange)="refreshQuote($event, quote, 'Primary_ContactId')">
+              [showQuickView]="true" [lookupOptions]="lookupOptions">
             </apt-output-field>
             <apt-output-field [record]="quote" field="AccountId" label="Account.Name" layout="inline"
             [editable]="false" [showQuickView]="true"></apt-output-field>
