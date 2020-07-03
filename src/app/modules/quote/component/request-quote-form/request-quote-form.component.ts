@@ -45,7 +45,7 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.Primary_Contact = _.get(user, 'Contact');
         this.contactId = _.get(user, 'ContactId');
         if(_.get(this.cart, 'Proposald.Id')) {
-          this.quote = _.get(this.cart, 'Proposald.Id');
+          this.quote = _.get(this.cart, 'Proposald');
           this.comments = _.get(quote, '[0].Notes', []);
         }
         this.quoteChange();
