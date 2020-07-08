@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CartService, CartItem, Storefront, StorefrontService } from '@apttus/ecommerce';
+import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } from '@apttus/ecommerce';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -17,6 +17,7 @@ import { ProductDetailsState, ProductDetailsResolver } from '../services/product
 export class ProductDetailComponent implements OnInit {
 
     cartItemList: Array<CartItem>;
+    product: BundleProduct;
     viewState$: BehaviorSubject<ProductDetailsState>;
 
     /**
@@ -57,8 +58,9 @@ export class ProductDetailComponent implements OnInit {
      * isConfigurationChanged to true.
      */
     onConfigurationChange(result: any) {
-        this.cartItemList = _.first(result);
-        if (_.get(result[1],'optionChanged') || _.get(result[1],'attributeChanged')) this.configurationChanged = true;
+        this.product = _.first(result);
+        this.cartItemList = result[1];
+        if (_.get(_.last(result),'optionChanged') || _.get(_.last(result),'attributeChanged')) this.configurationChanged = true;
     }
 
     /**
