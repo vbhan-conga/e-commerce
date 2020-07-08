@@ -42,7 +42,7 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.ShipToAccountId =  account.Id;
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
-        this.quote.Primary_Contact__r = _.get(user, 'Contact');
+        this.quote.Primary_Contact = _.get(user, 'Contact');
         this.contactId = _.get(user, 'ContactId');
         if(_.get(this.cart, 'Proposald.Id')) {
           this.quote = _.get(this.cart, 'Proposald');
@@ -90,7 +90,7 @@ export class RequestQuoteFormComponent implements OnInit {
     this.contactService.fetch(this.contactId)
       .pipe(take(1))
       .subscribe((newPrimaryContact: Contact) => {
-        this.quote.Primary_Contact__r = newPrimaryContact;
+        this.quote.Primary_Contact = newPrimaryContact;
         this.onQuoteUpdate.emit(this.quote);
       });
   }
