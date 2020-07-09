@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { filter, flatMap, map } from 'rxjs/operators';
+import { Observable, combineLatest, of } from 'rxjs';
+import { filter, flatMap, map, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { ACondition } from '@apttus/core';
-import { Order, OrderLineItem, OrderService, UserService } from '@apttus/ecommerce';
+import { Order, OrderLineItem, OrderService, UserService, QuoteService } from '@apttus/ecommerce';
 
 /**
  * Order details component is a way to show the details of an order.
@@ -19,14 +19,18 @@ export class OrderDetailsComponent implements OnInit {
   /**
    * Observable instance of an Order.
    */
-  order$ : Observable<Order>;
+  order$: Observable<Order>;
 
   /**
     * Boolean observable to check if user is logged in.
     */
   isLoggedIn$: Observable<boolean>;
 
-  constructor(private activatedRoute: ActivatedRoute, private orderService: OrderService, private router: Router, private userService: UserService) { }
+  constructor(private activatedRoute: ActivatedRoute,
+    private orderService: OrderService,
+    private router: Router,
+    private userService: UserService,
+    private quoteService: QuoteService) { }
 
   ngOnInit() {
     this.order$ = this.activatedRoute.params
@@ -36,7 +40,12 @@ export class OrderDetailsComponent implements OnInit {
           conditions: [new ACondition(this.orderService.type, 'Id', 'In', [_.get(params, 'id')])],
           waitForExpansion: false
         })),
-        map(orderList => _.get(orderList, '[0]'))
+        map(_.first),
+        switchMap((order: Order) => combineLatest(of(order), _.get(order,'Proposal.Id') ? this.quoteService.get([order.Proposal.Id]) : of(null))),
+        map(([order, quote]) => {
+          order.Proposal = _.first(quote);
+          return order;
+        })
       );
     this.isLoggedIn$ = this.userService.isLoggedIn();
   }
@@ -47,7 +56,7 @@ export class OrderDetailsComponent implements OnInit {
   getTotalPromotions(order: Order): number{
     return ((_.get(order,'OrderLineItems.length') > 0)) ?_.sum(_.get(order,'OrderLineItems').map(res => res.IncentiveAdjustmentAmount)):0;
   }
-  
+
   /**
    * @ignore
    */
