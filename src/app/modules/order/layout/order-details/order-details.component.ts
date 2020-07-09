@@ -40,7 +40,7 @@ export class OrderDetailsComponent implements OnInit {
           waitForExpansion: false
         })),
         map(first),
-        switchMap((order: Order) => combineLatest(of(order), this.quoteService.get([order.Proposal.Id]))),
+        switchMap((order: Order) => combineLatest(of(order), get(order,'Proposal.Id') ? this.quoteService.get([order.Proposal.Id]) : of(null))),
         map(([order, quote]) => {
           order.Proposal = first(quote);
           return order;
