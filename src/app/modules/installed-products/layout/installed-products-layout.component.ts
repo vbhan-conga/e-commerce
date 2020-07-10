@@ -256,7 +256,6 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         return combineLatest(
           of(assets),
           this.assetService.query({
-            searchString: this.searchQuery,
             conditions: childConditions,
             expressionOperator: 'AND'
           } as QueryOptions)
