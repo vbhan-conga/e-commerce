@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { ApiService, ACondition } from '@apttus/core';
+import { ACondition } from '@apttus/core';
 import {
   Product,
   CartItem,
   CartItemService,
   ConstraintRuleService,
   TranslatorLoaderService,
-  ProductService
+  ProductService,
+  ProductOptionService
 } from '@apttus/ecommerce';
 import { Observable, zip, BehaviorSubject, Subscription } from 'rxjs';
 import { take, map, tap, filter, switchMap } from 'rxjs/operators';
@@ -21,12 +22,12 @@ export class ProductDetailsResolver implements Resolve<any> {
 
   private subscription: Subscription;
 
-  constructor(private apiService: ApiService,
+  constructor(
     private cartItemService: CartItemService,
     private crService: ConstraintRuleService,
     private router: Router,
     private translatorService: TranslatorLoaderService,
-    private productService: ProductService) { }
+    private productOptionService: ProductOptionService) { }
 
 
   state(): BehaviorSubject<ProductDetailsState> {
@@ -39,7 +40,7 @@ export class ProductDetailsResolver implements Resolve<any> {
       this.subscription.unsubscribe();
     this.subject.next(null);
     this.subscription = zip(
-      this.productService.get([get(routeParams, 'params.id')])
+      this.productOptionService.get([get(routeParams, 'params.id')])
       .pipe(
         switchMap(data => this.translatorService.translateData(data)),
         map(first)
