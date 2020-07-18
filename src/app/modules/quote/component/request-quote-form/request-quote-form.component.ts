@@ -28,7 +28,8 @@ export class RequestQuoteFormComponent implements OnInit {
   billToAccount$: Observable<Account>;
   lookupOptions: LookupOptions = {
     primaryTextField: 'Name',
-    secondaryTextField: 'Email'
+    secondaryTextField: 'Email',
+    fieldList: ['Id', 'Name', 'Email']
   };
   contactId: string;
 
