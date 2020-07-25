@@ -59,6 +59,21 @@ export class QuoteListComponent implements OnInit {
       {
         field: 'Account'
       },
+      {
+        field: 'Opportunity'
+      }, 
+      {
+        field: 'Primary_Contact'
+      }, 
+      {
+        field: 'BillToAccountId'
+      },
+      {
+        field: 'ShipToAccountId'
+      }, 
+      {
+        field: 'Owner'
+      }
     ],
     children : ['ProposalSummaryGroups']
   };
