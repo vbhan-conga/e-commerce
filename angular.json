@@ -36,7 +36,7 @@
               }
             ],
             "styles": [
-              "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss",
+              "node_modules/roboto-fontface/css/roboto/roboto-fontface-regular.css",
               "src/styles.scss",
               "node_modules/ladda/dist/ladda-themeless.min.css"
             ],
