@@ -3,8 +3,9 @@ import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } f
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ProductConfigurationSummaryComponent } from '@apttus/elements';
+import { ProductConfigurationSummaryComponent, ProductConfigurationComponent } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
+import { plainToClass } from 'class-transformer';
 
 @Component({
     selector: 'app-product-detail',
@@ -42,6 +43,9 @@ export class ProductDetailComponent implements OnInit {
 
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
+
+    @ViewChild(ProductConfigurationComponent, { static: false })
+    prodConfigComponent: ProductConfigurationComponent;
 
     constructor(private cartService: CartService,
                 private resolver: ProductDetailsResolver,
@@ -83,6 +87,14 @@ export class ProductDetailComponent implements OnInit {
         if(this.quantity <= 0) {
             this.quantity = 1;
         }
+    }
+
+    changeProductQuntity(newQty: any){
+        if(this.cartItemList && this.cartItemList.length > 0)
+            _.forEach(this.cartItemList, c => {
+                if(c.LineType === 'Product/Service') c.Quantity = newQty;
+                this.prodConfigComponent.changePrductQty(newQty);
+          });
     }
 
     /**
