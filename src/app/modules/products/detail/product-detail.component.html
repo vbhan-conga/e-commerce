@@ -52,7 +52,7 @@
           <div class="d-flex justify-content-end">
             <div class="form-group mx-3 my-0 d-flex align-items-center">
               <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
-              <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" name="quantity" (ngModelChange)="changeProductQuntity(viewState.quantity)"/>
+              <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" name="quantity" (ngModelChange)="changeProductQuantity(viewState.quantity)"/>
             </div>
             <div class="d-flex align-items-center">
               <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
@@ -93,9 +93,8 @@
       <div class="col-12">
         <apt-constraint-rule-alert [showProductConfig]="true"></apt-constraint-rule-alert>
         <apt-product-configuration
-          [product]="viewState?.product"
+          [productId]="viewState?.product?.Id"
           [relatedTo]="viewState?.relatedTo"
-          (configurationChange)="onConfigurationChange($event)"
           (click)="configurationChanged = true">
         </apt-product-configuration>
       </div>
