@@ -153,7 +153,7 @@
         "PASSWORD_DO_NOT_MATCH_ERROR": "Your passwords do not match",
         "OLD_PASSWORD_CAN_NOT_BE_USED_ERROR": "Cannot reuse this old password.",
         "OCURRED_SERVER_ERROR": "An error ocurred. Please contact your administrator.",
-        "SUBMIT": "Login"
+        "SUBMIT": "Submit"
     },
     "BUTTON": {
         "Buy More": "Buy More",
