@@ -43,6 +43,10 @@
     <ng-template #complex>
       <div class="d-flex">
         <ng-container *ngIf="viewState?.relatedTo; else newProduct">
+          <button class="btn btn-outline-primary ml-2 mx-3"
+            *ngIf="(viewState?.product?.HasAttributes || viewState?.product?.HasOptions) && viewState.storefront.ConfigurationLayout === 'Embedded'"
+            (click)="openConfigWindow(viewState?.product, viewState?.childCart, viewState?.relatedTo);">Configure Product {{viewState.storefront.ConfigurationLayout}}</button>
+
           <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
             [cartItems]="cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'"
             (onAddToCart)="onAddToCart($event)"  [label]="'PRODUCT_DETAILS.UPDATE_CONFIGURATION' | translate">
@@ -50,6 +54,10 @@
         </ng-container>
         <ng-template #newProduct>
           <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-primary ml-2"
+              *ngIf="(viewState?.product?.HasAttributes || viewState?.product?.HasOptions) && viewState.storefront.ConfigurationLayout === 'Embedded'"
+              (click)="openConfigWindow(viewState?.product, viewState?.childCart, viewState?.relatedTo);">Configure Product</button>
+
             <div class="form-group mx-3 my-0 d-flex align-items-center">
               <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
               <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" name="quantity" (ngModelChange)="changeProductQuantity(viewState.quantity)"/>
@@ -86,7 +94,8 @@
     </div>
   </apt-detail-section>
 
-  <apt-detail-section [title]="'PRODUCT_DETAILS.CONFIGURATIONS' | translate"
+  <div *ngIf="viewState.storefront.ConfigurationLayout !== 'Embedded'">
+    <apt-detail-section [title]="'PRODUCT_DETAILS.CONFIGURATIONS' | translate"
     *ngIf="viewState?.product?.HasAttributes || viewState?.product?.HasOptions">
     <div class="row mt-4">
       <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.CONFIGURATIONS' | translate}} </h4>
@@ -100,6 +109,7 @@
       </div>
     </div>
   </apt-detail-section>
+  </div>
 
   <apt-detail-section [title]="'PRODUCT_DETAILS.SPECIFICATIONS' | translate"
     *ngIf="viewState?.product?.ProductFeatureValues?.length > 0">
