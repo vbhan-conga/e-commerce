@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } from '@apttus/ecommerce';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ConfigurationService } from '@apttus/core';
+import { CartService, CartItem, Storefront, StorefrontService, BundleProduct, Cart } from '@apttus/ecommerce';
 import { ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
 
@@ -48,7 +49,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 private resolver: ProductDetailsResolver,
                 private router: Router,
                 private storefrontService: StorefrontService,
-                private productConfigurationService: ProductConfigurationService) { }
+                private productConfigurationService: ProductConfigurationService,
+                private configService: ConfigurationService) { }
 
     ngOnInit() {
         this.viewState$ = this.resolver.state();
@@ -99,6 +101,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      */
     handleEndDateChange(cartItem: CartItem) {
         this.cartService.updateCartItems([cartItem]);
+    }
+
+    openConfigWindow(product: BundleProduct, childCart: Cart, relatedTo?: CartItem) {
+        const url = relatedTo ? `${this.configService.endpoint()}/apex/Apttus_Config2__Cart#!/flows/ngcpq/businessObjects/${childCart.BusinessObjectId}/steps/options/lines/${relatedTo.PrimaryLineNumber}/configure` : `${this.configService.endpoint()}/apex/Apttus_Config2__Cart#!/flows/ngcpq/businessObjects/${childCart.BusinessObjectId}/products/${product.Id}/configure`;
+        window.open(url, 'soWin', 'fullscreen=yes,titlebar=no,toolbar=no,menubar=no,location=no,scrollbars=no,status=no,height=800,width=1250');
     }
 
     showSummary() {
