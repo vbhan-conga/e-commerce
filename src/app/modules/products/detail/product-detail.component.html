@@ -45,10 +45,10 @@
         <ng-container *ngIf="viewState?.relatedTo; else newProduct">
           <button class="btn btn-outline-primary ml-2 mx-3"
             *ngIf="(viewState?.product?.HasAttributes || viewState?.product?.HasOptions) && viewState?.storefront?.ConfigurationLayout === 'Embedded'"
-            (click)="openConfigWindow(viewState?.product, viewState?.childCart, viewState?.relatedTo);">Configure Product {{viewState.storefront.ConfigurationLayout}}</button>
+            (click)="openConfigWindow(viewState?.product, viewState?.relatedTo);">Configure Product</button>
 
           <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
-            [cartItems]="cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'"
+            [cartItems]="(viewState?.storefront?.ConfigurationLayout === 'Embedded' && viewState?.relatedTo) ? [relatedTo] : cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'"
             (onAddToCart)="onAddToCart($event)"  [label]="'PRODUCT_DETAILS.UPDATE_CONFIGURATION' | translate">
           </apt-add-to-cart>
         </ng-container>
@@ -56,7 +56,7 @@
           <div class="d-flex justify-content-end">
             <button class="btn btn-outline-primary ml-2"
               *ngIf="(viewState?.product?.HasAttributes || viewState?.product?.HasOptions) && viewState?.storefront?.ConfigurationLayout === 'Embedded'"
-              (click)="openConfigWindow(viewState?.product, viewState?.childCart, viewState?.relatedTo);">Configure Product</button>
+              (click)="openConfigWindow(viewState?.product, viewState?.relatedTo);">Configure Product</button>
 
             <div class="form-group mx-3 my-0 d-flex align-items-center">
               <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
@@ -65,7 +65,7 @@
             <div class="d-flex align-items-center">
               <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
                 (onAddToCart)="onAddToCart($event)"
-                [cartItems]="cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'">
+                [cartItems]="(viewState?.storefront?.ConfigurationLayout === 'Embedded' && viewState?.relatedTo) ? [relatedTo] : cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'">
               </apt-add-to-cart>
             </div>
           </div>
