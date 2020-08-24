@@ -68,7 +68,7 @@
               "vendorChunk": false,
               "buildOptimizer": true,
               "serviceWorker": false,
-              "tsConfig": "tsconfig.app.json",
+              "tsConfig": "tsconfig.prod.json",
               "budgets": [
                 {
                   "type": "initial",
