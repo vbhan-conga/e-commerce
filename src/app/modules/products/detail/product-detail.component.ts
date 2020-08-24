@@ -80,7 +80,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     onAddToCart(cartItems: Array<CartItem>): void {
-        if(this.configWindow) this.configWindow.close();
+        if(this.productConfigurationService.configWindow) this.productConfigurationService.configWindow.close();
         this.configurationChanged = false;
 
         if(_.get(cartItems, 'LineItems') && this.viewState$.value.storefront.ConfigurationLayout === 'Embedded') cartItems = _.get(cartItems, 'LineItems');
@@ -113,10 +113,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     openConfigWindow(product: BundleProduct, relatedTo?: CartItem) {
-        this.subscriptions.push(this.cartService.childCart(_.get(relatedTo, 'LineNumber')).subscribe(res=> {
-            const url = relatedTo ? `${this.configService.endpoint()}/apex/Apttus_Config2__Cart#!/flows/ngcpq/businessObjects/${res.BusinessObjectId}/steps/options/lines/${relatedTo.PrimaryLineNumber}/configure` : `${this.configService.endpoint()}/apex/Apttus_Config2__Cart#!/flows/ngcpq/businessObjects/${res.BusinessObjectId}/products/${product.Id}/configure`;
-            this.configWindow = window.open(url, 'soWin', 'fullscreen=yes,titlebar=no,toolbar=no,menubar=no,location=no,scrollbars=no,status=no,height=800,width=1250');
-        }));
+        this.productConfigurationService.openConfigWindow(product, relatedTo);
     }
 
     showSummary() {
