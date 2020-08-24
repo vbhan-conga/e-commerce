@@ -283,8 +283,8 @@
         "CHANGE_SHIPPING_ADDRESS":"es_MX Change Shipping Address",
         "CHANGE_BILLING_ADDRESS":"es_MX Change Billing Address",
         "EDIT_LINE_ITEMS": "es_MX Edit Line Items",
-        "PLACE_ORDER": "es_MX PLACE ORDER",
-        "PLACE_ORDER_PAY": "es_MX PLACE ORDER & PAY",
+        "PLACE_ORDER": "es_MX Place Order",
+        "PLACE_ORDER_PAY": "es_MX Place Order & Pay",
         "ON": "es_MX on",
         "CONFIRM_CHANGES": "es_MX Confirm Changes",
         "UPLOAD": "es_MX Upload",
@@ -498,7 +498,7 @@
             "DISCARD_CHANGES_TITLE":"es_MX Discard your changes",
             "DISCARD_CHANGES_Message": "es_MX All yur changes will be lost.",
             "DISCARD_CHANGES_CONFIRMATION": "es_MX Do you want to discard your changes and go back to the Quote Details page?",
-            "DISCARD_CHANGES": "es_MX Yes, DISCARD CHANGES"
+            "DISCARD_CHANGES": "es_MX YES, DISCARD CHANGES"
         }
     },
     "JUMBORTON": {
