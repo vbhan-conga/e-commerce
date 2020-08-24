@@ -4,6 +4,9 @@
     "outDir": "./out-tsc/app",
     "types": [],
     "paths": {
+      "ngx-gallery": [
+        "../ngx-gallery/src/index.ts"
+      ],
       "@apttus/core": [
         "../ecommerce-core/resources/projects/apttus/core/src/public_api.ts"
       ],
