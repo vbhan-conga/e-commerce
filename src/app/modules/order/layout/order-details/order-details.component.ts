@@ -4,7 +4,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { filter, flatMap, map, switchMap } from 'rxjs/operators';
 import { get, first, sum } from 'lodash';
 import { ACondition } from '@apttus/core';
-import { Order, OrderLineItem, OrderService, UserService, QuoteService } from '@apttus/ecommerce';
+import { Order, OrderLineItem, OrderService, UserService, QuoteService, ItemGroup, LineItemService } from '@apttus/ecommerce';
 
 /**
  * Order details component is a way to show the details of an order.
@@ -25,11 +25,13 @@ export class OrderDetailsComponent implements OnInit {
     * Boolean observable to check if user is logged in.
     */
   isLoggedIn$: Observable<boolean>;
+  /** @ignore */
+  orderLineItems$: Observable<Array<ItemGroup>>;
 
   constructor(private activatedRoute: ActivatedRoute,
     private orderService: OrderService,
     private router: Router, private userService: UserService,
-    private quoteService: QuoteService) { }
+    private quoteService: QuoteService, private lineItemService: LineItemService) { }
 
   ngOnInit() {
     this.order$ = this.activatedRoute.params
@@ -43,6 +45,7 @@ export class OrderDetailsComponent implements OnInit {
         switchMap((order: Order) => combineLatest(of(order), get(order,'Proposal.Id') ? this.quoteService.get([order.Proposal.Id]) : of(null))),
         map(([order, quote]) => {
           order.Proposal = first(quote);
+          this.orderLineItems$ = of(LineItemService.groupItems(order.OrderLineItems));
           return order;
         })
       );
