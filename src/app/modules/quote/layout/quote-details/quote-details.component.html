@@ -101,7 +101,7 @@
       <div class="col-12 col-md-6">
         <form (ngSubmit)="addComment(quote.Id)">
           <!-- <apt-input-field [entity]="note" field="Title" [(ngModel)]="note.Title" name="title" [required]="true" [placeholder]="'Note Title'"></apt-input-field> -->
-          <apt-input-field [entity]="note" field="Body" rows="5" label="{{'COMMON.ADD_NEW_COMMENT' | translate }}" [(ngModel)]="note.Body" name="body" [required]="true"></apt-input-field>
+          <apt-input-field [entity]="note" field="Body" rows="5" label="{{'COMMON.ADD_NEW_COMMENT' | translate }}" [(ngModel)]="note.Body" name="body"></apt-input-field>
           <div class="d-flex justify-content-end">
             <button class="btn btn-link" (click)="clear()" type="button">{{'COMMON.CLEAR' | translate }}</button>
             <button class="btn btn-primary" type="submit" [ladda]="comments_loader" [disabled]="!note.Body">{{'COMMON.ADD_COMMENT' | translate }}</button>
