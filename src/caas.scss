@@ -105,24 +105,14 @@ md-tabs md-ink-bar {
 md-tabs {
   .md-tab {
     color: $blue;
+    font-size: 0.875rem;
+    font-weight: $font-weight-normal;
   }
   .md-tab.md-active {
     color:$gray-900;
   }
 }
 
-.md-tab {
-  font-size: 0.875rem;
-  font-weight: $font-weight-normal;
-}
-
-.product-option__name>label {
-  line-height: $line-height-base;
-  color: $gray-900;
-  padding-top: 0;
-  font-weight: 600;
-  font-size: $font-size-base;
-}
 
 .main-configure-product h2 {
   font-size: 1.54rem;
@@ -160,22 +150,18 @@ md-tabs {
     .product-option__title {
       border-bottom: 1px solid $gray-200 !important;
     }
+    &:first-child{ 
+      overflow: visible;
+      padding: 0rem .5rem;
+      border: 1px solid $gray-200;
+      margin: 0px 10px;	
+    }
   }
 }
 
-.main-configure-product__product-option:first-child {
-  overflow: visible;
-  padding: 0rem .5rem;
-  border: 1px solid $gray-200;
-  margin: 0px 10px;	
-}	
 .main-configure-product__product-option-row {	
   padding: 0.5rem 0.5rem;	
-}
-
-.main-configure-product__product-option-row:nth-child(2n+2) {
-  background-color: transparent;
-  .main-configure-product__product-option-row:nth-child(2n+1) {
+  &:nth-child(2n+2), &:nth-child(2n+1) {
     background-color: transparent;
   }
 }
@@ -185,6 +171,7 @@ md-tabs {
   color: $dark-grey;
   font-weight: $font-weight-normal;
 }
+
 .product-option__quantity input[type] {
   color: $gray-700;
   border: 1px solid $gray-400;
@@ -192,8 +179,17 @@ md-tabs {
   border-radius: 0px;
   text-align: center;
 }	
-.product-option__name .checkbox-override, .product-option__name .radio-override {	
-  margin-top: 0.2px;	
+.product-option__name {	
+  &>label {
+    line-height: $line-height-base;
+    color: $gray-900;
+    padding-top: 0;
+    font-weight: 600;
+    font-size: $font-size-base;
+  }
+  .checkbox-override, .radio-override {
+    margin-top: 0.3rem;	
+  }
 }
 
 .checkbox-override label {
@@ -259,6 +255,18 @@ label.product-attribute__name {
   .configure-product__price-name, .configure-product__price-value {
     font-size: .875rem;
   }
+  a.configure-product__group-name,  a.configure-product__subgroup-name {	
+    color: $gray-900;	
+    font-weight: bolder;	
+    font-size: $font-size-base;
+    text-decoration: none;	
+  }
+  .configure-product__product-options {	
+    .configure-product__product-options-row, .configure-product__product-price  {	
+      font-size: $font-size-base;
+      color: $gray-900;
+    }	
+  }
 }
 .error.error--critical {
   border: 0px;
@@ -308,8 +316,10 @@ constraint-dialog {
   text-align: right;	
   min-width:5rem;	
 }	
-.ui-select-choices-row:hover {	
-  background-color: $light-blue-hover;	
+.ui-select-choices-row {
+  &:hover {	
+    background-color: $light-blue-hover;
+  }	
 }	
 .select2-results .select2-highlighted {	
   color: $gray-900;	
@@ -353,24 +363,30 @@ constraint-dialog .modal-dialog {
   font-weight: 400;	
 }
 
-.layout--rightcol .sidebar--configure-product a.configure-product__group-name, .layout--rightcol .sidebar--configure-product a.configure-product__subgroup-name {	
-  color: $gray-900;	
-  font-weight: bolder;	
-  font-size: $font-size-base;
-  text-decoration: none;	
-}	
+/*.layout--rightcol .sidebar--configure-product {
+  a.configure-product__group-name,  a.configure-product__subgroup-name {	
+    color: $gray-900;	
+    font-weight: bolder;	
+    font-size: $font-size-base;
+    text-decoration: none;	
+  }
+}	*/
+
 .summary-opt-group {	
-  padding: .2rem 0;	
+  padding: .2rem 0;
+  &:first-child {
+    border-top: 1px solid $gray-900;	
+  }
 }	
-.summary-opt-group:first-child {	
-  border-top: 1px solid $gray-900;	
-}	
-.layout--rightcol .sidebar--configure-product .configure-product__product-options {	
-  .configure-product__product-options-row, .configure-product__product-price  {	
-  font-size: $font-size-base;
-  color: $gray-900;
-  }	
-}
+
+/*.layout--rightcol .sidebar--configure-product {
+  .configure-product__product-options {	
+    .configure-product__product-options-row, .configure-product__product-price  {	
+      font-size: $font-size-base;
+      color: $gray-900;
+    }	
+  }
+}*/
 
 .option-group-expand-collapse-enabled {	
   color: $gray-900;
@@ -388,9 +404,11 @@ constraint-dialog .modal-dialog {
     color: $gray-900;	
     font-size: $font-size-base;	
   }	
-  a:hover, a:focus {	
-    color: $gray-900;	
-    font-size: $font-size-base;	
-    text-decoration: none;	
+  a {	
+      &:hover, &:focus {
+      color: $gray-900;	
+      font-size: $font-size-base;	
+      text-decoration: none;	
+    }
   }
 }

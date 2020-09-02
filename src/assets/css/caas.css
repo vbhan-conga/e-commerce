@@ -79,21 +79,12 @@ md-tabs md-ink-bar {
   border-color: transparent transparent #0079CC; }
 
 md-tabs .md-tab {
-  color: #0079CC; }
-
-md-tabs .md-tab.md-active {
-  color: #323232; }
-
-.md-tab {
+  color: #0079CC;
   font-size: 0.875rem;
   font-weight: 400; }
 
-.product-option__name > label {
-  line-height: 1.5;
-  color: #323232;
-  padding-top: 0;
-  font-weight: 600;
-  font-size: 0.88rem; }
+md-tabs .md-tab.md-active {
+  color: #323232; }
 
 .main-configure-product h2 {
   font-size: 1.54rem;
@@ -124,19 +115,15 @@ md-tabs .md-tab.md-active {
   margin: auto 5px; }
   .sub-group .main-configure-product__product-option .product-option__title {
     border-bottom: 1px solid #DEDEDE !important; }
-
-.main-configure-product__product-option:first-child {
-  overflow: visible;
-  padding: 0rem .5rem;
-  border: 1px solid #DEDEDE;
-  margin: 0px 10px; }
+  .sub-group .main-configure-product__product-option:first-child {
+    overflow: visible;
+    padding: 0rem .5rem;
+    border: 1px solid #DEDEDE;
+    margin: 0px 10px; }
 
 .main-configure-product__product-option-row {
   padding: 0.5rem 0.5rem; }
-
-.main-configure-product__product-option-row:nth-child(2n+2) {
-  background-color: transparent; }
-  .main-configure-product__product-option-row:nth-child(2n+2) .main-configure-product__product-option-row:nth-child(2n+1) {
+  .main-configure-product__product-option-row:nth-child(2n+2), .main-configure-product__product-option-row:nth-child(2n+1) {
     background-color: transparent; }
 
 .main-configure-product__product-option-container div.product-option__price {
@@ -151,8 +138,15 @@ md-tabs .md-tab.md-active {
   border-radius: 0px;
   text-align: center; }
 
+.product-option__name > label {
+  line-height: 1.5;
+  color: #323232;
+  padding-top: 0;
+  font-weight: 600;
+  font-size: 0.88rem; }
+
 .product-option__name .checkbox-override, .product-option__name .radio-override {
-  margin-top: 0.2px; }
+  margin-top: 0.3rem; }
 
 .checkbox-override label {
   background: #CCCCCC;
@@ -298,9 +292,8 @@ constraint-dialog .modal-dialog {
 
 .summary-opt-group {
   padding: .2rem 0; }
-
-.summary-opt-group:first-child {
-  border-top: 1px solid #323232; }
+  .summary-opt-group:first-child {
+    border-top: 1px solid #323232; }
 
 .layout--rightcol .sidebar--configure-product .configure-product__product-options .configure-product__product-options-row, .layout--rightcol .sidebar--configure-product .configure-product__product-options .configure-product__product-price {
   font-size: 0.88rem;
