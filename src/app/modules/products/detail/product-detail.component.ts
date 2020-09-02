@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ConfigurationService } from '@apttus/core';
-import { CartService, CartItem, Storefront, StorefrontService, BundleProduct, Cart } from '@apttus/ecommerce';
+import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } from '@apttus/ecommerce';
 import { ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
 
@@ -48,7 +48,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
-    subscriptions: Array<Subscription> = [];    
+    subscriptions: Array<Subscription> = [];
 
     constructor(private cartService: CartService,
                 private resolver: ProductDetailsResolver,
@@ -84,7 +84,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.configurationChanged = false;
 
         if(_.get(cartItems, 'LineItems') && this.viewState$.value.storefront.ConfigurationLayout === 'Embedded') cartItems = _.get(cartItems, 'LineItems');
-        const primaryItem = _.find(cartItems, i => _.get(i, 'IsPrimaryLine') === true && _.isNil(_.get(i, 'Option')));
+        const primaryItem = this.getPrimaryItem(cartItems);
         this.relatedTo = primaryItem;
         if (!_.isNil(primaryItem) && (_.get(primaryItem, 'Product.HasOptions') || _.get(primaryItem, 'Product.HasAttributes')))
             this.router.navigate(['/products', _.get(this, 'viewState$.value.product.Id'), _.get(primaryItem, 'Id')]);
@@ -117,7 +117,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     showSummary() {
-      this.configSummaryModal.show();
+        this.configSummaryModal.show();
+    }
+
+    getPrimaryItem(cartItems: Array<CartItem>): CartItem {
+        let primaryItem: CartItem;
+        if (_.isNil(this.viewState$.value.relatedTo))
+            primaryItem = _.maxBy(_.filter(cartItems, i => _.get(i, 'IsPrimaryLine') === true && _.isNil(_.get(i, 'Option'))), 'PrimaryLineNumber');
+        else
+            primaryItem = _.find(cartItems, i => _.get(i, 'IsPrimaryLine') === true && i.PrimaryLineNumber === _.get(this.viewState$.value.relatedTo, 'PrimaryLineNumber') && _.isNil(_.get(i, 'Option')));
+        return primaryItem;
     }
 
     ngOnDestroy(){
