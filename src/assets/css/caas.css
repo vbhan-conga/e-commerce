@@ -202,6 +202,14 @@ label.product-attribute__name {
     background-color: #fff; }
   .layout--rightcol .sidebar--configure-product .configure-product__price-name, .layout--rightcol .sidebar--configure-product .configure-product__price-value {
     font-size: .875rem; }
+  .layout--rightcol .sidebar--configure-product a.configure-product__group-name, .layout--rightcol .sidebar--configure-product a.configure-product__subgroup-name {
+    color: #323232;
+    font-weight: bolder;
+    font-size: 0.88rem;
+    text-decoration: none; }
+  .layout--rightcol .sidebar--configure-product .configure-product__product-options .configure-product__product-options-row, .layout--rightcol .sidebar--configure-product .configure-product__product-options .configure-product__product-price {
+    font-size: 0.88rem;
+    color: #323232; }
 
 .error.error--critical {
   border: 0px;
@@ -284,20 +292,10 @@ constraint-dialog .modal-dialog {
   color: #323232;
   font-weight: 400; }
 
-.layout--rightcol .sidebar--configure-product a.configure-product__group-name, .layout--rightcol .sidebar--configure-product a.configure-product__subgroup-name {
-  color: #323232;
-  font-weight: bolder;
-  font-size: 0.88rem;
-  text-decoration: none; }
-
 .summary-opt-group {
   padding: .2rem 0; }
   .summary-opt-group:first-child {
     border-top: 1px solid #323232; }
-
-.layout--rightcol .sidebar--configure-product .configure-product__product-options .configure-product__product-options-row, .layout--rightcol .sidebar--configure-product .configure-product__product-options .configure-product__product-price {
-  font-size: 0.88rem;
-  color: #323232; }
 
 .option-group-expand-collapse-enabled {
   color: #323232; }

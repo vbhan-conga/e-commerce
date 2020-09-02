@@ -363,30 +363,12 @@ constraint-dialog .modal-dialog {
   font-weight: 400;	
 }
 
-/*.layout--rightcol .sidebar--configure-product {
-  a.configure-product__group-name,  a.configure-product__subgroup-name {	
-    color: $gray-900;	
-    font-weight: bolder;	
-    font-size: $font-size-base;
-    text-decoration: none;	
-  }
-}	*/
-
 .summary-opt-group {	
   padding: .2rem 0;
   &:first-child {
     border-top: 1px solid $gray-900;	
   }
 }	
-
-/*.layout--rightcol .sidebar--configure-product {
-  .configure-product__product-options {	
-    .configure-product__product-options-row, .configure-product__product-price  {	
-      font-size: $font-size-base;
-      color: $gray-900;
-    }	
-  }
-}*/
 
 .option-group-expand-collapse-enabled {	
   color: $gray-900;
