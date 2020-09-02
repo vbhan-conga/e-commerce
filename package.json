@@ -92,5 +92,10 @@
     "typescript": "3.9.7",
     "uglifyjs-folder": "^1.5.2",
     "webpack-bundle-analyzer": "^3.4.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "ng build"
+    }
   }
 }
