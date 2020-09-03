@@ -54,11 +54,11 @@
         </ng-container>
         <ng-template #newProduct>
           <div class="d-flex justify-content-end">
-            <button class="btn btn-outline-primary ml-2"
+            <button class="btn btn-outline-primary mx-3"
               *ngIf="(viewState?.product?.HasAttributes || viewState?.product?.HasOptions) && viewState?.storefront?.ConfigurationLayout === 'Embedded'"
               (click)="openConfigWindow(viewState?.product, viewState?.relatedTo);">Configure Product</button>
 
-            <div class="form-group mx-3 my-0 d-flex align-items-center">
+            <div class="form-group mx-3 my-0 d-flex align-items-center" *ngIf="viewState?.storefront?.ConfigurationLayout !== 'Embedded'">
               <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
               <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" name="quantity" (ngModelChange)="changeProductQuantity(viewState.quantity)"/>
             </div>
