@@ -105,7 +105,7 @@
                 <label class="custom-control-label" for="ponumber">{{'CART.PAYMENT.PONUMBER' | translate }}</label>
                 <div class="form-group" *ngIf="paymentState === 'PONUMBER'">
                   <input type="text" class="form-control" id="poNumber" placeholder="{{'CART.PAYMENT.ENTER_PO_NUMBER' | translate }}"
-                    [(ngModel)]="order.PONumber" name="poNumber">
+                    [(ngModel)]="order.Apttus_Config2__PONumber__c" name="poNumber">
                 </div>
               </div>
               <div class="custom-control custom-radio m-3">
@@ -151,7 +151,7 @@
         (onPaymentRequest)="submitPayment()" #priceSummary>
       </apt-price-summary>
     </div>
-    <div class="col-md-8 order-md-1">
+    <div class="col-md-8 order-md-1">   
       <div class="card p-3">
           <label>{{ 'CART.PAYMENT.ORDER_CONFIRMATION_MESSAGE' | translate }}</label>
           <h5 class="text-left my-3">{{ 'CART.PAYMENT.ORDER_NUMBER' | translate }} {{orderConfirmation?.Name}}</h5>

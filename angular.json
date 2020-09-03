@@ -36,6 +36,7 @@
               }
             ],
             "styles": [
+              "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss",
               "src/styles.scss",
               "node_modules/ladda/dist/ladda-themeless.min.css"
             ],
@@ -68,7 +69,7 @@
               "vendorChunk": false,
               "buildOptimizer": true,
               "serviceWorker": false,
-              "tsConfig": "tsconfig.prod.json",
+              "tsConfig": "tsconfig.app.json",
               "budgets": [
                 {
                   "type": "initial",
@@ -312,5 +313,8 @@
       }
     }
   },
-  "defaultProject": "reference-base"
+  "defaultProject": "reference-base",
+  "cli": {
+    "analytics": "e0cf922c-4f45-48f5-8203-4b7de9df8043"
+  }
 }
