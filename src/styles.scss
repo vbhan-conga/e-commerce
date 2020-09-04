@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "variables";
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+$roboto-font-path: '~roboto-fontface/fonts';
+@import "variables";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 @import "~@fortawesome/fontawesome-free/scss/v4-shims";
@@ -9,6 +10,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import '~ngx-toastr/toastr-bs4-alert';
 @import '~ngx-bootstrap/datepicker/bs-datepicker.css';
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~roboto-fontface/css/roboto/sass/roboto-fontface-regular";
 
 .px-6{
     padding-left: 4rem;
@@ -123,7 +125,7 @@ a .oi{
 
 /**
  * Reset anchor and button decoration
- */ 
+ */
 a:hover, a:focus, a:active, button.btn-link:focus, button.btn-link:active, button.btn-link:hover{
     text-decoration: none;
 }
@@ -137,7 +139,7 @@ button.chevron:before, button.minus:before{
 }
 /**
  * Button styles
- */ 
+ */
 button{
     .btn:not(.btn-link){
         text-transform: uppercase;
@@ -160,8 +162,8 @@ button{
         margin-right: .8rem;
     }
     &.chevron[aria-expanded="false"]:before{
-        content: "\f0da"; 
-        margin-right: .8rem;  
+        content: "\f0da";
+        margin-right: .8rem;
     }
     &.minus[aria-expanded="true"]:before{
         content: "\f068";
@@ -169,7 +171,7 @@ button{
         margin-right: 5px;
     }
     &.minus[aria-expanded="false"]:before{
-        content: "\f067";   
+        content: "\f067";
         font-size: smaller;
         margin-right: 5px;
     }
@@ -177,7 +179,7 @@ button{
 
 /**
  * Add margin to the main section to accomodate header
- */ 
+ */
 main{
     margin-top: $navbar-brand-height;
     min-height: calc(100vh - #{$navbar-brand-height});
@@ -185,7 +187,7 @@ main{
 
 /**
  * Dropdown fixes
- */ 
+ */
 .dropdown-toggle::after{
     display: none;
 }
