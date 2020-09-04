@@ -24,7 +24,8 @@ export const environment: Configuration = {
   expandDepth: 8,
   hashRouting: true,
   packageNamespace: 'Apttus_WebStore',
-  // Salesforce environment variables
   storefront: 'ECommerce',
-  endpoint: null
+  organizationId: '00DP0000000FKBT',
+  sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
+  endpoint: 'https://sandbox-business-efficiency-5594-dev-1741f53d989.cs4.force.com/ecom'
 };

@@ -24,9 +24,9 @@ export const environment: Configuration = {
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
-    // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'E-Commerce',
-  organizationId: '00D3I0000008mFM',
+  packageNamespace: 'Apttus_WebStore',
+  storefront: 'ECommerce',
+  organizationId: '00DP0000000FKBT',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://dc5-cpqqacommunity1.cs123.force.com/ecomm'
+  endpoint: 'https://sandbox-business-efficiency-5594-dev-1741f53d989.cs4.force.com/ecom'
 };
