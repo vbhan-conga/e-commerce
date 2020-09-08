@@ -12,6 +12,7 @@ import {
   TranslatorLoaderService,
   ProductOptionService, Cart, CartService, StorefrontService, Storefront
 } from '@apttus/ecommerce';
+import { ProductConfigurationService } from '@apttus/elements';
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +27,14 @@ export class ProductDetailsResolver implements Resolve<any> {
     private translatorService: TranslatorLoaderService,
     private productOptionService: ProductOptionService,
     private cartService: CartService,
+    private productConfigurationService: ProductConfigurationService,
     private storefrontService: StorefrontService) { }
 
   state(): BehaviorSubject<ProductDetailsState> {
     return this.subject;
   }
   resolve(route: ActivatedRouteSnapshot): Observable<ProductDetailsState> {
+    this.productConfigurationService.onChangeConfiguration(null);
     const routeParams = route.paramMap;
     if (!isNil(this.subscription))
       this.subscription.unsubscribe();
