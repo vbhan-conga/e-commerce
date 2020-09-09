@@ -62,9 +62,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.storefront$ = this.storefrontService.getStorefront();
         this.relatedTo = this.viewState$.value.relatedTo;
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
-            this.product = response.product;
-            this.cartItemList = response.itemList;
-            if (_.get(response.configurationFlags,'optionChanged') || _.get(response.configurationFlags,'attributeChanged')) this.configurationChanged = true;
+            this.product = _.get(response,'product');
+            this.cartItemList = _.get(response,'itemList');
+            if (_.get(response, 'configurationFlags.optionChanged') || _.get(response, 'configurationFlags.attributeChanged')) this.configurationChanged = true;
         }));
     }
 
@@ -132,6 +132,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     ngOnDestroy(){
         _.forEach(this.subscriptions, item => {
             if(item) item.unsubscribe();
-        })
+        });
     }
 }
