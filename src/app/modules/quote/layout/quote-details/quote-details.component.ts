@@ -1,16 +1,35 @@
-import {Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {
-  UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
-  ProductInformationService, ItemGroup, LineItemService, Attachment
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  NgZone,
+  ChangeDetectorRef,
+  OnDestroy
+} from '@angular/core';
+import {
+  UserService,
+  QuoteService,
+  Quote,
+  Order,
+  OrderService,
+  Note,
+  NoteService,
+  AttachmentService,
+  ProductInformationService,
+  ItemGroup,
+  LineItemService,
+  Attachment,
+  QuoteLineItemService
 } from '@apttus/ecommerce';
-import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, take, mergeMap, switchMap} from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter, map, take, mergeMap, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
-import {Observable, of, BehaviorSubject, Subscription} from 'rxjs';
-import {ExceptionService, LookupOptions} from '@apttus/elements';
-import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import {BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
-import {ACondition} from '@apttus/core';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
+import { ExceptionService, LookupOptions } from '@apttus/elements';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ACondition, ApiService } from '@apttus/core';
 
 
 @Component({
@@ -20,25 +39,42 @@ import {ACondition} from '@apttus/core';
 })
 export class QuoteDetailsComponent implements OnInit, OnDestroy {
   quote$: BehaviorSubject<Quote> = new BehaviorSubject<Quote>(null);
-  quoteLineItems$: Observable<Array<ItemGroup>>;
+
+  quoteLineItems$: BehaviorSubject<Array<ItemGroup>> = new BehaviorSubject<Array<ItemGroup>>(null);
+
   order$: Observable<Order>;
+
   note: Note = new Note();
-  newlyGeneratedOrder: Order;
+
   intimationModal: BsModalRef;
+
   hasSizeError: boolean;
+
   file: File;
+
   uploadFileList: any;
+
   edit_loader: boolean = false;
+
   accept_loader: boolean = false;
+
   comments_loader: boolean = false;
+
   attachments_loader: boolean = false;
+
   attachmentList$: BehaviorSubject<Array<Attachment>> = new BehaviorSubject<Array<Attachment>>(null);
+
   noteList$: BehaviorSubject<Array<Note>> = new BehaviorSubject<Array<Note>>(null);
+
   notesSubscription: Subscription;
+
   attachemntSubscription: Subscription;
+
   quoteSubscription: Subscription;
 
-  @ViewChild('intimationTemplate', {static: false}) intimationTemplate: TemplateRef<any>;
+  quoteLineItemsSubscription: Subscription;
+
+  @ViewChild('intimationTemplate', { static: false }) intimationTemplate: TemplateRef<any>;
 
   lookupOptions: LookupOptions = {
     primaryTextField: 'Name',
@@ -57,7 +93,9 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
               private productInformationService: ProductInformationService,
               private cdr: ChangeDetectorRef,
               private ngZone: NgZone,
-              private userService: UserService) {
+              private userService: UserService,
+              private quoteLineItemService: QuoteLineItemService,
+              private apiService: ApiService) {
   }
 
   ngOnInit() {
@@ -65,30 +103,34 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   getQuote() {
-    if (this.quoteSubscription) this.quoteSubscription.unsubscribe();
+    if (this.quoteSubscription) {
+      this.quoteSubscription.unsubscribe();
+    }
+
     this.quoteSubscription = this.activatedRoute.params
       .pipe(
         filter(params => _.get(params, 'id') != null),
-        mergeMap(params => {
-          return this.quoteService.query({
-            conditions: [new ACondition(this.quoteService.type, 'Id', 'In', [_.get(params, 'id')])],
-            waitForExpansion: false
-          });
-        }),
-        map(quoteList => {
-          return _.get(quoteList, '[0]');
-        })
+        map(params => _.get(params, 'id')),
+        mergeMap(quoteId => this.apiService.get(`/quotes?condition[0]=Id,Equal,${quoteId}&lookups=PriceListId,Primary_Contact,BillToAccountId,ShipToAccountId,Account,CreatedBy`, Quote)),
+        map(quoteList => _.get(quoteList, '[0]'))
       ).subscribe(result => {
         this.quote$.next(result);
-        this.quoteLineItems$ = this.quote$.pipe(
-          map(
-            quote => LineItemService.groupItems(quote.QuoteLineItems)
-          )
-        );
         this.order$ = this.quote$.pipe(
           mergeMap(quote => this.orderService.getOrderByQuote(_.get(quote, 'Id')))
         );
       });
+
+    this.quoteLineItemsSubscription = this.activatedRoute.params
+      .pipe(
+        filter(params => _.get(params, 'id') != null),
+        map(params => _.get(params, 'id')),
+        mergeMap(quoteId => this.quoteLineItemService.query({
+          conditions: [new ACondition(this.quoteLineItemService.type, 'ProposalId', 'In', [quoteId])],
+          waitForExpansion: false
+        })),
+        map(result => this.quoteLineItems$.next(LineItemService.groupItems(result)))
+      ).subscribe();
+
     this.getNotes();
     this.getAttachments();
   }
