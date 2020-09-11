@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CommerceModule, TranslatorLoaderService } from '@apttus/ecommerce';
+import { CommerceModule, TranslatorLoaderService, OrderDetailsGuard } from '@apttus/ecommerce';
 
 import { environment } from '../environments/environment';
 import { ComponentModule } from './components/component.module';
@@ -34,7 +34,6 @@ registerLocaleData(localeFr, 'fr-FR', localeFrExtra);
 // Translations
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AboGuard } from './services/abo.guard';
-import { OrderDetailsGuard } from '@apttus/ecommerce';
 
 
 @NgModule({
@@ -53,9 +52,7 @@ import { OrderDetailsGuard } from '@apttus/ecommerce';
       loader: { provide: TranslateLoader, useClass: TranslatorLoaderService }
     }),
     HttpClientModule,
-    ComponentModule,
-    ServiceWorkerModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: false })
+    ComponentModule
   ],
   providers: [RouteGuard, AuthGuard, AboGuard, ConfigureGuard, ConstraintRuleGuard, OrderDetailsGuard],
   bootstrap: [AppComponent]
