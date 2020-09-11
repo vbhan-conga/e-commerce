@@ -33,7 +33,7 @@ registerLocaleData(localeFr, 'fr-FR', localeFrExtra);
 
 // Translations
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { AboGuard } from './services/aboGuard';
+import { AboGuard } from './services/abo.guard';
 import { OrderDetailsGuard } from '@apttus/ecommerce';
 
 
