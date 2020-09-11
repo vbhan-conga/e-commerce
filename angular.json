@@ -17,8 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "showCircularDependencies": false,
             "preserveSymlinks": true,
-            "outputPath": "dist/reference-base",
+            "outputPath": "../core/force-app/main/default/staticresources/ECommerce",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -36,7 +37,7 @@
               }
             ],
             "styles": [
-              "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss",
+              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
               "src/styles.scss",
               "node_modules/ladda/dist/ladda-themeless.min.css"
             ],
