@@ -80,7 +80,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     onAddToCart(cartItems: Array<CartItem>): void {
-        if(this.productConfigurationService.configWindow) this.productConfigurationService.configWindow.close();
         this.configurationChanged = false;
 
         if(_.get(cartItems, 'LineItems') && this.viewState$.value.storefront.ConfigurationLayout === 'Embedded') cartItems = _.get(cartItems, 'LineItems');
@@ -110,10 +109,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      */
     handleEndDateChange(cartItem: CartItem) {
         this.cartService.updateCartItems([cartItem]);
-    }
-
-    openConfigWindow(product: BundleProduct, relatedTo?: CartItem) {
-        this.productConfigurationService.openConfigWindow(product, relatedTo);
     }
 
     showSummary() {
