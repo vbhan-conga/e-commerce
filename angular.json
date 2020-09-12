@@ -19,7 +19,7 @@
           "options": {
             "showCircularDependencies": false,
             "preserveSymlinks": true,
-            "outputPath": "../core/force-app/main/default/staticresources/ECommerce",
+            "outputPath": "dist/reference-base",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
