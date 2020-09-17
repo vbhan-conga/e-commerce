@@ -1,6 +1,6 @@
 {
   "name": "apttus.ui.ecom.rc",
-  "version": "2002.0.167",
+  "version": "2002.0.168",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
