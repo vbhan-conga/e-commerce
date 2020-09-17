@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { InstalledProductsRoutingModule } from './installed-products-routing.module';
 import { InstalledProductsLayoutComponent } from './layout/installed-products-layout.component';
 import { ProductFamilyFilterComponent } from './components/product-family-filter.component';
-import { AccordionModule } from 'ngx-bootstrap';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { CommonModule } from '@angular/common';
 import { PricingModule } from '@apttus/ecommerce';
 import { FormsModule } from '@angular/forms';

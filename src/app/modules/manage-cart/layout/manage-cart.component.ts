@@ -15,7 +15,7 @@ import { get } from 'lodash';
  */
 export class ManageCartComponent implements OnInit {
 
-  @ViewChild('discardChangesTemplate', { static: false }) discardChangesTemplate: TemplateRef<any>;
+  @ViewChild('discardChangesTemplate') discardChangesTemplate: TemplateRef<any>;
 
   /**
    * Observable of the information for rendering this view.

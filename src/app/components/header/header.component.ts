@@ -22,9 +22,9 @@ import { switchMap, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild('searchModal', { static: false }) searchModal: ElementRef;
-  @ViewChild('profile', { static: false }) profile: MiniProfileComponent;
-  @ViewChild('searchBox', { static: false }) searchBox: ElementRef;
+  @ViewChild('searchModal') searchModal: ElementRef;
+  @ViewChild('profile') profile: MiniProfileComponent;
+  @ViewChild('searchBox') searchBox: ElementRef;
 
   index: number = 0;
   searchQuery: string;
