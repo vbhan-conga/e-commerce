@@ -10,7 +10,7 @@ import { environment } from '../environments/environment';
 import { RouteGuard } from './services/route.guard';
 import { ConstraintRuleGuard } from './services/constraint-rule.guard';
 import { AuthGuard } from './services/auth.guard';
-import { AboGuard } from './services/aboGuard';
+import { AboGuard } from './services/abo.guard';
 
 const routes: Routes = [
   {

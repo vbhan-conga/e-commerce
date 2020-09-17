@@ -13,7 +13,7 @@ import { take } from 'rxjs/operators';
   styles: []
 })
 export class CreateQuoteComponent implements OnInit {
-  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
+  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
   /**
    * Observable of cart
    */

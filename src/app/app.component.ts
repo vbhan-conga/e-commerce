@@ -13,7 +13,7 @@ import { ProductSelectionService } from '@apttus/elements';
     <app-header></app-header>
     <main>
       <router-outlet></router-outlet>
-      <apt-product-drawer [products]="products" *ngIf="showDrawer$ | async"></apt-product-drawer>
+      <apt-product-drawer *ngIf="showDrawer$ | async"></apt-product-drawer>
     </main>
     `,
   styles: []

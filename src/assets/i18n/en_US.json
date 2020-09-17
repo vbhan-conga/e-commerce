@@ -153,7 +153,7 @@
         "PASSWORD_DO_NOT_MATCH_ERROR": "Your passwords do not match",
         "OLD_PASSWORD_CAN_NOT_BE_USED_ERROR": "Cannot reuse this old password.",
         "OCURRED_SERVER_ERROR": "An error ocurred. Please contact your administrator.",
-        "SUBMIT": "Login"
+        "SUBMIT": "Submit"
     },
     "BUTTON": {
         "Buy More": "Buy More",
@@ -295,8 +295,8 @@
         "ADD_COMMENT": "Add Comment",
         "CREATE_QUOTE": "Create Quote",
         "DEFALUT_COMMENT": "There has not been any comments yet",
-        "PLACE_ORDER": "PLACE ORDER",
-        "PLACE_ORDER_PAY": "PLACE ORDER & PAY",
+        "PLACE_ORDER": "Place Order",
+        "PLACE_ORDER_PAY": "Place Order & Pay",
         "ON": "on",
         "CONFIRM_CHANGES": "Confirm Changes",
         "DAYS": "Days",
@@ -352,7 +352,7 @@
     "CONSTRAINT_ALERT": {
         "VIEW_DETAILS": "View Details",
         "MESSAGES_FOUND": "messages found.",
-        "NUM_OF_ERRORS": "{{amount}} erros found.",
+        "NUM_OF_ERRORS": "{{amount}} errors found.",
         "NUM_OF_WARNINGS": "{{amount}} warnings found.",
         "NUM_OF_INFO_MESSAGES": "{{amount}} information messages found."
     },
@@ -510,7 +510,7 @@
             "DISCARD_CHANGES_TITLE": "Discard your changes",
             "DISCARD_CHANGES_Message": "All your changes will be lost.",
             "DISCARD_CHANGES_CONFIRMATION": "Do you want to discard your changes and go back to the Quote Details page?",
-            "DISCARD_CHANGES": "Yes, DISCARD CHANGES"
+            "DISCARD_CHANGES": "YES, DISCARD CHANGES"
         }
     },
     "JUMBORTON": {
