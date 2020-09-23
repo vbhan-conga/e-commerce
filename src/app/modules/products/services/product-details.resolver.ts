@@ -45,10 +45,7 @@ export class ProductDetailsResolver implements Resolve<any> {
           switchMap(data => this.translatorService.translateData(data)),
           map(first)
         ),
-      this.cartItemService.query({
-        conditions: [new ACondition(this.cartItemService.type, 'Id', 'In', [get(routeParams, 'params.cartItem')])],
-        skipCache: true
-      }),
+      this.cartItemService.getCartItem(get(routeParams, 'params.cartItem')),
       this.crService.getRecommendationsForProducts([get(routeParams, 'params.id')])
     ).pipe(
       mergeMap(([product, cartitemList, rProductList]) => combineLatest(of([product, cartitemList, rProductList]), this.storefrontService.getStorefront())),
