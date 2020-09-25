@@ -30,11 +30,11 @@ import { ExceptionService, PriceSummaryComponent, BreadcrumbLink } from '@apttus
   styleUrls: ['./cart.component.scss']
 })
 export class CartComponent implements OnInit, OnDestroy {
-  @ViewChild('addressTabs', {static: false}) addressTabs: any;
-  @ViewChild('addressInfo', { static: false }) addressInfo: ElementRef;
-  @ViewChild('staticTabs', { static: false }) staticTabs: TabsetComponent;
-  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
-  @ViewChild('priceSummary', { static: false }) priceSummary: PriceSummaryComponent;
+  @ViewChild('addressTabs') addressTabs: any;
+  @ViewChild('addressInfo') addressInfo: ElementRef;
+  @ViewChild('staticTabs') staticTabs: TabsetComponent;
+  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
+  @ViewChild('priceSummary') priceSummary: PriceSummaryComponent;
 
   /**
    * An Observable containing the current contact record

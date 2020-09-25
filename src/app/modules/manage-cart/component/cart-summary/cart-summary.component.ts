@@ -21,7 +21,7 @@ import { SummaryState } from '../../../cart/component/summary.component';
 
 export class CartSummaryComponent implements OnInit, OnChanges {
   @Input() cart: Cart;
-  @ViewChild('discardChangesTemplate', { static: false }) discardChangesTemplate: TemplateRef<any>;
+  @ViewChild('discardChangesTemplate') discardChangesTemplate: TemplateRef<any>;
 
   loading:boolean = false;
   discardChangesModal: BsModalRef;
@@ -39,14 +39,14 @@ export class CartSummaryComponent implements OnInit, OnChanges {
   totalPromotions: number = 0;
   storefront$: Observable<Storefront>;
   /** @ignore */
-  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
+  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
   /** tax related local properties */
   showTaxPopUp: boolean = false;
   taxItems: Array<TaxBreakup>;
   totalEstimatedTax: number = 0;
   taxPopHoverModal:BsModalRef;
 
-  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService, private storefrontService: StorefrontService, private router :Router, private userService: UserService, private cartService: CartService, 
+  constructor(private quoteService: QuoteService, private modalService: BsModalService, private crService: ConstraintRuleService, private storefrontService: StorefrontService, private router :Router, private userService: UserService, private cartService: CartService,
     private taxService:TaxService) {
     this.state = {
       configurationMessage: null,
@@ -114,5 +114,9 @@ export class CartSummaryComponent implements OnInit, OnChanges {
     this.taxService.getTaxBreakUpsForConfiguration().subscribe(taxBreakup => {
       this.totalEstimatedTax = ((_.get(this.cart, 'LineItems.length') > 0)) ? _.sum(taxBreakup.map(res => res.TaxAmount)) : 0;
     });
+  }
+
+  getCartState(): string {
+    return _.get(this.cart, '_state', '');
   }
 }

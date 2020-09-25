@@ -50,7 +50,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     configWindow: any = null;
 
-    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+    @ViewChild(ProductConfigurationSummaryComponent)
     configSummaryModal: ProductConfigurationSummaryComponent;
     subscriptions: Array<Subscription> = [];
 
@@ -64,8 +64,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.viewState$ = this.resolver.state();
         this.storefront$ = this.storefrontService.getStorefront();
-        this.relatedTo = this.viewState$.value.relatedTo;
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
+            this.relatedTo = _.get(this.viewState$, 'value.relatedTo');
             if(response && _.has(response, 'configurationPending')) this.configurationPending = _.get(response,'configurationPending');
             else {
             this.product = _.get(response,'product');
