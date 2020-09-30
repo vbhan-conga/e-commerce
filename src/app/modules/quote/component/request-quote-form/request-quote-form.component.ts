@@ -48,7 +48,7 @@ export class RequestQuoteFormComponent implements OnInit {
         if(_.get(this.cart, 'Proposald.Id')) {
           this.quote = _.get(this.cart, 'Proposald');
           this.comments = _.get(quote, '[0].Notes', []);
-          if(this.comments.length > 1) {
+          if(_.get(this.comments, 'length') > 1) {
             this.comments.sort(function(a, b){
               return new Date(b.CreatedDate).getTime() - new Date(a.CreatedDate).getTime();
             });
