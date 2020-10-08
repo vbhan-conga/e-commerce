@@ -33,8 +33,8 @@ import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 })
 export class SummaryComponent implements OnChanges {
   @Input() cart: Cart;
-  @ViewChild('confirmationTemplate', { static: false }) confirmationTemplate: TemplateRef<any>;
-  @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
+  @ViewChild(ProductConfigurationSummaryComponent)
   summaryModal: ProductConfigurationSummaryComponent;
 
   state: SummaryState;
