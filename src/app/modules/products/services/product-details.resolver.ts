@@ -12,6 +12,7 @@ import {
   TranslatorLoaderService,
   ProductOptionService, Cart, CartService, StorefrontService, Storefront
 } from '@apttus/ecommerce';
+import { ProductConfigurationService } from '@apttus/elements';
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +27,14 @@ export class ProductDetailsResolver implements Resolve<any> {
     private translatorService: TranslatorLoaderService,
     private productOptionService: ProductOptionService,
     private cartService: CartService,
+    private productConfigurationService: ProductConfigurationService,
     private storefrontService: StorefrontService) { }
 
   state(): BehaviorSubject<ProductDetailsState> {
     return this.subject;
   }
   resolve(route: ActivatedRouteSnapshot): Observable<ProductDetailsState> {
+    this.productConfigurationService.onChangeConfiguration(null);
     const routeParams = route.paramMap;
     if (!isNil(this.subscription))
       this.subscription.unsubscribe();
@@ -42,10 +45,7 @@ export class ProductDetailsResolver implements Resolve<any> {
           switchMap(data => this.translatorService.translateData(data)),
           map(first)
         ),
-      this.cartItemService.query({
-        conditions: [new ACondition(this.cartItemService.type, 'Id', 'In', [get(routeParams, 'params.cartItem')])],
-        skipCache: true
-      }),
+      this.cartItemService.getCartItem(get(routeParams, 'params.cartItem')),
       this.crService.getRecommendationsForProducts([get(routeParams, 'params.id')])
     ).pipe(
       mergeMap(([product, cartitemList, rProductList]) => combineLatest(of([product, cartitemList, rProductList]), this.storefrontService.getStorefront())),

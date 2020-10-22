@@ -25,6 +25,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      * Flag to detect if there is change in product configuration.
      */
     configurationChanged: boolean = false;
+    /**
+     * Flag to detect if there is pending in product configuration.
+     */
+    configurationPending: boolean = false;
 
     quantity: number = 1;
     /**
@@ -46,7 +50,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     configWindow: any = null;
 
-    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+    @ViewChild(ProductConfigurationSummaryComponent)
     configSummaryModal: ProductConfigurationSummaryComponent;
     subscriptions: Array<Subscription> = [];
 
@@ -60,12 +64,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.viewState$ = this.resolver.state();
         this.storefront$ = this.storefrontService.getStorefront();
-        this.relatedTo = this.viewState$.value.relatedTo;
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
-            this.product = response.product;
-            this.cartItemList = response.itemList;
-            if (_.get(response.configurationFlags,'optionChanged') || _.get(response.configurationFlags,'attributeChanged')) this.configurationChanged = true;
-        }));
+            this.relatedTo = _.get(this.viewState$, 'value.relatedTo');
+            if(response && _.has(response, 'configurationPending')) this.configurationPending = _.get(response,'configurationPending');
+            else {
+            this.product = _.get(response,'product');
+            this.cartItemList = _.get(response,'itemList');
+            if (_.get(response, 'configurationFlags.optionChanged') || _.get(response, 'configurationFlags.attributeChanged')) this.configurationChanged = true;
+        }}));
     }
 
     /**
@@ -80,13 +86,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     onAddToCart(cartItems: Array<CartItem>): void {
-        if(this.productConfigurationService.configWindow) this.productConfigurationService.configWindow.close();
         this.configurationChanged = false;
 
         if(_.get(cartItems, 'LineItems') && this.viewState$.value.storefront.ConfigurationLayout === 'Embedded') cartItems = _.get(cartItems, 'LineItems');
         const primaryItem = this.getPrimaryItem(cartItems);
         this.relatedTo = primaryItem;
-        if (!_.isNil(primaryItem) && (_.get(primaryItem, 'Product.HasOptions') || _.get(primaryItem, 'Product.HasAttributes')))
+        if (!_.isNil(primaryItem) && (_.get(primaryItem, 'HasOptions') || _.get(primaryItem, 'HasAttributes')))
             this.router.navigate(['/products', _.get(this, 'viewState$.value.product.Id'), _.get(primaryItem, 'Id')]);
 
         if(this.quantity <= 0) {
@@ -112,10 +117,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.cartService.updateCartItems([cartItem]);
     }
 
-    openConfigWindow(product: BundleProduct, relatedTo?: CartItem) {
-        this.productConfigurationService.openConfigWindow(product, relatedTo);
-    }
-
     showSummary() {
         this.configSummaryModal.show();
     }
@@ -123,15 +124,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     getPrimaryItem(cartItems: Array<CartItem>): CartItem {
         let primaryItem: CartItem;
         if (_.isNil(this.viewState$.value.relatedTo))
-            primaryItem = _.maxBy(_.filter(cartItems, i => _.get(i, 'IsPrimaryLine') === true && _.isNil(_.get(i, 'Option'))), 'PrimaryLineNumber');
+            primaryItem = _.maxBy(_.filter(cartItems, i => _.get(i, 'LineType') === 'Product/Service' && _.isNil(_.get(i, 'Option'))), 'PrimaryLineNumber');
         else
-            primaryItem = _.find(cartItems, i => _.get(i, 'IsPrimaryLine') === true && i.PrimaryLineNumber === _.get(this.viewState$.value.relatedTo, 'PrimaryLineNumber') && _.isNil(_.get(i, 'Option')));
+            primaryItem = _.find(cartItems, i => _.get(i, 'LineType') === 'Product/Service' && i.PrimaryLineNumber === _.get(this.viewState$.value.relatedTo, 'PrimaryLineNumber') && _.isNil(_.get(i, 'Option')));
         return primaryItem;
     }
 
     ngOnDestroy(){
         _.forEach(this.subscriptions, item => {
             if(item) item.unsubscribe();
-        })
+        });
     }
 }

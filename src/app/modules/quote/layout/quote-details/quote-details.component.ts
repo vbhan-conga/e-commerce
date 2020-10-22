@@ -68,13 +68,13 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
 
   notesSubscription: Subscription;
 
-  attachemntSubscription: Subscription;
+  attachentsSubscription: Subscription;
 
   quoteSubscription: Subscription;
 
   quoteLineItemsSubscription: Subscription;
 
-  @ViewChild('intimationTemplate', { static: false }) intimationTemplate: TemplateRef<any>;
+  @ViewChild('intimationTemplate') intimationTemplate: TemplateRef<any>;
 
   lookupOptions: LookupOptions = {
     primaryTextField: 'Name',
@@ -272,8 +272,8 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   getAttachments() {
-    if (this.attachemntSubscription) this.attachemntSubscription.unsubscribe();
-    this.attachemntSubscription = this.activatedRoute.params
+    if (this.attachentsSubscription) this.attachentsSubscription.unsubscribe();
+    this.attachentsSubscription = this.activatedRoute.params
       .pipe(
         switchMap(params => this.attachmentService.getAttachments(_.get(params, 'id')))
       ).subscribe((attachments: Array<Attachment>) => this.attachmentList$.next(attachments));
@@ -322,9 +322,11 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.notesSubscription)
       this.notesSubscription.unsubscribe();
-    if (this.attachemntSubscription)
-      this.attachemntSubscription.unsubscribe();
+    if (this.attachentsSubscription)
+      this.attachentsSubscription.unsubscribe();
     if (this.quoteSubscription)
       this.quoteSubscription.unsubscribe();
+    if (this.quoteLineItemsSubscription)
+      this.quoteLineItemsSubscription.unsubscribe();
   }
 }
