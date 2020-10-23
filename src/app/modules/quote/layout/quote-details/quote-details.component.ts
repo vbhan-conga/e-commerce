@@ -1,26 +1,7 @@
+import {Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  NgZone,
-  ChangeDetectorRef,
-  OnDestroy
-} from '@angular/core';
-import {
-  UserService,
-  QuoteService,
-  Quote,
-  Order,
-  OrderService,
-  Note,
-  NoteService,
-  AttachmentService,
-  ProductInformationService,
-  ItemGroup,
-  LineItemService,
-  Attachment,
-  QuoteLineItemService
+  UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
+  ProductInformationService, ItemGroup, LineItemService, Attachment
 } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap, switchMap } from 'rxjs/operators';
@@ -39,13 +20,11 @@ import { ACondition, ApiService } from '@apttus/core';
 })
 export class QuoteDetailsComponent implements OnInit, OnDestroy {
   quote$: BehaviorSubject<Quote> = new BehaviorSubject<Quote>(null);
-
-  quoteLineItems$: BehaviorSubject<Array<ItemGroup>> = new BehaviorSubject<Array<ItemGroup>>(null);
-
+  quoteLineItems$: Observable<Array<ItemGroup>>;
   order$: Observable<Order>;
 
   note: Note = new Note();
-
+  newlyGeneratedOrder: Order;
   intimationModal: BsModalRef;
 
   hasSizeError: boolean;
@@ -68,13 +47,10 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
 
   notesSubscription: Subscription;
 
-  attachentsSubscription: Subscription;
-
+  attachemntSubscription: Subscription;
   quoteSubscription: Subscription;
 
-  quoteLineItemsSubscription: Subscription;
-
-  @ViewChild('intimationTemplate') intimationTemplate: TemplateRef<any>;
+  @ViewChild('intimationTemplate', {static: false}) intimationTemplate: TemplateRef<any>;
 
   lookupOptions: LookupOptions = {
     primaryTextField: 'Name',
@@ -93,9 +69,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
               private productInformationService: ProductInformationService,
               private cdr: ChangeDetectorRef,
               private ngZone: NgZone,
-              private userService: UserService,
-              private quoteLineItemService: QuoteLineItemService,
-              private apiService: ApiService) {
+              private userService: UserService) {
   }
 
   ngOnInit() {
@@ -106,31 +80,30 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
     if (this.quoteSubscription) {
       this.quoteSubscription.unsubscribe();
     }
-
+  
     this.quoteSubscription = this.activatedRoute.params
       .pipe(
         filter(params => _.get(params, 'id') != null),
-        map(params => _.get(params, 'id')),
-        mergeMap(quoteId => this.apiService.get(`/quotes?condition[0]=Id,Equal,${quoteId}&lookups=PriceListId,Primary_Contact,BillToAccountId,ShipToAccountId,Account,CreatedBy`, Quote)),
-        map(quoteList => _.get(quoteList, '[0]'))
+        mergeMap(params => {
+          return this.quoteService.query({
+            conditions: [new ACondition(this.quoteService.type, 'Id', 'In', [_.get(params, 'id')])],
+            waitForExpansion: false
+          });
+        }),
+        map(quoteList => {
+          return _.get(quoteList, '[0]');
+        })
       ).subscribe(result => {
         this.quote$.next(result);
+        this.quoteLineItems$ = this.quote$.pipe(
+          map(
+            quote => LineItemService.groupItems(quote.QuoteLineItems)
+          )
+        );
         this.order$ = this.quote$.pipe(
           mergeMap(quote => this.orderService.getOrderByQuote(_.get(quote, 'Id')))
         );
       });
-
-    this.quoteLineItemsSubscription = this.activatedRoute.params
-      .pipe(
-        filter(params => _.get(params, 'id') != null),
-        map(params => _.get(params, 'id')),
-        mergeMap(quoteId => this.quoteLineItemService.query({
-          conditions: [new ACondition(this.quoteLineItemService.type, 'ProposalId', 'In', [quoteId])],
-          waitForExpansion: false
-        })),
-        map(result => this.quoteLineItems$.next(LineItemService.groupItems(result)))
-      ).subscribe();
-
     this.getNotes();
     this.getAttachments();
   }
@@ -272,8 +245,8 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   getAttachments() {
-    if (this.attachentsSubscription) this.attachentsSubscription.unsubscribe();
-    this.attachentsSubscription = this.activatedRoute.params
+    if (this.attachemntSubscription) this.attachemntSubscription.unsubscribe();
+    this.attachemntSubscription = this.activatedRoute.params
       .pipe(
         switchMap(params => this.attachmentService.getAttachments(_.get(params, 'id')))
       ).subscribe((attachments: Array<Attachment>) => this.attachmentList$.next(attachments));
@@ -322,11 +295,9 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.notesSubscription)
       this.notesSubscription.unsubscribe();
-    if (this.attachentsSubscription)
-      this.attachentsSubscription.unsubscribe();
+    if (this.attachemntSubscription)
+      this.attachemntSubscription.unsubscribe();
     if (this.quoteSubscription)
       this.quoteSubscription.unsubscribe();
-    if (this.quoteLineItemsSubscription)
-      this.quoteLineItemsSubscription.unsubscribe();
   }
 }

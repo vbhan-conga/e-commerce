@@ -65,14 +65,13 @@
     </div>
   </apt-detail-section>
 
-  <apt-detail-section [title]="'DETAILS.LINE_ITEMS' | translate" class="mt-4"
-                      *ngIf="orderLineItems$ | async as orderLineItems">
+  <apt-detail-section [title]="'DETAILS.LINE_ITEMS' | translate" class="mt-4">
     <h5 class="py-2">
       {{'DETAILS.LINE_ITEMS' | translate}}
     </h5>
     <table class="table table-responsive border-bottom">
       <tbody>
-      <ng-container *ngFor="let item of orderLineItems; let i = index">
+      <ng-container *ngFor="let item of orderLineItems$ | async; let i = index">
         <apt-line-item-table-row
           [index]="i"
           [parent]="item.MainLine"
