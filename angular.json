@@ -29,6 +29,7 @@
               "src/manifest.json",
               "src/apttus-worker.js",
               "src/web.config",
+              "src/caas.css",
               {
                 "glob": "**/*",
                 "input": "node_modules/crypto-js",
