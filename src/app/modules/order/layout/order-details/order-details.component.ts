@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, combineLatest, of } from 'rxjs';
-import { filter, flatMap, map, switchMap } from 'rxjs/operators';
+import { filter, flatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { get, first, sum } from 'lodash';
 import { ACondition } from '@apttus/core';
 import { Order, OrderLineItem, OrderService, UserService, QuoteService, ItemGroup, LineItemService } from '@apttus/ecommerce';
@@ -25,7 +25,10 @@ export class OrderDetailsComponent implements OnInit {
     * Boolean observable to check if user is logged in.
     */
   isLoggedIn$: Observable<boolean>;
-  /** @ignore */
+  
+  /**
+   * Orderlineitems observable.
+   */
   orderLineItems$: Observable<Array<ItemGroup>>;
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -52,18 +55,11 @@ export class OrderDetailsComponent implements OnInit {
     this.isLoggedIn$ = this.userService.isLoggedIn();
   }
 
-  /**
-   * @ignore
-   */
   getTotalPromotions(order: Order): number {
     return ((get(order, 'OrderLineItems.length') > 0)) ? sum(get(order, 'OrderLineItems').map(res => res.IncentiveAdjustmentAmount)) : 0;
   }
 
-  /**
-   * @ignore
-   */
   getChildItems(orderLineItems: Array<OrderLineItem>, lineItem: OrderLineItem): Array<OrderLineItem> {
     return orderLineItems.filter(orderItem => !orderItem.IsPrimaryLine && orderItem.PrimaryLineNumber === lineItem.PrimaryLineNumber);
   }
-
 }
