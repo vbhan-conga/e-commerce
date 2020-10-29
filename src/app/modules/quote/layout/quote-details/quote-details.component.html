@@ -25,13 +25,13 @@
             <apt-output-field [record]="quote" field="CreatedDate" layout="inline" [editable]="false"></apt-output-field>
             <apt-output-field [record]="quote.CreatedBy" field="Name" label="Created By" layout="inline"
             [editable]="false"></apt-output-field>
-            <apt-output-field [record]="quote" field="RFP_Response_Due_Date" layout="inline"
-              [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'"
+            <apt-output-field [record]="quote" field="RFP_Response_Due_Date" layout="inline" 
+              [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'" 
               (onChange)="refreshQuote($event, quote, 'RFP_Response_Due_Date')">
             </apt-output-field>
-            <apt-output-field [record]="quote" field="Primary_ContactId" layout="inline"
-              [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'"
-              [showQuickView]="true" [lookupOptions]="lookupOptions"
+            <apt-output-field [record]="quote" field="Primary_ContactId" layout="inline" 
+              [editable]="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'" 
+              [showQuickView]="true" [lookupOptions]="lookupOptions" 
               (onChange)="refreshQuote($event, quote, 'Primary_ContactId')">
             </apt-output-field>
             <apt-output-field [record]="quote" field="AccountId" label="Account.Name" layout="inline"
@@ -53,14 +53,14 @@
     </div>
   </apt-detail-section>
 
-  <apt-detail-section [title]="'DETAILS.LINE_ITEMS' | translate" class="mt-4" *ngIf="quoteLineItems$ | async as quoteLineItems">
+  <apt-detail-section [title]="'DETAILS.LINE_ITEMS' | translate" class="mt-4">
     <h5 class="py-2">
       {{'DETAILS.LINE_ITEMS' | translate}}
       <button class="btn btn-sm btn-outline-primary px-4 ml-4" *ngIf="quote?.Approval_Stage === 'Draft' || quote?.Approval_Stage === 'Presented'"  [ladda]="edit_loader"  data-style="zoom-in"  data-spinner-color="black" (click)="editQuoteItems(quote.Id)">{{'COMMON.EDIT' | translate}}</button>
     </h5>
     <table class="table table-responsive border-bottom">
       <tbody>
-        <ng-container *ngFor="let item of quoteLineItems; let i = index">
+        <ng-container *ngFor="let item of quoteLineItems$ | async; let i = index">
           <apt-line-item-table-row
             [index]="i"
             [parent]="item.MainLine"
