@@ -29,6 +29,7 @@
               "src/manifest.json",
               "src/apttus-worker.js",
               "src/web.config",
+              "src/caas.css",
               {
                 "glob": "**/*",
                 "input": "node_modules/crypto-js",
@@ -36,7 +37,6 @@
               }
             ],
             "styles": [
-              "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface-regular.scss",
               "src/styles.scss",
               "node_modules/ladda/dist/ladda-themeless.min.css"
             ],
@@ -60,7 +60,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
@@ -68,8 +68,8 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "tsConfig": "tsconfig.prod.json",
               "serviceWorker": false,
+              "tsConfig": "tsconfig.prod.json",
               "budgets": [
                 {
                   "type": "initial",
@@ -313,5 +313,8 @@
       }
     }
   },
-  "defaultProject": "reference-base"
+  "defaultProject": "reference-base",
+  "cli": {
+    "analytics": false
+  }
 }

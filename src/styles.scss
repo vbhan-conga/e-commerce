@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "variables";
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+$roboto-font-path: '~roboto-fontface/fonts';
+@import "variables";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/scss/solid";
 @import "~@fortawesome/fontawesome-free/scss/v4-shims";
@@ -9,6 +10,23 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import '~ngx-toastr/toastr-bs4-alert';
 @import '~ngx-bootstrap/datepicker/bs-datepicker.css';
 @import "~@ng-select/ng-select/themes/default.theme.css";
+
+/* latin-ext */
+@font-face {
+    font-family: 'Salesforce Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Salesforce Sans'), local('SalesforceSans-Regular'), url(assets/fonts/Salesforce-latin-ext.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+    font-family: 'Salesforce Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Salesforce Sans'), local('SalesforceSans-Regular'), url(assets/fonts/Salesforce-latin.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 .px-6{
     padding-left: 4rem;
@@ -123,7 +141,7 @@ a .oi{
 
 /**
  * Reset anchor and button decoration
- */ 
+ */
 a:hover, a:focus, a:active, button.btn-link:focus, button.btn-link:active, button.btn-link:hover{
     text-decoration: none;
 }
@@ -137,7 +155,7 @@ button.chevron:before, button.minus:before{
 }
 /**
  * Button styles
- */ 
+ */
 button{
     .btn:not(.btn-link){
         text-transform: uppercase;
@@ -160,8 +178,8 @@ button{
         margin-right: .8rem;
     }
     &.chevron[aria-expanded="false"]:before{
-        content: "\f0da"; 
-        margin-right: .8rem;  
+        content: "\f0da";
+        margin-right: .8rem;
     }
     &.minus[aria-expanded="true"]:before{
         content: "\f068";
@@ -169,7 +187,7 @@ button{
         margin-right: 5px;
     }
     &.minus[aria-expanded="false"]:before{
-        content: "\f067";   
+        content: "\f067";
         font-size: smaller;
         margin-right: 5px;
     }
@@ -177,7 +195,7 @@ button{
 
 /**
  * Add margin to the main section to accomodate header
- */ 
+ */
 main{
     margin-top: $navbar-brand-height;
     min-height: calc(100vh - #{$navbar-brand-height});
@@ -185,7 +203,7 @@ main{
 
 /**
  * Dropdown fixes
- */ 
+ */
 .dropdown-toggle::after{
     display: none;
 }

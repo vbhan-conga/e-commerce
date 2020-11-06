@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { QuoteService, Quote, CartService, PriceService, LocalCurrencyPipe } from '@apttus/ecommerce';
-import { Observable, of, combineLatest } from 'rxjs';
+import { QuoteService, Quote, CartService, LocalCurrencyPipe } from '@apttus/ecommerce';
+import { Observable, combineLatest } from 'rxjs';
 import { QuoteActions } from './quote-actions.component';
 import { Router } from '@angular/router';
 import { ACondition, AFilter } from '@apttus/core';
-import { TranslateService } from '@ngx-translate/core';
 import { take, map, flatMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -53,16 +52,36 @@ export class QuoteListComponent implements OnInit {
         prop: 'LastModifiedDate'
       }
     ],
+    lookups: [
+      {
+        field: 'PriceListId'
+      },
+      {
+        field: 'Account'
+      },
+      {
+        field: 'Opportunity'
+      }, 
+      {
+        field: 'Primary_Contact'
+      }, 
+      {
+        field: 'BillToAccountId'
+      },
+      {
+        field: 'ShipToAccountId'
+      }, 
+      {
+        field: 'Owner'
+      }
+    ],
     children : ['ProposalSummaryGroups']
   };
   /**
    * Array of quotes for current page number.
    */
-  quoteList$: Observable<Array<Quote>>;
   quote: Quote = new Quote();
   view$: Observable<QuoteListView>;
-  quotesByStatus$: Observable<Object>;
-  quotesByDueDate$: Observable<Object>;
   minDaysFromDueDate: number = 7;
   maxDaysFromDueDate: number = 14;
   actionConfiguration: object;

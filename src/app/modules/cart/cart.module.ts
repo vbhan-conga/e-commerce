@@ -16,6 +16,7 @@ import {
   PriceModule,
   IconModule
 } from '@apttus/elements';
+
 import { ComponentModule } from '../../components/component.module';
 import { CardFormComponent } from './component/card-form/card-form.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';

@@ -283,8 +283,8 @@
         "CHANGE_SHIPPING_ADDRESS":"es_MX Change Shipping Address",
         "CHANGE_BILLING_ADDRESS":"es_MX Change Billing Address",
         "EDIT_LINE_ITEMS": "es_MX Edit Line Items",
-        "PLACE_ORDER": "es_MX PLACE ORDER",
-        "PLACE_ORDER_PAY": "es_MX PLACE ORDER & PAY",
+        "PLACE_ORDER": "es_MX Place Order",
+        "PLACE_ORDER_PAY": "es_MX Place Order & Pay",
         "ON": "es_MX on",
         "CONFIRM_CHANGES": "es_MX Confirm Changes",
         "UPLOAD": "es_MX Upload",
@@ -341,7 +341,7 @@
     "CONSTRAINT_ALERT": {
         "VIEW_DETAILS": "es_MX View Details",
         "MESSAGES_FOUND": "es_MX messages found.",
-        "NUM_OF_ERRORS": "es_MX {{amount}} erros found.",
+        "NUM_OF_ERRORS": "es_MX {{amount}} errors found.",
         "NUM_OF_WARNINGS": "es_MX {{amount}} warnings found.",
         "NUM_OF_INFO_MESSAGES": "es_MX {{amount}} information messages found."
     },
@@ -365,13 +365,12 @@
         "PRODUCTS_EXCLUSION": "es_MX <strong>The following products </strong> are excluded with the product <strong> {{productName}}</strong>.",
         "AUTO_INCLUDED_OPTIONS": "es_MX Auto Included Options",
         "AUTO_INCLUSION_OF_OPTIONS": "es_MX Below option(s) are auto included with option <strong> {{productName}}</strong>.",
-        "INCLUDED_OPTIONS_HEADING": "es_MX Included Options",
+        "OPTIONS_HEADING": "es_MX Include / Exclude Options",
         "AT_LEAST": "es_MX At least",
         "OPTION": "es_MX Option",
         "OPTION_MUST_BE_INCLUDED": "es_MX from below must be included with",
         "ADD_TO_BUNDLE": "es_MX Add To Bundle",
         "DONE": "es_MX Done",
-        "EXCLUSION_OPTIONS_HEADING": "es_MX Exclusion Options",
         "OPTIONS_MUST_BE_EXCLUDED": "es_MX Option(s) from below must be excluded with <strong> {{productName}}</strong>.",
         "REMOVE_FROM_BUNDLE": "es_MX Remove From Bundle",
         "INCLUDED_EXCLUDED_OPTIONS_HEADING": "es_MX Included/Excluded Options",
@@ -499,7 +498,7 @@
             "DISCARD_CHANGES_TITLE":"es_MX Discard your changes",
             "DISCARD_CHANGES_Message": "es_MX All yur changes will be lost.",
             "DISCARD_CHANGES_CONFIRMATION": "es_MX Do you want to discard your changes and go back to the Quote Details page?",
-            "DISCARD_CHANGES": "es_MX Yes, DISCARD CHANGES"
+            "DISCARD_CHANGES": "es_MX YES, DISCARD CHANGES"
         }
     },
     "JUMBORTON": {

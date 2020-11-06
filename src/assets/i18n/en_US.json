@@ -153,7 +153,7 @@
         "PASSWORD_DO_NOT_MATCH_ERROR": "Your passwords do not match",
         "OLD_PASSWORD_CAN_NOT_BE_USED_ERROR": "Cannot reuse this old password.",
         "OCURRED_SERVER_ERROR": "An error ocurred. Please contact your administrator.",
-        "SUBMIT": "Login"
+        "SUBMIT": "Submit"
     },
     "BUTTON": {
         "Buy More": "Buy More",
@@ -295,8 +295,8 @@
         "ADD_COMMENT": "Add Comment",
         "CREATE_QUOTE": "Create Quote",
         "DEFALUT_COMMENT": "There has not been any comments yet",
-        "PLACE_ORDER": "PLACE ORDER",
-        "PLACE_ORDER_PAY": "PLACE ORDER & PAY",
+        "PLACE_ORDER": "Place Order",
+        "PLACE_ORDER_PAY": "Place Order & Pay",
         "ON": "on",
         "CONFIRM_CHANGES": "Confirm Changes",
         "DAYS": "Days",
@@ -352,7 +352,7 @@
     "CONSTRAINT_ALERT": {
         "VIEW_DETAILS": "View Details",
         "MESSAGES_FOUND": "messages found.",
-        "NUM_OF_ERRORS": "{{amount}} erros found.",
+        "NUM_OF_ERRORS": "{{amount}} errors found.",
         "NUM_OF_WARNINGS": "{{amount}} warnings found.",
         "NUM_OF_INFO_MESSAGES": "{{amount}} information messages found."
     },
@@ -376,16 +376,15 @@
         "PRODUCTS_EXCLUSION": "<strong>The following products </strong> are excluded with the product <strong> {{productName}}</strong>.",
         "AUTO_INCLUDED_OPTIONS": "Auto Included Options",
         "AUTO_INCLUSION_OF_OPTIONS": "Below option(s) are auto included with option <strong> {{productName}}</strong>.",
-        "INCLUDED_OPTIONS_HEADING": "Included Options",
+        "OPTIONS_HEADING": "Include / Exclude Options",
         "AT_LEAST": "At least",
         "OPTION": "Option",
         "OPTION_MUST_BE_INCLUDED": "from below must be included with",
         "ADD_TO_BUNDLE": "Add To Bundle",
         "DONE": "Done",
-        "EXCLUSION_OPTIONS_HEADING": "Exclusion Options",
         "OPTIONS_MUST_BE_EXCLUDED": "Option(s) from below must be excluded with <strong> {{productName}}</strong>.",
         "REMOVE_FROM_BUNDLE": "Remove From Bundle",
-        "INCLUDED_EXCLUDED_OPTIONS_HEADING": "Included/Excluded Options",
+        "INCLUDED_EXCLUDED_OPTIONS_HEADING": "Included / Excluded Options",
         "PRODUCT_GROUP_MESSAGE": "Product group <strong>{{productGroupName}}</strong> option(s) <span>{{message}}</span> <strong>{{productName}}</strong>",
         "PRODUCT_FAMILY_MESSAGE": "Product family <strong>{{productFamily}}</strong> option(s) <span>{{message}}</span> <strong>{{productName}}</strong>",
         "OPTIONS": "option(s)",
@@ -511,7 +510,7 @@
             "DISCARD_CHANGES_TITLE": "Discard your changes",
             "DISCARD_CHANGES_Message": "All your changes will be lost.",
             "DISCARD_CHANGES_CONFIRMATION": "Do you want to discard your changes and go back to the Quote Details page?",
-            "DISCARD_CHANGES": "Yes, DISCARD CHANGES"
+            "DISCARD_CHANGES": "YES, DISCARD CHANGES"
         }
     },
     "JUMBORTON": {

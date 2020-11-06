@@ -24,7 +24,8 @@ export const environment: Configuration = {
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
-    // *** TODO: Replace with Salesforce environment variables ***
+   pricingMode: 'turbo',
+  // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'E-Commerce',
   organizationId: '00D3I0000008mFM',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
