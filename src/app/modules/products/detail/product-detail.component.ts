@@ -66,7 +66,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.storefront$ = this.storefrontService.getStorefront();
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
             this.relatedTo = _.get(this.viewState$, 'value.relatedTo');
-            if(response && _.has(response, 'configurationPending')) this.configurationPending = _.get(response,'configurationPending');
+            if(response && _.has(response, 'hasErrors')) this.configurationPending = _.get(response,'hasErrors');
             else {
             this.product = _.get(response,'product');
             this.cartItemList = _.get(response,'itemList');
