@@ -25,6 +25,7 @@ export const environment: Configuration = {
   expandDepth: 8,
   hashRouting: true,
   packageNamespace: 'Apttus_WebStore',
+  pricingFallback: true,
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'Posteitaliane',
   organizationId: '00DJ0000003HSZL',
