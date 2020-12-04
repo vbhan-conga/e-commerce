@@ -409,6 +409,16 @@ constraint-dialog .modal-dialog {
     }
   }
 }
+configuration-summary {
+  .sidebar--configure-product.classic-sidebar-height {
+    .summary-pane {
+      background: none !important;
+      .configure-product__product-prices, h3 {
+        display: none;
+      }
+    }
+  }
+}
 
 /* Scrollbar width */
 ::-webkit-scrollbar {

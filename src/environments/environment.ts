@@ -24,7 +24,8 @@ export const environment: Configuration = {
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
-   pricingMode: 'turbo',
+  pricingMode: 'turbo',
+  pricingFallback: true,
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'E-Commerce',
   organizationId: '00D3I0000008mFM',
