@@ -14,7 +14,8 @@ import {
   QuoteService,
   ItemGroup,
   LineItemService,
-  OrderLineItemService
+  OrderLineItemService,
+  Account
 } from '@apttus/ecommerce';
 
 /**
@@ -61,7 +62,10 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
         map(params => get(params, 'id')),
         flatMap(orderId => this.apiService.get(`/orders?condition[0]=Id,Equal,${orderId}&lookups=PriceListId,PrimaryContact,BillToAccountId,ShipToAccountId,SoldToAccountId,Owner,CreatedBy`, Order)),
         map(first),
-        switchMap((order: Order) => combineLatest(of(order), get(order, 'Proposal.Id') ? this.quoteService.get([order.Proposal.Id]) : of(null))),
+        switchMap((order: Order) => combineLatest([of(order),
+          get(order, 'Proposal.Id') ? this.quoteService.get([order.Proposal.Id]) : of(null),
+          get(order, 'PrimaryContact.AccountId') ? this.apiService.get(`/accounts?condition[0]=Id,Equal,${order.PrimaryContact.AccountId}`, Account) : of(null)])
+        ),
         map(([order, quote]) => {
           order.Proposal = first(quote);
           return order;
