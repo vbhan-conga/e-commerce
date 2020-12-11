@@ -4,7 +4,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { filter, flatMap, map, mergeMap, startWith, switchMap } from 'rxjs/operators';
-import { get, first, sum, cloneDeep } from 'lodash';
+import { get, first, sum, cloneDeep, set } from 'lodash';
 import { ACondition, ApiService } from '@apttus/core';
 import {
   Order,
@@ -66,7 +66,8 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
           get(order, 'Proposal.Id') ? this.quoteService.get([order.Proposal.Id]) : of(null),
           get(order, 'PrimaryContact.AccountId') ? this.apiService.get(`/accounts?condition[0]=Id,Equal,${order.PrimaryContact.AccountId}`, Account) : of(null)])
         ),
-        map(([order, quote]) => {
+        map(([order, quote, account]) => {
+          set(order, 'PrimaryContact.Account', first(account));
           order.Proposal = first(quote);
           return order;
         })
