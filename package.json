@@ -1,10 +1,10 @@
 {
   "name": "apttus.ui.ecom.rc",
-  "version": "2101.0.12",
+  "version": "2101.0.13",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "node-sass  ./src/caas.scss -o ./src && ng build --configuration=dc1",
+    "build": "node-sass  ./src/caas.scss -o ./src && ng build --configuration=dc6",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
