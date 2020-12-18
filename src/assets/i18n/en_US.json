@@ -307,7 +307,11 @@
         "NO_DATA": "n/a",
         "CHECKOUT": "Checkout",
         "TOTAL_ORDERS": "Total Orders",
-        "ORDER_AMOUNT_BY_STATUS": "ORDER AMOUNT BY STATUS"
+        "ORDER_AMOUNT_BY_STATUS": "ORDER AMOUNT BY STATUS",
+        "PRICING_FAILED": "Pricing Failed",
+        "CLEAR_CART": "Clear Cart",
+        "REPRICE_CART": "Reprice Cart",
+        "PRICE_ERROR": "Pricing has failed for your cart. Please retry."
     },
     "CREATE_QUOTE": {
         "QUOTE_SUMMARY": "QUOTE SUMMARY",
