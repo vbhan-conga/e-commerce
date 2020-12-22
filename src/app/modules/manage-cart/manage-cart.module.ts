@@ -14,7 +14,7 @@ import { CartSummaryComponent } from './component/cart-summary/cart-summary.comp
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ProductCarouselModule, ConfigurationSummaryModule, PriceModule, PromotionModule, InputDateModule,
         LineItemTableRowModule, BreadcrumbModule, IconModule, TaxPopHoverModule, PriceSummaryModule,
-        AlertCustomModule, ConstraintRuleModule } from '@apttus/elements';
+        AlertModule, ConstraintRuleModule } from '@apttus/elements';
 import { TranslateModule } from '@ngx-translate/core';
 import { QuoteModule } from '../quote/quote.module';
 
@@ -44,7 +44,7 @@ import { QuoteModule } from '../quote/quote.module';
     IconModule,
     PriceSummaryModule,
     TaxPopHoverModule,
-    AlertCustomModule,
+    AlertModule,
     ConstraintRuleModule
   ],
   declarations: [ManageCartComponent, CartTableComponent, CartSummaryComponent]
