@@ -24,6 +24,8 @@ export const environment: Configuration = {
   useIndexedDB: true,
   expandDepth: 8,
   hashRouting: true,
+  pricingMode: 'turbo',
+  pricingFallback: false,
   //packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'E-Commerce',
