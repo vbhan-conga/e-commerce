@@ -22,6 +22,8 @@ export const environment: Configuration = {
   debounceTime: 500,
   proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: false,
+  skipPricing: true,
+  skipRules: false,
   expandDepth: 8,
   hashRouting: true,
   pricingMode: 'turbo',
