@@ -52,7 +52,7 @@
         <ng-container *ngIf="viewState?.relatedTo; else newProduct">
           <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity" [disabled]="configurationPending"
             [cartItems]="(viewState?.storefront?.ConfigurationLayout === 'Embedded' && viewState?.relatedTo) ? [relatedTo] : cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'"
-            (onAddToCart)="onAddToCart($event)"  [label]="'PRODUCT_DETAILS.UPDATE_CONFIGURATION' | translate">
+            (onAddToCart)="onAddToCart($event)"  [label]="'PRODUCT_DETAILS.SAVE_CHANGES' | translate">
           </apt-add-to-cart>
         </ng-container>
         <ng-template #newProduct>
