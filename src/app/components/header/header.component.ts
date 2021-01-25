@@ -47,7 +47,6 @@ export class HeaderComponent implements OnInit {
               private contactService: ContactService,
               private modalService: BsModalService,
               private translateService: TranslateService) {
-
                 this.typeahead$ = Observable.create((observer: any) => {
                   observer.next(this.searchQuery);
                 }).pipe(
@@ -139,6 +138,9 @@ export class HeaderComponent implements OnInit {
   goBack(view: HeaderView){
     _.set(view, `categoryBranch[${this.index}]`, new Category());
     this.index -= 1;
+    if(this.index < 0) {
+      this.index = 0;
+    }
   }
 
   doSearch(){
