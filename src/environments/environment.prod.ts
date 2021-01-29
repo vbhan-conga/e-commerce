@@ -27,6 +27,6 @@ export const environment: Configuration = {
   skipRules: false,
   packageNamespace: 'Apttus_WebStore',
   // Salesforce environment variables
-  storefront: 'D-Commerce',
+  storefront: 'ECommerce',
   endpoint: null
 };
