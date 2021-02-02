@@ -307,7 +307,11 @@
         "NO_DATA": "n/a",
         "CHECKOUT": "Checkout",
         "TOTAL_ORDERS": "Total Orders",
-        "ORDER_AMOUNT_BY_STATUS": "ORDER AMOUNT BY STATUS"
+        "ORDER_AMOUNT_BY_STATUS": "ORDER AMOUNT BY STATUS",
+        "PRICING_FAILED": "Pricing Failed",
+        "CLEAR_CART": "Clear Cart",
+        "REPRICE_CART": "Reprice Cart",
+        "PRICE_ERROR": "Pricing has failed for your cart. Please retry."
     },
     "CREATE_QUOTE": {
         "QUOTE_SUMMARY": "QUOTE SUMMARY",
@@ -595,6 +599,7 @@
         "PRODUCT_CODE": "Product ID: {{value}}",
         "STANDARD_PRICE": "Standard Price",
         "UPDATE_CONFIGURATION": "Update Configuration",
+        "SAVE_CHANGES": "Save Changes",
         "CONFIGURATIONS": "Configurations",
         "SPECIFICATIONS": "Specifications",
         "ATTACHMENTS": "Attachments",
@@ -631,7 +636,10 @@
     "MINI_CART": {
         "CART_TOTAL": "Cart Total",
         "VIEW_CART": "View Cart",
-        "YOUR_CART_IS_EMPTY": "Your cart is empty"
+        "YOUR_CART_IS_EMPTY": "Your cart is empty",
+        "UNSAVED_CHANGES_TEXT":"There are few unsaved configuration changes in <strong>{{value}}</strong> product",
+        "SAVE_CHANGES":"Save Changes",
+        "UNSAVED_CHANGES": "Unsaved Changes"
     },
     "MINI_PROFILE": {
         "LOGIN": "Login",

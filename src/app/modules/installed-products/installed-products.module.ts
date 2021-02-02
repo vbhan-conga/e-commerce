@@ -12,7 +12,7 @@ import { RenewalFilterComponent } from './components/renewal-filter.component';
 import { ApttusModule } from '@apttus/core';
 import { PriceTypeFilterComponent } from './components/price-type-filter.component';
 import { AssetActionFilterComponent } from './components/asset-action-filter.component';
-import { AssetListModule, FilterModule, InputSelectModule, TableModule, ChartModule, DataFilterModule, ConstraintRuleModule } from '@apttus/elements';
+import { AssetListModule, FilterModule, InputSelectModule, TableModule, ChartModule, DataFilterModule, ConstraintRuleModule, AlertModule } from '@apttus/elements';
 import { ButtonModule } from '@apttus/elements';
 
 @NgModule({
@@ -32,7 +32,8 @@ import { ButtonModule } from '@apttus/elements';
     InstalledProductsRoutingModule,
     AccordionModule.forRoot(),
     ButtonModule,
-    ConstraintRuleModule
+    ConstraintRuleModule,
+    AlertModule
   ],
   declarations: [
     InstalledProductsLayoutComponent,
