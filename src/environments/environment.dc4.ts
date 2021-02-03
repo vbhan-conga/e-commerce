@@ -1,6 +1,6 @@
 import { Configuration } from '@apttus/core';
 export const environment: Configuration = {
-  production: false,
+  production: true,
   defaultImageSrc: './assets/images/default.png',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
@@ -14,22 +14,23 @@ export const environment: Configuration = {
   maxBufferSize: 10,
   disableBuffer: false,
   subqueryLimit: 10,
+  pricingMode: 'turbo',
   disableCache: false,
   encryptResponse: false,
-  cartRetryLimit: 10,
+  cartRetryLimit: 3,
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
   proxy: 'https://apttus-proxy.herokuapp.com',
-  useIndexedDB: false,
+  useIndexedDB: true,
   skipPricing: true,
   skipRules: false,
-  expandDepth: 7,
-  hashRouting: false,
-   pricingMode: 'turbo',
+  expandDepth: 8,
+  hashRouting: true,
+  packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'E-Commerce',
-  organizationId: '00D3I0000008mFM',
+  storefront: 'D-Commerce',
+  organizationId: '00D3I0000008n7g',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://dc5-cpqqacommunity1.cs123.force.com/ecomm'
+  endpoint: 'https://dc4-cpqqacommunity1.cs123.force.com/ecom'
 };
