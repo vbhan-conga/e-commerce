@@ -21,10 +21,14 @@ export const environment: Configuration = {
   type: 'Salesforce',
   debounceTime: 1000,
   useIndexedDB: true,
+  skipPricing: true,
+  skipRules: false,
   expandDepth: 8,
   hashRouting: true,
+  pricingMode: 'turbo',
+  pricingFallback: false,
   packageNamespace: 'Apttus_WebStore',
   // Salesforce environment variables
-  storefront: 'ECommerce',
+  storefront: 'D-Commerce',
   endpoint: null
 };

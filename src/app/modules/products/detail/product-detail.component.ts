@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { ConfigurationService } from '@apttus/core';
-import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } from '@apttus/ecommerce';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+import { CartService, CartItem, BundleProduct } from '@apttus/ecommerce';
 import { ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
 
@@ -40,13 +40,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      */
     term: number = 1;
 
+    netPrice: number = 0;
+
     /** @ignore */
     productCode: string;
 
     /**@ignore */
     relatedTo: CartItem;
-
-    storefront$: Observable<Storefront> = null;
 
     configWindow: any = null;
 
@@ -57,21 +57,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     constructor(private cartService: CartService,
                 private resolver: ProductDetailsResolver,
                 private router: Router,
-                private storefrontService: StorefrontService,
-                private productConfigurationService: ProductConfigurationService,
-                private configService: ConfigurationService) { }
+                private productConfigurationService: ProductConfigurationService) { }
 
     ngOnInit() {
         this.viewState$ = this.resolver.state();
-        this.storefront$ = this.storefrontService.getStorefront();
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
+            if (_.get(response, 'configurationChanged')) this.configurationChanged = true;
+            this.netPrice = _.defaultTo(_.get(response, 'netPrice'), 0);
             this.relatedTo = _.get(this.viewState$, 'value.relatedTo');
-            if(response && _.has(response, 'configurationPending')) this.configurationPending = _.get(response,'configurationPending');
+            if(response && _.has(response, 'hasErrors')) this.configurationPending = _.get(response,'hasErrors');
             else {
-            this.product = _.get(response,'product');
-            this.cartItemList = _.get(response,'itemList');
-            if (_.get(response, 'configurationFlags.optionChanged') || _.get(response, 'configurationFlags.attributeChanged')) this.configurationChanged = true;
-        }}));
+                this.configurationPending = false;
+                this.product = _.get(response,'product');
+                this.cartItemList = _.get(response,'itemList');
+            }
+        }));
     }
 
     /**
@@ -128,6 +128,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         else
             primaryItem = _.find(cartItems, i => _.get(i, 'LineType') === 'Product/Service' && i.PrimaryLineNumber === _.get(this.viewState$.value.relatedTo, 'PrimaryLineNumber') && _.isNil(_.get(i, 'Option')));
         return primaryItem;
+    }
+
+    /**
+     * @ignore
+     */
+    getBundleRecord(): BundleProduct | Array<CartItem> {
+        return (this.cartItemList && this.cartItemList.length > 0) ? this.cartItemList : _.get(this, 'viewState$.value.product');
     }
 
     ngOnDestroy(){

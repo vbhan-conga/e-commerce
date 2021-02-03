@@ -22,9 +22,12 @@ export const environment: Configuration = {
   debounceTime: 1000,
   proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: false,
+  skipPricing: true,
+  skipRules: false,
   expandDepth: 7,
   hashRouting: false,
-   pricingMode: 'turbo',
+  pricingMode: 'turbo',
+  pricingFallback: true,
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'E-Commerce',
   organizationId: '00D3I0000008mFM',

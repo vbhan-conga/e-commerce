@@ -10,7 +10,8 @@ import { AttachmentComponent } from './attachment/attachment.component';
 import { PricingModule } from '@apttus/ecommerce';
 import { ToastrModule } from 'ngx-toastr';
 
-import { MiniProfileModule, MiniCartModule, ConstraintRuleModule, IconModule, PriceModule, DirectivesModule, ProductSearchModule } from '@apttus/elements';
+import { MiniProfileModule, MiniCartModule, ConstraintRuleModule,
+  IconModule, PriceModule, DirectivesModule, ProductSearchModule, PriceModalModule } from '@apttus/elements';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -31,7 +32,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     TooltipModule.forRoot(),
     ToastrModule.forRoot({ onActivateTick: true }),
     DirectivesModule,
-    ProductSearchModule
+    ProductSearchModule,
+    PriceModalModule
   ],
   exports : [
     HeaderComponent,
