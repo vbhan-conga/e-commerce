@@ -54,7 +54,7 @@ page-error-messages {
  }
 
 .main-configure-breadcrumb {
-  display: none;
+  display: none !important;
 }
 
 .product-option__label-row {
@@ -100,7 +100,7 @@ button.ands-btn.ands-flat.md-button.md-ink-ripple {
 configure-product-header {
   border-bottom: 1px solid $gray-300 !important;
   .main-configure-product__product-information {
-    display: none;
+    display: none !important;
   }
   .main-configure-product__product-header-col {
     .main-configure-product__frequency {
