@@ -40,7 +40,6 @@ function npm_version_update_patch {
     git config --global user.email 'apttusengrxuser@apttus.com'
     git config --global user.name 'github-cicd-id'
     npm version patch -m "Updated to patch version: %s with auto increment with Jenkins job. [ci skip]"
-    git status
 }
 
 function build_package {
