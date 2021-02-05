@@ -46,6 +46,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   subCategories: Array<Category> = [];
   joins: Array<AJoin> = new Array<AJoin>();
+
+  searchProductLimit: number = null;
   /**
    * Search query to filter products list from grid.
    */
@@ -133,7 +135,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
           return of(null);
         }
       }),
-      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins))
+      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins, this.searchProductLimit))
     ).subscribe(r => {
       this.searchResults$.next(r);
     });
