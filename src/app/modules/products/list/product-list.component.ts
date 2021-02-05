@@ -46,7 +46,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   subCategories: Array<Category> = [];
   joins: Array<AJoin> = new Array<AJoin>();
-
+  /**
+   * number of products you want to fetch on advanced search 
+   */
   searchProductLimit: number = null;
   /**
    * Search query to filter products list from grid.
