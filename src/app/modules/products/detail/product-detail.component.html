@@ -62,9 +62,12 @@
               <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" name="quantity" (ngModelChange)="changeProductQuantity(viewState.quantity)"/>
             </div>
             <div class="d-flex align-items-center">
-              <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity"
+              <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false"
+                [configurationEnabled]="false" [quantity]="viewState?.quantity"
                 (onAddToCart)="onAddToCart($event)" [disabled]="configurationPending"
-                [cartItems]="(viewState?.storefront?.ConfigurationLayout === 'Embedded' && viewState?.relatedTo) ? [relatedTo] : cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'">
+                [cartItems]="(viewState?.storefront?.ConfigurationLayout === 'Embedded' && viewState?.relatedTo) ? [relatedTo] : cartItemList"
+                [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'"
+                [label]="(viewState?.storefront?.ConfigurationLayout === 'Embedded') ? ('PRODUCT_DETAILS.SAVE_CHANGES' | translate) : ('COMMON.ADD_TO_CART' | translate)">
               </apt-add-to-cart>
             </div>
           </div>
