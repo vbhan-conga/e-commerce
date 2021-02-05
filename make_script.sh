@@ -28,7 +28,8 @@ function npm_install {
     npm config set registry https://registry.npmjs.com/
     LOG_INFO "NPM Install"
     npm set unsafe-perm true
-    npm install --unsafe-perm --no-package-lock
+    export NODE_OPTIONS=--max_old_space_size=4096
+    npm install --unsafe-perm --max_old_space_size=4096 --legacy-peer-deps
 }
 
 function npm_version_update_patch {
@@ -39,7 +40,6 @@ function npm_version_update_patch {
     git config --global user.email 'apttusengrxuser@apttus.com'
     git config --global user.name 'github-cicd-id'
     npm version patch -m "Updated to patch version: %s with auto increment with Jenkins job. [ci skip]"
-    git status
 }
 
 function build_package {
