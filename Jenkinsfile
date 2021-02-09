@@ -13,18 +13,18 @@ pipeline {
                         stage('Build-linuxAgent'){
                             agent {
                         kubernetes {
-            label 'apttus-ui-builder'
+            label 'conga-ui-builder-v1'
             defaultContainer 'jnlp'
             yaml """
 apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    name: apttus-ui-builder
+    name: conga-ui-builder-v1
 spec:
   containers:
   - name: ic-ui-builder
-    image: art01-ic-devops.jfrog.io/ic-ui-builder:10.x
+    image: art01-ic-devops.jfrog.io/ic-ui-builder:10.x.2
     command:
     - cat
     tty: true
