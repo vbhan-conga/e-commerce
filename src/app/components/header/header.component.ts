@@ -136,9 +136,11 @@ export class HeaderComponent implements OnInit {
   }
 
   goBack(view: HeaderView){
-    _.set(view, `categoryBranch[${this.index}]`, new Category());
-    this.index -= 1;
-    this.index = (this.index < 0) ? 0 : this.index;
+    setTimeout(() => {
+      _.set(view, `categoryBranch[${this.index}]`, new Category());
+      this.index -= 1;
+      this.index = (this.index < 0) ? 0 : this.index;
+    }, 10);
   }
 
   doSearch(){
