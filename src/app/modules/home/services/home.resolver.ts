@@ -29,8 +29,8 @@ export class HomeResolver implements Resolve<any> {
                     // Method sorts the category list by product count and reverses it to get the 2 categories with the most products.
                     const categories = _.slice(_.reverse(_.sortBy(categoryList, 'ProductCount')), 0, 2);
                     return combineLatest(
-                        this.productService.getProductsByCategory(_.first(categories).Id, 5, 0),
-                        this.productService.getProductsByCategory(_.last(categories).Id, 5, 0),
+                        this.productService.getProductsByCategory(_.get(_.first(categories),'Id'), 5, 0),
+                        this.productService.getProductsByCategory(_.get(_.last(categories),'Id'), 5, 0),
                         of(categories)
                     );
                 })
