@@ -1,12 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Observable, zip, of } from 'rxjs';
-import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account, Contact } from '@apttus/ecommerce';
 import { map, take } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { LookupOptions } from '@apttus/elements';
+import * as moment from 'moment';
 
+import { ApiService } from '@apttus/core';
+import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, Note, Account, Contact } from '@apttus/ecommerce';
+import { LookupOptions } from '@apttus/elements';
 @Component({
   selector: 'app-request-quote-form',
   templateUrl: './request-quote-form.component.html',
@@ -22,7 +23,7 @@ export class RequestQuoteFormComponent implements OnInit {
   rfpDueDate: Date = new Date();
   _moment = moment;
   note: Note = new Note();
-  comments: any =[];
+  comments: any = [];
 
   shipToAccount$: Observable<Account>;
   billToAccount$: Observable<Account>;
@@ -33,34 +34,39 @@ export class RequestQuoteFormComponent implements OnInit {
   };
   contactId: string;
 
-  constructor(public quoteService: QuoteService, private accountService: AccountService, private userService: UserService, private noteService:NoteService
-    , private contactService: ContactService) { }
+  constructor(public quoteService: QuoteService,
+    private accountService: AccountService,
+    private userService: UserService,
+    private apiService: ApiService,
+    private contactService: ContactService) { }
 
   ngOnInit() {
     this.quote.Name = 'Test';
-    zip((this.cart.Proposald ? this.contactService.getContact({Id : _.get(this.cart, 'Proposald.Primary_Contact')}) : of(null)),
-        this.accountService.getCurrentAccount(),
-        this.userService.me(),
-        (this.cart.Proposald ? this.quoteService.get([_.get(this.cart, 'Proposald.Id')]) : of(null))).pipe(take(1)).subscribe(([contact, account, user, quote]) => {
+    const primaryContact = (_.get(this.cart, 'Proposald.Primary_Contact') instanceof Contact) ? _.get(this.cart, 'Proposald.Primary_Contact.Id') : _.get(this.cart, 'Proposald.Primary_Contact');
+    zip(_.isNil(primaryContact) ? of(null) : this.apiService.get(`/contacts/${primaryContact}`, Contact),
+      this.accountService.getCurrentAccount(),
+      this.userService.me(),
+      (this.cart.Proposald ? this.quoteService.get([_.get(this.cart, 'Proposald.Id')]) : of(null))).pipe(take(1))
+      .subscribe(([contact, account, user, quote]) => {
         this.quote.ShipToAccount = account;
-        this.quote.ShipToAccountId =  account.Id;
+        this.quote.ShipToAccountId = account.Id;
         this.quote.BillToAccount = account;
-        this.quote.BillToAccountId =  account.Id;
+        this.quote.BillToAccountId = account.Id;
         this.quote.Primary_Contact = contact ? contact : _.get(user, 'Contact');
         this.quote.Primary_ContactId = contact ? contact.Id : _.get(user, 'Contact.Id');
         this.contactId = this.quote.Primary_ContactId;
-        if(_.get(this.cart, 'Proposald.Id')) {
+        if (_.get(this.cart, 'Proposald.Id')) {
           this.quote = _.get(this.cart, 'Proposald');
           this.comments = _.get(quote, '[0].Notes', []);
-          if(_.get(this.comments, 'length') > 1) {
-            this.comments.sort(function(a, b){
+          if (_.get(this.comments, 'length') > 1) {
+            this.comments.sort(function (a, b) {
               return new Date(b.CreatedDate).getTime() - new Date(a.CreatedDate).getTime();
             });
           }
           _.set(this.quote, 'Description', '');
         }
         this.quoteChange();
-    });
+      });
   }
 
   /**
@@ -110,7 +116,7 @@ export class RequestQuoteFormComponent implements OnInit {
    * Event handler for when the primary contact input changes.
    * @param event The event that was fired.
    */
-  handlePrimaryContactChange(event: any) {}
+  handlePrimaryContactChange(event: any) { }
 
 }
 
