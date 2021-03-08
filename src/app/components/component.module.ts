@@ -10,10 +10,11 @@ import { AttachmentComponent } from './attachment/attachment.component';
 import { PricingModule } from '@apttus/ecommerce';
 import { ToastrModule } from 'ngx-toastr';
 
-import { MiniProfileModule, MiniCartModule, ConstraintRuleModule, ConstraintSideMenuModule, IconModule, PriceModule, DirectivesModule, ProductSearchModule } from '@apttus/elements';
+import { MiniProfileModule, MiniCartModule, ConstraintRuleModule, IconModule, PriceModule, DirectivesModule, ProductSearchModule } from '@apttus/elements';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { CategoryCarouselComponent } from './category-carousel/category-carousel.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,6 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     MiniProfileModule,
     MiniCartModule,
     ConstraintRuleModule,
-    ConstraintSideMenuModule,
     LaddaModule,
     RouterModule,
     ApttusModule,
@@ -44,7 +44,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     HeaderComponent,
     NavAccountComponent,
     FooterComponent,
-    AttachmentComponent
+    AttachmentComponent,
+    CategoryCarouselComponent
   ]
 })
 export class ComponentModule { }

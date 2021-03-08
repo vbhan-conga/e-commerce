@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CartService, CartItem, Storefront, StorefrontService } from '@apttus/ecommerce';
+import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } from '@apttus/ecommerce';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  ConfigurationSummaryWrapperComponent
-} from '@apttus/elements';
+import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
 
 @Component({
@@ -19,6 +17,7 @@ import { ProductDetailsState, ProductDetailsResolver } from '../services/product
 export class ProductDetailComponent implements OnInit {
 
     cartItemList: Array<CartItem>;
+    product: BundleProduct;
     viewState$: BehaviorSubject<ProductDetailsState>;
 
     /**
@@ -41,8 +40,8 @@ export class ProductDetailComponent implements OnInit {
 
     storefront$: Observable<Storefront> = null;
 
-    @ViewChild(ConfigurationSummaryWrapperComponent, { static: false })
-    configSummaryModal: ConfigurationSummaryWrapperComponent;
+    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
+    configSummaryModal: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService,
                 private resolver: ProductDetailsResolver,
@@ -59,8 +58,9 @@ export class ProductDetailComponent implements OnInit {
      * isConfigurationChanged to true.
      */
     onConfigurationChange(result: any) {
-        this.cartItemList = _.first(result);
-        if (_.get(result[1],'optionChanged') || _.get(result[1],'attributeChanged')) this.configurationChanged = true;
+        this.product = _.first(result);
+        this.cartItemList = result[1];
+        if (_.get(_.last(result),'optionChanged') || _.get(_.last(result),'attributeChanged')) this.configurationChanged = true;
     }
 
     /**
@@ -77,7 +77,7 @@ export class ProductDetailComponent implements OnInit {
     onAddToCart(cartItems: Array<CartItem>): void {
         this.configurationChanged = false;
         const primaryItem = _.find(cartItems, i => _.get(i, 'IsPrimaryLine') === true && _.isNil(_.get(i, 'Option')));
-        if (!_.isNil(primaryItem))
+        if (!_.isNil(primaryItem) && (_.get(primaryItem, 'Product.HasOptions') || _.get(primaryItem, 'Product.HasAttributes')))
             this.router.navigate(['/products', _.get(this, 'viewState$.value.product.Id'), _.get(primaryItem, 'Id')]);
 
         if(this.quantity <= 0) {

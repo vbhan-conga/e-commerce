@@ -1,18 +1,19 @@
-<ng-container *ngIf="view$ | async as view">
-  <div class="navbar navbar-light bg-light fixed-top">
+  <div class="navbar navbar-light bg-white border-bottom fixed-top">
     <div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         (click)="menuModal.show()">
         <span class="navbar-toggler-icon"></span>
       </button>
   
-      <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']"
-        *ngIf="view?.storefront?.Logo; else text">
-        <img [src]="view?.storefront?.Logo | image" />
-      </button>
-      <ng-template #text>
-        <button class="navbar-brand btn btn-link" [routerLink]="['/']">{{view?.storefront?.Name}}</button>
-      </ng-template>
+      <ng-container *ngIf="storefront$ | async as storefront">
+        <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']"
+          *ngIf="view?.storefront?.Logo; else text">
+          <img [src]="storefront?.Logo | image" />
+        </button>
+        <ng-template #text>
+          <button class="navbar-brand btn btn-link" [routerLink]="['/']">{{storefront?.Name}}</button>
+        </ng-template>
+      </ng-container>
     </div>
   
     <div class="actions d-flex align-items-center">
@@ -27,15 +28,15 @@
   <div bsModal #menuModal="bs-modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
     <div class="modal-dialog modal-lg menu">
       <div class="modal-content py-3">
-        <div class="modal-header d-block p-0">
+        <div class="modal-header d-block p-0" *ngIf="user$ | async as user">
           <div class="d-flex justify-content-between align-items-start p-2">
             <div class="media p-2">
-              <img [src]="view?.me?.SmallPhotoUrl | image : null" class="img-circle" width="45" />
+              <img [src]="user?.SmallPhotoUrl | image : null" class="img-circle" width="45" />
               <div class= "ml-3">
-                <ng-container *ngIf="view?.me?.Alias !== 'guest'; else guest">
-                  <h5 class="my-0">{{view?.me?.FirstName}} {{view?.me?.LastName}}</h5>
+                <ng-container *ngIf="user?.Alias !== 'guest'; else guest">
+                  <h5 class="my-0">{{user?.FirstName}} {{user?.LastName}}</h5>
                   <small class="d-block">{{'HEADER.LAST_LOGIN' | translate}}
-                    {{view?.me.LastLoginDate | date : 'short'}}</small>
+                    {{user.LastLoginDate | date : 'short'}}</small>
                 </ng-container>
                 <ng-template #guest>
                   <h5 class="my-0">{{'HEADER.GUEST_USER' | translate}}</h5>
@@ -49,11 +50,11 @@
               <i class="fas fa-home mr-4"></i>{{'HEADER.HOME' | translate}}
             </a>
             <a href="javascript:void(0)" [routerLink]="['/my-account']" (click)="menuModal.hide()"
-              class="list-group-item list-group-item-action" *ngIf="view?.me?.Alias !== 'guest'">
+              class="list-group-item list-group-item-action" *ngIf="user?.Alias !== 'guest'">
               <i class="fas fa-cog mr-4"></i>{{'HEADER.MY_ACCOUNT' | translate}}
             </a>
             <a href="javascript:void(0)" [routerLink]="['/assets']" (click)="menuModal.hide()"
-              class="list-group-item list-group-item-action" *ngIf="view?.me?.Alias !== 'guest'">
+              class="list-group-item list-group-item-action" *ngIf="user?.Alias !== 'guest'">
               <i class="fas fa-list mr-4"></i>{{'HEADER.INSTALLED_PRODUCTS' | translate}}
             </a>
             <a href="javascript:void(0)" [routerLink]="['/products']" (click)="menuModal.hide()"
@@ -61,62 +62,20 @@
               <i class="fas fa-th mr-4"></i>{{'HEADER.PRODUCT_CATALOG' | translate}}
             </a>
             <a href="javascript:void(0)" class="list-group-item list-group-item-action"
-              *ngIf="view?.me?.Alias !== 'guest'" (click)="doLogout(); menuModal.hide();">
+              *ngIf="user?.Alias !== 'guest'" (click)="doLogout(); menuModal.hide();">
               <i class="fas fa-sign-out-alt mr-4"></i>{{'HEADER.LOG_OUT' | translate}}
             </a>
             <a href="javascript:void(0)" class="list-group-item list-group-item-action"
-              *ngIf="view?.me?.Alias === 'guest'" (click)="profile.openModal('second')">
+              *ngIf="user?.Alias === 'guest'" (click)="profile.openModal('second')">
               <i class="fas fa-sign-in-alt mr-4"></i>{{'HEADER.LOG_IN' | translate}}
             </a>
           </div>
         </div>
         <ng-scrollbar>
           <div class="modal-body d-flex align-items-stretch">
-            <div class="carousel slide flex-grow-1" id="menuCarousel" data-ride="carousel" data-interval="0">
-              <div class="carousel-inner h-100">
-                <div class="carousel-item active">
-                  <ul class="list-group list-group-flush">
-                    <ng-container *ngFor="let category of view?.categoryTree">
-                      <a class="list-group-item list-group-item-action" href="#menuCarousel"
-                        (click)="goToCategory(category, view)" data-slide="next"
-                        *ngIf="category?._children?.length > 0; else direct">{{category.Name}}</a>
-                      <ng-template #direct>
-                        <a class="list-group-item list-group-item-action" (click)="menuModal.hide()"
-                          [routerLink]="['/products/category', category.Name]">{{category.Name}}</a>
-                      </ng-template>
-                    </ng-container>
-                  </ul>
-                </div>
-                <div class="carousel-item" *ngFor="let currentCategory of view?.categoryBranch">
-                  <div *ngIf="currentCategory?.Id">
-                    <div class="d-flex justify-content-between">
-                      <a href="#menuCarousel" data-slide="prev" (click)="goBack(view)">
-                        <i class="fas fa-arrow-left mr-2"></i>{{'HEADER.BACK' | translate}}
-                      </a>
-                      <a href="#menuCarousel" [routerLink]="['/products/category', currentCategory.Name]"
-                        (click)="menuModal.hide()" data-slide-to="0">{{'HEADER.SHOW_ALL' | translate}}</a>
-                    </div>
-                    <ul class="list-group list-group-flush mt-3">
-                      <ng-container *ngFor="let category of currentCategory?._children">
-                        <a class="list-group-item list-group-item-action" href="#menuCarousel"
-                          (click)="goToCategory(category, view)" data-slide="next"
-                          *ngIf="category._children && category._children.length > 0; else link">{{category.Name}}</a>
-                        <ng-template #link>
-                          <a class="list-group-item list-group-item-action" href="#menuCarousel"
-                            (click)="menuModal.hide()" [routerLink]="['/products/category', category.Name]"
-                            data-slide-to="0">{{category.Name}}</a>
-                        </ng-template>
-                      </ng-container>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <app-category-carousel></app-category-carousel>
           </div>
         </ng-scrollbar>
       </div>
     </div>
   </div>
-  
-  <apt-cr-side-menu></apt-cr-side-menu>
-</ng-container>
