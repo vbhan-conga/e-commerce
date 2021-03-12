@@ -5,7 +5,7 @@ import { switchMap, map as rmap } from 'rxjs/operators';
 import { first, last, get, isNil, find } from 'lodash';
 
 import { ApiService } from '@apttus/core';
-import { CartService, CartItem, Storefront, StorefrontService, ConstraintRuleService, TranslatorLoaderService, Product, ProductService } from '@apttus/ecommerce';
+import { CartService, CartItem, ConstraintRuleService, TranslatorLoaderService, Product, ProductService } from '@apttus/ecommerce';
 import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 @Component({
     selector: 'app-product-detail',
@@ -31,15 +31,12 @@ export class ProductDetailComponent implements OnInit {
     /** @ignore */
     productCode: string;
 
-    storefront$: Observable<Storefront> = null;
-
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService,
         private router: Router,
         private route: ActivatedRoute,
-        private storefrontService: StorefrontService,
         private productService: ProductService,
         private translatorService: TranslatorLoaderService,
         private apiService: ApiService,
@@ -65,7 +62,6 @@ export class ProductDetailComponent implements OnInit {
                 };
             })
         );
-        this.storefront$ = this.storefrontService.getStorefront();
     }
 
     /**
