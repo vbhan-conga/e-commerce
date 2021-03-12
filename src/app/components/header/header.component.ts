@@ -131,6 +131,7 @@ export class HeaderComponent implements OnInit {
   }
 
   goToCategory(category: Category, view: HeaderView, event: any){
+    // to prevent double click event
     if(event.detail === 1) {
       _.set(view, `categoryBranch[${this.index}]`, category);
       this.index += 1;
@@ -138,6 +139,7 @@ export class HeaderComponent implements OnInit {
   }
 
   goBack(view: HeaderView, event: any){
+    // only accept click event
     if(event.detail === 1) {
       _.set(view, `categoryBranch[${this.index}]`, new Category());
       this.index -= 1;
