@@ -14,7 +14,7 @@
     </div>
     
     <!-- Table component rendering list of carts with applicable actions and pagination -->
-    <div class="card">
+    <div class="card" *ngIf="view?.tableOptions">
         <apt-table #table [type]="type" [options]="view?.tableOptions"></apt-table>
     </div>
     
