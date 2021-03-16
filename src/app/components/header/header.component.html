@@ -7,7 +7,7 @@
   
       <ng-container *ngIf="storefront$ | async as storefront">
         <button class="navbar-brand btn btn-link d-none d-md-inline-block" [routerLink]="['/']"
-          *ngIf="view?.storefront?.Logo; else text">
+          *ngIf="storefront?.Logo; else text">
           <img [src]="storefront?.Logo | image" />
         </button>
         <ng-template #text>

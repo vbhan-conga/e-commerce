@@ -64,8 +64,7 @@ const routes: Routes = [
   {
     path: 'orders',
     loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule),
-    data: { title: 'Orders' },
-    canActivate: [OrderDetailsGuard]
+    data: { title: 'Orders' }
   },
   {
     path: 'proposals',

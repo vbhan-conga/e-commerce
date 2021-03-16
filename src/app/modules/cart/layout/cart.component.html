@@ -26,7 +26,7 @@
         <div class="card p-3">
           <tabset #staticTabs *ngIf="primaryContact">
             <tab heading="{{'CART.BILLING_ADDRESS' | translate}}" id="billing">
-              <div *ngIf="!isLoggedIn; else showBillingAddressTemplate">
+              <div *ngIf="!isLoggedIn || !primaryContact?.Id; else showBillingAddressTemplate">
                 <div class="row mt-3">
                   <div class="col-md-6 mb-3">
                     <apt-input-field name="firstName" [labelClass]="'font-weight-normal'" [entity]="primaryContact"
