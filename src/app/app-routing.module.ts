@@ -78,11 +78,6 @@ const routes: Routes = [
     data: { title: 'Payment Message'}
   },
   {
-    path: 'Assets',
-    loadChildren: () => import('./modules/asset/asset.module').then(m => m.AssetModule),
-    data: {title: 'Assets'}
-  },
-  {
     path: '**',
     redirectTo: ''
   }

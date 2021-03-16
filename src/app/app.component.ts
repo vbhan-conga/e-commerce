@@ -42,11 +42,11 @@ export class AppComponent implements OnInit, OnDestroy {
       mergeMap(r => combineLatest(r.data, r.params)),)
       .subscribe(([data, params]) => {
         if (params && Object.keys(params).length > 0)
-          this.titleService.setTitle('Apttus: ' + params[Object.keys(params)[0]]);
+          this.titleService.setTitle('Conga: ' + params[Object.keys(params)[0]]);
         else if (_.get(data, 'title'))
-          this.titleService.setTitle('Apttus: ' + _.get(data, 'title'));
+          this.titleService.setTitle('Conga: ' + _.get(data, 'title'));
         else
-          this.titleService.setTitle('Apttus: B2B E-commerce');
+          this.titleService.setTitle('Conga: B2B E-commerce');
       });
 
     this.showDrawer$ = this.productSelectionService.getSelectedProducts()
