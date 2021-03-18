@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Category, CategoryService } from '@apttus/ecommerce';
 import { map } from 'rxjs/operators';
-import { map as _map, set } from 'lodash';
+import { map as _map, set, some} from 'lodash';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -46,15 +46,21 @@ export class CategoryCarouselComponent implements OnInit {
     return 1 + depth;
   }
 
-  goToCategory(category: Category, view: CategoryView){
-    set(view, `categoryBranch[${this.index}]`, category);
-    this.index += 1;
+  goToCategory(category: Category, view: CategoryView) {
+    if(!some(view.categoryBranch, {'Id': category.Id})){
+      set(view, `categoryBranch[${this.index}]`, category);
+      this.index += 1;
+    }
   }
 
-  goBack(view: CategoryView){
-    set(view, `categoryBranch[${this.index}]`, new Category());
-    this.index -= 1;
-    this.index = (this.index < 0) ? 0 : this.index;
+  goBack(view: CategoryView, category: Category){
+    setTimeout(() => {
+      if(some(view.categoryBranch, {'Id': category.Id})) {
+        this.index -= 1;
+        this.index = (this.index < 0) ? 0 : this.index;
+        set(view, `categoryBranch[${this.index}]`, new Category());
+      }
+    }, 500)
   }
 }
 
