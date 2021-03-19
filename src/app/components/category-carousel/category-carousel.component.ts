@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Category, CategoryService } from '@apttus/ecommerce';
 import { map } from 'rxjs/operators';
 import { map as _map, set, some} from 'lodash';
 import { Observable } from 'rxjs';
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-category-carousel',
@@ -14,6 +15,7 @@ export class CategoryCarouselComponent implements OnInit {
 
   index: number = 0;
   view$: Observable<CategoryView>;
+  @Input() modalRef: ModalDirective;
 
   constructor(private categoryService: CategoryService) { }
 
