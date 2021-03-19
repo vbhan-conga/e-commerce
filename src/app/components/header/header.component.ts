@@ -55,11 +55,8 @@ export class HeaderComponent implements OnInit {
                   observer.next(this.searchQuery);
                 }).pipe(
                   switchMap((query: string) => {
-                    return this.productService.query({
-                      searchString: query,
-                      page: new APageInfo(5, 0),
-                      groupBy: ['Name', 'Id', 'IconId', 'ProductCode']
-                    });
+                    const fieldList = 'Name,IconId,ProductCode';
+                    return this.productService.getProductsByName(query, fieldList, 5);
                   })
                 );
   }
