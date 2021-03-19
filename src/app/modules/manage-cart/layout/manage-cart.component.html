@@ -1,5 +1,7 @@
 <ng-container *ngIf="view$ | async as view; else loadingTemplate">
-    <apt-breadcrumb [sobject]="view?.cart?.Proposald" [label]="'COMMON.EDIT_LINE_ITEMS' | translate" *ngIf="view?.cart?.Proposald?.Id; else cartBreadcrumb"></apt-breadcrumb>
+    <div class="border-bottom bg-white">
+        <apt-breadcrumb [sobject]="view?.cart?.Proposald" [label]="'COMMON.EDIT_LINE_ITEMS' | translate" *ngIf="view?.cart?.Proposald?.Id; else cartBreadcrumb"></apt-breadcrumb>
+    </div>
     <apt-constraint-rule-alert></apt-constraint-rule-alert>
     <ng-template #cartBreadcrumb>
         <apt-breadcrumb [label]="'COMMON.MANAGE_CART' | translate"></apt-breadcrumb>
