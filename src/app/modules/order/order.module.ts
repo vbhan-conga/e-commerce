@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PricingModule } from '@apttus/ecommerce';
 import {
   OutputFieldModule,
   PriceModule,
@@ -22,7 +21,6 @@ import { TranslateModule } from '@ngx-translate/core';
     DetailsModule,
     OrderRoutingModule,
     OutputFieldModule,
-    PricingModule,
     PriceModule,
     BreadcrumbModule,
     LineItemTableRowModule,

@@ -4,18 +4,18 @@ import { CartService, AssetService, AssetLineItemExtended, AssetLineItem, Storef
 import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { AssetModalService, TableOptions, TableAction, ChildRecordOptions, FilterOptions } from '@apttus/elements';
+import { AssetModalService, TableOptions, TableAction, ChildRecordOptions, FilterOptions, CheckState } from '@apttus/elements';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { ClassType } from 'class-transformer/ClassTransformer';
 
 /**
-* Installed Product Layout is used to set the structure of the installed products page.
-*
-* @example
-* <app-installed-products-layout></app-installed-products-layout>
-*/
+ * Installed Product Layout is used to set the structure of the installed products page.
+ *
+ * @example
+ * <app-installed-products-layout></app-installed-products-layout>
+ */
 @Component({
   selector: 'app-installed-products-layout',
   templateUrl: './installed-products-layout.component.html',
@@ -116,7 +116,8 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     Terminate: new AFilter(AssetLineItem, [new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')]),
     'Buy More': new AFilter(this.assetService.type, [new ACondition(Product, 'Product.ConfigurationType', 'Equal', 'Standalone')]),
     'Change Configuration': new AFilter(this.assetService.type, [
-      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled')], [
+      new ACondition(this.assetService.type, 'AssetStatus', 'NotEqual', 'Cancelled'),
+      new ACondition(AssetLineItem, 'PriceType', 'NotEqual', 'One Time')], [
       new AFilter(this.assetService.type, [
         new ACondition(Product,
           'Product.ConfigurationType',
@@ -173,7 +174,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
           groupBy: 'Product.Name',
           filters: this.getFilters(),
           defaultSort: {
-            column: 'Product.Name',
+            column: 'CreatedDate',
             direction: 'ASC'
           },
           columns: [
@@ -186,13 +187,32 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
             { prop: 'AssetStatus' },
             { prop: 'PriceType' }
           ],
+          lookups: [
+            {
+              field: 'AttributeValueId'
+            },
+            {
+              field: 'ProductId',
+              children: [
+                {
+                  field: 'AssetLineItems'
+                }
+              ]
+            }
+          ],
           actions: _.filter(this.getMassActions(cart), action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
             relationshipField: 'BundleAssetId',
             childRecordFields: ['ChargeType', 'SellingFrequency', 'StartDate', 'EndDate', 'NetPrice', 'Quantity', 'AssetStatus', 'PriceType']
           } as ChildRecordOptions,
-          preselectItemsInGroups: this.preselectItemsInGroups
+          selectItemsInGroupFunc: this.preselectItemsInGroups ? (recordData => {
+            _.forEach(_.values(_.groupBy(recordData, 'Product.Name')), v => {
+              const recentAsset = _.last(_.filter(v, x => !_.isEmpty(x.get('actions'))));
+              if (recentAsset) recentAsset.set('state', CheckState.CHECKED);
+            });
+          }) : null,
+          disableLink: true
         } as TableOptions,
         assetType: AssetLineItemExtended,
         colorPalette: this.colorPalette,
@@ -268,7 +288,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         label: 'Renew',
         theme: 'primary',
         validate(record: AssetLineItemExtended): boolean {
-          return record.canRenew() && !_.includes(_.map(_.get(cart, 'LineItems'), 'ProductId'), _.get(record, 'ProductId'));
+          return record.canRenew() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openRenewModal(
@@ -284,7 +304,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         label: 'Terminate',
         theme: 'danger',
         validate(record: AssetLineItemExtended): boolean {
-          return record.canTerminate() && !_.includes(_.map(_.get(cart, 'LineItems'), 'ProductId'), _.get(record, 'ProductId'));
+          return record.canTerminate() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openTerminateModal(
@@ -300,7 +320,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         label: 'Buy More',
         theme: 'primary',
         validate(record: AssetLineItemExtended): boolean {
-          return record.canBuyMore() && !_.includes(_.map(_.get(cart, 'LineItems'), 'ProductId'), _.get(record, 'ProductId'));
+          return record.canBuyMore() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openBuyMoreModal(
@@ -315,7 +335,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         label: 'Change Configuration',
         theme: 'primary',
         validate(record: AssetLineItemExtended): boolean {
-          return record.canChangeConfiguration() && !_.includes(_.map(_.get(cart, 'LineItems'), 'ProductId'), _.get(record, 'ProductId'));
+          return record.canChangeConfiguration() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openChangeConfigurationModal(
@@ -339,3 +359,4 @@ interface AssetListView {
   assetActionValue?: string;
   advancedFilterList?: Array<AFilter>;
 }
+
