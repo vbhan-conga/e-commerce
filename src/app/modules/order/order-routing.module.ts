@@ -6,17 +6,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { OrderDetailsComponent } from './layout/order-details/order-details.component';
-import { OrderListComponent } from '../my-account/component/order-list/order-list.component';
+import { OrderDetailComponent } from './layout/order-details/order-detail.component';
 
 const routes: Routes = [
   {
     path: ':id',
-    component: OrderDetailsComponent
+    component: OrderDetailComponent
   },
   {
     path: '',
-    redirectTo: '/orders',
+    redirectTo: '/my-account/orders',
     pathMatch: 'full'
   }
 ];
