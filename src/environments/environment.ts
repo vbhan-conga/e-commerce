@@ -11,7 +11,7 @@ export const environment: Configuration = {
   enablePerformanceLogs: true,
   defaultCurrency: 'USD',
   bufferTime: 20,
-  maxBufferSize: 10,
+  maxBufferSize: 100,
   disableBuffer: false,
   subqueryLimit: 10,
   disableCache: false,
@@ -26,7 +26,8 @@ export const environment: Configuration = {
   skipRules: false,
   expandDepth: 7,
   hashRouting: false,
-   pricingMode: 'turbo',
+  packageNamespace: 'Apttus_WebStore',
+  pricingMode: 'turbo',
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'E-Commerce',
   organizationId: '00D3I0000008mFM',
