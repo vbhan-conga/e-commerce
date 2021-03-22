@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CartService, CartItem, Storefront, StorefrontService, BundleProduct } from '@apttus/ecommerce';
-import { Router } from '@angular/router';
-import * as _ from 'lodash';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ProductConfigurationSummaryComponent } from '@apttus/elements';
-import { ProductDetailsState, ProductDetailsResolver } from '../services/product-details.resolver';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, Observable, of } from 'rxjs';
+import { switchMap, map as rmap } from 'rxjs/operators';
+import { first, last, get, isNil, find } from 'lodash';
 
+import { ApiService } from '@apttus/core';
+import { CartService, CartItem, ConstraintRuleService, TranslatorLoaderService, Product, ProductService } from '@apttus/ecommerce';
+import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 @Component({
     selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
@@ -17,8 +18,8 @@ import { ProductDetailsState, ProductDetailsResolver } from '../services/product
 export class ProductDetailComponent implements OnInit {
 
     cartItemList: Array<CartItem>;
-    product: BundleProduct;
-    viewState$: BehaviorSubject<ProductDetailsState>;
+    product: Product;
+    viewState$: Observable<ProductDetailsState>;
 
     /**
      * Flag to detect if there is change in product configuration.
@@ -26,41 +27,51 @@ export class ProductDetailComponent implements OnInit {
     configurationChanged: boolean = false;
 
     quantity: number = 1;
-    /**
-     * Flag used in update configuration method
-     */
-    saving: boolean = false;
-    /**
-     * Default term is set to 1.
-     */
-    term: number = 1;
 
     /** @ignore */
     productCode: string;
-
-    storefront$: Observable<Storefront> = null;
 
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService,
-                private resolver: ProductDetailsResolver,
-                private router: Router,
-                private storefrontService: StorefrontService) { }
+        private router: Router,
+        private route: ActivatedRoute,
+        private productService: ProductService,
+        private translatorService: TranslatorLoaderService,
+        private apiService: ApiService,
+        private crService: ConstraintRuleService) { }
 
     ngOnInit() {
-        this.viewState$ = this.resolver.state();
-        this.storefront$ = this.storefrontService.getStorefront();
+        this.viewState$ = this.route.params.pipe(
+            switchMap(params => combineLatest([
+                this.productService.get([get(params, 'id')])
+                    .pipe(
+                        switchMap(data => this.translatorService.translateData(data)),
+                        rmap(first)
+                    ),
+                (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null),
+                this.crService.getRecommendationsForProducts([get(params, 'id')])
+            ])),
+            rmap(([product, cartitemList, rProductList]) => {
+                return {
+                    product: product as Product,
+                    recommendedProducts: rProductList,
+                    relatedTo: cartitemList,
+                    quantity: get(cartitemList, 'Quantity', 1)
+                };
+            })
+        );
     }
 
     /**
-     * onConfigurationChange method is invoked whenever there is change in product configuration and this method ets flag
+     * onConfigurationChange method is invoked whenever there is change in product configuration and this method sets flag
      * isConfigurationChanged to true.
      */
     onConfigurationChange(result: any) {
-        this.product = _.first(result);
+        this.product = first(result);
         this.cartItemList = result[1];
-        if (_.get(_.last(result),'optionChanged') || _.get(_.last(result),'attributeChanged')) this.configurationChanged = true;
+        if (get(last(result), 'optionChanged') || get(last(result), 'attributeChanged')) this.configurationChanged = true;
     }
 
     /**
@@ -76,11 +87,12 @@ export class ProductDetailComponent implements OnInit {
 
     onAddToCart(cartItems: Array<CartItem>): void {
         this.configurationChanged = false;
-        const primaryItem = _.find(cartItems, i => _.get(i, 'IsPrimaryLine') === true && _.isNil(_.get(i, 'Option')));
-        if (!_.isNil(primaryItem) && (_.get(primaryItem, 'Product.HasOptions') || _.get(primaryItem, 'Product.HasAttributes')))
-            this.router.navigate(['/products', _.get(this, 'viewState$.value.product.Id'), _.get(primaryItem, 'Id')]);
+        const primaryItem = find(cartItems, i => get(i, 'IsPrimaryLine') === true && isNil(get(i, 'Option')));
+        if (!isNil(primaryItem) && (get(primaryItem, 'Product.HasOptions') || get(primaryItem, 'Product.HasAttributes'))) {
+            this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
+        }
 
-        if(this.quantity <= 0) {
+        if (this.quantity <= 0) {
             this.quantity = 1;
         }
     }
@@ -96,6 +108,26 @@ export class ProductDetailComponent implements OnInit {
     }
 
     showSummary() {
-      this.configSummaryModal.show();
+        this.configSummaryModal.show();
     }
+}
+
+/** @ignore */
+export interface ProductDetailsState {
+    /**
+     * The product to display.
+     */
+    product: Product;
+    /**
+     * Array of products to act as recommendations.
+     */
+    recommendedProducts: Array<Product>;
+    /**
+     * The CartItem related to this product.
+     */
+    relatedTo: CartItem;
+    /**
+    * Quantity to set to child components
+    */
+    quantity: number;
 }

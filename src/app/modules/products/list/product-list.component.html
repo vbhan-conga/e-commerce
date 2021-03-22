@@ -1,4 +1,7 @@
-<apt-breadcrumb [sobject]="category" [label]="(!category) ? ('HEADER.PRODUCT_CATALOG' | translate) : category?.Label"></apt-breadcrumb>
+<div class="border-bottom bg-white">
+  <apt-breadcrumb [sobject]="category" [label]="(!category) ? ('HEADER.PRODUCT_CATALOG' | translate) : category?.Label"></apt-breadcrumb>
+</div>
+
 <apt-constraint-rule-alert></apt-constraint-rule-alert>
 <div class="container-fluid py-4" id="top" *ngIf="searchResults$ | async as searchResults; else loading">
   <div class="d-flex justify-content-end mb-2">
@@ -7,19 +10,6 @@
   <div class="row">
     <div class="col-12 col-lg-3">
       <div>
-        <!-- <pl-product-type-filter
-          *ngIf="(storefront$ | async)?.EnableABO && (storefront$ | async) !== null ? true : false"
-          class="d-block mb-2"
-          (value)="onAssetFilterChange($event)"
-        ></pl-product-type-filter>
-
-        <pl-asset-filter class="d-block mb-2" *ngIf="showAssetFilters"></pl-asset-filter>
-        
-        <pl-related-categories [categoryList]="searchResults?.relatedCategories" class="d-block mb-2" *ngIf="searchResults?.relatedCategories?.length > 0"
-          [categoryId]="category?.Id"></pl-related-categories>
-
-        <pl-subcategory (onFilterChange)="onSubcategoryFilter($event)" *ngIf="searchResults?.subcategories?.length > 0"
-          [categoryList]="searchResults?.subcategories" [categories]="categoryFilter" class="d-block mb-2"></pl-subcategory>-->
 
         <apt-product-type-filter (onFilterAdd)="onFilterAdd($event)" (onFilterRemove)="onFilterRemove($event)"></apt-product-type-filter>
 
@@ -28,9 +18,6 @@
         <apt-category-filter [category]="category" title="{{'COMMON.SUB_CATEGORIES' | translate}}" limit="10" relationship="children" selection="multi" class="mb-2" (onChange)="onSubcategoryFilter($event)">
         </apt-category-filter>
 
-        <!-- <apt-price-tier [conditions]="conditions" [joins]="joins" class="d-block mb-2"></apt-price-tier> -->
-
-        <!-- <apt-field-filter [fieldName]="'Family'" (fieldValueChange)="onFieldFilter($event)" class="d-block mb-2"></apt-field-filter> -->
         <div class="card mb-2">
           <div class="card-body">
             <h5 class="card-title">{{'PRODUCT_LIST.PRODUCT_FAMILY' | translate}}</h5>
