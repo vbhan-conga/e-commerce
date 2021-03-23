@@ -123,7 +123,6 @@ export class CartComponent implements OnInit, OnDestroy {
   breadcrumbs;
 
   private subscriptions: Subscription[] = [];
-  private accountMap: Map<string, Account> = new Map();
 
   constructor(private cartService: CartService,
               public configurationService: ConfigurationService,
