@@ -4,7 +4,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Observable, zip, of } from 'rxjs';
 import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account, Contact } from '@apttus/ecommerce';
 import { map, take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { get } from 'lodash';
 import { LookupOptions } from '@apttus/elements';
 
 @Component({
@@ -38,16 +38,16 @@ export class RequestQuoteFormComponent implements OnInit {
 
   ngOnInit() {
     this.quote.Name = 'Test';
-    zip(this.accountService.getCurrentAccount(), this.userService.me(),(this.cart.Proposald? this.quoteService.get([_.get(this.cart, 'Proposald.Id')]) : of(null))).pipe(take(1)).subscribe(([account, user, quote]) => {
+    zip(this.accountService.getCurrentAccount(), this.userService.me(),(this.cart.Proposald? this.quoteService.get([get(this.cart, 'Proposald.Id')]) : of(null))).pipe(take(1)).subscribe(([account, user, quote]) => {
         this.quote.ShipToAccount = account;
         this.quote.ShipToAccountId =  account.Id;
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
-        this.quote.Primary_Contact = _.get(user, 'Contact');
-        this.contactId = _.get(user, 'ContactId');
-        if(_.get(this.cart, 'Proposald.Id')) {
-          this.quote = _.get(this.cart, 'Proposald');
-          this.comments = _.get(quote, '[0].Notes', []);
+        this.quote.Primary_Contact = get(user, 'Contact');
+        this.contactId = get(user, 'ContactId');
+        if(get(this.cart, 'Proposald.Id')) {
+          this.quote = get(this.cart, 'Proposald');
+          this.comments = get(quote, '[0].Notes', []);
         }
         this.quoteChange();
     });
