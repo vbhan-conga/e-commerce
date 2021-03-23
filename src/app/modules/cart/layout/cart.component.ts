@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef, OnDestroy, NgZone } from '@angular/core';
 import { User, Account, Cart, CartService, Order, OrderService, Contact, ContactService, UserService, AccountService, EmailService, PaymentTransaction, AccountInfo } from '@apttus/ecommerce';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Card } from '../component/card-form/card-form.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
