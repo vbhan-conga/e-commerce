@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, TemplateRef, OnDestroy, NgZone } from '@angular/core';
 import { User, Account, Cart, CartService, Order, OrderService, Contact, ContactService, UserService, AccountService, EmailService, PaymentTransaction, AccountInfo } from '@apttus/ecommerce';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Card } from '../component/card-form/card-form.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -123,6 +123,7 @@ export class CartComponent implements OnInit, OnDestroy {
   breadcrumbs;
 
   private subscriptions: Subscription[] = [];
+  private accountMap: Map<string, Account> = new Map();
 
   constructor(private cartService: CartService,
               public configurationService: ConfigurationService,
@@ -147,7 +148,6 @@ export class CartComponent implements OnInit, OnDestroy {
     if (!this.isLoggedIn)
       this.paymentState = 'PAYNOW';
 
-    this.account$ = this.accountService.getCurrentAccount();
     this.subscriptions.push(this.cartService.getMyCart().subscribe(cart => {
       this.cart = cart;
       // Setting default values
@@ -232,11 +232,13 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   onBillToChange() {
-    this.billToAccount$ = this.accountService.get([this.model.BillToAccountId]).pipe(map(res => res[0]));
+    if(this.model.BillToAccountId)
+      this.billToAccount$ = this.accountService.getAccount(this.model.BillToAccountId).pipe(map(res => res[0]));
   }
 
   onShipToChange() {
-    this.shipToAccount$ = this.accountService.get([this.model.ShipToAccountId]).pipe(map(res => res[0]));
+    if(this.model.ShipToAccountId)
+      this.shipToAccount$ = this.accountService.getAccount(this.model.ShipToAccountId).pipe(map(res => res[0]));
   }
 
   convertCartToOrder(order: Order, primaryContact: Contact, cart?: Cart, selectedAccount?: AccountInfo) {
