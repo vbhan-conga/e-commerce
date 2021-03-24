@@ -38,11 +38,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     /**@ignore */
     relatedTo: CartItem;
 
-    storefront$: Observable<Storefront> = null;
-
-    configWindow: any = null;
-
-    configurationLayout: string = null;
+    private configurationLayout: string = null;
 
     @ViewChild(ProductConfigurationSummaryComponent)
     configSummaryModal: ProductConfigurationSummaryComponent;
@@ -59,17 +55,19 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         private productConfigurationService: ProductConfigurationService) { }
 
     ngOnInit() {
-        this.productConfigurationService.onChangeConfiguration(null);
         this.viewState$ = this.route.params.pipe(
-            switchMap(params => combineLatest([
-                this.productService.get([get(params, 'id')])
-                    .pipe(
-                        switchMap(data => this.translatorService.translateData(data)),
-                        rmap(first)
-                    ),
-                (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null),
-                this.crService.getRecommendationsForProducts([get(params, 'id')])
-            ])),
+            switchMap(params => {
+                this.productConfigurationService.onChangeConfiguration(null);
+                return combineLatest([
+                    this.productService.get([get(params, 'id')])
+                        .pipe(
+                            switchMap(data => this.translatorService.translateData(data)),
+                            rmap(first)
+                        ),
+                    (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null),
+                    this.crService.getRecommendationsForProducts([get(params, 'id')])
+                ])
+            }),
             switchMap(([product, cartitemList, rProductList]) => combineLatest([of([product, cartitemList, rProductList]), this.storefrontService.getStorefront()])),
             rmap(([[product, cartitemList, rProductList], storefront]) => {
                 this.configurationLayout = storefront.ConfigurationLayout;
