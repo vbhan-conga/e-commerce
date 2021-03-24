@@ -14,6 +14,7 @@ import { MiniProfileModule, MiniCartModule, ConstraintRuleModule, IconModule, Pr
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { CategoryCarouselComponent } from './category-carousel/category-carousel.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     HeaderComponent,
     NavAccountComponent,
     FooterComponent,
-    AttachmentComponent
+    AttachmentComponent,
+    CategoryCarouselComponent
   ]
 })
 export class ComponentModule { }
