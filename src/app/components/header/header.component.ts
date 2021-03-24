@@ -49,7 +49,7 @@ export class HeaderComponent implements OnInit {
                 }).pipe(
                   switchMap((query: string) => {
                     const fieldList = 'Name,IconId,ProductCode';
-                    return this.productService.getProductsByName(query, fieldList, 5);
+                    return this.productService.searchProducts(query, fieldList, 5);
                   })
                 );
   }
