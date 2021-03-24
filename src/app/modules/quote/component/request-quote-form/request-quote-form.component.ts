@@ -103,4 +103,3 @@ export class RequestQuoteFormComponent implements OnInit {
   handlePrimaryContactChange(event: any) {}
 
 }
-
