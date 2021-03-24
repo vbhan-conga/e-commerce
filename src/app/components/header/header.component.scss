@@ -37,6 +37,7 @@
     &.scale{
         transform: scale(.725);
     }
+    min-width: 30px;
 }
 
 .modal.show .modal-dialog.menu{
@@ -62,3 +63,7 @@ apt-spinner{
     right: 3rem;
     top: 1.5rem;
 }
+
+app-category-carousel {
+    width: 100%;
+} 
