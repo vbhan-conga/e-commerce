@@ -79,7 +79,7 @@ export class RequestQuoteFormComponent implements OnInit {
   }
 
   billToChange() {
-    this.billToAccount$ = this.accountService.getAccount(this.quote.BillToAccountId).pipe(map(res => res ? res[0]: []));
+    this.billToAccount$ = this.accountService.getAccount(this.quote.BillToAccountId).pipe(map(res => res[0]));
     this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => {
       this.quote.BillToAccount = newBillingAccount;
       this.onQuoteUpdate.emit(this.quote);

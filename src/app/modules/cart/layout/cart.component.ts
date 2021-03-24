@@ -232,12 +232,12 @@ export class CartComponent implements OnInit, OnDestroy {
 
   onBillToChange() {
     if(this.model.BillToAccountId)
-      this.billToAccount$ = this.accountService.getAccount(this.model.BillToAccountId).pipe(map(res => res ? res[0]: []));
+      this.billToAccount$ = this.accountService.getAccount(this.model.BillToAccountId).pipe(map(res => res[0]));
   }
 
   onShipToChange() {
     if(this.model.ShipToAccountId)
-      this.shipToAccount$ = this.accountService.getAccount(this.model.ShipToAccountId).pipe(map(res => res ? res[0]: []));
+      this.shipToAccount$ = this.accountService.getAccount(this.model.ShipToAccountId).pipe(map(res => res[0]));
   }
 
   convertCartToOrder(order: Order, primaryContact: Contact, cart?: Cart, selectedAccount?: AccountInfo) {
