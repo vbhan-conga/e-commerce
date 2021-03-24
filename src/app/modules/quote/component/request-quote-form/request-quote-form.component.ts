@@ -71,7 +71,7 @@ export class RequestQuoteFormComponent implements OnInit {
   }
 
   shipToChange() {
-    this.shipToAccount$ = this.accountService.getAccount(this.quote.ShipToAccountId).pipe(map(res => res ? res[0]: []));
+    this.shipToAccount$ = this.accountService.getAccount(this.quote.ShipToAccountId).pipe(map(res => res[0]));
     this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => {
       this.quote.ShipToAccount = newShippingAccount;
       this.onQuoteUpdate.emit(this.quote);
