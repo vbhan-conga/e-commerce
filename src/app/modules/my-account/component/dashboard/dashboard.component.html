@@ -41,7 +41,7 @@
                         </h6>
                     </div>
                     <div class="p-3">
-                        <h2 class="m-0">{{view?.totalAmount | localCurrency | async}}</h2>
+                        <h2 class="m-0">{{view?.totalAmount | convertCurrency | async}}</h2>
                         <small>{{'COMMON.TOTAL' | translate}} {{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</small>
                     </div>
                 </div>
