@@ -137,7 +137,7 @@ export class CartComponent implements OnInit, OnDestroy {
               private ngZone: NgZone,
               private toastr: ToastrService,
               private exceptionService: ExceptionService) {
-    this.uniqueId = _.uniqueId();
+    this.uniqueId = uniqueId();
   }
 
   ngOnInit() {
