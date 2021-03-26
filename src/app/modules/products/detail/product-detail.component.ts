@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map as rmap } from 'rxjs/operators';
 import { first, last, get, isNil, find } from 'lodash';
 
 import { ApiService } from '@apttus/core';
@@ -60,11 +60,11 @@ export class ProductDetailComponent implements OnInit {
                 this.productService.get([get(params, 'id')])
                     .pipe(
                         switchMap(data => this.translatorService.translateData(data)),
-                        map(first)
+                        rmap(first)
                     ),
                 (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null)
             ])),
-            map(([product, cartItemList]) => {
+            rmap(([product, cartItemList]) => {
                 return {
                     product: product as Product,
                     relatedTo: cartItemList,
@@ -75,7 +75,7 @@ export class ProductDetailComponent implements OnInit {
 
         this.recommendedProducts$ = this.route.params.pipe(
             switchMap(params => this.crService.getRecommendationsForProducts([get(params, 'id')])),
-            map(r => Array.isArray(r) ? r : [])
+            rmap(r => Array.isArray(r) ? r : [])
         );
     }
 
