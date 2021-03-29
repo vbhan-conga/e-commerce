@@ -26,7 +26,6 @@ export const environment: Configuration = {
   hashRouting: true,
   skipPricing: false,
   skipRules: false,
-  apiVersion: '3',
   packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'D-Commerce',

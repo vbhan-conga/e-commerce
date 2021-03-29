@@ -1,142 +1,92 @@
-<ng-container *ngIf="view$ | async as view; else loading">
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <div class="card">
-                <div class="card-body p-0">
-                    <div class="d-flex justify-content-between border-bottom py-2 px-3">
-                        <span>{{'COMMON.ORDERS' | translate}}</span>
-                        <h6><span class="badge badge-primary">{{'MY_ACCOUNT.DASHBOARD.WEEKLY' | translate}}</span></h6>
-                    </div>
-                    <div class="p-3">
-                        <h2 class="m-0">{{view.recentOrders}}</h2>
-                        <small>{{'MY_ACCOUNT.DASHBOARD.ORDERS_THIS_WEEK' | translate}}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Commented as we are not supporting request for quote in current release. To be added back later-->
-        <!-- <div class="col-12 col-md-4">
+<div class="row">
+    <div class="col-12 col-md-6">
         <div class="card">
             <div class="card-body p-0">
                 <div class="d-flex justify-content-between border-bottom py-2 px-3">
-                    <span>Quotes</span>
+                    <span>{{'COMMON.ORDERS' | translate}}</span>
+                    <h6><span class="badge badge-primary">{{'MY_ACCOUNT.DASHBOARD.WEEKLY' | translate}}</span></h6>
+                </div>
+                <div class="p-3">
+                    <h2 class="m-0">{{ totalRecords$ | async }}</h2>
+                    <small>{{'MY_ACCOUNT.DASHBOARD.ORDERS_THIS_WEEK' | translate}}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="d-flex justify-content-between border-bottom py-2 px-3">
+                    <span>{{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</span>
                     <h6>
-                        <span class="badge badge-primary">Weekly</span>
+                        <span class="badge badge-primary">{{'COMMON.TOTAL' | translate}}</span>
                     </h6>
                 </div>
                 <div class="p-3">
-                    <h2 class="m-0">{{quoteCount}}</h2>
-                    <small>Quotes this week</small>
-                </div>
-            </div>
-        </div>
-        </div> -->
-        <div class="col-12 col-md-6">
-            <div class="card">
-                <div class="card-body p-0">
-                    <div class="d-flex justify-content-between border-bottom py-2 px-3">
-                        <span>{{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</span>
-                        <h6>
-                            <span class="badge badge-primary">{{'COMMON.TOTAL' | translate}}</span>
-                        </h6>
-                    </div>
-                    <div class="p-3">
-                        <h2 class="m-0">{{view?.totalAmount | convertCurrency | async}}</h2>
+                    <ng-container *ngIf="totalOrderAmount$ | async as totalAmount; else loading">
+                        <h2 class="m-0">{{totalAmount | localCurrency | async}}</h2>
                         <small>{{'COMMON.TOTAL' | translate}} {{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</small>
-                    </div>
+                    </ng-container>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-12 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                  <strong class="text-uppercase d-block">{{'COMMON.ORDER_AMOUNT_BY_STATUS' | translate}}</strong>
-                </div>
-                <div class="card-body">
-                  <apt-chart [data]="view?.orderAmountByStatus" [type]="'doughnut'" [legendPosition]="'right'"
+</div>
+<div class="row mt-3">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <strong class="text-uppercase d-block">{{'COMMON.ORDER_AMOUNT_BY_STATUS' | translate}}</strong>
+            </div>
+            <div class="card-body">
+                <apt-chart *ngIf="orderAmountByStatus$ | async as orderAmountByStatus; else loading"
+                    [data]="orderAmountByStatus" [type]="'doughnut'" [legendPosition]="'right'"
                     [colorPalette]="colorPalette" [labelDataTransform]="'currency'">
-                  </apt-chart>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between">
-                    <span>{{'MY_ACCOUNT.DASHBOARD.INFORMATION' | translate}}</span>
-                    <a href="javascript:void(0)" [routerLink]="['/my-account/settings']">{{'MY_ACCOUNT.DASHBOARD.ACCOUNT_DETAILS' | translate}} ></a>
-                </div>
-                <div class="card-body">
-                    <dl>
-                        <dd><apt-output-field [record]="view.user" field="FirstName" [editable]="false" [layout]="'inline'"></apt-output-field></dd>
-                        <dd><apt-output-field [record]="view.user" field="Username" [editable]="false" [layout]="'inline'"></apt-output-field></dd>
-                        <dd><apt-output-field [record]="view.user" field="Email" [editable]="false" [layout]="'inline'"></apt-output-field></dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-        <!--Commented as we are not supporting request for quote in current release. To be added back later-->
-        <!-- <div class="col-12 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    Quotes by Status
-                </div>
-                <div class="card-body">
-                    <canvas #quoteChart id="chart"></canvas>
-                </div>
-            </div>
-        </div> -->
-    </div>
-    <div class="row mt-2">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    {{'MY_ACCOUNT.DASHBOARD.RECENT_ORDERS' | translate}}
-                </div>
-                <div class="card-body p-0">
-                    <apt-table [type]="type" [options]="view.tableOptions"></apt-table>
-                </div>
+                </apt-chart>
             </div>
         </div>
     </div>
-    <!--Commented as we are not supporting request for quote in current release. To be added back later-->
-    <!-- <div class="row mt-3">
-        <div class="col-12 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    Recent Quotes
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-sm table-striped table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col" class="pl-3">Quote Name</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col" class="pr-3">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let quote of quoteList; let i = index">
-                                <ng-container *ngIf="i < 6">
-                                    <th scope="row" class="pl-3">
-                                        <a href="javascript:void(0)" [routerLink]="['/my-account/quotes/', quote.Name]">{{quote.Name}}</a>
-                                    </th>
-                                    <td>{{quote.Discounted_Price__c | localCurrency | async}}</td>
-                                    <td class="pr-3">{{quote.CreatedDate | date:'shortDate'}}</td>
-                                </ng-container>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <span>{{'MY_ACCOUNT.DASHBOARD.INFORMATION' | translate}}</span>
+                <a href="javascript:void(0)"
+                    [routerLink]="['/my-account/settings']">{{'MY_ACCOUNT.DASHBOARD.ACCOUNT_DETAILS' | translate}} ></a>
+            </div>
+            <div class="card-body" *ngIf="user$ | async as user; else loading">
+                <dl>
+                    <dd>
+                        <apt-output-field [record]="user" field="FirstName" [editable]="false" [layout]="'inline'">
+                        </apt-output-field>
+                    </dd>
+                    <dd>
+                        <apt-output-field [record]="user" field="Username" [editable]="false" [layout]="'inline'">
+                        </apt-output-field>
+                    </dd>
+                    <dd>
+                        <apt-output-field [record]="user" field="Email" [editable]="false" [layout]="'inline'">
+                        </apt-output-field>
+                    </dd>
+                </dl>
             </div>
         </div>
-    </div> -->
-</ng-container>
-
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                {{'MY_ACCOUNT.DASHBOARD.RECENT_ORDERS' | translate}}
+            </div>
+            <div class="card-body p-0">
+                <apt-table [type]="type" [options]="tableOptions"></apt-table>
+            </div>
+        </div>
+    </div>
+</div>
 
 <ng-template #loading>
     <div class="d-flex justify-content-center py-5">
-        <apt-spinner></apt-spinner>
+        <apt-dots></apt-dots>
     </div>
 </ng-template>
