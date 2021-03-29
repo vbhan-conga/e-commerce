@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService, Order, UserService, User } from '@apttus/ecommerce';
-import { ACondition, AFilter } from '@apttus/core';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { first, isArray, sumBy, get, mapValues, omit, groupBy, zipObject, map as rmap } from 'lodash';
-import { map } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
+
+import { ACondition, AFilter } from '@apttus/core';
+import { OrderService, Order, UserService, User } from '@apttus/ecommerce';
 import { TableOptions } from '@apttus/elements';
 
 /**
- * This component is for Apttus-ecommerce dashboard. This gives you glimpse of orders, quotes and total spending done for logged in user profile.
+ * This component is for Apttus-ecommerce dashboard. This gives you glimpse of orders and total spending done for logged in user profile.
  */
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,13 @@ import { TableOptions } from '@apttus/elements';
 })
 export class DashboardComponent implements OnInit {
   type = Order;
-  view$: Observable<DashboardView>;
+  
+  private recentOrders$: Observable<boolean>;
+  user$: Observable<User>;
+  totalOrderAmount$: Observable<number>;
+  totalRecords$: Observable<number>;
+  orderAmountByStatus$: Observable<number>;
+
   colorPalette = ['#D22233', '#F2A515', '#6610f2', '#008000', '#17a2b8', '#0079CC', '#CD853F', '#6f42c1', '#20c997', '#fd7e14'];
 
   tableOptions: TableOptions = {
@@ -37,45 +44,40 @@ export class DashboardComponent implements OnInit {
   /**
   * @ignore
   */
-  constructor(private orderService: OrderService, private userService: UserService) {}
+  constructor(private orderService: OrderService, private userService: UserService) { }
 
   /**
   * @ignore
   */
   ngOnInit() {
-    this.view$ = combineLatest(
-      this.userService.me(),
-      this.orderService.query({
-        aggregate: true,
-        conditions: [new ACondition(Order, 'CreatedDate', 'LastXDays', 7)],
-        groupBy: ['Status']
-      }),
-      this.orderService.query({
-        aggregate: true
-      }).pipe(map(res => first(res)))
-    ).pipe(
-      map(([user, recentOrders, agg]) => {
-        return {
-          user: user,
-          tableOptions: this.tableOptions,
-          recentOrders: isArray(recentOrders)
-          ? sumBy(recentOrders, order => get(order, 'total_records'))
-          : get(recentOrders, 'total_records'),
-          totalAmount: get(agg, 'SUM_OrderAmount'),
-          orderAmountByStatus: isArray(recentOrders)
-            ? omit(mapValues(groupBy(recentOrders, 'Apttus_Config2__Status__c'), s => sumBy(s, 'SUM_OrderAmount')), 'null')
-            : zipObject([get(recentOrders, 'Apttus_Config2__Status__c')], rmap([get(recentOrders, 'Apttus_Config2__Status__c')], key => get(recentOrders, 'SUM_OrderAmount')))
-        } as DashboardView;
-      })
-    );
-  }
-}
 
-/** @ignore */
-interface DashboardView {
-  user: User;
-  tableOptions: TableOptions;
-  recentOrders: number;
-  totalAmount: number;
-  orderAmountByStatus: object;
+    this.user$ = this.userService.getCurrentUser();
+
+    this.totalOrderAmount$ = this.orderService.query({
+      aggregate: true
+    }).pipe(map(res => get(first(res), 'SUM_OrderAmount')));
+
+    this.recentOrders$ = this.orderService.query({
+      aggregate: true,
+      conditions: [new ACondition(Order, 'CreatedDate', 'LastXDays', 7)],
+      groupBy: ['Status']
+    });
+
+    this.recentOrders$.pipe(
+      take(1),
+      tap( recentOrders => {
+        this.totalRecords$ = of(
+          isArray(recentOrders)
+        ? sumBy(recentOrders, order => get(order, 'total_records'))
+        : get(recentOrders, 'total_records')
+        ),
+
+        this.orderAmountByStatus$ = of(
+          isArray(recentOrders)
+          ? omit(mapValues(groupBy(recentOrders, 'Apttus_Config2__Status__c'), s => sumBy(s, 'SUM_OrderAmount')), 'null')
+          : zipObject([get(recentOrders, 'Apttus_Config2__Status__c')], rmap([get(recentOrders, 'Apttus_Config2__Status__c')], key => get(recentOrders, 'SUM_OrderAmount')))
+        )
+      })
+    ).subscribe();
+  }
 }
