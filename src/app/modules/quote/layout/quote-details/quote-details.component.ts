@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import {
   UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
-  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService
+  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account
 } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap, switchMap, startWith } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { get, set, compact, uniq, find, cloneDeep, sum } from 'lodash';
 import { Observable, of, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { ExceptionService, LookupOptions } from '@apttus/elements';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -19,6 +19,7 @@ import { ACondition, ApiService } from '@apttus/core';
   styleUrls: ['./quote-details.component.scss']
 })
 export class QuoteDetailsComponent implements OnInit, OnDestroy {
+
   quote$: BehaviorSubject<Quote> = new BehaviorSubject<Quote>(null);
 
   quoteLineItems$: BehaviorSubject<Array<ItemGroup>> = new BehaviorSubject<Array<ItemGroup>>(null);
@@ -90,16 +91,25 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
 
     const quote$ = this.activatedRoute.params
       .pipe(
-        filter(params => _.get(params, 'id') != null),
-        map(params => _.get(params, 'id')),
-        mergeMap(quoteId => this.apiService.get(`/quotes?condition[0]=Id,Equal,${quoteId}&lookups=PriceListId,Primary_Contact,BillToAccountId,ShipToAccountId,Account,CreatedBy`, Quote)),
-        map(quoteList => _.get(quoteList, '[0]'))
+        filter(params => get(params, 'id') != null),
+        map(params => get(params, 'id')),
+        mergeMap(quoteId => this.apiService.get(`/quotes/${quoteId}?lookups=PriceListId,Primary_Contact,Account,CreatedBy`, Quote)),
+        switchMap((quote: Quote) => combineLatest([of(quote), 
+          this.apiService.get(`/accounts?condition[0]=Id,In,${compact(uniq([quote.BillToAccountId, quote.ShipToAccountId, quote.AccountId, get(quote, 'PrimaryContact.AccountId')]))}&lookups=OwnerId,PriceListId`, Account)])
+        ),
+        map(([quote, account]) => {
+          quote.Account = find(account, acc => acc.Id === quote.AccountId);
+          quote.BillToAccount = find(account, acc => acc.Id === quote.BillToAccountId);
+          quote.ShipToAccount = find(account, acc => acc.Id === quote.ShipToAccountId);
+          set(quote, 'Primary_Contact.Account', find(account, acc => quote.Primary_Contact && acc.Id === quote.Primary_Contact.AccountId));
+          return quote;
+        })
       );
 
     const quoteLineItems$ = this.activatedRoute.params
       .pipe(
-        filter(params => _.get(params, 'id') != null),
-        map(params => _.get(params, 'id')),
+        filter(params => get(params, 'id') != null),
+        map(params => get(params, 'id')),
         mergeMap(quoteId => this.quoteLineItemService.query({
           conditions: [new ACondition(this.quoteLineItemService.type, 'ProposalId', 'In', [quoteId])],
           waitForExpansion: false
@@ -111,8 +121,8 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
         if (!quote) return;
         quote.R00N70000001yUfBEAU = lineItems;
         lineItems && this.quoteLineItems$.next(LineItemService.groupItems(lineItems));
-        this.order$ = this.orderService.getOrderByQuote(_.get(quote, 'Id'));
-        this.ngZone.run(() => this.quote$.next(_.cloneDeep(quote)));
+        this.order$ = this.orderService.getOrderByQuote(get(quote, 'Id'));
+        this.ngZone.run(() => this.quote$.next(cloneDeep(quote)));
       })).subscribe();
 
     this.getNotes();
@@ -120,7 +130,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   refreshQuote(fieldValue, quote, fieldName) {
-    _.set(quote, fieldName, fieldValue);
+    set(quote, fieldName, fieldValue);
     this.quoteService.update([quote]).subscribe(r => {
       this.getQuote();
     });
@@ -130,17 +140,17 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
     if (this.notesSubscription) this.notesSubscription.unsubscribe();
     this.notesSubscription = this.activatedRoute.params
       .pipe(
-        switchMap(params => this.noteService.getNotes(_.get(params, 'id')))
+        switchMap(params => this.noteService.getNotes(get(params, 'id')))
       ).subscribe((notes: Array<Note>) => this.noteList$.next(notes));
   }
 
   addComment(quoteId: string) {
     this.comments_loader = true;
 
-    _.set(this.note, 'ParentId', quoteId);
-    _.set(this.note, 'OwnerId', _.get(this.userService.me(), 'Id'));
+    set(this.note, 'ParentId', quoteId);
+    set(this.note, 'OwnerId', get(this.userService.me(), 'Id'));
     if (!this.note.Title) {
-      _.set(this.note, 'Title', 'Dummy Title');
+      set(this.note, 'Title', 'Dummy Title');
     }
     this.noteService.create([this.note])
       .subscribe(r => {
@@ -155,9 +165,9 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    _.set(this.note, 'Body', null);
-    _.set(this.note, 'Title', null);
-    _.set(this.note, 'Id', null);
+    set(this.note, 'Body', null);
+    set(this.note, 'Title', null);
+    set(this.note, 'Id', null);
   }
 
   acceptQuote(quoteId: string) {
@@ -259,8 +269,9 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
     if (this.attachmentSubscription) this.attachmentSubscription.unsubscribe();
     this.attachmentSubscription = this.activatedRoute.params
       .pipe(
-        switchMap(params => this.attachmentService.getAttachments(_.get(params, 'id')))
-      ).subscribe((attachments: Array<Attachment>) => this.attachmentList$.next(attachments));
+        switchMap(params => this.attachmentService.getAttachments(get(params, 'id')))
+      ).subscribe((attachments: Array<Attachment>) => this.ngZone.run(() => this.attachmentList$.next(attachments))
+    );
   }
 
   /**
@@ -290,7 +301,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
    * @ignore
    */
   getTotalPromotions(quote: Quote): number {
-    return ((_.get(quote, 'QuoteLineItems.length') > 0)) ? _.sum(_.get(quote, 'QuoteLineItems').map(res => res.IncentiveAdjustmentAmount)) : 0;
+    return ((get(quote, 'QuoteLineItems.length') > 0)) ? sum(get(quote, 'QuoteLineItems').map(res => res.IncentiveAdjustmentAmount)) : 0;
   }
 
   closeModal() {

@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit {
               private contactService: ContactService,
               private modalService: BsModalService,
               private translateService: TranslateService) {
-
+                
                 this.typeahead$ = Observable.create((observer: any) => {
                   observer.next(this.searchQuery);
                 }).pipe(
