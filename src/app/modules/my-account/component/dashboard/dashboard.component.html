@@ -23,8 +23,23 @@
                     </h6>
                 </div>
                 <div class="p-3">
-                    <ng-container *ngIf="totalOrderAmount$ | async as totalAmount; else loading">
-                        <h2 class="m-0">{{totalAmount | localCurrency | async}}</h2>
+                    <h2 class="m-0">{{quoteCount}}</h2>
+                    <small>Quotes this week</small>
+                </div>
+            </div>
+        </div>
+        </div> -->
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="d-flex justify-content-between border-bottom py-2 px-3">
+                        <span>{{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</span>
+                        <h6>
+                            <span class="badge badge-primary">{{'COMMON.TOTAL' | translate}}</span>
+                        </h6>
+                    </div>
+                    <div class="p-3">
+                        <h2 class="m-0">{{view?.totalAmount | convertCurrency | async}}</h2>
                         <small>{{'COMMON.TOTAL' | translate}} {{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</small>
                     </ng-container>
                 </div>

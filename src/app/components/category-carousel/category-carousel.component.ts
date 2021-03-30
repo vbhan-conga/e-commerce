@@ -20,7 +20,6 @@ export class CategoryCarouselComponent implements OnInit {
   constructor(private categoryService: CategoryService) { }
 
   ngOnInit() {
-
     this.view$ = this.categoryService.getCategoryTree()
       .pipe(
         map(categoryTree => {

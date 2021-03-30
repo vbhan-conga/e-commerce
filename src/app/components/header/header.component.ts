@@ -1,19 +1,15 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
-import { Category, Storefront, ContactService, StorefrontService,
-  UserService, CurrencyType, User, ProductService, Product, Contact } from '@apttus/ecommerce';
+import { Storefront, ContactService, StorefrontService, UserService, CurrencyType, 
+          User, ProductService, Product, Contact } from '@apttus/ecommerce';
 
 import { MiniProfileComponent } from '@apttus/elements';
-
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { APageInfo, ConfigurationService } from '@apttus/core';
+import { ConfigurationService } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
-
-import * as _ from 'lodash';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -35,18 +31,15 @@ export class HeaderComponent implements OnInit {
   typeaheadLoading: boolean = false;
   keyupEvent: any;
 
-
   storefront$: Observable<Storefront>;
   user$: Observable<User>;
-  categoryTree$: Observable<Array<Category>>;
-  categoryBranch$: Observable<Array<Category>>;
   contact$: Observable<Contact>;
 
   constructor(private storefrontService: StorefrontService,
               private userService: UserService,
               private router: Router,
-              private productService: ProductService,
               private config: ConfigurationService,
+              private productService: ProductService,
               private contactService: ContactService,
               private modalService: BsModalService,
               private translateService: TranslateService) {
