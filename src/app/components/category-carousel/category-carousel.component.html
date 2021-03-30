@@ -7,7 +7,7 @@
               (click)="goToCategory(category, view)" data-slide="next"
               *ngIf="category?.Children?.length > 0; else direct">{{category.Name}}</a>
             <ng-template #direct>
-              <a class="list-group-item list-group-item-action" (click)="menuModal.hide()"
+              <a class="list-group-item list-group-item-action" (click)="modalRef.hide()"
                 [routerLink]="['/products/category', category.Name]">{{category.Name}}</a>
             </ng-template>
           </ng-container>
@@ -16,11 +16,11 @@
       <div class="carousel-item" *ngFor="let currentCategory of view?.categoryBranch">
         <div *ngIf="currentCategory?.Id">
           <div class="d-flex justify-content-between">
-            <a href="#menuCarousel" data-slide="prev" (click)="goBack(view)">
+            <a href="#menuCarousel" data-slide="prev" (click)="goBack(view, currentCategory)">
               <i class="fas fa-arrow-left mr-2"></i>{{'HEADER.BACK' | translate}}
             </a>
             <a href="#menuCarousel" [routerLink]="['/products/category', currentCategory.Name]"
-              (click)="menuModal.hide()" data-slide-to="0">{{'HEADER.SHOW_ALL' | translate}}</a>
+              (click)="modalRef.hide()" data-slide-to="0">{{'HEADER.SHOW_ALL' | translate}}</a>
           </div>
           <ul class="list-group list-group-flush mt-3">
             <ng-container *ngFor="let category of currentCategory?.Children">
@@ -29,7 +29,7 @@
                 *ngIf="category.Children && category.Children.length > 0; else link">{{category.Name}}</a>
               <ng-template #link>
                 <a class="list-group-item list-group-item-action" href="#menuCarousel"
-                  (click)="menuModal.hide()" [routerLink]="['/products/category', category.Name]"
+                  (click)="modalRef.hide()" [routerLink]="['/products/category', category.Name]"
                   data-slide-to="0">{{category.Name}}</a>
               </ng-template>
             </ng-container>

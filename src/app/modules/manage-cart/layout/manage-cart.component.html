@@ -10,14 +10,16 @@
         <div class="px-4">
             <div class="row">
                 <div class="col-12 col-md-8 mb-4">
-                    <div class="d-block border-bottom table-responsive">
-                        <h4>
-                            <span *ngIf="view?.cart?.Proposald?.Id; else manageCart">{{view?.cart?.Proposald.Name}} /
-                                {{'COMMON.EDIT_LINE_ITEMS' | translate }}</span>
-                            <ng-template #manageCart>
-                                <span>{{'MANAGE_CART.CART_TABLE.ITEMS_IN_YOURCART' | translate }}</span>
-                            </ng-template>
-                        </h4>
+                    <div class="d-block table-responsive card">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <span *ngIf="view?.cart?.Proposald?.Id; else manageCart">{{view?.cart?.Proposald.Name}} /
+                                    {{'COMMON.EDIT_LINE_ITEMS' | translate }}</span>
+                                <ng-template #manageCart>
+                                    <span>{{'MANAGE_CART.CART_TABLE.ITEMS_IN_YOURCART' | translate }}</span>
+                                </ng-template>
+                            </h4>    
+                        </div>
                         <table class="table" *ngIf="view?.lineItems?.length > 0; else empty">
                             <tbody>
                                 <apt-line-item-table-row *ngFor="let item of view?.lineItems; let i = index; trackBy: trackById" [index]="i"

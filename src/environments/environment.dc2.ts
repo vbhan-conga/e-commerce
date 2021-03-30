@@ -7,19 +7,21 @@ export const environment: Configuration = {
   enableErrorLogging: false,
   enableErrorReporting: false,
   enableMultiCurrency: false,
-  enableQueryLogs: false,
-  enablePerformanceLogs: false,
+  enableQueryLogs: true,
+  enablePerformanceLogs: true,
   defaultCurrency: 'USD',
-  bufferTime: 10,
+  bufferTime: 20,
   maxBufferSize: 100,
   disableBuffer: false,
   subqueryLimit: 10,
+  pricingMode: 'turbo',
   disableCache: false,
   encryptResponse: false,
-  cartRetryLimit: 5,
+  cartRetryLimit: 3,
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
+  proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: true,
   skipPricing: true,
   skipRules: false,
@@ -28,7 +30,9 @@ export const environment: Configuration = {
   skipPricing: true,
   skipRules: false,
   packageNamespace: 'Apttus_WebStore',
-  // Salesforce environment variables
-  storefront: 'ECommerce',
-  endpoint: null
+  // *** TODO: Replace with Salesforce environment variables ***
+  storefront: 'D-Commerce',
+  organizationId: '00D2g0000008fIO',
+  sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
+  endpoint: 'https://dc2-cpqqacommunity1.cs35.force.com/ecom'
 };
