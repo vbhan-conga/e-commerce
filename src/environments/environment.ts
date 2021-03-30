@@ -1,14 +1,14 @@
 import { Configuration } from '@apttus/core';
 export const environment: Configuration = {
   production: false,
-  defaultImageSrc: './assets/images/default.png',
+  defaultImageSrc: 'https://loremflickr.com/320/240/hardware',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
   enableErrorLogging: false,
   enableErrorReporting: false,
   enableMultiCurrency: false,
-  enableQueryLogs: true,
-  enablePerformanceLogs: true,
+  enableQueryLogs: false,
+  enablePerformanceLogs: false,
   defaultCurrency: 'USD',
   bufferTime: 20,
   maxBufferSize: 100,
@@ -22,15 +22,13 @@ export const environment: Configuration = {
   debounceTime: 1000,
   proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: false,
-  skipPricing: true,
-  skipRules: false,
   expandDepth: 7,
   hashRouting: false,
-  packageNamespace: 'Apttus_WebStore',
-  pricingMode: 'turbo',
+  skipPricing: false,
+  skipRules: false,
   // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'E-Commerce',
-  organizationId: '00D3I0000008mFM',
+  storefront: 'Partner Commerce',
+  organizationId: '00D2g0000008fIO',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://dc5-cpqqacommunity1.cs123.force.com/ecomm'
+  endpoint: 'https://apttusdc-developer-edition.na134.force.com/partner'
 };
