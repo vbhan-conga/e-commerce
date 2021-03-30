@@ -3,7 +3,7 @@ import { Category, CategoryService } from '@apttus/ecommerce';
 import { map } from 'rxjs/operators';
 import { map as _map, set, some} from 'lodash';
 import { Observable } from 'rxjs';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-category-carousel',
