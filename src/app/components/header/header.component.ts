@@ -1,19 +1,15 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
-import { CategoryService, Category, Storefront, ContactService, StorefrontService,
-  UserService, ConversionService, CurrencyType, User, ProductService, Product, Contact } from '@apttus/ecommerce';
+import { Storefront, ContactService, StorefrontService, UserService, CurrencyType, 
+          User, ProductService, Product, Contact } from '@apttus/ecommerce';
 
 import { MiniProfileComponent } from '@apttus/elements';
-
 import { Router } from '@angular/router';
-import { Observable, combineLatest } from 'rxjs';
-
+import { Observable } from 'rxjs';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { APageInfo, ConfigurationService } from '@apttus/core';
+import { ConfigurationService } from '@apttus/core';
 import { TranslateService } from '@ngx-translate/core';
-
-import * as _ from 'lodash';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +22,6 @@ export class HeaderComponent implements OnInit {
   @ViewChild('profile') profile: MiniProfileComponent;
   @ViewChild('searchBox') searchBox: ElementRef;
 
-  index: number = 0;
   searchQuery: string;
   postalCode: number;
   pageTop: boolean = true;
@@ -36,65 +31,33 @@ export class HeaderComponent implements OnInit {
   typeaheadLoading: boolean = false;
   keyupEvent: any;
 
-  view$: Observable<HeaderView>;
+  storefront$: Observable<Storefront>;
+  user$: Observable<User>;
+  contact$: Observable<Contact>;
 
-  constructor(private categoryService: CategoryService,
-              private storefrontService: StorefrontService,
+  constructor(private storefrontService: StorefrontService,
               private userService: UserService,
               private router: Router,
-              private productService: ProductService,
               private config: ConfigurationService,
+              private productService: ProductService,
               private contactService: ContactService,
               private modalService: BsModalService,
               private translateService: TranslateService) {
-
+                
                 this.typeahead$ = Observable.create((observer: any) => {
                   observer.next(this.searchQuery);
                 }).pipe(
                   switchMap((query: string) => {
-                    return this.productService.query({
-                      searchString: query,
-                      page: new APageInfo(5, 0),
-                      groupBy: ['Name', 'Id', 'IconId', 'ProductCode']
-                    });
+                    const fieldList = 'Name,IconId,ProductCode';
+                    return this.productService.searchProducts(query, fieldList, 5);
                   })
                 );
   }
 
   ngOnInit() {
-    this.view$ = combineLatest(
-      this.storefrontService.getStorefront()
-      ,this.categoryService.getCategoryTree()
-      ,this.contactService.getMyContact()
-      ,this.userService.me()
-      ,this.storefrontService.describe(null, 'DefaultLocale', true)
-    ).pipe(
-      map(([storefront, categoryTree, contact, user, localeFields]) => {
-        return {
-          storefront: storefront,
-          categoryTree: categoryTree,
-          categoryBranch: _.map(categoryTree, (c) => {
-            const depth = this.getDepth(c);
-            return new Array<any>(depth);
-          }),
-          contact: contact,
-          me: user
-        };
-      })
-    );
-  }
-
-  getDepth(obj) {
-    let depth = 0;
-    if (obj._children) {
-      obj._children.forEach(d => {
-        const tmpDepth = this.getDepth(d);
-        if (tmpDepth > depth) {
-          depth = tmpDepth;
-        }
-      });
-    }
-    return 1 + depth;
+    this.storefront$ = this.storefrontService.getStorefront();
+    this.contact$ = this.contactService.getMyContact();
+    this.user$ = this.userService.me();
   }
 
   openModal(template: TemplateRef<any>) {
@@ -131,16 +94,6 @@ export class HeaderComponent implements OnInit {
      this.router.navigate(['/address']);
   }
 
-  goToCategory(category: Category, view: HeaderView){
-    _.set(view, `categoryBranch[${this.index}]`, category);
-    this.index += 1;
-  }
-
-  goBack(view: HeaderView){
-    _.set(view, `categoryBranch[${this.index}]`, new Category());
-    this.index -= 1;
-  }
-
   doSearch(){
     this.modalRef.hide();
     this.typeaheadLoading = false;
@@ -156,19 +109,4 @@ export class HeaderComponent implements OnInit {
   onScroll(event){
       this.pageTop = window.pageYOffset <= 0;
   }
-}
-
-/** @ignore */
-interface LocaleType {
-  salesforceLocaleCode: string;
-  nativeLabel: string;
-}
-
-/** @ignore */
-interface HeaderView{
-  storefront: Storefront;
-  categoryTree: Array<Category>;
-  categoryBranch: Array<Category>;
-  contact: Contact;
-  me: User;
 }
