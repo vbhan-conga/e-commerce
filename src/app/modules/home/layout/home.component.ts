@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { HomeState, HomeResolver } from '../services/home.resolver';
 import { Observable } from 'rxjs';
-
+import { map, tap } from 'rxjs/operators';
+import { Product, Storefront, StorefrontService, CategoryService, ProductService, Category } from '@apttus/ecommerce';
+import * as _ from 'lodash';
 
 /**
  * Default Home/Landing componenet for Apttus Digital Commerce.
@@ -18,12 +18,28 @@ import { Observable } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  public view$: Observable<HomeState>;
+  storefront$: Observable<Storefront>;
 
-  constructor(public sanitizer:DomSanitizer, private resolver: HomeResolver) {}
+  productListA$: Observable<Array<Product>>;
 
-  ngOnInit() {
-    this.view$ = this.resolver.state();
+  productListB$: Observable<Array<Product>>;
+
+  categories$: Observable<Array<Category>>;
+
+  constructor(private storefrontService: StorefrontService, private categoryService: CategoryService, private productService: ProductService) {
   }
 
+  ngOnInit() {
+    this.storefront$ = this.storefrontService.getStorefront();
+    this.categories$ = this.categoryService.getCategories()
+      .pipe(
+        map(categoryList => {
+          // Method sorts the category list by product count and reverses it to get the 2 categories with the most products.
+          const categories = _.slice(_.reverse(_.sortBy(categoryList, 'ProductCount')), 0, 2);
+          this.productListA$ = this.productService.getProductsByCategory(_.first(categories).Id, 5, 0);
+          return categories;
+        }),
+        tap(categories =>  this.productListB$ = this.productService.getProductsByCategory(_.last(categories).Id, 5, 0))
+      );
+  }
 }
