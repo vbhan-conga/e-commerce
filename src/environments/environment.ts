@@ -26,9 +26,9 @@ export const environment: Configuration = {
   hashRouting: false,
   skipPricing: false,
   skipRules: false,
+  packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'Partner Commerce',
-  organizationId: '00D2g0000008fIO',
-  sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://apttusdc-developer-edition.na134.force.com/partner'
+  storefront: 'ECommerce',
+  organizationId: '00D3I0000008n7g',
+  endpoint: 'https://dc4-cpqqacommunity1.cs123.force.com/ecom'
 };
