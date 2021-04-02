@@ -125,12 +125,11 @@ export class QuoteListComponent implements OnInit {
 
     this.quoteService.getGrandTotalByApprovalStage().pipe(take(1))
       .subscribe(totalByStage => {
-        this.totalAmount$ = of(get(totalByStage, 'NetPrice', sumBy(totalByStage, 'NetPrice'))),
-
-          this.amountsByStatus$ = of(isArray(totalByStage)
-            ? omit(mapValues(groupBy(totalByStage, 'Stage'), s => sumBy(s, 'NetPrice')), 'null')
-            : zipObject([get(totalByStage, 'Stage')], map([get(totalByStage, 'Stage')], key => get(totalByStage, 'NetPrice')))
-          )
+        this.totalAmount$ = of(get(totalByStage, 'NetPrice', sumBy(totalByStage, 'NetPrice')));
+        this.amountsByStatus$ = of(isArray(totalByStage)
+          ? omit(mapValues(groupBy(totalByStage, 'Stage'), s => sumBy(s, 'NetPrice')), 'null')
+          : zipObject([get(totalByStage, 'Stage')], map([get(totalByStage, 'Stage')], key => get(totalByStage, 'NetPrice')))
+        );
       });
   }
   /** @ignore */
