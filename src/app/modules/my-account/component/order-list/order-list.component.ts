@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { take, tap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { clone, assign, get, isArray, groupBy, sumBy, omit, zipObject, mapValues, map } from 'lodash';
 
@@ -106,24 +106,23 @@ export class OrderListComponent implements OnInit {
       aggregate: true,
       groupBy: ['Status'],
       filters: this.filterList
-    }).pipe(
-      take(1),
-      tap(data => {
-        this.tableOptions = clone(assign(this.tableOptions, { filters: this.filterList })),
-        this.totalRecords$ = of(get(data, 'total_records', sumBy(data, 'total_records'))),
-        this.totalAmount$ = of(get(data, 'SUM_OrderAmount', sumBy(data, 'SUM_OrderAmount'))),
+    })
+      .pipe(take(1))
+      .subscribe(data => {
+        this.tableOptions = clone(assign(this.tableOptions, { filters: this.filterList }));
+        this.totalRecords$ = of(get(data, 'total_records', sumBy(data, 'total_records')));
+        this.totalAmount$ = of(get(data, 'SUM_OrderAmount', sumBy(data, 'SUM_OrderAmount')));
         this.ordersByStatus$ = of(
           isArray(data)
             ? omit(mapValues(groupBy(data, 'Apttus_Config2__Status__c'), s => sumBy(s, 'total_records')), 'null')
             : zipObject([get(data, 'Apttus_Config2__Status__c')], map([get(data, 'Apttus_Config2__Status__c')], key => get(data, 'total_records')))
-        ),
+        );
         this.orderAmountByStatus$ = of(
           isArray(data)
             ? omit(mapValues(groupBy(data, 'Apttus_Config2__Status__c'), s => sumBy(s, 'SUM_OrderAmount')), 'null')
             : zipObject([get(data, 'Apttus_Config2__Status__c')], map([get(data, 'Apttus_Config2__Status__c')], key => get(data, 'SUM_OrderAmount')))
-        )
+        );
       })
-    ).subscribe();
   }
 
   handleFilterListChange(event: any) {

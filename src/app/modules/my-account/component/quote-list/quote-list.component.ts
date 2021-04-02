@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Observable, of } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import * as moment from 'moment';
 import { clone, assign, find, get, isArray, groupBy, sumBy, omit, zipObject, mapKeys, mapValues, map, bind, includes } from 'lodash';
 
@@ -39,7 +39,7 @@ export class QuoteListComponent implements OnInit {
       {
         prop: 'Grand_Total',
         value: (record) => {
-          return this.currencyPipe.transform(get(find(get(record, 'ProposalSummaryGroups'), {LineType : 'Grand Total'}), 'NetPrice'));
+          return this.currencyPipe.transform(get(find(get(record, 'ProposalSummaryGroups'), { LineType: 'Grand Total' }), 'NetPrice'));
         }
       },
       {
@@ -61,21 +61,21 @@ export class QuoteListComponent implements OnInit {
       },
       {
         field: 'Opportunity'
-      }, 
+      },
       {
         field: 'Primary_Contact'
-      }, 
+      },
       {
         field: 'BillToAccountId'
       },
       {
         field: 'ShipToAccountId'
-      }, 
+      },
       {
         field: 'Owner'
       }
     ],
-    children : ['ProposalSummaryGroups']
+    children: ['ProposalSummaryGroups']
   };
   /**
    * Array of quotes for current page number.
@@ -105,37 +105,33 @@ export class QuoteListComponent implements OnInit {
       groupBy: ['Approval_Stage', 'RFP_Response_Due_Date'],
       filters: this.filterList
     })
-    .pipe(
-      take(1),
-      tap(data => {
-        this.tableOptions = clone(assign(this.tableOptions, {filters: this.filterList})),
-        this.totalRecords$ = of(get(data, 'total_records', sumBy(data, 'total_records'))),
-        
+      .pipe(take(1))
+      .subscribe(data => {
+        this.tableOptions = clone(assign(this.tableOptions, { filters: this.filterList }));
+        this.totalRecords$ = of(get(data, 'total_records', sumBy(data, 'total_records')));
+
         this.quotesByStatus$ = of(
           isArray(data)
-          ? omit(mapValues(groupBy(data, 'Apttus_Proposal__Approval_Stage__c'), s => sumBy(s, 'total_records')), 'null')
-          : zipObject([get(data, 'Apttus_Proposal__Approval_Stage__c')], map([get(data, 'Apttus_Proposal__Approval_Stage__c')], key => get(data, 'total_records')))
-        ),
+            ? omit(mapValues(groupBy(data, 'Apttus_Proposal__Approval_Stage__c'), s => sumBy(s, 'total_records')), 'null')
+            : zipObject([get(data, 'Apttus_Proposal__Approval_Stage__c')], map([get(data, 'Apttus_Proposal__Approval_Stage__c')], key => get(data, 'total_records')))
+        );
 
         this.quotesByDueDate$ = of(
           isArray(data)
-          ? omit(mapKeys(mapValues(groupBy(data, 'Apttus_Proposal__RFP_Response_Due_Date__c'), s => sumBy(s, 'total_records')), bind(this.generateLabels, this)), 'null')
-          : zipObject([get(data, 'Apttus_Proposal__RFP_Response_Due_Date__c')], map([get(data, 'Apttus_Proposal__RFP_Response_Due_Date__c')], key => get(data, 'total_records')))
-        )
-      })
-    ).subscribe();
+            ? omit(mapKeys(mapValues(groupBy(data, 'Apttus_Proposal__RFP_Response_Due_Date__c'), s => sumBy(s, 'total_records')), bind(this.generateLabels, this)), 'null')
+            : zipObject([get(data, 'Apttus_Proposal__RFP_Response_Due_Date__c')], map([get(data, 'Apttus_Proposal__RFP_Response_Due_Date__c')], key => get(data, 'total_records')))
+        );
+      });
 
-    this.quoteService.getGrandTotalByApprovalStage().pipe(
-      take(1),
-      tap(totalByStage => {
+    this.quoteService.getGrandTotalByApprovalStage().pipe(take(1))
+      .subscribe(totalByStage => {
         this.totalAmount$ = of(get(totalByStage, 'NetPrice', sumBy(totalByStage, 'NetPrice'))),
 
-        this.amountsByStatus$ = of(isArray(totalByStage)
-          ? omit(mapValues(groupBy(totalByStage, 'Stage'), s => sumBy(s, 'NetPrice')), 'null')
-          : zipObject([get(totalByStage, 'Stage')], map([get(totalByStage, 'Stage')], key => get(totalByStage, 'NetPrice')))
-        )
-      })
-    ).subscribe()
+          this.amountsByStatus$ = of(isArray(totalByStage)
+            ? omit(mapValues(groupBy(totalByStage, 'Stage'), s => sumBy(s, 'NetPrice')), 'null')
+            : zipObject([get(totalByStage, 'Stage')], map([get(totalByStage, 'Stage')], key => get(totalByStage, 'NetPrice')))
+          )
+      });
   }
   /** @ignore */
   handleFilterListChange(event: any) {
@@ -143,8 +139,8 @@ export class QuoteListComponent implements OnInit {
     this.loadViewData();
   }
 
-/**@ignore
- */
+  /**@ignore
+   */
   private generateLabels(date): string {
     const today = moment(new Date());
     const dueDate = (date) ? moment(date) : null;
