@@ -23,7 +23,7 @@ export const environment: Configuration = {
   useIndexedDB: true,
   expandDepth: 8,
   hashRouting: true,
-  skipPricing: true,
+  skipPricing: false,
   skipRules: false,
   packageNamespace: 'Apttus_WebStore',
   // Salesforce environment variables

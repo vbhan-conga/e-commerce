@@ -1,4 +1,4 @@
-<ng-container *ngIf="addressList$ | async as addressList">
+<ng-container *ngIf="addressList$ | async as addressList; else showLoader">
   <nav class="navbar navbar-light bg-white d-flex justify-content-between">
     <span class="navbar-brand">
       {{'COMMON.ADDRESS_BOOK' | translate}}
@@ -10,7 +10,7 @@
     </div>
   </nav>
 
-  <div class="row" *ngIf="addressList; else spinner">
+  <div class="row" *ngIf="addressList; else showLoader">
     <div class="col-12 col-sm-6 col-md-4" *ngFor="let address of addressList">
       <div class="card mt-4">
         <div class="card-body">
@@ -79,9 +79,9 @@
     </form>
   </ng-template>
 
-  <ng-template #spinner>
+  <ng-template #showLoader>
     <div class="d-flex justify-content-center py-5">
-      <apt-spinner></apt-spinner>
+      <apt-dots></apt-dots>
     </div>
   </ng-template>
 </ng-container>
