@@ -15,10 +15,9 @@ import { ProductConfigurationSummaryComponent, ProductConfigurationService } fro
 /**
  * Product Details Component is the details of the product for standalone and bundle products with attributes and options.
  */
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
 
     viewState$: Observable<ProductDetailsState>;
-
     recommendedProducts$: Observable<Array<Product>>;
 
     cartItemList: Array<CartItem>;
@@ -67,24 +66,28 @@ export class ProductDetailComponent implements OnInit {
                             switchMap(data => this.translatorService.translateData(data)),
                             rmap(first)
                         ),
-                    (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null),
-                    this.crService.getRecommendationsForProducts([get(params, 'id')])
+                    (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode,AssetLineItem`, CartItem) : of(null)
                 ])
             }),
-            switchMap(([product, cartitemList, rProductList]) => combineLatest([of([product, cartitemList, rProductList]), this.storefrontService.getStorefront()])),
-            rmap(([[product, cartitemList, rProductList], storefront]) => {
+            switchMap(([product, cartitemList]) => combineLatest([of([product, cartitemList]), this.storefrontService.getStorefront()])),
+            rmap(([[product, cartitemList], storefront]) => {
                 this.configurationLayout = storefront.ConfigurationLayout;
                 this.relatedTo = cartitemList;
                 this.product = product;
                 return {
                     product: product as Product,
-                    recommendedProducts: rProductList,
                     relatedTo: cartitemList,
                     quantity: get(cartitemList, 'Quantity', 1),
                     storefront: storefront
                 };
             })
         );
+
+        this.recommendedProducts$ = this.route.params.pipe(
+            switchMap(params => this.crService.getRecommendationsForProducts([get(params, 'id')])),
+            rmap(r => Array.isArray(r) ? r : [])
+        );
+        
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
             if (response && has(response, 'configurationPending')) {
                 this.configurationPending = get(response, 'configurationPending');
@@ -175,10 +178,6 @@ export interface ProductDetailsState {
      * The product to display.
      */
     product: Product;
-    /**
-     * Array of products to act as recommendations.
-     */
-    recommendedProducts: Array<Product>;
     /**
      * The CartItem related to this product.
      */
