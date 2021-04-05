@@ -39,8 +39,10 @@
                         </h6>
                     </div>
                     <div class="p-3">
-                        <h2 class="m-0">{{view?.totalAmount | convertCurrency | async}}</h2>
-                        <small>{{'COMMON.TOTAL' | translate}} {{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</small>
+                        <ng-container *ngIf="totalOrderAmount$ | async as totalAmount; else loading">
+                            <h2 class="m-0">{{totalAmount | localCurrency | async}}</h2>
+                            <small>{{'COMMON.TOTAL' | translate}} {{'MY_ACCOUNT.DASHBOARD.SPENT' | translate}}</small>
+                        </ng-container>
                 </div>
             </div>
         </div>
