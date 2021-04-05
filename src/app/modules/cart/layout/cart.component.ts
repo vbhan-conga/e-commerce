@@ -147,7 +147,6 @@ export class CartComponent implements OnInit, OnDestroy {
     if (!this.isLoggedIn)
       this.paymentState = 'PAYNOW';
 
-    this.account$ = this.accountService.getCurrentAccount();
     this.subscriptions.push(this.cartService.getMyCart().subscribe(cart => {
       this.cart = cart;
       // Setting default values

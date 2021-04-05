@@ -15,12 +15,16 @@ import { ProductConfigurationSummaryComponent, ProductConfigurationService } fro
 /**
  * Product Details Component is the details of the product for standalone and bundle products with attributes and options.
  */
-export class ProductDetailComponent implements OnInit, OnDestroy {
+export class ProductDetailComponent implements OnInit {
+
+    viewState$: Observable<ProductDetailsState>;
+
+    recommendedProducts$: Observable<Array<Product>>;
 
     cartItemList: Array<CartItem>;
     product: Product;
-    viewState$: Observable<ProductDetailsState>;
-
+    subscriptions: Array<Subscription> = new Array<Subscription>();
+    
     /**
      * Flag to detect if there is change in product configuration.
      */
@@ -42,7 +46,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     @ViewChild(ProductConfigurationSummaryComponent)
     configSummaryModal: ProductConfigurationSummaryComponent;
-    subscriptions: Array<Subscription> = [];
 
     constructor(private cartService: CartService,
         private router: Router,
@@ -107,11 +110,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     onAddToCart(cartItems: Array<CartItem>): void {
         this.configurationChanged = false;
+        const primaryItem = find(cartItems, i => get(i, 'IsPrimaryLine') === true && isNil(get(i, 'Option')));
+        if (!isNil(primaryItem) && (get(primaryItem, 'Product.HasOptions') || get(primaryItem, 'Product.HasAttributes'))) {
+            this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
+        }
 
         if (get(cartItems, 'LineItems') && this.configurationLayout === 'Embedded') {
             cartItems = get(cartItems, 'LineItems');
         }
-        const primaryItem = this.getPrimaryItem(cartItems);
         this.relatedTo = primaryItem;
         if (!isNil(primaryItem) && (get(primaryItem, 'HasOptions') || get(primaryItem, 'HasAttributes')))
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
@@ -143,6 +149,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     showSummary() {
         this.configSummaryModal.show();
     }
+
 
     getPrimaryItem(cartItems: Array<CartItem>): CartItem {
         let primaryItem: CartItem;
