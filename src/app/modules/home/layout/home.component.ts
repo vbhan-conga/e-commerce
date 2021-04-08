@@ -36,10 +36,9 @@ export class HomeComponent implements OnInit {
         map(categoryList => {
           // Method sorts the category list by product count and reverses it to get the 2 categories with the most products.
           const categories = _.slice(_.reverse(_.sortBy(categoryList, 'ProductCount')), 0, 2);
-          this.productListA$ = this.productService.getProductsByCategory(_.first(categories).Id, 5, 0);
+          this.productListA$ = this.productService.getProductsByCategory(_.first(categories).Id, 5, 0).pipe(map(r => r.Products));
+          this.productListB$ = this.productService.getProductsByCategory(_.last(categories).Id, 5, 0).pipe(map(r => r.Products));
           return categories;
-        }),
-        tap(categories =>  this.productListB$ = this.productService.getProductsByCategory(_.last(categories).Id, 5, 0))
-      );
+        }));
   }
 }
