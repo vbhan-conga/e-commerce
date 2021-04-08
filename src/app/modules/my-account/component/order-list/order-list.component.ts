@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService, Order } from '@apttus/ecommerce';
+
+import { take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { clone, assign, get, isArray, groupBy, sumBy, omit, zipObject, mapValues, map } from 'lodash';
+
 import { Operator, AFilter } from '@apttus/core';
-import { TranslateService } from '@ngx-translate/core';
-import { map } from 'rxjs/operators';
+import { OrderService, Order } from '@apttus/ecommerce';
 import { TableOptions, FilterOptions } from '@apttus/elements';
-import { Observable } from 'rxjs';
-import * as _ from 'lodash';
 
 /**
  * Displays all orders for the logged in user in grid view with pagination.
@@ -18,7 +19,12 @@ import * as _ from 'lodash';
 export class OrderListComponent implements OnInit {
 
   type = Order;
-  view$: Observable<OrderListView>;
+
+  totalRecords$: Observable<number>;
+  totalAmount$: Observable<number>;
+  ordersByStatus$: Observable<number>;
+  orderAmountByStatus$: Observable<number>;
+
   colorPalette = ['#D22233', '#F2A515', '#6610f2', '#008000', '#17a2b8', '#0079CC', '#CD853F', '#6f42c1', '#20c997', '#fd7e14'];
   tableOptions: TableOptions = {
     columns: [
@@ -86,7 +92,7 @@ export class OrderListComponent implements OnInit {
   /**
    * @ignore
    */
-  constructor(private orderService: OrderService, private translateService: TranslateService) {}
+  constructor(private orderService: OrderService) {}
 
   /**
    * @ignore
@@ -96,25 +102,27 @@ export class OrderListComponent implements OnInit {
   }
 
   loadViewData() {
-    this.view$ = this.orderService.query({
+    this.orderService.query({
       aggregate: true,
       groupBy: ['Status'],
       filters: this.filterList
-    }).pipe(
-      map(data => {
-        return {
-          tableOptions: _.clone(_.assign(this.tableOptions, {filters: this.filterList})),
-          total: _.get(data, 'total_records', _.sumBy(data, 'total_records')),
-          totalAmount: _.get(data, 'SUM_OrderAmount', _.sumBy(data, 'SUM_OrderAmount')),
-          ordersByStatus: _.isArray(data)
-            ? _.omit(_.mapValues(_.groupBy(data, 'Apttus_Config2__Status__c'), s => _.sumBy(s, 'total_records')), 'null')
-            : _.zipObject([_.get(data, 'Apttus_Config2__Status__c')], _.map([_.get(data, 'Apttus_Config2__Status__c')], key => _.get(data, 'total_records'))),
-          orderAmountByStatus: _.isArray(data)
-            ? _.omit(_.mapValues(_.groupBy(data, 'Apttus_Config2__Status__c'), s => _.sumBy(s, 'SUM_OrderAmount')), 'null')
-            : _.zipObject([_.get(data, 'Apttus_Config2__Status__c')], _.map([_.get(data, 'Apttus_Config2__Status__c')], key => _.get(data, 'SUM_OrderAmount')))
-        } as OrderListView;
+    })
+      .pipe(take(1))
+      .subscribe(data => {
+        this.tableOptions = clone(assign(this.tableOptions, { filters: this.filterList }));
+        this.totalRecords$ = of(get(data, 'total_records', sumBy(data, 'total_records')));
+        this.totalAmount$ = of(get(data, 'SUM_OrderAmount', sumBy(data, 'SUM_OrderAmount')));
+        this.ordersByStatus$ = of(
+          isArray(data)
+            ? omit(mapValues(groupBy(data, 'Apttus_Config2__Status__c'), s => sumBy(s, 'total_records')), 'null')
+            : zipObject([get(data, 'Apttus_Config2__Status__c')], map([get(data, 'Apttus_Config2__Status__c')], key => get(data, 'total_records')))
+        );
+        this.orderAmountByStatus$ = of(
+          isArray(data)
+            ? omit(mapValues(groupBy(data, 'Apttus_Config2__Status__c'), s => sumBy(s, 'SUM_OrderAmount')), 'null')
+            : zipObject([get(data, 'Apttus_Config2__Status__c')], map([get(data, 'Apttus_Config2__Status__c')], key => get(data, 'SUM_OrderAmount')))
+        );
       })
-    );
   }
 
   handleFilterListChange(event: any) {
@@ -122,13 +130,4 @@ export class OrderListComponent implements OnInit {
     this.loadViewData();
   }
 
-}
-
-/** @ignore */
-interface OrderListView{
-  tableOptions: TableOptions;
-  total: number;
-  totalAmount: number;
-  ordersByStatus: object;
-  orderAmountByStatus: object;
 }
