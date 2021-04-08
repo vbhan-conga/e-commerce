@@ -11,8 +11,7 @@ import {
     ConstraintRuleService,
     TranslatorLoaderService,
     Product,
-    ProductService,
-    CartItemService
+    ProductService
 } from '@apttus/ecommerce';
 import { ProductConfigurationSummaryComponent } from '@apttus/elements';
 
@@ -48,27 +47,25 @@ export class ProductDetailComponent implements OnInit {
     configSummaryModal: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService,
-                private router: Router,
-                private route: ActivatedRoute,
-                private productService: ProductService,
-                private translatorService: TranslatorLoaderService,
-                private apiService: ApiService,
-                private cartItemService: CartItemService,
-                private crService: ConstraintRuleService) {
+        private router: Router,
+        private route: ActivatedRoute,
+        private productService: ProductService,
+        private translatorService: TranslatorLoaderService,
+        private apiService: ApiService,
+        private crService: ConstraintRuleService) {
         this.product = get(this.router.getCurrentNavigation(), 'extras.state');
     }
 
     ngOnInit() {
         this.viewState$ = this.route.params.pipe(
-            switchMap(params => {
-                const product$ = (this.product instanceof Product) ? of(this.product) : this.productService.get([get(params, 'id')])
+            switchMap(params => combineLatest([
+                this.product ? of(this.product) : this.productService.get([get(params, 'id')])
                     .pipe(
                         switchMap(data => this.translatorService.translateData(data)),
                         rmap(first)
-                    );
-                const cartItem$ = (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode,AssetLineItem`, CartItem) : of(null);
-                return combineLatest([product$, cartItem$]);
-            }),
+                    ),
+                (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null)
+            ])),
             rmap(([product, cartItemList]) => {
                 return {
                     product: product as Product,
