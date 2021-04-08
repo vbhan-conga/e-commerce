@@ -47,12 +47,12 @@ export class ProductDetailComponent implements OnInit {
     configSummaryModal: ProductConfigurationSummaryComponent;
 
     constructor(private cartService: CartService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private productService: ProductService,
-        private translatorService: TranslatorLoaderService,
-        private apiService: ApiService,
-        private crService: ConstraintRuleService) {
+                private router: Router,
+                private route: ActivatedRoute,
+                private productService: ProductService,
+                private translatorService: TranslatorLoaderService,
+                private apiService: ApiService,
+                private crService: ConstraintRuleService) {
         this.product = get(this.router.getCurrentNavigation(), 'extras.state');
     }
 
