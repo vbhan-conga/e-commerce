@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, SearchResults, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
+import { CategoryService, Category, ProductResult, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
 import { get, set, compact, map, isNil, isEmpty, remove, isEqual } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { map as rmap, take, mergeMap, tap } from 'rxjs/operators';
+import { map as rmap, take, mergeMap, tap, switchMap } from 'rxjs/operators';
 
 /**
  * Product list component shows all the products in a list for user selection.
@@ -50,7 +50,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * Search query to filter products list from grid.
    */
   searchString: string = null;
-  searchResults$: BehaviorSubject<SearchResults> = new BehaviorSubject<SearchResults>(null);
+  data$: BehaviorSubject<ProductResult> = new BehaviorSubject<ProductResult>(null);
   productFamilies$: Observable<Array<string>> = new Observable<Array<string>>();
   category: Category;
   subscription: Subscription;
@@ -106,36 +106,18 @@ export class ProductListComponent implements OnInit, OnDestroy {
   getResults() {
     this.ngOnDestroy();
     this.subscription = this.activatedRoute.params.pipe(
-      tap(() => {
-        if(!isNil(this.searchResults$)){
-          const results = this.searchResults$.value;
-          set(results, 'productList', null);
-          this.searchResults$.next(results);
-        }
-      }),
       mergeMap(params => {
         this.searchString = get(params, 'query');
 
-        if (!isNil(get(params, 'categoryName')) && isEmpty(this.subCategories))
-          return this.categoryService.getCategoryByName(get(params, 'categoryName')).pipe(
-            tap(category => this.category = category),
-            mergeMap(category => this.categoryService.getCategoryBranchChildren([category.Id])),
-            tap(categoryList =>{
-              this.joins = [new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(c => c.Id))])];
-            })
-          );
-          else if (!isEmpty(this.subCategories)) {
-            remove(this.joins, (j) => j.type === ProductCategory);
-            this.joins.push(new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', this.subCategories.map(category => category.Id))]));
-            return of(null);
-          }
+        if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories))
+          return this.productService.getProductsByCategory(get(params, 'categoryId'));
         else{
-          return of(null);
+          return this.productService.getProducts();
         }
       }),
-      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins))
     ).subscribe(r => {
-      this.searchResults$.next(r);
+      console.log(r);
+      this.data$.next(r);
     });
   }
 
@@ -158,7 +140,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     const category = get(categoryList, '[0]');
     if(category){
       this.subCategories = [];
-      this.router.navigate(['/products/category', category.Name]);
+      this.router.navigate(['/products/category', category.Id]);
     }
   }
 
