@@ -109,10 +109,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
       mergeMap(params => {
         this.searchString = get(params, 'query');
 
-        if (!isNil(get(params, 'categoryName')) && isEmpty(this.subCategories))
-          return this.categoryService.getCategoryByName(get(params, 'categoryName')).pipe(
-            switchMap(category => this.productService.getProductsByCategory(category.Id)),
-          );
+        if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories))
+          return this.productService.getProductsByCategory(get(params, 'categoryId'));
         else{
           return this.productService.getProducts();
         }
@@ -142,7 +140,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     const category = get(categoryList, '[0]');
     if(category){
       this.subCategories = [];
-      this.router.navigate(['/products/category', category.Name]);
+      this.router.navigate(['/products/category', category.Id]);
     }
   }
 
