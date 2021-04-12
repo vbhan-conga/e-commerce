@@ -51,15 +51,16 @@ export class ProductDetailComponent implements OnInit {
                 private productService: ProductService,
                 private apiService: ApiService,
                 private crService: ConstraintRuleService) {
-        this.product = get(this.router.getCurrentNavigation(), 'extras.state');
     }
 
     ngOnInit() {
         this.viewState$ = this.route.params.pipe(
-            switchMap(params => combineLatest([
-                this.product ? of(this.product) : this.productService.fetch(get(params, 'id')),
-                (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null)
-            ])),
+            switchMap(params => {
+                const product$ =  (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
+                this.productService.fetch(get(params, 'id'));
+                const cartItem$ =  (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
+                return combineLatest([product$,cartItem$]);
+            }),
             rmap(([product, cartItemList]) => {
                 console.log(product, cartItemList);
                 return {
