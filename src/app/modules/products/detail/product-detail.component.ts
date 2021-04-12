@@ -113,8 +113,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     onAddToCart(cartItems: Array<CartItem>): void {
         this.configurationChanged = false;
-        this.productConfigurationService.onChangeConfiguration(null);
-        
+       
         const primaryItem = find(cartItems, i => get(i, 'IsPrimaryLine') === true && isNil(get(i, 'Option')));
         if (!isNil(primaryItem) && (get(primaryItem, 'Product.HasOptions') || get(primaryItem, 'Product.HasAttributes'))) {
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
@@ -130,6 +129,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         if (this.quantity <= 0) {
             this.quantity = 1;
         }
+
+        this.productConfigurationService.onChangeConfiguration({
+            product: get(this, 'product'),
+            itemList: cartItems,
+            configurationFlags: null,
+            configurationPending: false
+        });
     }
 
     changeProductQuantity(newQty: any) {
