@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, ProductResult, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
-import { get, set, compact, map, isNil, isEmpty, remove, isEqual } from 'lodash';
+import { CategoryService, Category, ProductResult, SearchService, ProductService } from '@apttus/ecommerce';
+import { get, compact, map, isNil, remove, isEqual, concat } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -108,15 +108,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.subscription = this.activatedRoute.params.pipe(
       mergeMap(params => {
         this.searchString = get(params, 'query');
-
-        if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories))
-          return this.productService.getProductsByCategory(get(params, 'categoryId'));
-        else{
-          return this.productService.getProducts();
-        }
+        const categories = compact(concat(get(params, 'categoryId'), this.subCategories))
+        return this.productService.getProducts(categories, this.pageSize, this.page, this.sortField, 'ASC', this.conditions);
       }),
     ).subscribe(r => {
-      console.log(r);
       this.data$.next(r);
     });
   }
