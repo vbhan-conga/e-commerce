@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Product, Storefront, StorefrontService, CategoryService, ProductService, Category } from '@apttus/ecommerce';
-import { first, get, slice, reverse, sortBy, last } from 'lodash';
+import { first, get, slice, reverse, sortBy, last, isNil } from 'lodash';
 /**
  * Default Home/Landing componenet for Apttus Digital Commerce.
  * Shows Storefront image(s), products from first two categories of price list and Footer
@@ -36,8 +36,8 @@ export class HomeComponent implements OnInit {
         take(1)
       ).subscribe(categoryList => {
         this.categories = slice(reverse(sortBy(categoryList, 'ProductCount')), 0, 2);
-        this.productListA$ = this.productService.getProductsByCategory(first(this.categories).Id, 5, 1).pipe(map(results => get(results, 'Products')));
-        this.productListB$ = this.productService.getProductsByCategory(last(this.categories).Id, 5, 1).pipe(map(results => get(results, 'Products')));
+        this.productListA$ = this.productService.getProducts([first(this.categories).Id], 5, 1).pipe(map(results => get(results, 'Products')));
+        this.productListB$ = this.productService.getProducts([last(this.categories).Id], 5, 1).pipe(map(results => get(results, 'Products')));
       });
   }
 }
