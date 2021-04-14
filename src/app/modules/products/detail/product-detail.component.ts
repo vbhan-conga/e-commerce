@@ -62,7 +62,6 @@ export class ProductDetailComponent implements OnInit {
                 return combineLatest([product$,cartItem$]);
             }),
             rmap(([product, cartItemList]) => {
-                console.log(product, cartItemList);
                 return {
                     product: product as Product,
                     relatedTo: cartItemList,
