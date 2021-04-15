@@ -9,7 +9,6 @@ import {
     CartService,
     CartItem,
     ConstraintRuleService,
-    TranslatorLoaderService,
     Product,
     ProductService
 } from '@apttus/ecommerce';
@@ -50,22 +49,18 @@ export class ProductDetailComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private productService: ProductService,
-                private translatorService: TranslatorLoaderService,
                 private apiService: ApiService,
                 private crService: ConstraintRuleService) {
-        this.product = get(this.router.getCurrentNavigation(), 'extras.state');
     }
 
     ngOnInit() {
         this.viewState$ = this.route.params.pipe(
-            switchMap(params => combineLatest([
-                this.product ? of(this.product) : this.productService.get([get(params, 'id')])
-                    .pipe(
-                        switchMap(data => this.translatorService.translateData(data)),
-                        rmap(first)
-                    ),
-                (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null)
-            ])),
+            switchMap(params => {
+                const product$ =  (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
+                this.productService.fetch(get(params, 'id'));
+                const cartItem$ =  (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,AssetLineItem,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
+                return combineLatest([product$,cartItem$]);
+            }),
             rmap(([product, cartItemList]) => {
                 return {
                     product: product as Product,
