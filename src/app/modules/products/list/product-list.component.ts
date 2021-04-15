@@ -109,16 +109,14 @@ export class ProductListComponent implements OnInit, OnDestroy {
       mergeMap(params => {
         this.searchString = get(params, 'query');
 
-        if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories)){
-          this.category = new Category();
-          this.category.Id = params.categoryId;
+        if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories))
           return this.productService.getProducts([get(params, 'categoryId')]);
-        }
         else{
           return this.productService.getProducts(null);
         }
-      })
+      }),
     ).subscribe(r => {
+      console.log(r);
       this.data$.next(r);
     });
   }
