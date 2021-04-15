@@ -112,7 +112,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories))
           return this.productService.getProducts([get(params, 'categoryId')]);
         else{
-          return this.productService.getProducts(null, this.pageSize, this.page, this.sortField, null, this.conditions);
+          return this.productService.getProducts(null, this.pageSize, this.page, this.sortField, 'ASC', this.searchString, this.conditions);
         }
       }),
     ).subscribe(r => {
