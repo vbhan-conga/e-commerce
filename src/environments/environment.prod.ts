@@ -29,6 +29,5 @@ export const environment: Configuration = {
   packageNamespace: 'Apttus_WebStore',
   // Salesforce environment variables
   storefront: 'ECommerce',
-  endpoint: null,
-  apiVersion: '3'
+  endpoint: null
 };
