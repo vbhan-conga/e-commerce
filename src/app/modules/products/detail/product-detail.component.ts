@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
 import { switchMap, map as rmap } from 'rxjs/operators';
-import { first, last, get, isNil, find } from 'lodash';
+import { first, last, get, isNil, find, forEach } from 'lodash';
 
 import { ApiService } from '@apttus/core';
 import {
@@ -85,6 +85,16 @@ export class ProductDetailComponent implements OnInit {
         this.cartItemList = result[1];
         if (get(last(result), 'optionChanged') || get(last(result), 'attributeChanged')) this.configurationChanged = true;
     }
+    /**
+     * Change the product quantity and update the primary cartItem
+     * to see the updated the netprice of the product.
+     */
+    changeProductQuantity(newQty: any) {
+        if (this.cartItemList && this.cartItemList.length > 0)
+          forEach(this.cartItemList, c => {
+            if (c.LineType === 'Product/Service') c.Quantity = newQty;
+          });
+      }
 
     /**
      * Changes the quantity of the cart item passed to this method.
