@@ -1,12 +1,12 @@
-<div *ngIf="view$ | async as view; else loading">
-    <apt-jumbotron [storefront]="view.storefront" imagePosition="left" height="45vh;" class="animated fadeIn" class="d-block" brightness="50"></apt-jumbotron>
+<div>
+    <apt-jumbotron *ngIf="storefront$ | async as storefront; else loading" [storefront]="storefront" imagePosition="left" height="45vh;" class="animated fadeIn" class="d-block" brightness="50"></apt-jumbotron>
     <div class="container py-5">
-        <div *ngIf="view.categories">
-            <apt-product-carousel [productList]="view.productListA" slides="4" [title]="view?.categories[0]?.Name" subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
+        <div *ngIf="categories">
+            <apt-product-carousel *ngIf="productListA$ | async as productListA; else loading" [productList]="productListA" slides="4" [title]="categories[0]?.Name" subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
                     rhoncus. Nullam tempor, libero vel auctor efficitur, nibh lacus luctus orci, vitae fringilla lorem magna
                     at metus."></apt-product-carousel>
 
-            <apt-product-carousel [productList]="view.productListB" slides="4" [title]="view?.categories[1]?.Name" subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
+            <apt-product-carousel *ngIf="productListB$ | async as productListB; else loading" [productList]="productListB" slides="4" [title]="categories[1]?.Name" subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt quam massa, a commodo orci finibus
                 rhoncus. Nullam tempor, libero vel auctor efficitur, nibh lacus luctus orci, vitae fringilla lorem magna
                 at metus."></apt-product-carousel>
         </div>
@@ -16,6 +16,6 @@
 
 <ng-template #loading>
   <div class="d-flex justify-content-center pt-5">
-    <apt-spinner></apt-spinner>
+    <apt-dots></apt-dots>
   </div>
 </ng-template>
