@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Observable, zip, of } from 'rxjs';
 import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account, Contact } from '@apttus/ecommerce';
-import { map, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { get } from 'lodash';
 import { LookupOptions } from '@apttus/elements';
 
