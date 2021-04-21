@@ -112,7 +112,11 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
         map(params => get(params, 'id')),
         mergeMap(quoteId => this.quoteLineItemService.query({
           conditions: [new ACondition(this.quoteLineItemService.type, 'ProposalId', 'In', [quoteId])],
-          waitForExpansion: false
+          waitForExpansion: false,
+          children: [
+            {
+              field: 'TaxBreakups'
+            }]
         }))
       );
 
