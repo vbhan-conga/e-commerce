@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Observable, zip, of } from 'rxjs';
 import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account, Contact } from '@apttus/ecommerce';
-import { map, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { get } from 'lodash';
 import { LookupOptions } from '@apttus/elements';
 
@@ -71,7 +71,7 @@ export class RequestQuoteFormComponent implements OnInit {
   }
 
   shipToChange() {
-    this.shipToAccount$ = this.accountService.getAccount(this.quote.ShipToAccountId).pipe(map(res => res[0]));
+    this.shipToAccount$ = this.accountService.getAccount(this.quote.ShipToAccountId);
     this.shipToAccount$.pipe(take(1)).subscribe((newShippingAccount) => {
       this.quote.ShipToAccount = newShippingAccount;
       this.onQuoteUpdate.emit(this.quote);
@@ -79,7 +79,7 @@ export class RequestQuoteFormComponent implements OnInit {
   }
 
   billToChange() {
-    this.billToAccount$ = this.accountService.getAccount(this.quote.BillToAccountId).pipe(map(res => res[0]));
+    this.billToAccount$ = this.accountService.getAccount(this.quote.BillToAccountId);
     this.billToAccount$.pipe(take(1)).subscribe((newBillingAccount) => {
       this.quote.BillToAccount = newBillingAccount;
       this.onQuoteUpdate.emit(this.quote);
