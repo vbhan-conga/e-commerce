@@ -10,9 +10,10 @@ import {
     CartItem,
     ConstraintRuleService,
     Product,
-    ProductService
+    ProductService,
+    ProductOptionService
 } from '@apttus/ecommerce';
-import { ProductConfigurationSummaryComponent } from '@apttus/elements';
+import { ProductConfigurationComponent, ProductConfigurationSummaryComponent } from '@apttus/elements';
 
 @Component({
     selector: 'app-product-detail',
@@ -44,22 +45,24 @@ export class ProductDetailComponent implements OnInit {
 
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
+    @ViewChild(ProductConfigurationComponent, { static: false })
+    productConfigComponent: ProductConfigurationComponent;
 
     constructor(private cartService: CartService,
-                private router: Router,
-                private route: ActivatedRoute,
-                private productService: ProductService,
-                private apiService: ApiService,
-                private crService: ConstraintRuleService) {
+        private router: Router,
+        private route: ActivatedRoute,
+        private productService: ProductService,
+        private apiService: ApiService,
+        private crService: ConstraintRuleService) {
     }
 
     ngOnInit() {
         this.viewState$ = this.route.params.pipe(
             switchMap(params => {
-                const product$ =  (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
-                this.productService.fetch(get(params, 'id'));
-                const cartItem$ =  (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,AssetLineItem,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
-                return combineLatest([product$,cartItem$]);
+                const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
+                    this.productService.fetch(get(params, 'id'));
+                const cartItem$ = (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,AssetLineItem,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
+                return combineLatest([product$, cartItem$]);
             }),
             rmap(([product, cartItemList]) => {
                 return {
@@ -91,10 +94,11 @@ export class ProductDetailComponent implements OnInit {
      */
     changeProductQuantity(newQty: any) {
         if (this.cartItemList && this.cartItemList.length > 0)
-          forEach(this.cartItemList, c => {
-            if (c.LineType === 'Product/Service') c.Quantity = newQty;
-          });
-      }
+            forEach(this.cartItemList, c => {
+                if (c.LineType === 'Product/Service') c.Quantity = newQty;
+                this.productConfigComponent.changeProductQuantity(newQty);
+            });
+    }
 
     /**
      * Changes the quantity of the cart item passed to this method.
