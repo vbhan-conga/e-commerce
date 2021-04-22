@@ -105,6 +105,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   getResults() {
     this.ngOnDestroy();
+    this.data$.next(null);
     this.subscription = this.activatedRoute.params.pipe(
       mergeMap(params => {
         this.searchString = get(params, 'query');
@@ -119,7 +120,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
         return this.productService.getProducts(categories, this.pageSize, this.page, this.sortField, 'ASC', this.searchString, this.conditions);
       }),
     ).subscribe(r => {
-      console.log(r);
       this.data$.next(r);
     });
   }
