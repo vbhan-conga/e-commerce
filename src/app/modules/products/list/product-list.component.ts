@@ -32,7 +32,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * A field name on which one wants to apply sorting.
    */
-  sortField: string;
+  sortField: string = 'Relevance';
   /**
    * Value of the product family field filter.
    */
@@ -117,7 +117,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
         } else if (!isEmpty(this.subCategories)) {
           categories = this.subCategories.map(category => category.Id);
         }
-        return this.productService.getProducts(categories, this.pageSize, this.page, this.sortField, 'ASC', this.searchString, this.conditions);
+        const sortBy = this.sortField === 'Name' ? 'Name' : '';
+        return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
       }),
     ).subscribe(r => {
       this.data$.next(r);
@@ -212,7 +213,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   onSortChange(evt) {
     this.page = 1;
-    this.sortField = evt === 'Name' ? evt : null;
+    this.sortField = evt;
     this.getResults();
   }
 
