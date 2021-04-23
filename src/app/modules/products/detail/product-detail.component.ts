@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
 import { switchMap, map as rmap } from 'rxjs/operators';
-import { first, last, get, isNil, find, forEach } from 'lodash';
+import { first, last, get, isNil, find, forEach, set } from 'lodash';
 
 import { ApiService } from '@apttus/core';
 import {
@@ -11,7 +11,8 @@ import {
     ConstraintRuleService,
     Product,
     ProductService,
-    ProductOptionService
+    ProductInformationService,
+    ProductInformation
 } from '@apttus/ecommerce';
 import { ProductConfigurationComponent, ProductConfigurationSummaryComponent } from '@apttus/elements';
 
@@ -28,6 +29,8 @@ export class ProductDetailComponent implements OnInit {
     viewState$: Observable<ProductDetailsState>;
 
     recommendedProducts$: Observable<Array<Product>>;
+
+    attachments$: Observable<Array<ProductInformation>>;
 
     cartItemList: Array<CartItem>;
 
@@ -53,6 +56,7 @@ export class ProductDetailComponent implements OnInit {
         private route: ActivatedRoute,
         private productService: ProductService,
         private apiService: ApiService,
+        private productInformationService: ProductInformationService,
         private crService: ConstraintRuleService) {
     }
 
@@ -76,6 +80,10 @@ export class ProductDetailComponent implements OnInit {
         this.recommendedProducts$ = this.route.params.pipe(
             switchMap(params => this.crService.getRecommendationsForProducts([get(params, 'id')])),
             rmap(r => Array.isArray(r) ? r : [])
+        );
+
+        this.attachments$ = this.route.params.pipe(
+            switchMap(params => this.productInformationService.getProductInformation(get(params, 'id')))
         );
     }
 
