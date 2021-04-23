@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService, Category, ProductResult, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
-import { get, set, compact, map, isNil, isEmpty, remove, isEqual, uniq } from 'lodash';
+import { get, set, compact, map, isNil, isEmpty, remove, isEqual } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
