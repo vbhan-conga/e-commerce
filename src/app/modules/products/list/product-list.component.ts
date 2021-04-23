@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService, Category, ProductResult, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
-import { get, set, compact, map, isNil, isEmpty, remove, isEqual } from 'lodash';
+import { get, set, compact, map, isNil, isEmpty, remove, isEqual, uniq } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
@@ -110,15 +110,21 @@ export class ProductListComponent implements OnInit, OnDestroy {
       mergeMap(params => {
         this.searchString = get(params, 'query');
         let categories = null;
+        const sortBy = this.sortField === 'Name' ? this.sortField : null;
         if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories)) {
           this.category = new Category();
           this.category.Id = get(params, 'categoryId');
           categories = [get(params, 'categoryId')];
+          return this.categoryService.getCategoryBranchChildren(categories)
+            .pipe(mergeMap(result => {
+              if(result) categories = result.map(r => r.Id);
+              return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
+            }));
         } else if (!isEmpty(this.subCategories)) {
           categories = this.subCategories.map(category => category.Id);
-        }
-        const sortBy = this.sortField === 'Name'? this.sortField : null;
-        return this.productService.getProducts(categories, this.pageSize, this.page, sortBy , 'ASC', this.searchString, this.conditions);
+          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
+        } else
+          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
       }),
     ).subscribe(r => {
       this.data$.next(r);
