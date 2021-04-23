@@ -11,7 +11,8 @@ import {
     ConstraintRuleService,
     Product,
     ProductService,
-    ProductInformationService
+    ProductInformationService,
+    ProductInformation
 } from '@apttus/ecommerce';
 import { ProductConfigurationComponent, ProductConfigurationSummaryComponent } from '@apttus/elements';
 
@@ -28,6 +29,8 @@ export class ProductDetailComponent implements OnInit {
     viewState$: Observable<ProductDetailsState>;
 
     recommendedProducts$: Observable<Array<Product>>;
+
+    attachments$: Observable<Array<ProductInformation>>;
 
     cartItemList: Array<CartItem>;
 
@@ -63,11 +66,9 @@ export class ProductDetailComponent implements OnInit {
                 const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
                     this.productService.fetch(get(params, 'id'));
                 const cartItem$ = (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,AssetLineItem,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
-                const attachments$ = this.productInformationService.getProductInformation(get(params, 'id'))
-                return combineLatest([product$, cartItem$, attachments$]);
+                return combineLatest([product$, cartItem$]);
             }),
-            rmap(([product, cartItemList, attachments]) => {
-                set(product, 'ProductInformation', attachments);
+            rmap(([product, cartItemList]) => {
                 return {
                     product: product as Product,
                     relatedTo: cartItemList,
@@ -79,6 +80,10 @@ export class ProductDetailComponent implements OnInit {
         this.recommendedProducts$ = this.route.params.pipe(
             switchMap(params => this.crService.getRecommendationsForProducts([get(params, 'id')])),
             rmap(r => Array.isArray(r) ? r : [])
+        );
+
+        this.attachments$ = this.route.params.pipe(
+            switchMap(params => this.productInformationService.getProductInformation(get(params, 'id')))
         );
     }
 
