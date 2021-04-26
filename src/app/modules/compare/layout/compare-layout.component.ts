@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService, Product } from '@apttus/ecommerce';
+import { map } from 'rxjs/operators';
 import { ConfigurationService, ACondition } from '@apttus/core';
+import { ProductService, Product } from '@apttus/ecommerce';
 import { ProductDrawerService, ProductSelectionService } from '@apttus/elements';
 
 
@@ -51,7 +52,8 @@ export class CompareLayoutComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/products/compare?products=${newIdentifiers.join(',')}`);
       }
       else {
-        this.subs.push(this.productService.where([new ACondition(this.productService.type, this.identifier, 'In', newIdentifiers)]).subscribe(products => {
+        const conditions: Array<ACondition> = new Array(new ACondition(this.productService.type, this.identifier, 'In', newIdentifiers));
+        this.subs.push(this.productService.getProducts(null, null, null, null, null, null, conditions).pipe(map(res => res.Products)).subscribe(products => {
           const tableProducts = products.filter(product => newIdentifiers.includes(product[this.identifier]));
           this.products = tableProducts;
           this.productSelectionService.setSelectedProducts(tableProducts);
