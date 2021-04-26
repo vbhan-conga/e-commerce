@@ -28,6 +28,6 @@ export const environment: Configuration = {
   hashRouting: true,
   packageNamespace: 'Apttus_WebStore',
   // Salesforce environment variables
-  storefront: 'ECommerce',
+  storefront: 'D-Commerce',
   endpoint: null
 };
