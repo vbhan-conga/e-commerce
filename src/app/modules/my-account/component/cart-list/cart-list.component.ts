@@ -82,7 +82,7 @@ export class CartListComponent implements OnInit {
               massAction: false,
               label: 'Set Active',
               theme: 'primary',
-              validate: (record: Cart) => CartApiService.getCurrentCartId() !== record.Id,
+              validate: (record: Cart) => this.canActivate(record),
               action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList)),
               disableReload: true
             } as TableAction,
@@ -148,6 +148,10 @@ export class CartListComponent implements OnInit {
     return (cartToDelete.Status !== 'Finalized');
   }
 
+  /**@ignore */
+  canActivate(cartToActivate: Cart) {
+    return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
+  }
 
   /**@ignore */
   getFilters(): Array<AFilter> {
