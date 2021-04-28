@@ -15,10 +15,8 @@ import { MiniProfileComponent } from '@apttus/elements';
 export class HeaderComponent implements OnInit {
   @ViewChild('profile', { static: false }) profile: MiniProfileComponent;
 
-  searchQuery: string;
   pageTop: boolean = true;
   modalRef: BsModalRef;
-  keyupEvent: any;
 
   storefront$: Observable<Storefront>;
   user$: Observable<User>;
