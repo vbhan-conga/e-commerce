@@ -12,20 +12,18 @@
                 (click)="newCart(template)">{{'MY_ACCOUNT.CART_LIST.CREATE_NEW' | translate}}</button>
         </nav>
     </div>
-    
+
     <!-- Table component rendering list of carts with applicable actions and pagination -->
     <div class="card" *ngIf="view?.tableOptions; else spinner">
         <apt-table #table [type]="type" [options]="view?.tableOptions"></apt-table>
     </div>
-    
-    
+
     <!-- Spinner dots while data is loading -->
     <ng-template #spinner>
         <div class="d-flex justify-content-center py-5">
             <apt-dots></apt-dots>
         </div>
     </ng-template>
-    
     <!-- Template for creating new cart -->
     <ng-template #template>
         <form (ngSubmit)="createCart()">
