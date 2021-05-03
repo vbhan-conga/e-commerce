@@ -32,7 +32,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * A field name on which one wants to apply sorting.
    */
-  sortField: string;
+  sortField: string = 'Relevance';
   /**
    * Value of the product family field filter.
    */
@@ -107,16 +107,24 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.ngOnDestroy();
     this.subscription = this.activatedRoute.params.pipe(
       mergeMap(params => {
+        this.data$.next(null);
         this.searchString = get(params, 'query');
         let categories = null;
+        const sortBy = this.sortField === 'Name' ? this.sortField : null;
         if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories)) {
           this.category = new Category();
           this.category.Id = get(params, 'categoryId');
           categories = [get(params, 'categoryId')];
+          return this.categoryService.getCategoryBranchChildren(categories)
+            .pipe(mergeMap(result => {
+              if(result) categories = result.map(r => r.Id);
+              return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
+            }));
         } else if (!isEmpty(this.subCategories)) {
           categories = this.subCategories.map(category => category.Id);
-        }
-        return this.productService.getProducts(categories, this.pageSize, this.page, this.sortField, 'ASC', this.searchString, this.conditions);
+          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
+        } else
+          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
       }),
     ).subscribe(r => {
       this.data$.next(r);
@@ -211,7 +219,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   onSortChange(evt) {
     this.page = 1;
-    this.sortField = evt === 'Name' ? evt : null;
+    this.sortField = evt;
     this.getResults();
   }
 
