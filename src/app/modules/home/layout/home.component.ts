@@ -36,8 +36,8 @@ export class HomeComponent implements OnInit {
         take(1)
       ).subscribe(categoryList => {
         this.categories = slice(reverse(sortBy(categoryList, 'ProductCount')), 0, 2);
-        this.productListA$ = this.productService.getProducts([first(this.categories).Id], 5, 1).pipe(map(results => get(results, 'Products')));
-        this.productListB$ = this.productService.getProducts([last(this.categories).Id], 5, 1).pipe(map(results => get(results, 'Products')));
+        this.productListA$ = this.productService.getProducts([get(first(this.categories),'Id')], 5, 1).pipe(map(results => get(results, 'Products')));
+        this.productListB$ = this.productService.getProducts([get(last(this.categories), 'Id')], 5, 1).pipe(map(results => get(results, 'Products')));
       });
   }
 }
