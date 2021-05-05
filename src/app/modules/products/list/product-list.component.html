@@ -35,10 +35,9 @@
       <div *ngIf="data$ | async as data;else loading">
 
         <nav class="navbar navbar-light bg-white p-0 mb-3">
-          <pl-results [recordCount]="data?.TotalCount" [limit]="pageSize"
-            [offset]="(page - 1) * pageSize" [page]="page" [view]="view" [query]="searchString" [sortBy]="sortField"
-            (onViewChange)="view = $event" (onSortChange)="onSortChange($event)"
-            (onPageSizeChange)="onPageSizeChange($event)" class="d-block w-100">
+          <pl-results [recordCount]="data?.TotalCount" [limit]="pageSize" [offset]="(page - 1) * pageSize" [page]="page"
+            [view]="view" [query]="searchString" [sortBy]="sortField" (onViewChange)="view = $event"
+            (onSortChange)="onSortChange($event)" (onPageSizeChange)="onPageSizeChange($event)" class="d-block w-100">
           </pl-results>
         </nav>
 
@@ -49,23 +48,22 @@
             [lastText]="paginationButtonLabels.last"></pagination>
         </div>
 
-        <div>
-          <div class="row" *ngIf="view == 'grid' && data?.Products">
-            <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3" *ngFor="let product of data?.Products">
-              <apt-product-card [product]="product"></apt-product-card>
-            </div>
-          </div>
-          <div class="row" *ngIf="view == 'list' && data?.Products">
-            <div class="col-12">
-              <ul class="list-unstyled list-group">
-                <li *ngFor="let product of data?.Products; let i = index; let last= last" class="list-group-item"
-                  [class.mb-3]="last">
-                  <apt-product-card [product]="product" type="media"></apt-product-card>
-                </li>
-              </ul>
-            </div>
+        <div class="row" *ngIf="view == 'grid' && data?.Products">
+          <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3" *ngFor="let product of data?.Products">
+            <apt-product-card [product]="product"></apt-product-card>
           </div>
         </div>
+        <div class="row" *ngIf="view == 'list' && data?.Products">
+          <div class="col-12">
+            <ul class="list-unstyled list-group">
+              <li *ngFor="let product of data?.Products; let i = index; let last= last" class="list-group-item"
+                [class.mb-3]="last">
+                <apt-product-card [product]="product" type="media"></apt-product-card>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div class="d-flex justify-content-center" *ngIf="data?.TotalCount">
           <pagination (pageChanged)="onPage($event)" [totalItems]="data?.TotalCount" [(ngModel)]="page"
             [boundaryLinks]="true" [itemsPerPage]="pageSize" [maxSize]="5" [firstText]="paginationButtonLabels.first"
