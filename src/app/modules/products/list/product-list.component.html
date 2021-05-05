@@ -49,7 +49,7 @@
             [lastText]="paginationButtonLabels.last"></pagination>
         </div>
 
-        <div class="d-flex">
+        <div>
           <div class="row" *ngIf="view == 'grid' && data?.Products">
             <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-3" *ngFor="let product of data?.Products">
               <apt-product-card [product]="product"></apt-product-card>
