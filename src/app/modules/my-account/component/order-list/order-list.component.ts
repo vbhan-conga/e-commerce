@@ -101,7 +101,7 @@ export class OrderListComponent implements OnInit {
     this.loadViewData();
   }
 
-  loadViewData() {
+  private loadViewData() {
     this.orderService.query({
       aggregate: true,
       groupBy: ['Status'],

@@ -61,21 +61,21 @@ export class QuoteListComponent implements OnInit {
       },
       {
         field: 'Opportunity'
-      }, 
+      },
       {
         field: 'Primary_Contact'
-      }, 
+      },
       {
         field: 'BillToAccountId'
       },
       {
         field: 'ShipToAccountId'
-      }, 
+      },
       {
         field: 'Owner'
       }
     ],
-    children : ['ProposalSummaryGroups']
+    children: ['ProposalSummaryGroups']
   };
   /**
    * Array of quotes for current page number.
@@ -85,7 +85,6 @@ export class QuoteListComponent implements OnInit {
   maxDaysFromDueDate: number = 14;
   colorPalette: Array<String> = ['#D22233', '#F2A515', '#6610f2', '#008000', '#17a2b8', '#0079CC', '#CD853F', '#6f42c1', '#20c997', '#fd7e14'];
   filterList: Array<AFilter> = [];
-
   totalAmount$: Observable<number>;
   amountsByStatus$: Observable<number>;
   totalRecords$: Observable<number>;
@@ -100,7 +99,7 @@ export class QuoteListComponent implements OnInit {
     this.loadViewData();
   }
 
-  loadViewData() {
+  private loadViewData() {
     this.quoteService.query({
       aggregate: true,
       groupBy: ['Approval_Stage', 'RFP_Response_Due_Date'],

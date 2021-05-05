@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription, BehaviorSubject, combineLatest, of } from 'rxjs';
 import { filter, flatMap, map, mergeMap, startWith, switchMap, take } from 'rxjs/operators';
-import { get, set, indexOf, first, sum, isEmpty, cloneDeep, filter as rfilter, find, compact, uniq } from 'lodash';
+import { get, set, indexOf, first, sum, isEmpty, cloneDeep, filter as rfilter, find, compact, uniq, defaultTo } from 'lodash';
 import {
   Order,
   OrderLineItem,
@@ -41,7 +41,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   /**
    * String containing the lookup fields to be queried for an order record.
    */
-  private orderLookups = `PriceListId,PrimaryContact,Owner,CreatedBy`;
+  private orderLookups = `PriceListId,PrimaryContact,Owner,CreatedBy,ShipToAccountId`;
 
   /**
    * String containing the lookup fields to be queried for a proposal record.
@@ -153,9 +153,9 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
         ),
         map(([order, quote, account]) => {
           order.Proposal = quote;
-          order.SoldToAccount = find(account, acc => acc.Id === order.SoldToAccountId);
-          order.BillToAccount = find(account, acc => acc.Id === order.BillToAccountId);
-          order.ShipToAccount = find(account, acc => acc.Id === order.ShipToAccountId);
+          order.SoldToAccount = defaultTo(find(account, acc => acc.Id === order.SoldToAccountId), order.SoldToAccount);
+          order.BillToAccount = defaultTo(find(account, acc => acc.Id === order.BillToAccountId), order.BillToAccount);
+          order.ShipToAccount = defaultTo(find(account, acc => acc.Id === order.ShipToAccountId), order.ShipToAccount);
           set(order, 'PrimaryContact.Account', find(account, acc => order.PrimaryContact && acc.Id === order.PrimaryContact.AccountId));
           return order;
         })
@@ -167,7 +167,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
         map(params => get(params, 'id')),
         mergeMap(orderId => this.orderLineItemService.query({
           conditions: [new ACondition(this.orderLineItemService.type, 'Apttus_Config2__OrderId__c', 'Equal', orderId)],
-          waitForExpansion: false
+          waitForExpansion: false,
+          children: [
+            {
+              field: 'OrderTaxBreakups'
+            }]
         }))
       );
 
