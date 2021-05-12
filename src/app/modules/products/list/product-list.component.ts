@@ -54,6 +54,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   productFamilies$: Observable<Array<string>> = new Observable<Array<string>>();
   category: Category;
   subscription: Subscription;
+  hasSearchError: boolean;
 
   /**
    * Control over button's text/label of pagination component for Multi-Language Support
@@ -108,6 +109,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.subscription = this.activatedRoute.params.pipe(
       mergeMap(params => {
         this.data$.next(null);
+        this.hasSearchError = false;
         this.searchString = get(params, 'query');
         let categories = null;
         const sortBy = this.sortField === 'Name' ? this.sortField : null;
@@ -115,16 +117,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.category = new Category();
           this.category.Id = get(params, 'categoryId');
           categories = [get(params, 'categoryId')];
-          return this.categoryService.getCategoryBranchChildren(categories)
-            .pipe(mergeMap(result => {
-              if(result) categories = result.map(r => r.Id);
-              return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
-            }));
         } else if (!isEmpty(this.subCategories)) {
           categories = this.subCategories.map(category => category.Id);
+        }
+
+        if (get(this.searchString, 'length') < 3) {
+          this.hasSearchError = true;
+          return of(null);
+        } else {
           return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
-        } else
-          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
+        }
       }),
     ).subscribe(r => {
       this.data$.next(r);
