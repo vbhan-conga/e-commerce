@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, ProductResult, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
-import { get, set, compact, map, isNil, isEmpty, remove, isEqual } from 'lodash';
+import { CategoryService, Category, ProductResult, SearchService, ProductService } from '@apttus/ecommerce';
+import { get, compact, map, isNil, remove, isEqual, isEmpty } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { map as rmap, take, mergeMap, tap, switchMap } from 'rxjs/operators';
+import { map as rmap, mergeMap } from 'rxjs/operators';
 
 /**
  * Product list component shows all the products in a list for user selection.
