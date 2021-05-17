@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import {
   UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
-  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account
+  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService
 } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap, switchMap, startWith } from 'rxjs/operators';
-import { get, set, compact, uniq, find, cloneDeep, sum } from 'lodash';
+import { get, set, compact, uniq, find, cloneDeep, sum, defaultTo } from 'lodash';
 import { Observable, of, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { ExceptionService, LookupOptions } from '@apttus/elements';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -77,8 +77,8 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
               private ngZone: NgZone,
               private userService: UserService,
               private quoteLineItemService: QuoteLineItemService,
-              private apiService: ApiService) {
-  }
+              private apiService: ApiService,
+              private accountService: AccountService) { }
 
   ngOnInit() {
     this.getQuote();
@@ -95,13 +95,17 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
         map(params => get(params, 'id')),
         mergeMap(quoteId => this.apiService.get(`/quotes/${quoteId}?lookups=PriceListId,Primary_Contact,Account,CreatedBy`, Quote)),
         switchMap((quote: Quote) => combineLatest([of(quote), 
-          this.apiService.get(`/accounts?condition[0]=Id,In,${compact(uniq([quote.BillToAccountId, quote.ShipToAccountId, quote.AccountId, get(quote, 'PrimaryContact.AccountId')]))}&lookups=OwnerId,PriceListId`, Account)])
+          // Using query instead of get(), as get is not returning list of accounts as expected.
+          this.accountService.query({
+            conditions: [
+              new ACondition(Account, 'Id', 'In', compact(uniq([quote.BillToAccountId, quote.ShipToAccountId, quote.AccountId, get(quote, 'PrimaryContact.AccountId')])))]})
+          ])  
         ),
-        map(([quote, account]) => {
-          quote.Account = find(account, acc => acc.Id === quote.AccountId);
-          quote.BillToAccount = find(account, acc => acc.Id === quote.BillToAccountId);
-          quote.ShipToAccount = find(account, acc => acc.Id === quote.ShipToAccountId);
-          set(quote, 'Primary_Contact.Account', find(account, acc => quote.Primary_Contact && acc.Id === quote.Primary_Contact.AccountId));
+        map(([quote, accounts]) => {
+          quote.Account = defaultTo(find(accounts, acc => acc.Id === quote.AccountId), quote.Account);
+          quote.BillToAccount = defaultTo(find(accounts, acc => acc.Id === quote.BillToAccountId), quote.BillToAccount);
+          quote.ShipToAccount = defaultTo(find(accounts, acc => acc.Id === quote.ShipToAccountId), quote.ShipToAccount);
+          set(quote, 'Primary_Contact.Account', find(accounts, acc => quote.Primary_Contact && acc.Id === quote.Primary_Contact.AccountId));
           return quote;
         })
       );
