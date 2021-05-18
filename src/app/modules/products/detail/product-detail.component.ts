@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
 import { switchMap, map as rmap } from 'rxjs/operators';
-import { first, last, get, isNil, find, forEach, set } from 'lodash';
+import { get, isNil, find, forEach } from 'lodash';
 
 import { ApiService } from '@apttus/core';
 import {
@@ -67,7 +67,11 @@ export class ProductDetailComponent implements OnInit {
                 this.cartItemList = null;
                 const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
                     this.productService.fetch(get(params, 'id'));
-                const cartItem$ = (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,AssetLineItem,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
+                let cartItem$ = of(null)
+                if(get(params, 'cartItem'))
+                    cartItem$ = this.cartService.getMyCart().pipe(
+                            rmap(cart => find(get(cart, 'LineItems'), {Id: get(params, 'cartItem')}))
+                        );
                 return combineLatest([product$, cartItem$]);
             }),
             rmap(([product, cartItemList]) => {
@@ -93,10 +97,10 @@ export class ProductDetailComponent implements OnInit {
      * onConfigurationChange method is invoked whenever there is change in product configuration and this method sets flag
      * isConfigurationChanged to true.
      */
-    onConfigurationChange(result: any) {
-        this.product = first(result);
-        this.cartItemList = result[1];
-        if (get(last(result), 'optionChanged') || get(last(result), 'attributeChanged')) this.configurationChanged = true;
+    onConfigurationChange([product, cartItemList, status]) {
+        this.product = product
+        this.cartItemList = cartItemList
+        if (get(status, 'optionChanged') || get(status, 'attributeChanged')) this.configurationChanged = true;
     }
     /**
      * Change the product quantity and update the primary cartItem
