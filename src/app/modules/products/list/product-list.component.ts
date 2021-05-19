@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, ProductResult, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
-import { get, set, compact, map, isNil, isEmpty, remove, isEqual } from 'lodash';
+import { CategoryService, Category, ProductResult, SearchService, ProductService } from '@apttus/ecommerce';
+import { get, compact, map, isNil, remove, isEqual, isEmpty } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { map as rmap, take, mergeMap, tap, switchMap } from 'rxjs/operators';
+import { map as rmap, mergeMap } from 'rxjs/operators';
 
 /**
  * Product list component shows all the products in a list for user selection.
@@ -54,6 +54,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   productFamilies$: Observable<Array<string>> = new Observable<Array<string>>();
   category: Category;
   subscription: Subscription;
+  hasSearchError: boolean;
 
   /**
    * Control over button's text/label of pagination component for Multi-Language Support
@@ -105,9 +106,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   getResults() {
     this.ngOnDestroy();
-    this.data$.next(null);
     this.subscription = this.activatedRoute.params.pipe(
       mergeMap(params => {
+        this.data$.next(null);
+        this.hasSearchError = false;
         this.searchString = get(params, 'query');
         let categories = null;
         const sortBy = this.sortField === 'Name' ? this.sortField : null;
@@ -115,16 +117,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.category = new Category();
           this.category.Id = get(params, 'categoryId');
           categories = [get(params, 'categoryId')];
-          return this.categoryService.getCategoryBranchChildren(categories)
-            .pipe(mergeMap(result => {
-              if(result) categories = result.map(r => r.Id);
-              return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
-            }));
         } else if (!isEmpty(this.subCategories)) {
           categories = this.subCategories.map(category => category.Id);
+        }
+
+        if (get(this.searchString, 'length') < 3) {
+          this.hasSearchError = true;
+          return of(null);
+        } else {
           return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
-        } else
-          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
+        }
       }),
     ).subscribe(r => {
       this.data$.next(r);

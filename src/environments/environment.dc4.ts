@@ -22,11 +22,12 @@ export const environment: Configuration = {
   debounceTime: 1000,
   proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: true,
-  pricingMode: 'default',
+  pricingMode: 'turbo',
   skipPricing: true,
   skipRules: false,
   expandDepth: 8,
   hashRouting: true,
+  apiVersion: '3',
   packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
   storefront: 'D-Commerce',
