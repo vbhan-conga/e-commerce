@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, get, isNil, find, forEach, maxBy, filter, last, has } from 'lodash';
+import { get, isNil, find, forEach, maxBy, filter, has } from 'lodash';
 import { combineLatest, Observable, Subscription, of } from 'rxjs';
 import { switchMap, map as rmap } from 'rxjs/operators';
 
@@ -45,11 +45,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      * Flag to detect if there is pending in product configuration.
      */
     configurationPending: boolean = false;
-
-    quantity: number = 1;
-
-    /** @ignore */
-    productCode: string;
 
     /**@ignore */
     relatedTo: CartItem;
@@ -117,10 +112,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      * onConfigurationChange method is invoked whenever there is change in product configuration and this method sets flag
      * isConfigurationChanged to true.
      */
-    onConfigurationChange(result: any) {
-        this.product = first(result);
-        this.cartItemList = result[1];
-        if (get(last(result), 'optionChanged') || get(last(result), 'attributeChanged')) this.configurationChanged = true;
+    onConfigurationChange([product, cartItemList, status]) {
+        this.product = product
+        this.cartItemList = cartItemList
+        if (get(status, 'optionChanged') || get(status, 'attributeChanged')) this.configurationChanged = true;
     }
     
 
@@ -149,10 +144,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.relatedTo = primaryItem;
         if (!isNil(primaryItem) && (get(primaryItem, 'HasOptions') || get(primaryItem, 'HasAttributes')))
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
-
-        if (this.quantity <= 0) {
-            this.quantity = 1;
-        }
 
         this.productConfigurationService.onChangeConfiguration({
             product: get(this, 'product'),
