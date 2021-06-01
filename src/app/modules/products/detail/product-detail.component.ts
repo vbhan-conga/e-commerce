@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
-import { switchMap, map as rmap } from 'rxjs/operators';
+import { switchMap, map as rmap, take } from 'rxjs/operators';
 import { get, isNil, find, forEach } from 'lodash';
 
 import { ApiService } from '@apttus/core';
@@ -41,8 +41,6 @@ export class ProductDetailComponent implements OnInit {
      */
     configurationChanged: boolean = false;
 
-    quantity: number = 1;
-
     /** @ignore */
     productCode: string;
 
@@ -67,7 +65,12 @@ export class ProductDetailComponent implements OnInit {
                 this.cartItemList = null;
                 const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
                     this.productService.fetch(get(params, 'id'));
-                const cartItem$ = (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,AssetLineItem,PriceList,PriceListItem,Product,TaxCode`, CartItem,) : of(null);
+                let cartItem$ = of(null);
+                if(get(params, 'cartItem'))
+                    cartItem$ = this.cartService.getMyCart().pipe(
+                            take(1),
+                            rmap(cart => find(get(cart, 'LineItems'), {Id: get(params, 'cartItem')}))
+                        );
                 return combineLatest([product$, cartItem$]);
             }),
             rmap(([product, cartItemList]) => {
@@ -94,8 +97,8 @@ export class ProductDetailComponent implements OnInit {
      * isConfigurationChanged to true.
      */
     onConfigurationChange([product, cartItemList, status]) {
-        this.product = product
-        this.cartItemList = cartItemList
+        this.product = product;
+        this.cartItemList = cartItemList;
         if (get(status, 'optionChanged') || get(status, 'attributeChanged')) this.configurationChanged = true;
     }
     /**
@@ -126,10 +129,6 @@ export class ProductDetailComponent implements OnInit {
         const primaryItem = find(cartItems, i => get(i, 'IsPrimaryLine') === true && isNil(get(i, 'Option')));
         if (!isNil(primaryItem) && (get(primaryItem, 'Product.HasOptions') || get(primaryItem, 'Product.HasAttributes'))) {
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
-        }
-
-        if (this.quantity <= 0) {
-            this.quantity = 1;
         }
     }
 
