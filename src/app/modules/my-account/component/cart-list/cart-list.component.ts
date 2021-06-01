@@ -25,6 +25,7 @@ export class CartListComponent implements OnInit {
   loading: boolean = false;
   cart: Cart;
   view$: Observable<CartListView>;
+  cartAggregate$: Observable<any>;
   /** @ignore */
   type = Cart;
 
@@ -41,12 +42,12 @@ export class CartListComponent implements OnInit {
   }
   /** @ignore */
   loadView() {
-    this.view$ = this.cartService.query({
-      aggregate: true,
-      skipCache: true,
-      filters: this.getFilters()
-    }).pipe(
-      map(cartList => ({
+    this.view$ = combineLatest([
+      this.cartService.getMyCart(),
+      this.getCartAggregate()
+    ])
+    .pipe(
+      map(([currentCart, cartList]) => ({
         tableOptions: {
           columns: [
             {
@@ -83,7 +84,7 @@ export class CartListComponent implements OnInit {
               label: 'Set Active',
               theme: 'primary',
               validate: (record: Cart) => this.canActivate(record),
-              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList)),
+              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList), true),
               disableReload: true
             } as TableAction,
             {
@@ -93,14 +94,13 @@ export class CartListComponent implements OnInit {
               label: 'Delete',
               theme: 'danger',
               validate: (record: Cart) => this.canDelete(record),
-              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList)
+              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList).pipe(map(res => this.getCartAggregate()))
             } as TableAction
           ],
           highlightRow: (record: Cart) => of(CartApiService.getCurrentCartId() === record.Id),
           children: ['SummaryGroups'],
           filters: this.getFilters()
         },
-        totalCarts: _.get(_.first(cartList), 'total_records'),
         type: Cart
       }))
     );
@@ -153,6 +153,16 @@ export class CartListComponent implements OnInit {
     return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
   }
 
+   /** @ignore */
+   private getCartAggregate(): any {
+    return this.cartAggregate$ = this.cartService.query({
+      aggregate: true,
+      skipCache: true,
+      filters: this.getFilters()
+    }).pipe(map(_.first));
+  }
+
+
   /**@ignore */
   getFilters(): Array<AFilter> {
     return new Array(new AFilter(this.cartService.type, [
@@ -166,5 +176,4 @@ export class CartListComponent implements OnInit {
 interface CartListView {
   tableOptions: TableOptions;
   type: ClassType<AObject>;
-  totalCarts: number;
 }
