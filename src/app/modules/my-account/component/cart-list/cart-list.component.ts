@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, combineLatest } from 'rxjs';
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { TranslateService } from '@ngx-translate/core';
 import { map, mergeMap, take } from 'rxjs/operators';
@@ -42,8 +42,12 @@ export class CartListComponent implements OnInit {
   }
   /** @ignore */
   loadView() {
-    this.view$ = this.getCartAggregate().pipe(
-      map(() => ({
+    this.view$ = combineLatest([
+      this.cartService.getMyCart(),
+      this.getCartAggregate()
+    ])
+    .pipe(
+      map(([currentCart, cartList]) => ({
         tableOptions: {
           columns: [
             {
@@ -80,7 +84,7 @@ export class CartListComponent implements OnInit {
               label: 'Set Active',
               theme: 'primary',
               validate: (record: Cart) => this.canActivate(record),
-              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList)),
+              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList), true),
               disableReload: true
             } as TableAction,
             {
