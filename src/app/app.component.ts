@@ -1,6 +1,6 @@
 
-import {combineLatest,  Observable } from 'rxjs';
-import {mergeMap, map, filter} from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { mergeMap, map, filter } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
         return route;
       }),
       filter((route) => route.outlet === 'primary'),
-      mergeMap(r => combineLatest(r.data, r.params)),)
+      mergeMap(r => combineLatest(r.data, r.params)))
       .subscribe(([data, params]) => {
         if (params && Object.keys(params).length > 0)
           this.titleService.setTitle('Conga: ' + params[Object.keys(params)[0]]);
