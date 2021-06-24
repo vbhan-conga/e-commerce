@@ -120,7 +120,12 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
           children: [
             {
               field: 'TaxBreakups'
-            }]
+            }],
+            lookups: [
+              {
+                field: 'Apttus_Proposal__Product__c'
+              }
+            ]
         }))
       );
 
