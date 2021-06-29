@@ -146,7 +146,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        flatMap(orderId => this.apiService.get(`/orders/${orderId}?lookups=${this.orderLookups}`, Order)),
+        flatMap(orderId => this.orderService.fetch(orderId)),
         switchMap((order: Order) => combineLatest([of(order),
         get(order, 'ProposalId') ? this.apiService.get(`/quotes/${order.ProposalId}?lookups=${this.proposalLookups}`, Quote) : of(null),
         // Using query instead of get(), as get is not returning list of accounts as expected.
@@ -170,26 +170,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        mergeMap(orderId => this.apiService.post('/Apttus_Config2__OrderLineItem__c/query', {
-          'conditions': [
-            {
-              'field': 'OrderId',
-              'filterOperator': 'Equal',
-              'value': orderId
-            }
-          ],
-          'lookups': [
-            {
-              'field': 'Apttus_Config2__ProductId__c'
-            },
-            {
-              'field': 'Apttus_Config2__AttributeValueId__c'
-            }
-          ],
-          'children': [{
-            'field': 'Apttus_Config2__OrderTaxBreakups__r'
-          }]
-        }, OrderLineItem, null)));
+        mergeMap(orderId => this.orderLineItemService.getOrderLineItems(orderId)));
 
     this.orderSubscription = combineLatest(order$.pipe(startWith(null)), lineItems$.pipe(startWith(null)))
       .pipe(map(([order, lineItems]) => {

@@ -114,27 +114,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        mergeMap(quoteId =>
-          this.apiService.post('/Apttus_Proposal__Proposal_Line_Item__c/query', {
-            'conditions': [
-              {
-                'field': 'ProposalId',
-                'filterOperator': 'Equal',
-                'value': quoteId
-              }
-            ],
-            'lookups': [
-              {
-                'field': 'Apttus_Proposal__Product__c'
-              },
-              {
-                'field': 'Apttus_QPConfig__AttributeValueId__c'
-              }
-            ],
-            'children': [{
-              'field': 'Apttus_QPConfig__TaxBreakups__r'
-            }]
-          }, QuoteLineItem, null)));
+        mergeMap(quoteId => this.quoteLineItemService.getQuoteLineItems(quoteId)));
 
     this.quoteSubscription = combineLatest(quote$.pipe(startWith(null)), quoteLineItems$.pipe(startWith(null)))
       .pipe(map(([quote, lineItems]) => {
