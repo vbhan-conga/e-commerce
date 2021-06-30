@@ -43,6 +43,10 @@
     <ng-template #complex>
       <div class="d-flex">
         <ng-container *ngIf="viewState?.relatedTo; else newProduct">
+          <div class="form-group mx-3 my-0 d-flex align-items-center">
+            <span class="mr-3"> {{'COMMON.QUANTITY' | translate}} </span>
+            <input type="number" min="1" class="w-75 form-control" [(ngModel)]="viewState.quantity" (ngModelChange)="changeProductQuantity(viewState.quantity)" name="quantity" />
+          </div>
           <apt-add-to-cart [aboEnabled]="false" [showQuantityControls]="false" [configurationEnabled]="false" [quantity]="viewState?.quantity" [disabled]="configurationPending"
             [cartItems]="(viewState?.storefront?.ConfigurationLayout === 'Embedded' && viewState?.relatedTo) ? [relatedTo] : cartItemList" [product]="product ? product: viewState?.product" [btnClass]="'btn-primary px-3'"
             (onAddToCart)="onAddToCart($event)"  [label]="'PRODUCT_DETAILS.UPDATE_CONFIGURATION' | translate">
@@ -95,6 +99,7 @@
         <apt-product-configuration
           [productId]="viewState?.product?.Id"
           [relatedTo]="viewState?.relatedTo"
+          [accordion]="true"
           (click)="configurationChanged = true">
         </apt-product-configuration>
       </div>
@@ -116,7 +121,7 @@
   </apt-detail-section>
 
   <apt-detail-section [title]="'PRODUCT_DETAILS.ATTACHMENTS' | translate"
-    *ngIf="viewState?.product?.ProductInformation?.length > 0">
+    *ngIf="(attachments$ | async)?.length > 0">
     <div class="row mt-4">
       <h4 class="text-muted col-12"> {{'PRODUCT_DETAILS.ATTACHMENTS' | translate}} </h4>
       <div class="col-12">

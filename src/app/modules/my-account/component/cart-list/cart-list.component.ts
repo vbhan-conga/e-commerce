@@ -25,6 +25,7 @@ export class CartListComponent implements OnInit {
   loading: boolean = false;
   cart: Cart;
   view$: Observable<CartListView>;
+  cartAggregate$: Observable<any>;
   /** @ignore */
   type = Cart;
 
@@ -41,12 +42,12 @@ export class CartListComponent implements OnInit {
   }
   /** @ignore */
   loadView() {
-    this.view$ = this.cartService.query({
-      aggregate: true,
-      skipCache: true,
-      filters: this.getFilters()
-    }).pipe(
-      map(cartList => ({
+    this.view$ = combineLatest([
+      this.cartService.getMyCart(),
+      this.getCartAggregate()
+    ])
+    .pipe(
+      map(([currentCart, cartList]) => ({
         tableOptions: {
           columns: [
             {
@@ -82,8 +83,8 @@ export class CartListComponent implements OnInit {
               massAction: false,
               label: 'Set Active',
               theme: 'primary',
-              validate: (record: Cart) => CartApiService.getCurrentCartId() !== record.Id,
-              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList)),
+              validate: (record: Cart) => this.canActivate(record),
+              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList), true),
               disableReload: true
             } as TableAction,
             {
@@ -93,17 +94,25 @@ export class CartListComponent implements OnInit {
               label: 'Delete',
               theme: 'danger',
               validate: (record: Cart) => this.canDelete(record),
-              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList)
+              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList).pipe(map(()=> this.getCartAggregate()))
             } as TableAction
           ],
           highlightRow: (record: Cart) => of(CartApiService.getCurrentCartId() === record.Id),
           children: ['SummaryGroups'],
           filters: this.getFilters()
         },
-        totalCarts: _.get(_.first(cartList), 'total_records'),
         type: Cart
       }))
     );
+  }
+
+  /** @ignore */
+  private getCartAggregate(): any {
+    return this.cartAggregate$ = this.cartService.query({
+      aggregate: true,
+      skipCache: true,
+      filters: this.getFilters()
+    }).pipe(map(_.first));
   }
 
   /**
@@ -143,11 +152,16 @@ export class CartListComponent implements OnInit {
   getCartTotal(currentCart: Cart) {
     return this.priceService.getCartPrice(currentCart).pipe(mergeMap((price) => { return price.netPrice$; }));
   }
+
   /**@ignore */
   canDelete(cartToDelete: Cart) {
     return (cartToDelete.Status !== 'Finalized');
   }
 
+  /**@ignore */
+  canActivate(cartToActivate: Cart) {
+    return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
+  }
 
   /**@ignore */
   getFilters(): Array<AFilter> {
@@ -162,5 +176,4 @@ export class CartListComponent implements OnInit {
 interface CartListView {
   tableOptions: TableOptions;
   type: ClassType<AObject>;
-  totalCarts: number;
 }

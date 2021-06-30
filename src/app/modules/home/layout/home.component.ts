@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Product, Storefront, StorefrontService, CategoryService, ProductService, Category } from '@apttus/ecommerce';
-import * as _ from 'lodash';
-
+import { first, get, slice, reverse, sortBy, last, isNil } from 'lodash';
 /**
  * Default Home/Landing componenet for Apttus Digital Commerce.
  * Shows Storefront image(s), products from first two categories of price list and Footer
@@ -24,22 +23,21 @@ export class HomeComponent implements OnInit {
 
   productListB$: Observable<Array<Product>>;
 
-  categories$: Observable<Array<Category>>;
+  categories: Array<Category>;
 
   constructor(private storefrontService: StorefrontService, private categoryService: CategoryService, private productService: ProductService) {
   }
 
   ngOnInit() {
     this.storefront$ = this.storefrontService.getStorefront();
-    this.categories$ = this.categoryService.getCategories()
+
+    this.categoryService.getCategories()
       .pipe(
-        map(categoryList => {
-          // Method sorts the category list by product count and reverses it to get the 2 categories with the most products.
-          const categories = _.slice(_.reverse(_.sortBy(categoryList, 'ProductCount')), 0, 2);
-          this.productListA$ = this.productService.getProductsByCategory(_.first(categories).Id, 5, 0);
-          return categories;
-        }),
-        tap(categories =>  this.productListB$ = this.productService.getProductsByCategory(_.last(categories).Id, 5, 0))
-      );
+        take(1)
+      ).subscribe(categoryList => {
+        this.categories = slice(reverse(sortBy(categoryList, 'ProductCount')), 0, 2);
+        this.productListA$ = this.productService.getProducts([get(first(this.categories),'Id')], 5, 1).pipe(map(results => get(results, 'Products')));
+        this.productListB$ = this.productService.getProducts([get(last(this.categories), 'Id')], 5, 1).pipe(map(results => get(results, 'Products')));
+      });
   }
 }

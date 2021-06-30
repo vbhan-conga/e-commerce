@@ -1,12 +1,23 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first, get, isNil, find, has, forEach, maxBy, filter } from 'lodash';
+import { get, isNil, find, forEach, maxBy, filter, has, defaultTo } from 'lodash';
 import { combineLatest, Observable, Subscription, of } from 'rxjs';
 import { switchMap, map as rmap } from 'rxjs/operators';
 
-import { ApiService } from '@apttus/core';
-import { CartService, CartItem, Storefront, StorefrontService, Product, ProductService, TranslatorLoaderService, ConstraintRuleService } from '@apttus/ecommerce';
-import { ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
+import {
+    CartService,
+    CartItem,
+    ConstraintRuleService,
+    Product,
+    ProductService,
+    ProductInformationService,
+    ProductInformation,
+    StorefrontService,
+    Storefront,
+    PriceListItemService
+} from '@apttus/ecommerce';
+import { ProductConfigurationComponent, ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
+
 @Component({
     selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
@@ -20,10 +31,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     viewState$: Observable<ProductDetailsState>;
     recommendedProducts$: Observable<Array<Product>>;
 
+    attachments$: Observable<Array<ProductInformation>>;
+
     cartItemList: Array<CartItem>;
     product: Product;
     subscriptions: Array<Subscription> = new Array<Subscription>();
-    
+
     /**
      * Flag to detect if there is change in product configuration.
      */
@@ -33,50 +46,48 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
      */
     configurationPending: boolean = false;
 
-    quantity: number = 1;
-
-    /** @ignore */
-    productCode: string;
-
     /**@ignore */
     relatedTo: CartItem;
 
     private configurationLayout: string = null;
 
-    @ViewChild(ProductConfigurationSummaryComponent)
+    @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
+    @ViewChild(ProductConfigurationComponent, { static: false })
+    productConfigComponent: ProductConfigurationComponent;
 
     constructor(private cartService: CartService,
         private router: Router,
         private route: ActivatedRoute,
         private productService: ProductService,
+        private productInformationService: ProductInformationService,
         private storefrontService: StorefrontService,
-        private translatorService: TranslatorLoaderService,
-        private apiService: ApiService,
-        private crService: ConstraintRuleService,
-        private productConfigurationService: ProductConfigurationService) { }
+        private productConfigurationService: ProductConfigurationService,
+        private crService: ConstraintRuleService) {
+    }
 
     ngOnInit() {
         this.viewState$ = this.route.params.pipe(
             switchMap(params => {
-                this.productConfigurationService.onChangeConfiguration(null);
-                const product$ = (this.product instanceof Product) ? of(this.product) : this.productService.get([get(params, 'id')])
-                    .pipe(
-                        switchMap(data => this.translatorService.translateData(data)),
-                        rmap(first)
+                this.product = null;
+                this.cartItemList = null;
+                const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
+                    this.productService.fetch(get(params, 'id'));
+                let cartItem$ = of(null);
+                if (get(params, 'cartItem'))
+                    cartItem$ = this.cartService.getMyCart().pipe(
+                        rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') }))
                     );
-                const cartItem$ = (get(params, 'cartItem')) ? this.apiService.get(`/Apttus_Config2__LineItem__c/${get(params, 'cartItem')}?lookups=AttributeValue,PriceList,PriceListItem,Product,TaxCode,AssetLineItem`, CartItem) : of(null);
-                return combineLatest([product$, cartItem$]);
+                return combineLatest([product$, cartItem$, this.storefrontService.getStorefront()]);
             }),
-            switchMap(([product, cartitemList]) => combineLatest([of([product, cartitemList]), this.storefrontService.getStorefront()])),
-            rmap(([[product, cartitemList], storefront]) => {
-                this.configurationLayout = storefront.ConfigurationLayout;
-                this.relatedTo = cartitemList;
-                this.product = product;
+            rmap(([product, cartItemList, storefront]) => {
+                const pli = PriceListItemService.getPriceListItemForProduct(product as Product);
+                const qty = isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1)
+                this.productConfigurationService.changeProductQuantity(qty);
                 return {
                     product: product as Product,
-                    relatedTo: cartitemList,
-                    quantity: get(cartitemList, 'Quantity', 1),
+                    relatedTo: cartItemList,
+                    quantity: qty,
                     storefront: storefront
                 };
             })
@@ -86,7 +97,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             switchMap(params => this.crService.getRecommendationsForProducts([get(params, 'id')])),
             rmap(r => Array.isArray(r) ? r : [])
         );
-        
+
+        this.attachments$ = this.route.params.pipe(
+            switchMap(params => this.productInformationService.getProductInformation(get(params, 'id')))
+        );
+
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
             if (response && has(response, 'configurationPending')) {
                 this.configurationPending = get(response, 'configurationPending');
@@ -98,6 +113,17 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             }
         }));
     }
+
+    /**
+     * onConfigurationChange method is invoked whenever there is change in product configuration and this method sets flag
+     * isConfigurationChanged to true.
+     */
+    onConfigurationChange([product, cartItemList, status]) {
+        this.product = product;
+        this.cartItemList = cartItemList;
+        if (get(status, 'optionChanged') || get(status, 'attributeChanged')) this.configurationChanged = true;
+    }
+
 
     /**
      * Changes the quantity of the cart item passed to this method.
@@ -112,7 +138,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     onAddToCart(cartItems: Array<CartItem>): void {
         this.configurationChanged = false;
-       
+
         const primaryItem = find(cartItems, i => get(i, 'IsPrimaryLine') === true && isNil(get(i, 'Option')));
         if (!isNil(primaryItem) && (get(primaryItem, 'Product.HasOptions') || get(primaryItem, 'Product.HasAttributes'))) {
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
@@ -125,10 +151,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         if (!isNil(primaryItem) && (get(primaryItem, 'HasOptions') || get(primaryItem, 'HasAttributes')))
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
 
-        if (this.quantity <= 0) {
-            this.quantity = 1;
-        }
-
         this.productConfigurationService.onChangeConfiguration({
             product: get(this, 'product'),
             itemList: cartItems,
@@ -137,13 +159,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Change the product quantity and update the primary cartItem
+     * to see the updated the netprice of the product.
+     */
     changeProductQuantity(newQty: any) {
-        if (this.cartItemList && this.cartItemList.length > 0) {
+        if (this.cartItemList && this.cartItemList.length > 0)
             forEach(this.cartItemList, c => {
                 if (c.LineType === 'Product/Service') c.Quantity = newQty;
                 this.productConfigurationService.changeProductQuantity(newQty);
             });
-        }
     }
 
     /**
