@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import {
   UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
-  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService
+  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService, QuoteLineItem
 } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap, switchMap, startWith } from 'rxjs/operators';
@@ -114,20 +114,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        mergeMap(quoteId => this.quoteLineItemService.query({
-          conditions: [new ACondition(this.quoteLineItemService.type, 'ProposalId', 'In', [quoteId])],
-          waitForExpansion: false,
-          children: [
-            {
-              field: 'TaxBreakups'
-            }],
-            lookups: [
-              {
-                field: 'Apttus_Proposal__Product__c'
-              }
-            ]
-        }))
-      );
+        mergeMap(quoteId => this.quoteLineItemService.getQuoteLineItems(quoteId)));
 
     this.quoteSubscription = combineLatest(quote$.pipe(startWith(null)), quoteLineItems$.pipe(startWith(null)))
       .pipe(map(([quote, lineItems]) => {
