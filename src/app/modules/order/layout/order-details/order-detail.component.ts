@@ -109,20 +109,20 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
   private subscriptions: Subscription[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
-              private orderService: OrderService,
-              private userService: UserService,
-              private productInformationService: ProductInformationService,
-              private exceptionService: ExceptionService,
-              private noteService: NoteService,
-              private router: Router,
-              private emailService: EmailService,
-              private accountService: AccountService,
-              private cartService: CartService,
-              private cdr: ChangeDetectorRef,
-              private ngZone: NgZone,
-              private orderLineItemService: OrderLineItemService,
-              private apiService: ApiService,
-              private attachmentService: AttachmentService) { }
+    private orderService: OrderService,
+    private userService: UserService,
+    private productInformationService: ProductInformationService,
+    private exceptionService: ExceptionService,
+    private noteService: NoteService,
+    private router: Router,
+    private emailService: EmailService,
+    private accountService: AccountService,
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private orderLineItemService: OrderLineItemService,
+    private apiService: ApiService,
+    private attachmentService: AttachmentService) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.userService.isLoggedIn();
@@ -146,14 +146,15 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        flatMap(orderId => this.apiService.get(`/orders/${orderId}?lookups=${this.orderLookups}`, Order)),
-        switchMap((order: Order) => combineLatest([of(order), 
-          get(order, 'ProposalId') ? this.apiService.get(`/quotes/${order.ProposalId}?lookups=${this.proposalLookups}`, Quote) : of(null),
-          // Using query instead of get(), as get is not returning list of accounts as expected.
-          this.accountService.query({
-            conditions: [
-              new ACondition(Account, 'Id', 'In', compact(uniq([order.BillToAccountId, order.ShipToAccountId, order.SoldToAccountId, get(order, 'PrimaryContact.AccountId')])))]})
-          ])
+        flatMap(orderId => this.orderService.fetch(orderId)),
+        switchMap((order: Order) => combineLatest([of(order),
+        get(order, 'ProposalId') ? this.apiService.get(`/quotes/${order.ProposalId}?lookups=${this.proposalLookups}`, Quote) : of(null),
+        // Using query instead of get(), as get is not returning list of accounts as expected.
+        this.accountService.query({
+          conditions: [
+            new ACondition(Account, 'Id', 'In', compact(uniq([order.BillToAccountId, order.ShipToAccountId, order.SoldToAccountId, get(order, 'PrimaryContact.AccountId')])))]
+        })
+        ])
         ),
         map(([order, quote, accounts]) => {
           order.Proposal = quote;
@@ -169,15 +170,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        mergeMap(orderId => this.orderLineItemService.query({
-          conditions: [new ACondition(this.orderLineItemService.type, 'Apttus_Config2__OrderId__c', 'Equal', orderId)],
-          waitForExpansion: false,
-          children: [
-            {
-              field: 'OrderTaxBreakups'
-            }]
-        }))
-      );
+        mergeMap(orderId => this.orderLineItemService.getOrderLineItems(orderId)));
 
     this.orderSubscription = combineLatest(order$.pipe(startWith(null)), lineItems$.pipe(startWith(null)))
       .pipe(map(([order, lineItems]) => {
@@ -280,10 +273,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
     }
     this.noteService.create([this.note])
       .subscribe(r => {
-          this.getNotes();
-          this.clear();
-          this.comments_loader = false;
-        },
+        this.getNotes();
+        this.clear();
+        this.comments_loader = false;
+      },
         err => {
           this.exceptionService.showError(err);
           this.comments_loader = false;
@@ -327,10 +320,10 @@ export class OrderDetailComponent implements OnInit, OnDestroy, AfterViewChecked
             this.lineItem_loader = false;
           });
       },
-      err => {
-        this.exceptionService.showError(err);
-        this.lineItem_loader = false;
-      });
+        err => {
+          this.exceptionService.showError(err);
+          this.lineItem_loader = false;
+        });
   }
 
   clear() {
