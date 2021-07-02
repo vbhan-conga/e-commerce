@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
-import { switchMap, map as rmap } from 'rxjs/operators';
+import { switchMap, map as rmap, distinctUntilKeyChanged } from 'rxjs/operators';
 import { get, isNil, find, forEach, defaultTo } from 'lodash';
 import {
     CartService,
@@ -66,7 +66,8 @@ export class ProductDetailComponent implements OnInit {
                 let cartItem$ = of(null);
                 if(get(params, 'cartItem'))
                     cartItem$ = this.cartService.getMyCart().pipe(
-                        rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') }))
+                        rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') })),
+                        distinctUntilKeyChanged('Quantity')
                     );
                 return combineLatest([product$, cartItem$]);
             }),
