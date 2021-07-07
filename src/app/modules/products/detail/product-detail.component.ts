@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, of, Observable } from 'rxjs';
-import { switchMap, map as rmap, distinctUntilKeyChanged } from 'rxjs/operators';
+import { switchMap, map as rmap, distinctUntilChanged } from 'rxjs/operators';
 import { get, isNil, find, forEach, defaultTo } from 'lodash';
 import {
     CartService,
@@ -43,6 +43,8 @@ export class ProductDetailComponent implements OnInit {
     /** @ignore */
     productCode: string;
 
+    currentQty: number;
+
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
     @ViewChild(ProductConfigurationComponent, { static: false })
@@ -67,16 +69,17 @@ export class ProductDetailComponent implements OnInit {
                 if(get(params, 'cartItem'))
                     cartItem$ = this.cartService.getMyCart().pipe(
                         rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') })),
-                        distinctUntilKeyChanged('TotalQuantity')
+                        distinctUntilChanged((cli) => cli.Quantity === this.currentQty )
                     );
                 return combineLatest([product$, cartItem$]);
             }),
             rmap(([product, cartItemList]) => {
                 const pli = PriceListItemService.getPriceListItemForProduct(product as Product);
+                this.currentQty = isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1);
                 return {
                     product: product as Product,
                     relatedTo: cartItemList,
-                    quantity: isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1)
+                    quantity: this.currentQty
                 };
             })
         );
