@@ -15,11 +15,8 @@ import {
     StorefrontService,
     Storefront,
     PriceListItemService
-} from '@apttus/ecommerce';
 import { ProductConfigurationComponent, ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
 
-@Component({
-    selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.scss']
 })
@@ -50,6 +47,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     relatedTo: CartItem;
 
     private configurationLayout: string = null;
+
+    currentQty: number;
 
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
