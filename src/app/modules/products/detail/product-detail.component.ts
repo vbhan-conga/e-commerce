@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { get, isNil, find, forEach, maxBy, filter, has, defaultTo } from 'lodash';
 import { combineLatest, Observable, Subscription, of } from 'rxjs';
-import { switchMap, map as rmap, distinctUntilKeyChanged } from 'rxjs/operators';
+import { switchMap, map as rmap, distinctUntilChanged } from 'rxjs/operators';
 
 import {
     CartService,
@@ -15,8 +15,10 @@ import {
     StorefrontService,
     Storefront,
     PriceListItemService
+} from '@apttus/ecommerce';
 import { ProductConfigurationComponent, ProductConfigurationSummaryComponent, ProductConfigurationService } from '@apttus/elements';
-
+@Component({
+    selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.scss']
 })
@@ -76,18 +78,18 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 if (get(params, 'cartItem'))
                     cartItem$ = this.cartService.getMyCart().pipe(
                         rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') })),
-                        distinctUntilKeyChanged('Quantity')
+                        distinctUntilChanged((oldCli, newCli) => newCli.Quantity === this.currentQty)
                     );
                 return combineLatest([product$, cartItem$, this.storefrontService.getStorefront()]);
             }),
             rmap(([product, cartItemList, storefront]) => {
                 const pli = PriceListItemService.getPriceListItemForProduct(product as Product);
-                const qty = isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1)
-                this.productConfigurationService.changeProductQuantity(qty);
+                this.currentQty = isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1);
+                this.productConfigurationService.changeProductQuantity(this.currentQty);
                 return {
                     product: product as Product,
                     relatedTo: cartItemList,
-                    quantity: qty,
+                    quantity: this.currentQty,
                     storefront: storefront
                 };
             })
