@@ -5,7 +5,6 @@ import { map, filter, distinctUntilKeyChanged, flatMap, switchMap, take } from '
 import { get, some } from 'lodash';
 import { ProductService, Product, ConstraintRuleService, CartService } from '@apttus/ecommerce';
 import { ACondition, ConfigurationService } from '@apttus/core';
-import { ProductService, Product, ConstraintRuleService, CartService } from '@apttus/ecommerce';
 import { ProductDetailComponent } from '../modules/products/detail/product-detail.component';
 
 

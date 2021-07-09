@@ -163,15 +163,6 @@ export class CartListComponent implements OnInit {
     return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
   }
 
-   /** @ignore */
-   private getCartAggregate(): any {
-    return this.cartAggregate$ = this.cartService.query({
-      aggregate: true,
-      skipCache: true,
-      filters: this.getFilters()
-    }).pipe(map(_.first));
-  }
-
 
   /**@ignore */
   getFilters(): Array<AFilter> {
