@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import {
   UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
-  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService
+  ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService, QuoteLineItem
 } from '@apttus/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap, switchMap, startWith } from 'rxjs/operators';
@@ -65,20 +65,20 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   };
 
   constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private quoteService: QuoteService,
-              private noteService: NoteService,
-              private exceptionService: ExceptionService,
-              private modalService: BsModalService,
-              private orderService: OrderService,
-              private attachmentService: AttachmentService,
-              private productInformationService: ProductInformationService,
-              private cdr: ChangeDetectorRef,
-              private ngZone: NgZone,
-              private userService: UserService,
-              private quoteLineItemService: QuoteLineItemService,
-              private apiService: ApiService,
-              private accountService: AccountService) { }
+    private router: Router,
+    private quoteService: QuoteService,
+    private noteService: NoteService,
+    private exceptionService: ExceptionService,
+    private modalService: BsModalService,
+    private orderService: OrderService,
+    private attachmentService: AttachmentService,
+    private productInformationService: ProductInformationService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private userService: UserService,
+    private quoteLineItemService: QuoteLineItemService,
+    private apiService: ApiService,
+    private accountService: AccountService) { }
 
   ngOnInit() {
     this.getQuote();
@@ -94,13 +94,13 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
         mergeMap(quoteId => this.apiService.get(`/quotes/${quoteId}?lookups=PriceListId,Primary_Contact,Account,CreatedBy`, Quote)),
-        switchMap((quote: Quote) => combineLatest([of(quote), 
+        switchMap((quote: Quote) => combineLatest([of(quote),
           // Using query instead of get(), as get is not returning list of accounts as expected.
           this.accountService.query({
             conditions: [
-              new ACondition(Account, 'Id', 'In', compact(uniq([quote.BillToAccountId, quote.ShipToAccountId, quote.AccountId, get(quote, 'PrimaryContact.AccountId')])))]})
-          ])  
-        ),
+              new ACondition(Account, 'Id', 'In', compact(uniq([quote.BillToAccountId, quote.ShipToAccountId, quote.AccountId, get(quote, 'PrimaryContact.AccountId')])))]
+          })
+        ])),
         map(([quote, accounts]) => {
           quote.Account = defaultTo(find(accounts, acc => acc.Id === quote.AccountId), quote.Account);
           quote.BillToAccount = defaultTo(find(accounts, acc => acc.Id === quote.BillToAccountId), quote.BillToAccount);
@@ -114,15 +114,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         filter(params => get(params, 'id') != null),
         map(params => get(params, 'id')),
-        mergeMap(quoteId => this.quoteLineItemService.query({
-          conditions: [new ACondition(this.quoteLineItemService.type, 'ProposalId', 'In', [quoteId])],
-          waitForExpansion: false,
-          children: [
-            {
-              field: 'TaxBreakups'
-            }]
-        }))
-      );
+        mergeMap(quoteId => this.quoteLineItemService.getQuoteLineItems(quoteId)));
 
     this.quoteSubscription = combineLatest(quote$.pipe(startWith(null)), quoteLineItems$.pipe(startWith(null)))
       .pipe(map(([quote, lineItems]) => {
@@ -162,10 +154,10 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
     }
     this.noteService.create([this.note])
       .subscribe(r => {
-          this.getNotes();
-          this.clear();
-          this.comments_loader = false;
-        },
+        this.getNotes();
+        this.clear();
+        this.comments_loader = false;
+      },
         err => {
           this.exceptionService.showError(err);
           this.comments_loader = false;
@@ -202,9 +194,9 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
   editQuoteItems(quoteId: string) {
     this.edit_loader = true;
     this.quoteService.convertQuoteToCart(quoteId).pipe(take(1)).subscribe(res => {
-        this.edit_loader = false;
-        this.ngZone.run(() => this.router.navigate(['/carts', 'active']));
-      },
+      this.edit_loader = false;
+      this.ngZone.run(() => this.router.navigate(['/carts', 'active']));
+    },
       err => {
         this.exceptionService.showError(err);
         this.edit_loader = false;
@@ -279,7 +271,7 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(params => this.attachmentService.getAttachments(get(params, 'id')))
       ).subscribe((attachments: Array<Attachment>) => this.ngZone.run(() => this.attachmentList$.next(attachments))
-    );
+      );
   }
 
   /**
