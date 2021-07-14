@@ -163,6 +163,7 @@ export class CartListComponent implements OnInit {
     return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
   }
 
+
   /**@ignore */
   getFilters(): Array<AFilter> {
     return new Array(new AFilter(this.cartService.type, [
