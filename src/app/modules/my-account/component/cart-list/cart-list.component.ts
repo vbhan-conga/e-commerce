@@ -8,7 +8,7 @@ import { map, mergeMap, take } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { AObject, AFilter, ACondition } from '@apttus/core';
-import { CartService, Cart, PriceService } from '@apttus/ecommerce';
+import { CartService, Cart, PriceService, CartApiService } from '@apttus/ecommerce';
 import { TableOptions, TableAction } from '@apttus/elements';
 
 /**
@@ -25,6 +25,7 @@ export class CartListComponent implements OnInit {
   loading: boolean = false;
   cart: Cart;
   view$: Observable<CartListView>;
+  cartAggregate$: Observable<any>;
   /** @ignore */
   type = Cart;
 
@@ -41,75 +42,77 @@ export class CartListComponent implements OnInit {
   }
   /** @ignore */
   loadView() {
-    this.view$ = combineLatest(
+    this.view$ = combineLatest([
       this.cartService.getMyCart(),
-      this.cartService.query({
-        aggregate: true,
-        skipCache: true,
-        filters: this.getFilters()
-      })
-    ).pipe(
-      map(([currentCart, cartList]) => {
-        return {
-          tableOptions: {
-            columns: [
-              {
-                prop: 'Name'
-              },
-              {
-                prop: 'CreatedDate'
-              },
-              {
-                prop: 'NumberOfItems'
-              },
-              {
-                prop: 'IsActive',
-                label: 'Is Active',
-                sortable: false,
-                value: (record: Cart) => this.isCartActive(currentCart, record) ? of('Yes') : of('No')
-              },
-              {
-                prop: 'TotalAmount',
-                label: 'Total Amount',
-                sortable: false,
-                value: (record: Cart) => this.getCartTotal(record)
-              },
-              {
-                prop: 'Status'
-              }
-            ],
-            lookups: [],
-            actions: [
-              {
-                enabled: true,
-                icon: 'fa-check',
-                massAction: false,
-                label: 'Set Active',
-                theme: 'primary',
-                validate: (record: Cart) => this.canActivate(currentCart, record),
-                action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList)).pipe(map(cart => null))
-              } as TableAction,
-              {
-                enabled: true,
-                icon: 'fa-trash',
-                massAction: true,
-                label: 'Delete',
-                theme: 'danger',
-                validate: (record: Cart) => this.canDelete(record),
-                action: (recordList: Array<Cart>) => {
-                  return this.cartService.deleteCart(recordList).pipe(map(res => null));
-                }
-              } as TableAction
-            ],
-            highlightRow: (record: Cart) => of(this.isCartActive(currentCart, record)),
-            children: ['SummaryGroups'],
-            filters: this.getFilters()
-          },
-          totalCarts: _.get(_.first(cartList), 'total_records'),
-          type: Cart
-        } as CartListView;
-      })
+      this.getCartAggregate()
+    ])
+    .pipe(
+      map(([currentCart, cartList]) => ({
+        tableOptions: {
+          columns: [
+            {
+              prop: 'Name'
+            },
+            {
+              prop: 'CreatedDate'
+            },
+            {
+              prop: 'NumberOfItems'
+            },
+            {
+              prop: 'IsActive',
+              label: 'Is Active',
+              sortable: false,
+              value: (record: Cart) => CartApiService.getCurrentCartId() === record.Id ? of('Yes') : of('No')
+            },
+            {
+              prop: 'TotalAmount',
+              label: 'Total Amount',
+              sortable: false,
+              value: (record: Cart) => this.getCartTotal(record)
+            },
+            {
+              prop: 'Status'
+            }
+          ],
+          lookups: [],
+          actions: [
+            {
+              enabled: true,
+              icon: 'fa-check',
+              massAction: false,
+              label: 'Set Active',
+              theme: 'primary',
+              validate: (record: Cart) => this.canActivate(record),
+              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList), true),
+              disableReload: true
+            } as TableAction,
+            {
+              enabled: true,
+              icon: 'fa-trash',
+              massAction: true,
+              label: 'Delete',
+              theme: 'danger',
+              validate: (record: Cart) => this.canDelete(record),
+              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList).pipe(map(()=> this.getCartAggregate()))
+            } as TableAction
+          ],
+          highlightRow: (record: Cart) => of(CartApiService.getCurrentCartId() === record.Id),
+          children: ['SummaryGroups'],
+          filters: this.getFilters()
+        },
+        type: Cart
+      }))
     );
+  }
+
+  /** @ignore */
+  private getCartAggregate(): any {
+    return this.cartAggregate$ = this.cartService.query({
+      aggregate: true,
+      skipCache: true,
+      filters: this.getFilters()
+    }).pipe(map(_.first));
   }
 
   /**
@@ -149,18 +152,18 @@ export class CartListComponent implements OnInit {
   getCartTotal(currentCart: Cart) {
     return this.priceService.getCartPrice(currentCart).pipe(mergeMap((price) => { return price.netPrice$; }));
   }
+
   /**@ignore */
   canDelete(cartToDelete: Cart) {
     return (cartToDelete.Status !== 'Finalized');
   }
+
   /**@ignore */
-  canActivate(currentActiveCart: Cart, rowCart: Cart) {
-    return (rowCart.Status !== 'Finalized') && (currentActiveCart.Id !== rowCart.Id);
+  canActivate(cartToActivate: Cart) {
+    return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
   }
-  /**@ignore */
-  isCartActive(currentActiveCart: Cart, rowCart: Cart) {
-    return (currentActiveCart.Id === rowCart.Id);
-  }
+
+
   /**@ignore */
   getFilters(): Array<AFilter> {
     return new Array(new AFilter(this.cartService.type, [
@@ -174,5 +177,4 @@ export class CartListComponent implements OnInit {
 interface CartListView {
   tableOptions: TableOptions;
   type: ClassType<AObject>;
-  totalCarts: number;
 }

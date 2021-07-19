@@ -9,7 +9,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProductDetailComponent } from './detail/product-detail.component';
 import { ProductListComponent } from './list/product-list.component';
 import { ConfigureGuard } from '../../services/configure.guard';
-import { ProductDetailsResolver } from './services/product-details.resolver';
 
 const routes: Routes = [
     {
@@ -23,17 +22,15 @@ const routes: Routes = [
     },
     {
         path: ':id',
-        component: ProductDetailComponent,
-        resolve: { state: ProductDetailsResolver }
+        component: ProductDetailComponent
     },
     {
-        path: 'category/:categoryName',
+        path: 'category/:categoryId',
         component: ProductListComponent
     },
     {
         path: ':id/:cartItem',
         component: ProductDetailComponent,
-        resolve: { state: ProductDetailsResolver },
         canDeactivate: [ConfigureGuard]
     }
 ];

@@ -64,8 +64,7 @@ const routes: Routes = [
   {
     path: 'orders',
     loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule),
-    data: { title: 'Orders' },
-    canActivate: [OrderDetailsGuard]
+    data: { title: 'Orders' }
   },
   {
     path: 'proposals',
@@ -77,11 +76,6 @@ const routes: Routes = [
     path: 'payment-message',
     loadChildren: () => import('./modules/payment/payment-message.module').then(m => m.PaymentMessageModule),
     data: { title: 'Payment Message'}
-  },
-  {
-    path: 'Assets',
-    loadChildren: () => import('./modules/asset/asset.module').then(m => m.AssetModule),
-    data: {title: 'Assets'}
   },
   {
     path: '**',

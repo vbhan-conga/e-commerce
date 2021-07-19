@@ -11,7 +11,7 @@ export const environment: Configuration = {
   enablePerformanceLogs: false,
   defaultCurrency: 'USD',
   bufferTime: 10,
-  maxBufferSize: 10,
+  maxBufferSize: 100,
   disableBuffer: false,
   subqueryLimit: 10,
   disableCache: false,
@@ -21,12 +21,13 @@ export const environment: Configuration = {
   type: 'Salesforce',
   debounceTime: 1000,
   useIndexedDB: true,
+  pricingMode: 'default',
   skipPricing: true,
   skipRules: false,
   expandDepth: 8,
   hashRouting: true,
   packageNamespace: 'Apttus_WebStore',
   // Salesforce environment variables
-  storefront: 'ECommerce',
+  storefront: 'D-Commerce',
   endpoint: null
 };

@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, SearchResults, SearchService, ProductCategory, ProductService } from '@apttus/ecommerce';
-import * as _ from 'lodash';
+import { CategoryService, Category, ProductResult, SearchService, ProductService } from '@apttus/ecommerce';
+import { get, compact, map, isNil, remove, isEqual, isEmpty } from 'lodash';
 import { ACondition, AJoin } from '@apttus/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { map, take, mergeMap, tap } from 'rxjs/operators';
+import { map as rmap, mergeMap } from 'rxjs/operators';
 
 /**
  * Product list component shows all the products in a list for user selection.
@@ -32,7 +32,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * A field name on which one wants to apply sorting.
    */
-  sortField: string;
+  sortField: string = 'Relevance';
   /**
    * Value of the product family field filter.
    */
@@ -50,10 +50,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * Search query to filter products list from grid.
    */
   searchString: string = null;
-  searchResults$: BehaviorSubject<SearchResults> = new BehaviorSubject<SearchResults>(null);
+  data$: BehaviorSubject<ProductResult> = new BehaviorSubject<ProductResult>(null);
   productFamilies$: Observable<Array<string>> = new Observable<Array<string>>();
   category: Category;
   subscription: Subscription;
+  hasSearchError: boolean;
 
   /**
    * Control over button's text/label of pagination component for Multi-Language Support
@@ -71,13 +72,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * @ignore
    */
-  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService) {}
+  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService) { }
 
   /**
    * @ignore
    */
   ngOnDestroy() {
-    if(!_.isNil(this.subscription))
+    if (!isNil(this.subscription))
       this.subscription.unsubscribe();
   }
 
@@ -87,9 +88,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getResults();
 
-    this.productFamilies$ = this.productService.query({groupBy: ['Family']})
+    this.productFamilies$ = this.productService.query({ groupBy: ['Family'] })
       .pipe(
-        map(productList => _.compact(_.map(productList, 'Family')))
+        rmap(productList => compact(map(productList, 'Family')))
       );
 
     this.translateService.stream('PAGINATION').subscribe((val: string) => {
@@ -106,36 +107,29 @@ export class ProductListComponent implements OnInit, OnDestroy {
   getResults() {
     this.ngOnDestroy();
     this.subscription = this.activatedRoute.params.pipe(
-      tap(() => {
-        if(!_.isNil(this.searchResults$)){
-          const results = this.searchResults$.value;
-          _.set(results, 'productList', null);
-          this.searchResults$.next(results);
-        }
-      }),
       mergeMap(params => {
-        this.searchString = _.get(params, 'query');
+        this.data$.next(null);
+        this.hasSearchError = false;
+        this.searchString = get(params, 'query');
+        let categories = null;
+        const sortBy = this.sortField === 'Name' ? this.sortField : null;
+        if (!isNil(get(params, 'categoryId')) && isEmpty(this.subCategories)) {
+          this.category = new Category();
+          this.category.Id = get(params, 'categoryId');
+          categories = [get(params, 'categoryId')];
+        } else if (!isEmpty(this.subCategories)) {
+          categories = this.subCategories.map(category => category.Id);
+        }
 
-        if (!_.isNil(_.get(params, 'categoryName')) && _.isEmpty(this.subCategories))
-          return this.categoryService.getCategoryByName(_.get(params, 'categoryName')).pipe(
-            tap(category => this.category = category),
-            mergeMap(category => this.categoryService.getCategoryBranchChildren([category.Id])),
-            tap(categoryList =>{
-              this.joins = [new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', categoryList.map(c => c.Id))])];
-            })
-          );
-          else if (!_.isEmpty(this.subCategories)) {
-            _.remove(this.joins, (j) => j.type === ProductCategory);
-            this.joins.push(new AJoin(ProductCategory, 'Id', 'ProductId', [new ACondition(ProductCategory, 'ClassificationId', 'In', this.subCategories.map(category => category.Id))]));
-            return of(null);
-          }
-        else{
+        if (get(this.searchString, 'length') < 3) {
+          this.hasSearchError = true;
           return of(null);
+        } else {
+          return this.productService.getProducts(categories, this.pageSize, this.page, sortBy, 'ASC', this.searchString, this.conditions);
         }
       }),
-      mergeMap(() => this.searchService.searchProducts(this.searchString, this.pageSize, this.page, this.sortField, 'ASC', this.conditions, this.joins))
     ).subscribe(r => {
-      this.searchResults$.next(r);
+      this.data$.next(r);
     });
   }
 
@@ -154,10 +148,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * Filters peers Category from the categorylist.
    * @param categoryList Array of Category.
    */
-  onCategory(categoryList: Array<Category>){
-    const category = _.get(categoryList, '[0]');
-    if(category)
-      this.router.navigate(['/products/category', category.Name]);
+  onCategory(categoryList: Array<Category>) {
+    const category = get(categoryList, '[0]');
+    if (category) {
+      this.subCategories = [];
+      this.page = 1;
+      this.router.navigate(['/products/category', category.Id]);
+    }
   }
 
   /**
@@ -165,7 +162,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * @param evt Event object that was fired.
    */
   onPage(evt) {
-    if(_.get(evt, 'page') !== this.page){
+    if (get(evt, 'page') !== this.page) {
       this.page = evt.page;
       this.getResults();
     }
@@ -193,8 +190,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * This function is called when adding saerch filter criteria to product grid.
    * @param condition Search filter query to filter products.
    */
-  onFilterAdd(condition: ACondition){
-    _.remove(this.conditions, (c) => _.isEqual(c, condition));
+  onFilterAdd(condition: ACondition) {
+    remove(this.conditions, (c) => isEqual(c, condition));
     this.page = 1;
 
     this.conditions.push(condition);
@@ -205,8 +202,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * This function is called when removing saerch filter criteria to product grid.
    * @param condition Search filter query to remove from products grid.
    */
-  onFilterRemove(condition: ACondition){
-    _.remove(this.conditions, (c) => _.isEqual(c, condition));
+  onFilterRemove(condition: ACondition) {
+    remove(this.conditions, (c) => isEqual(c, condition));
     this.page = 1;
     this.getResults();
   }
@@ -225,7 +222,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   onSortChange(evt) {
     this.page = 1;
-    this.sortField = evt === 'Name' ? evt : null;
+    this.sortField = evt;
     this.getResults();
   }
 
@@ -243,7 +240,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * @param event Event Object that was fired.
    */
   handlePicklistChange(event: any) {
-    if (this.productFamilyFilter) _.remove(this.conditions, this.productFamilyFilter);
+    if (this.productFamilyFilter) remove(this.conditions, this.productFamilyFilter);
     if (event.length > 0) {
       let values = [];
       event.forEach(item => values.push(item));
