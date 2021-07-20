@@ -1,0 +1,61 @@
+<div *ngIf="item;">
+  <div class="table-responsive mt-2">
+    <table class="table table-borderless h-100 bg-white">
+      <tbody>
+        <tr>
+          <td class="w-50">
+            <div *ngIf="attachments; else noAttachments" class="pr-2">
+              <div class="mb-2" *ngFor="let attachment of attachments">
+                <div class="row">
+                  <div class="col"><span class="text-underline cursor-pointer">{{attachment?.Name}}</span></div>
+                  <div class="col"><span>{{(attachment?.BodyLength/1024).toFixed(2)}} KB</span></div>
+                  <div class="col"><span>{{attachment?.CreatedDate | date:'short'}}</span></div>
+                  <div class="col"><span class="cursor-pointer" [tooltip]="'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.REMOVE_ATTACHMENT' | translate">&times;</span></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <ng-template #noAttachments>
+                <p>{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.NO_ATTACHMENTS' | translate}}</p>
+              </ng-template>
+            </div>
+          </td>
+          <td class="w-50 border-left pl-4">
+            <div class="form-group">
+              <div *ngIf="uploadFileList && !hasSizeError">
+                <div class="d-flex justify-content-between" *ngFor="let file of uploadFileList">
+                  <div class="w-70"><span>{{file?.name}}</span></div>
+                  <div class="w-30"><span>{{(file?.size/1024).toFixed(2)}} KB</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="file-upload" class="">{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.TITLE' | translate}}</label>
+              <div class="bg-white border border-secondary text-center align-middle file-upload" id="file-upload">
+                <label class="p-5" for="browse">{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.INPUT_LABEL' | translate}}<span
+                    class="pl-1 text-underline cursor-pointer">{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.BROWSE' | translate}}</span></label>
+                <input id="browse" class="position-absolute p-5" type="file" (change)="fileChange($event)"
+                  data-max-size="26214400" />
+              </div>
+              <div class="mt-2" *ngIf="hasSizeError">
+                <p class="text-danger">{{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.FILE_SIZE_EXCEEDED_ERROR' | translate}}
+                </p>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="d-flex justify-content-end">
+                <button type="reset" class="btn btn-link m-2" data-style="zoom-in" data-spinner-color="black">
+                  <small>{{'COMMON.CLEAR' | translate }}</small>
+                </button>
+                <button class="btn btn-primary m-2" (click)="onSubmit()" data-style="zoom-in">
+                  <span class="oi"></span>
+                  <small>{{'COMMON.SUBMIT' | translate }}</small>
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<nav class="navbar navbar-light bg-white d-flex justify-content-between">
+  <span class="navbar-brand">
+      {{'MY_ACCOUNT.REORDER.SELECT_ITEMS' | translate}}
+  </span>
+  <button class="btn btn-primary" [ladda]="cartLoading" data-style="zoom-in">{{'COMMON.ADD_TO_CART' | translate}}</button>
+</nav>
+
+<ng-container *ngIf="cart; else loading">
+  <div class="card mt-4">
+    <div class="card-body">
+      <h4 class="card-title">{{'COMMON.REORDER' | translate}}</h4>
+      <small class="font-weight-bold">{{'MY_ACCOUNT.REORDER.PRE_SELECTION_OF_PRODUCTS' | translate}}</small>
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th scope="col">{{'COMMON.PRODUCT' | translate}}</th>
+            <th scope="col">{{'MY_ACCOUNT.REORDER.UNIT' | translate}}</th>
+            <th scope="col">{{'MY_ACCOUNT.REORDER.BASE' | translate}}</th>
+            <th scope="col">{{'COMMON.QUANTITY' | translate}}</th>
+            <th scope="col">{{'MY_ACCOUNT.REORDER.TOTAL_PRICE' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+  <!--         <tr *ngFor="let item of cart?.LineItems?.records"> -->
+          <tr *ngFor="let item of cart?.LineItems">
+            <th scope="row">{{item.Product.Name}}</th>
+            <td><apt-price [record]="item" [type]="'unit'" [quantity]="item.Quantity"></apt-price></td>
+            <td><apt-price [record]="item" [type]="'base'" [quantity]="item.Quantity"></apt-price></td>
+            <td>
+              <apt-input-quantity min="0" default="0" [(ngModel)]="item.Quantity" (ngModelChange)="item.QFTotalqty__c = $event"></apt-input-quantity>
+            </td>
+            <td>
+              <span class="text-muted"><apt-price [record]="item" [quantity]="item.Quantity" [type]="'total'"></apt-price></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center py-5">
+    <apt-spinner></apt-spinner>
+  </div>
+</ng-template>
+
+

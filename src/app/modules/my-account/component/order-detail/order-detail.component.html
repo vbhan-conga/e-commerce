@@ -1,0 +1,127 @@
+<nav class="navbar navbar-light bg-white d-flex justify-content-between">
+  <span class="navbar-brand">
+    {{'COMMON.ORDER' | translate}} {{order?.Name}}
+  </span>
+</nav>
+
+<div *ngIf="order; else loading">
+  <div class="row mt-3">
+    <div class="col-12 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.BILLING_ADDRESS' | translate}}</h5>
+          {{order?.PrimaryContact?.FirstName}} {{order?.PrimaryContact?.LastName}}
+          <apt-address [ngModel]="order?.PrimaryContact" name="billingAddress" [readonly]="true"></apt-address>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.SHIPPING_ADDRESS' | translate}}</h5>
+          {{order?.PrimaryContact?.FirstName}} {{order?.PrimaryContact?.LastName}}
+          <apt-address [ngModel]="order?.PrimaryContact" name="shippingAddress" type="shipping" [readonly]="true"></apt-address>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.PAYMENT_INFO' | translate}}</h5>
+          <dl>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.PAYMENT_TYPE' | translate}}:</dt>
+            <dd>{{'MY_ACCOUNT.ORDER_DETAIL.PURCHASE_ORDER' | translate}}</dd>
+
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.PO_NUMBER' | translate}}:</dt>
+            <dd>{{order?.PONumber}}</dd>
+
+            <dt>{{'COMMON.TOTAL_AMOUNT' | translate}}:</dt>
+            <dd>{{(order | OrderPricePipe | async)?.netPrice$ | async}}</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_SUMMARY' | translate}}</h5>
+          <dl>
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_ID' | translate}}:</dt>
+            <dd>{{order?.Name}}</dd>
+
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_DATE' | translate}}:</dt>
+            <dd>{{order?.CreatedDate | date:'short'}}</dd>
+
+            <dt>{{'MY_ACCOUNT.ORDER_DETAIL.ORDER_STATUS' | translate}}:</dt>
+            <dd>{{order?.Status}}</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+      <div class="card p-0">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{'COMMON.ITEMS' | translate}}</th>
+              <th scope="col">{{'COMMON.YOUR_PRICE' | translate}}</th>
+              <th scope="col" class="text-center">{{'COMMON.QUANTITY' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let lineItem of order?.OrderLineItems">
+              <tr *ngIf="lineItem.LineType === 'Product/Service'">
+                <th scope="row">
+                  <div class="media align-items-stretch">
+                    <img class="mr-3" [src]="lineItem.Product.IconId | image" width="75" height="60"
+                      alt="Generic placeholder image">
+                    <div class="media-body d-flex flex-column justify-content-between">
+                      <div>
+                        <h6 class="m-0">
+                          <a href="javascript:void(0)" [routerLink]="['/products', lineItem.Product[identifier]]">{{lineItem.Product?.Name}}</a>
+                        </h6>
+                        <small>
+                          <strong>{{'COMMON.PRODUCT_CODE' | translate}}:</strong>&nbsp;{{lineItem.Product.ProductCode}}
+                          <!-- <a class="d-block mt-1" href="javascript:void(0)" *ngIf="lineItem.HasOptions" (click)="openModal(configurationTemplate, lineItem)">
+                            <span class="oi oi-wrench mr-1"></span>Configuration
+                          </a> -->
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </th>
+                <td>{{(lineItem | OrderLineItemPricePipe | async)?.netPrice$ | async}}</td>
+                <td class="text-center">
+                  <span class="badge badge-light p-3 text-muted">{{lineItem.Quantity}}</span>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #configurationTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{'MY_ACCOUNT.ORDER_DETAIL.PRODUCT_CONFIG' | translate}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <apt-product-configuration-summary [item]="selectedLineItem"></apt-product-configuration-summary> -->
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center py-5">
+    <apt-spinner></apt-spinner>
+  </div>
+</ng-template>

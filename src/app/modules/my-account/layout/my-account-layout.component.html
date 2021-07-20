@@ -1,0 +1,55 @@
+<div class="bg-white border-bottom">
+  <apt-breadcrumb [label]="'HEADER.MY_ACCOUNT' | translate"></apt-breadcrumb>
+</div>
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="media">
+            <img *ngIf="!isAIC" [src]="(me$ | async)?.SmallPhotoUrl | image : false" class="img-circle" width="45" height="45" />
+            <div class="media-body ml-3">
+              <h5 class="my-0">{{(me$ | async)?.FirstName}} {{(me$ | async)?.LastName}}</h5>
+              <small class="d-block">{{'MY_ACCOUNT.LAST_LOGIN_DATE' | translate}} {{(me$ | async)?.LastLoginDate | date : 'short'}}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mt-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/dashboard']" [routerLinkActive]="'active'">
+            <i class="fas fa-tachometer-alt"></i>
+            {{'MY_ACCOUNT.OVERVIEW' | translate}}
+          </a>
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/orders']" [routerLinkActive]="'active'">
+            <i class="fas fa-list-ul"></i>
+            {{'COMMON.ORDERS' | translate}}
+          </a>
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/quotes']" [routerLinkActive]="'active'">
+            <i class="fas fa-pencil-alt"></i>
+            {{'COMMON.QUOTES' | translate}}
+          </a>
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/carts']" [routerLinkActive]="'active'">
+            <i class="fas fa-shopping-cart"></i>
+            {{'COMMON.CARTS' | translate}}
+          </a>
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/addresses']" [routerLinkActive]="'active'">
+            <i class="fas fa-address-book"></i>
+            {{'COMMON.ADDRESS_BOOK' | translate}}
+          </a>
+          <!-- <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/catalog']" [routerLinkActive]="'active'">
+            <span class="oi oi-list-rich"></span>
+            Catalog
+          </a> -->
+          <a class="nav-link" href="javascript:void(0)" [routerLink]="['/my-account/settings']" [routerLinkActive]="'active'">
+            <i class="fas fa-cog"></i>
+            {{'MY_ACCOUNT.SETTINGS' | translate}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-9 p-0">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
