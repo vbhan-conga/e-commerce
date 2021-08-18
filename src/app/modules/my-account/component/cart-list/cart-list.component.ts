@@ -8,7 +8,7 @@ import { map, mergeMap, take } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { AObject, AFilter, ACondition } from '@congacommerce/core';
-import { CartService, Cart, PriceService, CartApiService } from '@congacommerce/ecommerce';
+import { CartService, Cart, PriceService } from '@congacommerce/ecommerce';
 import { TableOptions, TableAction } from '@congacommerce/elements';
 
 /**
@@ -63,7 +63,7 @@ export class CartListComponent implements OnInit {
               prop: 'IsActive',
               label: 'Is Active',
               sortable: false,
-              value: (record: Cart) => CartApiService.getCurrentCartId() === record.Id ? of('Yes') : of('No')
+              value: (record: Cart) => CartService.getCurrentCartId() === record.Id ? of('Yes') : of('No')
             },
             {
               prop: 'TotalAmount',
@@ -94,10 +94,11 @@ export class CartListComponent implements OnInit {
               label: 'Delete',
               theme: 'danger',
               validate: (record: Cart) => this.canDelete(record),
-              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList).pipe(map(()=> this.getCartAggregate()))
+              action: (recordList: Array<Cart>) => this.cartService.deleteCart(recordList).pipe(map(()=> this.getCartAggregate())),
+              disableReload: true
             } as TableAction
           ],
-          highlightRow: (record: Cart) => of(CartApiService.getCurrentCartId() === record.Id),
+          highlightRow: (record: Cart) => of(CartService.getCurrentCartId() === record.Id),
           children: ['SummaryGroups'],
           filters: this.getFilters()
         },
@@ -160,8 +161,9 @@ export class CartListComponent implements OnInit {
 
   /**@ignore */
   canActivate(cartToActivate: Cart) {
-    return (CartApiService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
+    return (CartService.getCurrentCartId() !== cartToActivate.Id && cartToActivate.Status !== 'Finalized');
   }
+
 
   /**@ignore */
   getFilters(): Array<AFilter> {

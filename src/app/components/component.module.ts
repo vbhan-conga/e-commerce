@@ -10,7 +10,8 @@ import { AttachmentComponent } from './attachment/attachment.component';
 import { PricingModule } from '@congacommerce/ecommerce';
 import { ToastrModule } from 'ngx-toastr';
 
-import { MiniProfileModule, MiniCartModule, ConstraintRuleModule, IconModule, PriceModule, DirectivesModule, ProductSearchModule } from '@congacommerce/elements';
+import { MiniProfileModule, MiniCartModule, ConstraintRuleModule,
+  IconModule, PriceModule, DirectivesModule, ProductSearchModule, PriceModalModule } from '@congacommerce/elements';
 
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -32,7 +33,8 @@ import { CategoryCarouselComponent } from './category-carousel/category-carousel
     TooltipModule.forRoot(),
     ToastrModule.forRoot({ onActivateTick: true }),
     DirectivesModule,
-    ProductSearchModule
+    ProductSearchModule,
+    PriceModalModule
   ],
   exports : [
     HeaderComponent,

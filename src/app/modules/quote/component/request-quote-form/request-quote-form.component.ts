@@ -1,12 +1,14 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import * as moment from 'moment';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Observable, zip, of } from 'rxjs';
-import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, NoteService, Note, Account, Contact } from '@congacommerce/ecommerce';
 import { take } from 'rxjs/operators';
 import { get } from 'lodash';
+
+import { ApiService } from '@congacommerce/core';
+import { AccountService, ContactService, UserService, Quote, QuoteService, Cart, Note, Account, Contact } from '@congacommerce/ecommerce';
 import { LookupOptions } from '@congacommerce/elements';
 
+import * as moment from 'moment';
 @Component({
   selector: 'app-request-quote-form',
   templateUrl: './request-quote-form.component.html',
@@ -22,7 +24,7 @@ export class RequestQuoteFormComponent implements OnInit {
   rfpDueDate: Date = new Date();
   _moment = moment;
   note: Note = new Note();
-  comments: any =[];
+  comments: any = [];
 
   shipToAccount$: Observable<Account>;
   billToAccount$: Observable<Account>;
@@ -33,14 +35,17 @@ export class RequestQuoteFormComponent implements OnInit {
   };
   contactId: string;
 
-  constructor(public quoteService: QuoteService, private accountService: AccountService, private userService: UserService, private noteService:NoteService
-    , private contactService: ContactService) { }
+  constructor(public quoteService: QuoteService,
+    private accountService: AccountService,
+    private userService: UserService,
+    private apiService: ApiService,
+    private contactService: ContactService) { }
 
   ngOnInit() {
     this.quote.Name = 'Test';
     zip(this.accountService.getCurrentAccount(), this.userService.me(),(this.cart.Proposald? this.quoteService.get([get(this.cart, 'Proposald.Id')]) : of(null))).pipe(take(1)).subscribe(([account, user, quote]) => {
         this.quote.ShipToAccount = account;
-        this.quote.ShipToAccountId =  account.Id;
+        this.quote.ShipToAccountId = account.Id;
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
         this.quote.Primary_Contact = get(user, 'Contact');
@@ -50,7 +55,7 @@ export class RequestQuoteFormComponent implements OnInit {
           this.comments = get(quote, '[0].Notes', []);
         }
         this.quoteChange();
-    });
+      });
   }
 
   /**
@@ -100,6 +105,6 @@ export class RequestQuoteFormComponent implements OnInit {
    * Event handler for when the primary contact input changes.
    * @param event The event that was fired.
    */
-  handlePrimaryContactChange(event: any) {}
+  handlePrimaryContactChange(event: any) { }
 
 }

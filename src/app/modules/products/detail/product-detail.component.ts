@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { get, isNil, find, forEach, maxBy, filter, has, defaultTo } from 'lodash';
-import { combineLatest, Observable, Subscription, of } from 'rxjs';
-import { switchMap, map as rmap, distinctUntilKeyChanged } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription, of, BehaviorSubject } from 'rxjs';
+import { switchMap, map as rmap, distinctUntilChanged } from 'rxjs/operators';
 
 import {
     CartService,
@@ -17,7 +17,6 @@ import {
     PriceListItemService
 } from '@congacommerce/ecommerce';
 import { ProductConfigurationComponent, ProductConfigurationSummaryComponent, ProductConfigurationService } from '@congacommerce/elements';
-
 @Component({
     selector: 'app-product-detail',
     templateUrl: './product-detail.component.html',
@@ -28,7 +27,7 @@ import { ProductConfigurationComponent, ProductConfigurationSummaryComponent, Pr
  */
 export class ProductDetailComponent implements OnInit, OnDestroy {
 
-    viewState$: Observable<ProductDetailsState>;
+    viewState$: BehaviorSubject<ProductDetailsState> = new BehaviorSubject<ProductDetailsState>(null);
     recommendedProducts$: Observable<Array<Product>>;
 
     attachments$: Observable<Array<ProductInformation>>;
@@ -48,8 +47,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     /**@ignore */
     relatedTo: CartItem;
+    netPrice: number = 0;
 
     private configurationLayout: string = null;
+
+    currentQty: number;
 
     @ViewChild(ProductConfigurationSummaryComponent, { static: false })
     configSummaryModal: ProductConfigurationSummaryComponent;
@@ -67,8 +69,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.viewState$ = this.route.params.pipe(
+        this.subscriptions.push(this.route.params.pipe(
             switchMap(params => {
+                this.productConfigurationService.onChangeConfiguration(null);
                 this.product = null;
                 this.cartItemList = null;
                 const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
@@ -77,22 +80,22 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 if (get(params, 'cartItem'))
                     cartItem$ = this.cartService.getMyCart().pipe(
                         rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') })),
-                        distinctUntilKeyChanged('TotalQuantity')
+                        distinctUntilChanged((oldCli, newCli) => newCli.Quantity === this.currentQty)
                     );
                 return combineLatest([product$, cartItem$, this.storefrontService.getStorefront()]);
             }),
             rmap(([product, cartItemList, storefront]) => {
                 const pli = PriceListItemService.getPriceListItemForProduct(product as Product);
-                const qty = isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1)
-                this.productConfigurationService.changeProductQuantity(qty);
+                this.currentQty = isNil(cartItemList) ? defaultTo(get(pli, 'DefaultQuantity'), 1) : get(cartItemList, 'Quantity', 1);
+                this.productConfigurationService.changeProductQuantity(this.currentQty);
                 return {
                     product: product as Product,
                     relatedTo: cartItemList,
-                    quantity: qty,
+                    quantity: this.currentQty,
                     storefront: storefront
                 };
             })
-        );
+        ).subscribe(r => this.viewState$.next(r)));
 
         this.recommendedProducts$ = this.route.params.pipe(
             switchMap(params => this.crService.getRecommendationsForProducts([get(params, 'id')])),
@@ -104,10 +107,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         );
 
         this.subscriptions.push(this.productConfigurationService.configurationChange.subscribe(response => {
-            if (response && has(response, 'configurationPending')) {
-                this.configurationPending = get(response, 'configurationPending');
+            if (get(response, 'configurationChanged')) this.configurationChanged = true;
+            this.netPrice = defaultTo(get(response, 'netPrice'), 0);
+            this.relatedTo = get(this.viewState$, 'value.relatedTo');
+            if (response && has(response, 'hasErrors')) {
+                this.configurationPending = get(response, 'hasErrors');
             }
             else {
+                this.configurationPending = false;
                 this.product = get(response, 'product');
                 this.cartItemList = get(response, 'itemList');
                 if (get(response, 'configurationFlags.optionChanged') || get(response, 'configurationFlags.attributeChanged')) this.configurationChanged = true;
@@ -145,18 +152,18 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
         }
 
-        if (get(cartItems, 'LineItems') && this.configurationLayout === 'Embedded') {
+        if (get(cartItems, 'LineItems') && this.viewState$.value.storefront.ConfigurationLayout === 'Embedded') {
             cartItems = get(cartItems, 'LineItems');
         }
         this.relatedTo = primaryItem;
         if (!isNil(primaryItem) && (get(primaryItem, 'HasOptions') || get(primaryItem, 'HasAttributes')))
-            this.router.navigate(['/products', get(this, 'product.Id'), get(primaryItem, 'Id')]);
+            this.router.navigate(['/products', get(this.viewState$, 'value.product.Id'), get(primaryItem, 'Id')]);
 
         this.productConfigurationService.onChangeConfiguration({
             product: get(this, 'product'),
             itemList: cartItems,
-            configurationFlags: null,
-            configurationPending: false
+            configurationChanged: false,
+            hasErrors: false
         });
     }
 

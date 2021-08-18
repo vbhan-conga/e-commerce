@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Product, Storefront, StorefrontService, CategoryService, ProductService, Category } from '@congacommerce/ecommerce';
 import { first, get, slice, reverse, sortBy, last, isNil } from 'lodash';
-
 /**
  * Default Home/Landing componenet for Apttus Digital Commerce.
  * Shows Storefront image(s), products from first two categories of price list and Footer

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService, Account } from '@congacommerce/ecommerce';
 import { Observable } from 'rxjs';
 
+// A change
+
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'nav-account',

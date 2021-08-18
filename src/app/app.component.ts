@@ -7,9 +7,6 @@ import { Title } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { ProductSelectionService } from '@congacommerce/elements';
 
-
-// A subtle change
-
 @Component({
   selector: 'app-root',
   template: `

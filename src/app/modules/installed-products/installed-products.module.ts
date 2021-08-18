@@ -12,7 +12,7 @@ import { RenewalFilterComponent } from './components/renewal-filter.component';
 import { ApttusModule } from '@congacommerce/core';
 import { PriceTypeFilterComponent } from './components/price-type-filter.component';
 import { AssetActionFilterComponent } from './components/asset-action-filter.component';
-import { AssetListModule, FilterModule, InputSelectModule, TableModule, ChartModule, DataFilterModule, ConstraintRuleModule } from '@congacommerce/elements';
+import { AssetListModule, FilterModule, InputSelectModule, TableModule, ChartModule, DataFilterModule, ConstraintRuleModule, AlertModule } from '@congacommerce/elements';
 import { ButtonModule } from '@congacommerce/elements';
 
 @NgModule({
@@ -32,7 +32,8 @@ import { ButtonModule } from '@congacommerce/elements';
     InstalledProductsRoutingModule,
     AccordionModule.forRoot(),
     ButtonModule,
-    ConstraintRuleModule
+    ConstraintRuleModule,
+    AlertModule
   ],
   declarations: [
     InstalledProductsLayoutComponent,
