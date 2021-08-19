@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "reference-base": {
+    "ecommerce": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -18,23 +18,14 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "preserveSymlinks": true,
-            "outputPath": "../core/force-app/main/default/staticresources/Ecommerce",
+            "outputPath": "dist/ecommerce",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "tsconfig.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/manifest.json",
-              "src/apttus-worker.js",
-              "src/web.config",
-              "src/caas.css",
-              {
-                "glob": "**/*",
-                "input": "node_modules/crypto-js",
-                "output": "/assets/scripts/"
-              }
+              "src/assets"
             ],
             "styles": [
               "src/styles.scss",
@@ -83,54 +74,36 @@
                 }
               ]
             },
-            "dc4": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dc4.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "tsConfig": "tsconfig.prod.json",
-              "serviceWorker": false,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "10mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "30kb"
-                }
-              ]
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "reference-base:build"
+            "browserTarget": "ecommerce:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "reference-base:build:production"
+              "browserTarget": "ecommerce:build:production"
+            },
+            "development": {
+              "browserTarget": "ecommerce:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "reference-base:build"
+            "browserTarget": "ecommerce:build"
           }
         },
         "test": {
@@ -165,31 +138,9 @@
           }
         }
       }
-    },
-    "reference-base-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "reference-base:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
     }
   },
-  "defaultProject": "reference-base",
+  "defaultProject": "ecommerce",
   "cli": {
     "analytics": false
   }
