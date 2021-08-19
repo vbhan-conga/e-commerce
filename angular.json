@@ -60,7 +60,7 @@
               "vendorChunk": false,
               "buildOptimizer": true,
               "serviceWorker": false,
-              "tsConfig": "tsconfig.app.json",
+              "tsConfig": "tsconfig.json",
               "budgets": [
                 {
                   "type": "initial",
@@ -129,7 +129,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
+              "src/tsconfig.json",
               "src/tsconfig.spec.json"
             ],
             "exclude": [
