@@ -22,7 +22,6 @@ import localeMxExtra from '@angular/common/locales/extra/es-MX';
 import localeFr from '@angular/common/locales/fr';
 import localeFrExtra from '@angular/common/locales/extra/fr';
 import { registerLocaleData } from '@angular/common';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -53,9 +52,7 @@ import { OrderDetailsGuard } from '@congacommerce/ecommerce';
       loader: { provide: TranslateLoader, useClass: TranslatorLoaderService }
     }),
     HttpClientModule,
-    ComponentModule,
-    ServiceWorkerModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: false })
+    ComponentModule
   ],
   providers: [RouteGuard, AuthGuard, AboGuard, ConfigureGuard, ConstraintRuleGuard, OrderDetailsGuard],
   bootstrap: [AppComponent]
