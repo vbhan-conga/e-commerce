@@ -32,5 +32,5 @@ export const environment: Configuration = {
   storefront: 'D-Commerce',
   organizationId: '00D6C0000000fln',
   sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: '	https://dc6-cpqqacommunity1.cs63.force.com/ecom'
+  endpoint: 'https://dc6-cpqqacommunity1.cs63.force.com/ecom'
 };
