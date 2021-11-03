@@ -5,7 +5,7 @@ import { ComponentModule } from '../../components/component.module';
 import { CompareRoutingModule } from './compare-routing.module';
 import { CompareLayoutComponent } from './layout/compare-layout.component';
 import { PricingModule } from '@congacommerce/ecommerce';
-import { ProductCardModule, IconModule, ProductCompareModule } from '@congacommerce/elements';
+import { ProductCardModule, IconModule, ProductCompareModule, AlertModule } from '@congacommerce/elements';
 
 @NgModule({
   imports: [
@@ -16,7 +16,8 @@ import { ProductCardModule, IconModule, ProductCompareModule } from '@congacomme
     ComponentModule,
     ProductCardModule,
     IconModule,
-    ProductCompareModule
+    ProductCompareModule,
+    AlertModule
   ],
   declarations: [
     CompareLayoutComponent,

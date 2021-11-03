@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, ProductResult, SearchService, ProductService } from '@congacommerce/ecommerce';
+import { CategoryService, Category, ProductResult, SearchService, ProductService, Cart, CartService } from '@congacommerce/ecommerce';
 import { get, compact, map, isNil, remove, isEqual, isEmpty } from 'lodash';
 import { ACondition, AJoin } from '@congacommerce/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
@@ -52,6 +52,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   searchString: string = null;
   data$: BehaviorSubject<ProductResult> = new BehaviorSubject<ProductResult>(null);
   productFamilies$: Observable<Array<string>> = new Observable<Array<string>>();
+  cart$: Observable<Cart>;
   category: Category;
   subscription: Subscription;
   hasSearchError: boolean;
@@ -72,7 +73,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * @ignore
    */
-  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService) { }
+  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService,
+    private cartService:CartService) { }
 
   /**
    * @ignore
@@ -87,7 +89,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.getResults();
-
+    this.cart$ = this.cartService.getMyCart();
     this.productFamilies$ = this.productService.query({ groupBy: ['Family'] })
       .pipe(
         rmap(productList => compact(map(productList, 'Family')))

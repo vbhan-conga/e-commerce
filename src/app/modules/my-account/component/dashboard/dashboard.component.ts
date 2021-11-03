@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
 
     this.totalOrderAmount$ = this.orderService.query({
       aggregate: true
-    }).pipe(map(res => get(first(res), 'SUM_OrderAmount')));
+    }).pipe(map(res => get(first(res), 'SUM_OrderAmount') || '0'));
 
     this.recentOrders$ = this.orderService.query({
       aggregate: true,

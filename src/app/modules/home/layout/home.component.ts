@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { Product, Storefront, StorefrontService, CategoryService, ProductService, Category } from '@congacommerce/ecommerce';
+import { Product, Storefront, StorefrontService, CategoryService, ProductService, Category, CartService, Cart } from '@congacommerce/ecommerce';
 import { first, get, slice, reverse, sortBy, last, isNil } from 'lodash';
 /**
  * Default Home/Landing componenet for Apttus Digital Commerce.
@@ -24,13 +24,15 @@ export class HomeComponent implements OnInit {
   productListB$: Observable<Array<Product>>;
 
   categories: Array<Category>;
+  cart$: Observable<Cart>;
 
-  constructor(private storefrontService: StorefrontService, private categoryService: CategoryService, private productService: ProductService) {
+  constructor(private storefrontService: StorefrontService,
+    private cartService:CartService, private categoryService: CategoryService, private productService: ProductService) {
   }
 
   ngOnInit() {
     this.storefront$ = this.storefrontService.getStorefront();
-
+    this.cart$ =  this.cartService.getMyCart();
     this.categoryService.getCategories()
       .pipe(
         take(1)

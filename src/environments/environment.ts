@@ -1,7 +1,7 @@
 import { Configuration } from '@congacommerce/core';
 export const environment: Configuration = {
   production: false,
-  defaultImageSrc: 'https://loremflickr.com/320/240/hardware',
+  defaultImageSrc: './assets/images/default.png',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
   enableErrorLogging: false,
@@ -20,7 +20,6 @@ export const environment: Configuration = {
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
-  proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
@@ -28,8 +27,8 @@ export const environment: Configuration = {
   skipPricing: true,
   skipRules: false,
   packageNamespace: 'Apttus_WebStore',
-  // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'ECommerce',
-  organizationId: '00D3I0000008n7g',
-  endpoint: 'https://dc4-cpqqacommunity1.cs123.force.com/ecom'
+  // *** TODO: Replace with details of your Salesforce org ***
+  storefront: 'Storefront Name',
+  organizationId: 'Salesforce Org Id',
+  endpoint: 'Community Site Url'
 };

@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { ConfigurationService, ACondition } from '@congacommerce/core';
-import { ProductService, Product } from '@congacommerce/ecommerce';
-import { ProductDrawerService, ProductSelectionService } from '@congacommerce/elements';
+import { ProductService, Product,  Cart, CartService } from '@congacommerce/ecommerce';
+import { ProductDrawerService, ProductSelectionService} from '@congacommerce/elements';
+import { Observable } from 'rxjs';
 
 
 /**
@@ -30,8 +31,12 @@ export class CompareLayoutComponent implements OnInit, OnDestroy {
   * Defined default value if one not found in configuration.
   */
   identifier: string = 'Id';
+  /**
+  * Defined default value if one not found in configuration.
+  */
+   cart$: Observable<Cart>;
 
-  constructor(private config: ConfigurationService, private activatedRoute: ActivatedRoute, private router: Router, private productService: ProductService, private productSelectionService: ProductSelectionService, private productDrawerService: ProductDrawerService) {
+  constructor(private config: ConfigurationService, private activatedRoute: ActivatedRoute, private cartService: CartService, private router: Router, private productService: ProductService, private productSelectionService: ProductSelectionService, private productDrawerService: ProductDrawerService) {
     this.identifier = this.config.get('productIdentifier');
   }
 
@@ -46,6 +51,7 @@ export class CompareLayoutComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(params => {
+      this.cart$ = this.cartService.getMyCart();
       let newIdentifiers = decodeURIComponent(params.products).split(',');
       if (newIdentifiers.length > 5) {
         newIdentifiers = newIdentifiers.splice(0, 5);

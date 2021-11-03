@@ -11,7 +11,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './layout/home.component';
 import { ComponentModule } from '../../components/component.module';
 
-import { ProductCarouselModule, JumbotronModule, IconModule } from '@congacommerce/elements';
+import { ProductCarouselModule, JumbotronModule, IconModule, AlertModule } from '@congacommerce/elements';
 
 @NgModule({
   imports: [
@@ -20,7 +20,8 @@ import { ProductCarouselModule, JumbotronModule, IconModule } from '@congacommer
     ComponentModule,
     JumbotronModule,
     ProductCarouselModule,
-    IconModule
+    IconModule,
+    AlertModule
   ],
   declarations: [HomeComponent]
 })
