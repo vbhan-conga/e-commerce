@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup, LineItemService } from '@congacommerce/ecommerce';
+import { Cart, CartService, Product, ConstraintRuleService, CartItemService, ItemGroup, LineItemService, OrderLineItem, QuoteLineItem } from '@congacommerce/ecommerce';
 import { Observable, combineLatest } from 'rxjs';
 import { map as rmap } from 'rxjs/operators';
 import { get } from 'lodash';
@@ -22,7 +22,10 @@ export class ManageCartComponent implements OnInit {
    */
   view$: Observable<ManageCartState>;
 
-  constructor(private cartService: CartService, private cartItemService: CartItemService, private crService: ConstraintRuleService, private cdr: ChangeDetectorRef) { }
+  constructor(private cartService: CartService, 
+              private cartItemService: CartItemService, 
+              private crService: ConstraintRuleService, 
+              private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.view$ = combineLatest(

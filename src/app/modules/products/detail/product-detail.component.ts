@@ -14,7 +14,8 @@ import {
     ProductInformation,
     StorefrontService,
     Storefront,
-    PriceListItemService
+    PriceListItemService,
+    Cart
 } from '@congacommerce/ecommerce';
 import { ProductConfigurationComponent, ProductConfigurationSummaryComponent, ProductConfigurationService } from '@congacommerce/elements';
 @Component({
@@ -47,6 +48,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     /**@ignore */
     relatedTo: CartItem;
+    cart: Cart;
     netPrice: number = 0;
 
     private configurationLayout: string = null;
@@ -76,12 +78,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
                 this.cartItemList = null;
                 const product$ = (this.product instanceof Product && get(params, 'id') === this.product.Id) ? of(this.product) :
                     this.productService.fetch(get(params, 'id'));
-                let cartItem$ = of(null);
-                if (get(params, 'cartItem'))
-                    cartItem$ = this.cartService.getMyCart().pipe(
-                        rmap(cart => find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') })),
-                        distinctUntilChanged((oldCli, newCli) => newCli.Quantity === this.currentQty)
-                    );
+                const cartItem$ = this.cartService.getMyCart().pipe(
+                    rmap(cart => {
+                        this.cart = cart;
+                        return find(get(cart, 'LineItems'), { Id: get(params, 'cartItem') })
+                    }),
+                    distinctUntilChanged((oldCli, newCli) => get(newCli, 'Quantity') === this.currentQty)
+                );
                 return combineLatest([product$, cartItem$, this.storefrontService.getStorefront()]);
             }),
             rmap(([product, cartItemList, storefront]) => {

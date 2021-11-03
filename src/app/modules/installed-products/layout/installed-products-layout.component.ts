@@ -3,7 +3,7 @@ import { ACondition, AFilter, AObject, Operator } from '@congacommerce/core';
 import { CartService, AssetService, AssetLineItemExtended, AssetLineItem, StorefrontService, Product, Cart } from '@congacommerce/ecommerce';
 import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { get, map, includes, filter, split, forEach, values, groupBy, isEmpty, omit, isArray, mapValues, sumBy, zipObject, concat, last } from 'lodash';
 import { AssetModalService, TableOptions, TableAction, ChildRecordOptions, FilterOptions, CheckState } from '@congacommerce/elements';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -27,6 +27,10 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * The view object used for rendering information in the template.
    */
   view$: BehaviorSubject<AssetListView> = new BehaviorSubject<AssetListView>(null);
+  /**
+   * cart record
+   */
+  cart: Cart;
   /**
    * Value of the days to renew filter.
    */
@@ -97,8 +101,9 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
     new AFilter(this.assetService.type, [
       new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'),
       new ACondition(this.assetService.type, 'Product.ConfigurationType', 'NotEqual', 'Option'),
-      new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', true),
-      new ACondition(this.assetService.type, 'AssetStatus', 'Equal', 'Activated')])];
+      new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', true)
+    ])
+  ];
   /**
    * Flag to pre-select items in the table component.
    */
@@ -148,10 +153,10 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * @ignore
    */
   ngOnInit() {
-    if (!_.isEmpty(_.get(this.route, 'snapshot.queryParams'))) {
+    if (!isEmpty(get(this.route, 'snapshot.queryParams'))) {
       this.preselectItemsInGroups = true;
-      this.assetActionFilter = this.assetActionMap[_.get(this.route, 'snapshot.queryParams.action')];
-      this.advancedFilters = [new AFilter(this.assetService.type, _.map(_.split(decodeURIComponent(_.get(this.route, 'snapshot.queryParams.productIds')), ','), id => new ACondition(this.assetService.type, 'ProductId', 'Equal', id)), null, 'OR')];
+      this.assetActionFilter = this.assetActionMap[get(this.route, 'snapshot.queryParams.action')];
+      this.advancedFilters = [new AFilter(this.assetService.type, map(split(decodeURIComponent(get(this.route, 'snapshot.queryParams.productIds')), ','), id => new ACondition(this.assetService.type, 'ProductId', 'Equal', id)), null, 'OR')];
     }
     this.loadView();
   }
@@ -167,11 +172,12 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         filters: this.getFilters()
       }),
       this.storefrontService.getStorefront(),
-      this.cartService.getMyCart()
+      this.cartService.getMyCart(),
     ).subscribe(([chartData, storefront, cart]) => {
+      this.cart = cart;
       this.view$.next({
         tableOptions: {
-          groupBy: 'Product.Name',
+          groupBy: 'Name',
           filters: this.getFilters(),
           defaultSort: {
             column: 'CreatedDate',
@@ -190,31 +196,20 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
           lookups: [
             {
               field: 'AttributeValueId'
-            },
+            }, 
             {
-              field: 'ProductId',
-              children: [
-                {
-                  field: 'AssetLineItems',
-                  filters: [
-                    new AFilter(this.assetService.type, [
-                        new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'),
-                        new ACondition(this.assetService.type, 'PriceType', 'In', ['Recurring', 'Usage']),
-                        new ACondition(this.assetService.type, 'BundleAssetId', 'NotNull', null)])
-                  ]
-                }
-              ]
+              field: 'ProductId'
             }
           ],
-          actions: _.filter(this.getMassActions(cart), action => _.includes(_.get(storefront, 'AssetActions'), _.get(action, 'label'))),
+          actions: filter(this.getMassActions(cart), action => includes(get(storefront, 'AssetActions'), get(action, 'label'))),
           childRecordOptions: {
             filters: [new AFilter(this.assetService.type, [new ACondition(this.assetService.type, 'LineType', 'NotEqual', 'Option'), new ACondition(Product, 'Product.ConfigurationType', 'NotEqual', 'Option'), new ACondition(this.assetService.type, 'IsPrimaryLine', 'Equal', false)])],
             relationshipField: 'BundleAssetId',
             childRecordFields: ['ChargeType', 'SellingFrequency', 'StartDate', 'EndDate', 'NetPrice', 'Quantity', 'AssetStatus', 'PriceType']
           } as ChildRecordOptions,
           selectItemsInGroupFunc: this.preselectItemsInGroups ? (recordData => {
-            _.forEach(_.values(_.groupBy(recordData, 'Product.Name')), v => {
-              const recentAsset = _.last(_.filter(v, x => !_.isEmpty(x.get('actions'))));
+            forEach(values(groupBy(recordData, 'Product.Name')), v => {
+              const recentAsset = last(filter(v, x => !isEmpty(x.get('actions'))));
               if (recentAsset) recentAsset.set('state', CheckState.CHECKED);
             });
           }) : null,
@@ -222,13 +217,13 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         } as TableOptions,
         assetType: AssetLineItemExtended,
         colorPalette: this.colorPalette,
-        barChartData: _.isArray(chartData)
-          ? _.omit(_.mapValues(_.groupBy(chartData, 'Apttus_Config2__PriceType__c'), s => _.sumBy(s, 'total_records')), 'null')
-          : _.zipObject([_.get(chartData, 'Apttus_Config2__PriceType__c')], _.map([_.get(chartData, 'Apttus_Config2__PriceType__c')], key => _.get(chartData, 'total_records'))),
-        doughnutChartData: _.isArray(chartData)
-          ? _.omit(_.mapValues(_.groupBy(chartData, 'Apttus_Config2__PriceType__c'), s => _.sumBy(s, 'SUM_NetPrice')), 'null')
-          : _.zipObject([_.get(chartData, 'Apttus_Config2__PriceType__c')], _.map([_.get(chartData, 'Apttus_Config2__PriceType__c')], key => _.get(chartData, 'SUM_NetPrice'))),
-        assetActionValue: !_.isEmpty(_.get(this.route, 'snapshot.queryParams')) ? decodeURIComponent(_.get(this.route, 'snapshot.queryParams.action')) : 'All',
+        barChartData: isArray(chartData)
+          ? omit(mapValues(groupBy(chartData, 'Apttus_Config2__PriceType__c'), s => sumBy(s, 'total_records')), 'null')
+          : zipObject([get(chartData, 'Apttus_Config2__PriceType__c')], map([get(chartData, 'Apttus_Config2__PriceType__c')], key => get(chartData, 'total_records'))),
+        doughnutChartData: isArray(chartData)
+          ? omit(mapValues(groupBy(chartData, 'Apttus_Config2__PriceType__c'), s => sumBy(s, 'SUM_NetPrice')), 'null')
+          : zipObject([get(chartData, 'Apttus_Config2__PriceType__c')], map([get(chartData, 'Apttus_Config2__PriceType__c')], key => get(chartData, 'SUM_NetPrice'))),
+        assetActionValue: !isEmpty(get(this.route, 'snapshot.queryParams')) ? decodeURIComponent(get(this.route, 'snapshot.queryParams.action')) : 'All',
         advancedFilterList: this.advancedFilters
       } as AssetListView);
       this.preselectItemsInGroups = false;
@@ -283,7 +278,7 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
    * Get all the currently applied filters.
    */
   private getFilters() {
-    return _.concat(this.defaultFilters, this.advancedFilters, this.renewFilter, this.priceTypeFilter, this.assetActionFilter, this.productFamilyFilter);
+    return concat(this.defaultFilters, this.advancedFilters, this.renewFilter, this.priceTypeFilter, this.assetActionFilter, this.productFamilyFilter);
   }
 
   private getMassActions(cart: Cart): Array<TableAction> {
@@ -293,8 +288,8 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         massAction: true,
         label: 'Renew',
         theme: 'primary',
-        validate(record: AssetLineItemExtended): boolean {
-          return record.canRenew() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
+        validate(record: AssetLineItemExtended, childRecords: Array<AssetLineItemExtended>): boolean {
+          return record.canRenew(childRecords) && !(filter(get(cart, 'LineItems'), (item) => get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openRenewModal(
@@ -309,8 +304,8 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         massAction: true,
         label: 'Terminate',
         theme: 'danger',
-        validate(record: AssetLineItemExtended): boolean {
-          return record.canTerminate() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
+        validate(record: AssetLineItemExtended, childRecords: Array<AssetLineItemExtended>): boolean {
+          return record.canTerminate(childRecords) && !(filter(get(cart, 'LineItems'), (item) => get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openTerminateModal(
@@ -325,8 +320,8 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         massAction: false,
         label: 'Buy More',
         theme: 'primary',
-        validate(record: AssetLineItemExtended): boolean {
-          return record.canBuyMore() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
+        validate(record: AssetLineItemExtended, childRecords: Array<AssetLineItemExtended>): boolean {
+          return record.canBuyMore() && !(filter(get(cart, 'LineItems'), (item) => get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openBuyMoreModal(
@@ -340,8 +335,8 @@ export class InstalledProductsLayoutComponent implements OnInit, OnDestroy {
         icon: 'fa-wrench',
         label: 'Change Configuration',
         theme: 'primary',
-        validate(record: AssetLineItemExtended): boolean {
-          return record.canChangeConfiguration() && !(_.filter(_.get(cart, 'LineItems'), (item) => _.get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
+        validate(record: AssetLineItemExtended, childRecords: Array<AssetLineItemExtended>): boolean {
+          return record.canChangeConfiguration() && !(filter(get(cart, 'LineItems'), (item) => get(item, 'AssetLineItem.Id') ===  record.Id).length > 0);
         },
         action: (recordList: Array<AObject>): Observable<void> => {
           this.assetModalService.openChangeConfigurationModal(

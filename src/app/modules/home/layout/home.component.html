@@ -1,4 +1,6 @@
 <div>
+    
+    <apt-alert [record]="cart$ | async" [autoRun]="false"></apt-alert>
     <apt-jumbotron *ngIf="storefront$ | async as storefront; else loading" [storefront]="storefront" imagePosition="left" height="45vh;" class="animated fadeIn" class="d-block" brightness="50"></apt-jumbotron>
     <div class="container py-5">
         <div *ngIf="categories">

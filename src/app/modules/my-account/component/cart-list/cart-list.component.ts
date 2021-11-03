@@ -4,12 +4,12 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Observable, of, combineLatest } from 'rxjs';
 import { ClassType } from 'class-transformer/ClassTransformer';
 import { TranslateService } from '@ngx-translate/core';
-import { map, mergeMap, take } from 'rxjs/operators';
+import { map, mergeMap, take, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 import { AObject, AFilter, ACondition } from '@congacommerce/core';
 import { CartService, Cart, PriceService } from '@congacommerce/ecommerce';
-import { TableOptions, TableAction } from '@congacommerce/elements';
+import { TableOptions, TableAction, RevalidateCartService } from '@congacommerce/elements';
 
 /**
  * Cart list Component loads and shows all the carts for logged in user.
@@ -32,8 +32,11 @@ export class CartListComponent implements OnInit {
   /**
    * @ignore
    */
-  constructor(private cartService: CartService, public priceService: PriceService,
-    private modalService: BsModalService, private translateService: TranslateService) { }
+  constructor(private cartService: CartService, 
+              public priceService: PriceService,
+              private modalService: BsModalService, 
+              private translateService: TranslateService,
+              private revalidateCartService: RevalidateCartService) { }
   /**
    * @ignore
    */
@@ -84,7 +87,7 @@ export class CartListComponent implements OnInit {
               label: 'Set Active',
               theme: 'primary',
               validate: (record: Cart) => this.canActivate(record),
-              action: (recordList: Array<Cart>) => this.cartService.setCartActive(_.first(recordList), true),
+              action: (recordList: Array<Cart>) => this.setCartActive(_.first(recordList)),
               disableReload: true
             } as TableAction,
             {
@@ -133,6 +136,7 @@ export class CartListComponent implements OnInit {
     this.loading = true;
     this.cartService.createNewCart(this.cart).pipe(take(1)).subscribe(
       res => {
+        this.revalidateCartService.setRevalidateLines();
         this.loading = false;
         this.modalRef.hide();
         this.loadView();
@@ -168,9 +172,14 @@ export class CartListComponent implements OnInit {
   /**@ignore */
   getFilters(): Array<AFilter> {
     return new Array(new AFilter(this.cartService.type, [
-      new ACondition(this.cartService.type, 'ParentConfigurationId', 'Equal', null),
       new ACondition(this.cartService.type, 'Status', 'NotEqual', 'Saved')
     ]));
+  }
+
+  setCartActive(record): Observable<Cart> {
+    return this.cartService.setCartActive(record, true).pipe(
+      tap(() => this.revalidateCartService.setRevalidateLines())
+    );
   }
 
 }

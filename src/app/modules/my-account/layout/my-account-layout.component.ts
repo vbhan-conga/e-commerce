@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService, User } from '@congacommerce/ecommerce';
+import { UserService, User, Cart, CartService } from '@congacommerce/ecommerce';
 import { Observable } from 'rxjs';
 import { ConfigurationService } from '@congacommerce/core';
 
@@ -18,17 +18,20 @@ export class MyAccountLayoutComponent implements OnInit {
   me$: Observable<User>;
   /** @ignore */
   isAIC: boolean = false;
+  cart$: Observable<Cart>;
 
   /** @ignore */
   constructor(
     private userService: UserService,
-    private config: ConfigurationService
+    private config: ConfigurationService,
+    private cartService: CartService
     ) { }
 
   /** @ignore */
   ngOnInit() {
     this.me$ = this.userService.me();
     this.isAIC = this.config.platform() === 'AIC';
+    this.cart$ = this.cartService.getMyCart();
   }
 
 }

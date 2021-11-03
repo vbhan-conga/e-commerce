@@ -20,7 +20,7 @@ import { CartListComponent } from './component/cart-list/cart-list.component';
 import { ApttusModule } from '@congacommerce/core';
 import { OrderDetailComponent } from './component/order-detail/order-detail.component';
 import { ReorderComponent } from './component/reorder/reorder.component';
-import { IconModule, AddressModule, PriceModule, InputQuantityModule, ConfigurationSummaryModule, BreadcrumbModule, InputFieldModule, OutputFieldModule, ChartModule, DataFilterModule, ConstraintRuleModule } from '@congacommerce/elements';
+import { IconModule, AddressModule, PriceModule, InputQuantityModule, ConfigurationSummaryModule, BreadcrumbModule, InputFieldModule, OutputFieldModule, ChartModule, DataFilterModule, ConstraintRuleModule, AlertModule } from '@congacommerce/elements';
 import { TableModule } from '@congacommerce/elements';
 
 
@@ -47,7 +47,8 @@ import { TableModule } from '@congacommerce/elements';
     OutputFieldModule,
     ChartModule,
     TableModule,
-    ConstraintRuleModule
+    ConstraintRuleModule,
+    AlertModule
   ],
   declarations: [MyAccountLayoutComponent, OrderListComponent, DashboardComponent, QuoteListComponent, WishlistsComponent, AddressBookComponent, SettingsComponent, CartListComponent, OrderDetailComponent, ReorderComponent],
   exports: []

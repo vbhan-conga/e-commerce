@@ -4,10 +4,10 @@ import {
   ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService, QuoteLineItem
 } from '@congacommerce/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, map, take, mergeMap, switchMap, startWith } from 'rxjs/operators';
+import { filter, map, take, mergeMap, switchMap, startWith, tap } from 'rxjs/operators';
 import { get, set, compact, uniq, find, cloneDeep, sum, defaultTo } from 'lodash';
 import { Observable, of, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { ExceptionService, LookupOptions } from '@congacommerce/elements';
+import { ExceptionService, LookupOptions, RevalidateCartService } from '@congacommerce/elements';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ACondition, ApiService } from '@congacommerce/core';
@@ -78,7 +78,8 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private quoteLineItemService: QuoteLineItemService,
     private apiService: ApiService,
-    private accountService: AccountService) { }
+    private accountService: AccountService,
+    private revalidateCartService: RevalidateCartService) { }
 
   ngOnInit() {
     this.getQuote();
@@ -193,7 +194,10 @@ export class QuoteDetailsComponent implements OnInit, OnDestroy {
 
   editQuoteItems(quoteId: string) {
     this.edit_loader = true;
-    this.quoteService.convertQuoteToCart(quoteId).pipe(take(1)).subscribe(res => {
+    this.quoteService.convertQuoteToCart(quoteId).pipe(
+      tap(() => this.revalidateCartService.setRevalidateLines()),
+      take(1)
+    ).subscribe(res => {
       this.edit_loader = false;
       this.ngZone.run(() => this.router.navigate(['/carts', 'active']));
     },
