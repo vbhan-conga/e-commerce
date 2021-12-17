@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, NgZone } from '@angular/core';
+import { Component, OnInit, TemplateRef, NgZone,ChangeDetectionStrategy} from '@angular/core';
 import { AccountLocationService, AccountLocation } from '@congacommerce/ecommerce';
 import { Observable } from 'rxjs';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -19,7 +19,9 @@ import * as _ from 'lodash';
       left: auto !important;
       right: 0px !important;
     }
-  `]
+  `],
+  providers: [],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class AddressBookComponent implements OnInit {
   modalRef: BsModalRef;
@@ -28,6 +30,7 @@ export class AddressBookComponent implements OnInit {
    */
   addressList$: Observable<Array<AccountLocation>>;
   addressEdit: AccountLocation;
+  addressLocation: AccountLocation;
   loading: boolean = false;
   message: string = null;
 
@@ -49,6 +52,7 @@ export class AddressBookComponent implements OnInit {
    */
   newAddress(template: TemplateRef<any>) {
     this.addressEdit = new AccountLocation();
+    this.addressLocation = this.addressEdit;
     this.message = null;
     this.modalRef = this.modalService.show(template, { class : 'modal-lg'});
   }
@@ -58,6 +62,7 @@ export class AddressBookComponent implements OnInit {
   */
   saveAddress(){
     this.ngZone.run(() => this.loading = true);
+    this.addressEdit = _.cloneDeep(this.addressLocation);
     this.accountLocationService.saveLocationToAccount(this.addressEdit)
       .subscribe(
         res => {
@@ -105,6 +110,7 @@ export class AddressBookComponent implements OnInit {
    */
   edit(location: AccountLocation, template: TemplateRef<any>){
     this.addressEdit = location;
-    this.modalRef = this.modalService.show(template);
+    this.addressLocation = _.cloneDeep(this.addressEdit);
+    this.modalRef = this.modalService.show(template, { class : 'modal-lg'});
   }
 }
