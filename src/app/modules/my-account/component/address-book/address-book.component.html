@@ -68,7 +68,7 @@
           <apt-input-field placeholder="{{'COMMON.NAME' | translate}}" [(ngModel)]="addressEdit.Name" field="Name"
             [entity]="addressEdit" name="addressName" [labelClass]="'font-weight-normal'"></apt-input-field>
         </div>
-        <apt-address [(ngModel)]="addressEdit" name="addressInput"></apt-address>
+        <apt-address [ngModel]="addressLocation" name="addressInput"></apt-address>
         <small class="text-danger animated fadeIn" *ngIf="message">{{message}}</small>
       </div>
       <div class="d-flex justify-content-end modal-footer">
