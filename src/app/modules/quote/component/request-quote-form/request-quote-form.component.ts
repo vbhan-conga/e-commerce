@@ -49,7 +49,7 @@ export class RequestQuoteFormComponent implements OnInit {
         this.quote.BillToAccount = account;
         this.quote.BillToAccountId =  account.Id;
         this.quote.Primary_Contact = get(user, 'Contact');
-        this.contactId = get(user, 'ContactId');
+        this.contactId = this.cart.Proposald? get(quote[0],'Primary_ContactId') : get(user, 'ContactId');
         if(get(this.cart, 'Proposald.Id')) {
           this.quote = get(this.cart, 'Proposald');
           this.comments = get(quote, '[0].Notes', []);
