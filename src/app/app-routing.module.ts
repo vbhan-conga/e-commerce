@@ -78,6 +78,11 @@ const routes: Routes = [
     data: { title: 'Payment Message'}
   },
   {
+    path: 'favorites',
+    loadChildren: () => import('./modules/favorite/favorite.module').then(m => m.FavoriteModule),
+    data: { title: 'Favorites'}
+  },
+  {
     path: '**',
     redirectTo: ''
   }
