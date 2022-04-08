@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, NgZone, ChangeDetectorRef, OnDestroy, ViewEncapsulation } from '@angular/core';
 import {
   UserService, QuoteService, Quote, Order, OrderService, Note, NoteService, AttachmentService,
   ProductInformationService, ItemGroup, LineItemService, Attachment, QuoteLineItemService, Account, AccountService, QuoteLineItem
@@ -16,7 +16,8 @@ import { ACondition, ApiService } from '@congacommerce/core';
 @Component({
   selector: 'app-quote-details',
   templateUrl: './quote-details.component.html',
-  styleUrls: ['./quote-details.component.scss']
+  styleUrls: ['./quote-details.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class QuoteDetailsComponent implements OnInit, OnDestroy {
 

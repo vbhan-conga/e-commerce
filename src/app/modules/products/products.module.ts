@@ -32,9 +32,10 @@ import {
   InputFieldModule,
   InputSelectModule,
   ConstraintRuleModule,
-  AlertModule
+  AlertModule,
+  SelectAllModule
 } from '@congacommerce/elements';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { DetailsModule } from '../details/details.module';
 import { ProductListComponent } from './list/product-list.component';
 
@@ -64,7 +65,8 @@ import { ProductListComponent } from './list/product-list.component';
     InputFieldModule,
     FilterModule,
     ConstraintRuleModule,
-    AlertModule
+    AlertModule,
+    SelectAllModule
   ],
   providers : [ConfigureGuard],
   declarations: [ProductDetailComponent,

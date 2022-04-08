@@ -62,8 +62,9 @@ export class AddressBookComponent implements OnInit {
   */
   saveAddress(){
     this.ngZone.run(() => this.loading = true);
-    this.addressEdit = _.cloneDeep(this.addressLocation);
-    this.accountLocationService.saveLocationToAccount(this.addressEdit)
+    const requestBody = _.cloneDeep(this.addressLocation);
+    requestBody.Name= this.addressEdit.Name;
+    this.accountLocationService.saveLocationToAccount(requestBody)
       .subscribe(
         res => {
           this.loading = false;

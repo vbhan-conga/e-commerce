@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryService, Category, ProductResult, SearchService, ProductService, Cart, CartService } from '@congacommerce/ecommerce';
+import { Category, ProductResult, ProductService, Cart, CartService } from '@congacommerce/ecommerce';
 import { get, compact, map, isNil, remove, isEqual, isEmpty } from 'lodash';
 import { ACondition, AJoin } from '@congacommerce/core';
 import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
@@ -73,8 +73,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
   /**
    * @ignore
    */
-  constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService, private categoryService: CategoryService, private router: Router, public productService: ProductService, private translateService: TranslateService,
-    private cartService:CartService) { }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router, 
+    public productService: ProductService, 
+    private translateService: TranslateService,
+    private cartService:CartService
+  ) { }
 
   /**
    * @ignore

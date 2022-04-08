@@ -97,6 +97,7 @@ export class RequestQuoteFormComponent implements OnInit {
       .pipe(take(1))
       .subscribe((newPrimaryContact: Contact) => {
         this.quote.Primary_Contact = newPrimaryContact;
+        this.quote.Primary_ContactId = newPrimaryContact.Id;
         this.onQuoteUpdate.emit(this.quote);
       });
   }
