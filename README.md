@@ -1,6 +1,6 @@
 # Digital Commerce Core Reference Template
 
-This is the base reference application for the conga ecommerce product. Follow the below instructions to get started. See the [docs](https://cmoyle336.github.io/sdk-docs/overview.html) for more detailed instructions on interacting with the underlying SDK.
+This is the base reference application for the conga ecommerce product. Follow the below instructions to get started. See the [docs](https://apttus-ecom.github.io/May22/index.html) for more detailed instructions on interacting with the underlying SDK.
 
 ---
 ## Table of content 
@@ -12,9 +12,8 @@ This is the base reference application for the conga ecommerce product. Follow t
 - [Debugging](#debugging)
 - [Response Encryption](#response-encryption)
 - [Product identifier](#product-identifier)
-- [Setup the proxy for local development](#setup-the-proxy-for-local-development)
 - [Development server](#development-server)
-- [Angular command](#code-scaffolding)
+- [Angular CLI command](#code-scaffolding)
 - [Build](#build)
 - [Running unit tests](#running-unit-tests)
 - [Running end-to-end tests](#running-end-to-end-tests)
@@ -25,7 +24,7 @@ This is the base reference application for the conga ecommerce product. Follow t
 <div id="install-managed-package"/>
 
 ## Install the managed package in your org
-Login to your org and use the following [link](https://login.salesforce.com/packaging/installPackage.apexp?p0=04to000000047xK) to install the managed package. The managed package requires a password, and you'll need to reach out to an Conga representative to obtain this.
+Login to your org and use the following [link](https://login.salesforce.com/packaging/installPackage.apexp?p0=04to000000047xK) to install the managed package. The managed package requires a password, and you'll need to reach out to Conga representative to obtain this.
 
 <div id="prerequisites"/>
 
@@ -38,9 +37,9 @@ You will need Node js, NPM, and Angular CLI to work with this project
 
 To make sure you have them available on your machine, try running the following command.
 
-npm -v : To check nodejs version,
+npm -v : To check NPM version,
 
-node -v : To check NPM version
+node -v : To check nodejs version,
 
 ng --version : To check Angular CLI version
 
@@ -66,16 +65,25 @@ Either clone this repository or fork it on GitHub and clone your fork:
 git clone https://github.com/congacommerce/e-commerce.git
 ```
 ### Update .npmrc file
-To install given SDK version you need to setup auth token in .npmrc file.
-1.  "@congacommerce/core": "^2201.0.73",
-2.  "@congacommerce/ecommerce": "^2201.0.73",
-3.  "@congacommerce/elements": "^2201.0.73",
+### Update .npmrc file
 
+To install below SDK version from **Package.json** you need to setup auth token in .npmrc file.
 
 ```
 @congacommerce:registry=https://npm.pkg.github.com
+
 npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+
 ```
+
+The following are the SDKs from **Package.json** where the latest versions will be updated:-
+
+1.  "@congacommerce/core": "^package version",
+
+2.  "@congacommerce/ecommerce": "^package version",
+
+3.  "@congacommerce/elements": "^package version",
+
 ### Dependency installation
 To install dependency run npm install command.
 ```
@@ -88,13 +96,10 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ### Updating the environment file
 
-The last three fields of the environment file will be Replace with details of the Salesforce org
+The last three fields of the environment file will be replaced with details of the Salesforce org
 
-  storefront: 'Storefront Name',
+![Image](https://user-images.githubusercontent.com/94816916/162710880-b38b6b52-d884-4b1e-a76e-89361e765449.PNG)
 
-  organizationId: 'Salesforce Org Id',
-
-  endpoint: 'Community Site Url'
   
 ### Run server
 
@@ -121,7 +126,7 @@ Sentry will be installed and running and, if you run into errors, you may see a 
 <div id="enabledisable-localization"/>
 
 ## Enable/disable localization
-If you do not have multi-currency enabled in your org, you must turn off multi-currency support in your storefront in the src/app/salesforce.config.ts file.
+If you do not have multi-currency enabled in your org, you must turn off multi-currency support in your storefront in the src/environments/environment.ts file.
 ```json
 {
     "enableMultiCurrency" : false
@@ -160,22 +165,18 @@ to any product field
 }
 ```
 
-<div id="setup-the-proxy-for-local-development"/>
-
-## Setup the proxy for local development
-In the root directory, there is a file named 'proxy.config.json'. This allows you to make SOAP API calls from your local development server (for functionality like login and reprice cart). Populate the 'target' attributes in that file with the instance url of your community.
-
-
 <div id="code-scaffolding"/>
 
-## Angular command
+## Angular CLI command
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate` to generate directives, pipes, guards etc as mentioned below
+
+`ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Deploy to your salesforce org
 Deploy your Digital Commerce application on your Salesforce Org.
 
-Refer the [docs](https://documentation.conga.com/digital-commerce/december-21/deploying-the-application-to-salesforce-161156294.html)
+Refer the [docs](https://documentation.conga.com/digital-commerce/may-22/deploying-the-application-to-salesforce-161156294.html)
 
 <div id="running-unit-tests"/>
 
@@ -193,7 +194,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Digital Commerce SDK
 
-The objective of this section is to provide information about reference templates, base libraries, models, and components that can be inherited and reused. This section also provides information about services that are sufficient for most of the business logic. You can create orders, create quotes, and more with the **DC SDK**. See the [Docs](https://documentation.conga.com/digital-commerce/december-21/digital-commerce-sdk-167772458.html) for more information.
+The objective of this section is to provide information about reference templates, base libraries, models, and components that can be inherited and reused. This section also provides information about services that are sufficient for most of the business logic. You can create orders, create quotes, and more with the **DC SDK**. See the [Docs](https://documentation.conga.com/digital-commerce/may-22/digital-commerce-sdk-167772458.html) for more information.
 
 <div id="digital-commerce-for-rest-api-developers"/>
 
@@ -201,7 +202,7 @@ The objective of this section is to provide information about reference template
 
 This section is designed to provide administrators with information on the micro-service architecture that enables commerce into any part of an application.
 
-Refer the [Docs](https://documentation.conga.com/digital-commerce/december-21/digital-commerce-for-rest-api-developers-157582100.html) to get detailed information of DC REST API
+Refer the [Docs](https://documentation.conga.com/digital-commerce/may-22/digital-commerce-for-rest-api-developers-157582100.html) to get detailed information of DC REST API
 
 <div id="further-help"/>
 
