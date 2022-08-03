@@ -259,3 +259,13 @@ dl{
 .collapse, .collapsing{
     background-color: $white;
 }
+
+apt-line-item-table-row {
+    tr:first-child {
+        >td:first-child {
+            >div:first-child {
+                display: none;
+            }
+        }
+    }
+}
