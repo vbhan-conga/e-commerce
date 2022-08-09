@@ -182,7 +182,7 @@
                 <input id="browse" class="d-none p-5" type="file" (change)="fileChange($event)"
                        data-max-size="26214400" />
               </div>
-              <div class="mt-2" *ngIf="hasSizeError">
+              <div class="mt-2" *ngIf="hasSizeError && file != null">
                 <p class="text-danger">
                   {{'MY_ACCOUNT.QUOTE_DETAIL.ATTACHMENTS.FILE_SIZE_EXCEEDED_ERROR' | translate}}
                 </p>

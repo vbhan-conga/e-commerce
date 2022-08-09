@@ -7,11 +7,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { OrderDetailComponent } from './layout/order-details/order-detail.component';
+import { DetailsGuard } from '@congacommerce/ecommerce';
 
 const routes: Routes = [
   {
     path: ':id',
-    component: OrderDetailComponent
+    component: OrderDetailComponent,
+    canActivate: [DetailsGuard]
   },
   {
     path: '',
