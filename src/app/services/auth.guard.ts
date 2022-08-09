@@ -15,15 +15,18 @@ export class AuthGuard implements CanActivate {
             if(res)
                 return true;
             else{
-                return this.redirectLogin(route, state.url);
+                return this.redirectUrl(route, state.url);
             }
         }));
     }
 
-    redirectLogin(route: ActivatedRouteSnapshot,url: string): boolean {
+    redirectUrl(route: ActivatedRouteSnapshot,url: string): boolean {
         // Store the attempted URL for redirecting
        let params: Params={};
        if(url) params.redirectUrl = window.location.href;
+       if(url.includes('/proposals')) {
+           return this.redirectToLogin(params);
+       }
         // Navigate to the login page with extras
         this.router.navigate(['/'], {
             queryParams: params ? params : route.queryParams,
@@ -31,5 +34,12 @@ export class AuthGuard implements CanActivate {
         });
         return false;
       }
-
+    
+      redirectToLogin(redirectQueryParams){
+        this.router.navigate(['/login'], {
+            queryParams: redirectQueryParams,
+            queryParamsHandling: 'merge',
+        });
+        return false;
+      }
 }

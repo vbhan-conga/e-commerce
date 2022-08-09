@@ -32,7 +32,10 @@
             "COUPON_LIMIT_EXCEEDED": "fr_FR Coupon {{name}} usage limit is exceeded"
         },
         "APPLICATION_ERROR_TOASTR_TITLE": "fr_FR Application Error",
-        "INVALID_QUANTITY": "fr_FR Cannot add a quantity less than 1"
+        "INVALID_QUANTITY": "fr_FR Cannot add a quantity less than 1",
+        "SESSION_EXPIRATION":"fr_FR Session is expired, login again to proceed",
+        "INACCESSIBLE_ORDER":"fr_FR Order not found or you do not have access to this order",
+        "INACCESSIBLE_QUOTE":"fr_FR Quote not found or you do not have access to this quote"
     },
     "SUCCESS": {
         "TITLE": "fr_FR Success",
@@ -341,7 +344,8 @@
         "PRODUCTNAME": "fr_FR Product Name",
         "REVALIDATION_WARNING": "fr_FR Some items in your cart need to be validated",
         "VALIDATE_CART": "fr_FR Validate Cart",
-        "SUCCESSFULLY_REVALIDATED": "fr_FR Successfully revalidated"
+        "SUCCESSFULLY_REVALIDATED": "fr_FR Successfully revalidated",
+        "REVALIDATION_INFO":"fr_FR If you select an optional product, the entire bundle including other optional products too will be revalidated to maintain sanctity of the bundle product"
     },
     "CREATE_QUOTE": {
         "QUOTE_SUMMARY": "fr_FR QUOTE SUMMARY",
