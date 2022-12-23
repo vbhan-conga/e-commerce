@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private titleService: Title,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private BatchSelectionService: BatchSelectionService) {
+    private batchSelectionService: BatchSelectionService) {
   }
 
   ngOnInit() {
@@ -50,8 +50,8 @@ export class AppComponent implements OnInit, OnDestroy {
       });
 
     this.showDrawer$ = combineLatest([
-      this.BatchSelectionService.getSelectedProducts(),
-      this.BatchSelectionService.getSelectedLineItems()
+      this.batchSelectionService.getSelectedProducts(),
+      this.batchSelectionService.getSelectedLineItems()
     ])
       .pipe(map(([productList, lineItemList]) => get(productList, 'length', 0) > 0 || get(lineItemList, 'length', 0) > 0));
   }
