@@ -33,6 +33,7 @@ export class LoginLayoutComponent {
    * Flag used to show/hide loader
    */
   loading: boolean = false;
+
   loginMessage: string;
 
   constructor(
