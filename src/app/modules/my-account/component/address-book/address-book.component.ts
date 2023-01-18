@@ -5,9 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
-/**
- * Address book component for managing list of addresses. Can  Add, Edit, Delete and Set any address as default.
- */
+
 @Component({
   selector: 'app-address-book',
   templateUrl: './address-book.component.html',

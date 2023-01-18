@@ -11,9 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./manage-cart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-/**
- * Manage Cart component is used to show the list of cart line item(s)  and summary of the cart.
- */
+
 export class ManageCartComponent implements OnInit {
 
   @ViewChild('discardChangesTemplate') discardChangesTemplate: TemplateRef<any>;

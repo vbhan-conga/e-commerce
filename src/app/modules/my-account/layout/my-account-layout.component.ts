@@ -4,10 +4,6 @@ import { map } from 'rxjs/operators';
 import { ConfigurationService } from '@congacommerce/core';
 import { UserService, User, Cart, CartService, StorefrontService } from '@congacommerce/ecommerce';
 
-/**
- * Loads all saved layouts for logged-in user profile. One can save UI specific settings as per their preference and use it later. 
- * Different user UI preferences helps different business case.
- */
 @Component({
   selector: 'app-my-account-layout',
   templateUrl: './my-account-layout.component.html',

@@ -35,7 +35,7 @@ import {
   AlertModule,
   SelectAllModule
 } from '@congacommerce/elements';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { DetailsModule } from '../details/details.module';
 import { ProductListComponent } from './list/product-list.component';
 

@@ -15,7 +15,7 @@ import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ProductCarouselModule, ConfigurationSummaryModule, PriceModule, PromotionModule, InputDateModule,
         LineItemTableRowModule, BreadcrumbModule, IconModule, TaxPopHoverModule, PriceSummaryModule,
         AlertModule, ConstraintRuleModule, SelectAllModule } from '@congacommerce/elements';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { QuoteModule } from '../quote/quote.module';
 
 @NgModule({
