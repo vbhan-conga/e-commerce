@@ -1,7 +1,7 @@
 import { Configuration } from '@congacommerce/core';
 export const environment: Configuration = {
   production: false,
-  defaultImageSrc: 'https://loremflickr.com/320/240/hardware',
+  defaultImageSrc: './assets/images/default.png',
   defaultCountry: 'US',
   defaultLanguage: 'en-US',
   enableErrorLogging: false,
@@ -29,8 +29,7 @@ export const environment: Configuration = {
   skipRules: false,
   packageNamespace: 'Apttus_WebStore',
   // *** TODO: Replace with Salesforce environment variables ***
-  storefront: 'D-Commerce',
-  organizationId: '00D790000008jFd',
-  sentryDsn: 'https://6ad10246235742dc89f89b4c3f53f4aa@sentry.io/1230495',
-  endpoint: 'https://dcdomain--dc2.sandbox.my.site.com/ecom'
+  storefront: 'Storefront Name',
+  organizationId: 'Salesforce Org Id',
+  endpoint: 'Community Site Url'
 };
