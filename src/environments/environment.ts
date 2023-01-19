@@ -20,7 +20,6 @@ export const environment: Configuration = {
   productIdentifier: 'Id',
   type: 'Salesforce',
   debounceTime: 1000,
-  proxy: 'https://apttus-proxy.herokuapp.com',
   useIndexedDB: false,
   expandDepth: 7,
   hashRouting: false,
@@ -28,7 +27,7 @@ export const environment: Configuration = {
   skipPricing: true,
   skipRules: false,
   packageNamespace: 'Apttus_WebStore',
-  // *** TODO: Replace with Salesforce environment variables ***
+  // *** TODO: Replace with details of your Salesforce org ***
   storefront: 'Storefront Name',
   organizationId: 'Salesforce Org Id',
   endpoint: 'Community Site Url'
