@@ -6,9 +6,6 @@ import { get, set, isEmpty, forEach } from 'lodash';
 import { Favorite, FavoriteService, LineItemService, ItemGroup, User, UserService, FavoriteScope } from '@congacommerce/ecommerce';
 import { ExceptionService } from '@congacommerce/elements';
 
-/**
- * Favorite details component shows the details of the selected favorite configuration.
- */
 @Component({
   selector: 'app-favorite-details',
   templateUrl: './favorite-details.component.html',

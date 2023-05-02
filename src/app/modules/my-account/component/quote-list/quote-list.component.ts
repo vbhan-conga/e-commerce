@@ -9,10 +9,6 @@ import { AFilter } from '@congacommerce/core';
 import { QuoteService, Quote, LocalCurrencyPipe } from '@congacommerce/ecommerce';
 import { TableOptions } from '@congacommerce/elements';
 
-/** @ignore */
-/**
- * Loads list of quotes for logged in user.
- */
 @Component({
   selector: 'app-quote-list',
   templateUrl: './quote-list.component.html',

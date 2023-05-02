@@ -5,7 +5,7 @@ import {
 } from '@congacommerce/ecommerce';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, take, mergeMap, switchMap, startWith, tap } from 'rxjs/operators';
-import { get, set, compact, uniq, find, cloneDeep, sum, defaultTo } from 'lodash';
+import { get, set, compact, uniq, find, cloneDeep, sum, defaultTo} from 'lodash';
 import { Observable, of, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { ExceptionService, LookupOptions, RevalidateCartService } from '@congacommerce/elements';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';

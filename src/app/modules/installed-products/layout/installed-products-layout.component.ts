@@ -10,12 +10,6 @@ import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { ClassType } from 'class-transformer/ClassTransformer';
 
-/**
- * Installed Product Layout is used to set the structure of the installed products page.
- *
- * @example
- * <app-installed-products-layout></app-installed-products-layout>
- */
 @Component({
   selector: 'app-installed-products-layout',
   templateUrl: './installed-products-layout.component.html',

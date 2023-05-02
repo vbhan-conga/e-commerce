@@ -8,12 +8,6 @@ import {get, last} from 'lodash';
 import { combineLatest } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-/**
- * Login Layout component is used to get the user details and verify it with connected org.
- *
- * @example
- * <app-login-layout></app-login-layout>
- */
 @Component({
   selector: 'app-login-layout',
   templateUrl: './login-layout.component.html',
