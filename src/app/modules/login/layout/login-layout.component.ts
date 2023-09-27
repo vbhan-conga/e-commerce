@@ -27,7 +27,7 @@ export class LoginLayoutComponent {
    * Flag used to show/hide loader
    */
   loading: boolean = false;
-
+  /** @ignore */
   loginMessage: string;
 
   constructor(
